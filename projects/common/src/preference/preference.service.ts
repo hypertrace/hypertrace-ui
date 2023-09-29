@@ -55,6 +55,24 @@ export class PreferenceService {
       );
   }
 
+  /**
+   * Returns the current storage value if defined, else the default value.
+   */
+  public getOnce<T extends PreferenceValue>(
+    key: PreferenceKey,
+    defaultValue?: T,
+    type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE
+  ): T {
+    const storedValue = this.preferenceStorage(type).get(this.asStorageKey(key));
+    const value = this.fromStorageValue<T>(storedValue) ?? defaultValue;
+
+    if (value === undefined) {
+      throw Error(`No value found or default provided for preferenceKey: ${key}`);
+    }
+
+    return value;
+  }
+
   public set(
     key: PreferenceKey,
     value: PreferenceValue,

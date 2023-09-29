@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
+import { isNil } from 'lodash-es';
 import { IconSize } from '../../icon/icon-size';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
 import { Filter, FilterValue } from '../filter/filter';
@@ -47,6 +48,9 @@ export class FilterButtonComponent implements OnChanges {
   @Input()
   public value?: FilterValue;
 
+  @Input()
+  public subpath?: string;
+
   @Output()
   public readonly popoverOpen: EventEmitter<boolean> = new EventEmitter();
 
@@ -59,14 +63,18 @@ export class FilterButtonComponent implements OnChanges {
 
   public ngOnChanges(): void {
     this.availableFilters =
-      this.attribute !== undefined && this.value !== undefined
-        ? this.filterBuilderLookupService
-            .lookup(this.attribute.type)
-            .buildFiltersForSupportedOperators(this.attribute, this.value)
+      !isNil(this.attribute) && !isNil(this.value)
+        ? this.buildAvailableFilters(this.attribute, this.value, this.subpath)
         : [];
   }
 
   public onFilterClick(filter: Filter): void {
     this.filterUrlService.addUrlFilter(this.metadata || [], filter);
+  }
+
+  private buildAvailableFilters(attribute: FilterAttribute, value: FilterValue, subpath?: string): Filter[] {
+    return this.filterBuilderLookupService
+      .lookup(attribute.type)
+      .buildFiltersForSupportedOperators(attribute, value, subpath);
   }
 }

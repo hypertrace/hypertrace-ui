@@ -70,7 +70,7 @@ describe('Entity topology graphql query handler', () => {
   const buildTopologyResponse = (): unknown => ({
     results: [
       {
-        id: '1',
+        entityId: '1',
         name: 'service 1',
         duration: {
           avg: {
@@ -86,7 +86,7 @@ describe('Entity topology graphql query handler', () => {
                 }
               },
               neighbor: {
-                id: 'a',
+                entityId: 'a',
                 name: 'backend a',
                 type: 'mysql',
                 numCalls: {
@@ -107,7 +107,7 @@ describe('Entity topology graphql query handler', () => {
                 }
               },
               neighbor: {
-                id: '2',
+                entityId: '2',
                 name: 'service 2',
                 duration: {
                   avg: {
@@ -123,7 +123,7 @@ describe('Entity topology graphql query handler', () => {
         }
       },
       {
-        id: '2',
+        entityId: '2',
         name: 'service 2',
         duration: {
           avg: {
@@ -142,7 +142,7 @@ describe('Entity topology graphql query handler', () => {
                 }
               },
               neighbor: {
-                id: '3',
+                entityId: '3',
                 name: 'service 3',
                 duration: {
                   avg: {
@@ -162,7 +162,7 @@ describe('Entity topology graphql query handler', () => {
                 }
               },
               neighbor: {
-                id: '1',
+                entityId: '1',
                 name: 'service 1',
                 duration: {
                   avg: {
@@ -175,7 +175,7 @@ describe('Entity topology graphql query handler', () => {
         }
       },
       {
-        id: '3',
+        entityId: '3',
         name: 'service 3',
         duration: {
           avg: {
@@ -191,7 +191,7 @@ describe('Entity topology graphql query handler', () => {
                 }
               },
               neighbor: {
-                id: 'b',
+                entityId: 'b',
                 name: 'backend b',
                 type: 'redis',
                 numCalls: {
@@ -215,7 +215,7 @@ describe('Entity topology graphql query handler', () => {
                 }
               },
               neighbor: {
-                id: '2',
+                entityId: '2',
                 name: 'service 2',
                 duration: {
                   avg: {
@@ -257,7 +257,7 @@ describe('Entity topology graphql query handler', () => {
         {
           path: 'results',
           children: [
-            { path: 'id' },
+            { path: 'id', alias: 'entityId' },
             { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] },
             {
               path: 'metric',
@@ -296,7 +296,7 @@ describe('Entity topology graphql query handler', () => {
                     {
                       path: 'neighbor',
                       children: [
-                        { path: 'id' },
+                        { path: 'id', alias: 'entityId' },
                         {
                           path: 'attribute',
                           alias: 'name',
@@ -353,7 +353,7 @@ describe('Entity topology graphql query handler', () => {
                     {
                       path: 'neighbor',
                       children: [
-                        { path: 'id' },
+                        { path: 'id', alias: 'entityId' },
                         {
                           path: 'attribute',
                           alias: 'name',
@@ -402,7 +402,7 @@ describe('Entity topology graphql query handler', () => {
                     {
                       path: 'neighbor',
                       children: [
-                        { path: 'id' },
+                        { path: 'id', alias: 'entityId' },
                         {
                           path: 'attribute',
                           alias: 'name',
