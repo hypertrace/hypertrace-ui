@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
-import { FeatureState, FeatureStateResolver, PageTimeRangePreferenceService } from '@hypertrace/common';
+import { FeatureState, FeatureStateResolver } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
 import { combineLatest, Observable, of } from 'rxjs';
-import { defaultIfEmpty, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { NavItemConfig, NavItemHeaderConfig, NavItemLinkConfig, NavItemType } from './navigation.config';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationListComponentService {
-  public constructor(
-    private readonly featureStateResolver: FeatureStateResolver,
-    private readonly pageTimeRangePreferenceService: PageTimeRangePreferenceService
-  ) {}
+  public constructor(private readonly featureStateResolver: FeatureStateResolver) {}
 
   public resolveFeaturesAndUpdateVisibilityForNavItems(navItems: NavItemConfig[]): NavItemConfig[] {
     const updatedItems = this.updateLinkNavItemsVisibility(navItems);
@@ -27,25 +24,6 @@ export class NavigationListComponentService {
     }
 
     return updatedItems;
-  }
-
-  public resolveNavItemConfigTimeRanges(navItems: NavItemConfig[]): Observable<NavItemConfig[]> {
-    return combineLatest(this.getTimeRangesForNavItems(navItems)).pipe(defaultIfEmpty<NavItemConfig[]>([]));
-  }
-
-  private getTimeRangesForNavItems(navItems: NavItemConfig[]): Observable<NavItemConfig>[] {
-    return navItems.map(navItem => {
-      if (navItem.type === NavItemType.Link) {
-        return this.pageTimeRangePreferenceService.getTimeRangePreferenceForPage(navItem.matchPaths[0]).pipe(
-          map(timeRangeResolver => ({
-            ...navItem,
-            timeRangeResolver: timeRangeResolver
-          }))
-        );
-      }
-
-      return of(navItem);
-    });
   }
 
   private updateHeaderNavItemsVisibility(navItems: NavItemLinkConfig[]): Observable<boolean> {

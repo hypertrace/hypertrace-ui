@@ -36,16 +36,6 @@ describe('NavigationComponent', () => {
           }
         })
       }),
-      mockProvider(NavigationListComponentService, {
-        resolveNavItemConfigTimeRanges: jest.fn().mockImplementation((navItems: NavItemConfig[]) =>
-          of(
-            navItems.map(navItem => ({
-              ...navItem,
-              timeRangeResolver: mockTimeRange
-            }))
-          )
-        )
-      }),
       mockProvider(TimeRangeService),
       mockProvider(NavigationListService, {
         decorateNavItem: jest
