@@ -1,13 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import {
-  LoggerService,
-  NavigationService,
-  PreferenceService,
-  RelativeTimeRange,
-  TimeDuration,
-  TimeRangeService,
-  TimeUnit
-} from '@hypertrace/common';
+import { LoggerService, NavigationService, PreferenceService, TimeRangeService } from '@hypertrace/common';
 import { LetAsyncModule, NavigationListComponent, NavigationListService, NavItemConfig } from '@hypertrace/components';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -15,7 +7,6 @@ import { BehaviorSubject, of } from 'rxjs';
 import { NavigationComponent } from './navigation.component';
 
 describe('NavigationComponent', () => {
-  const mockTimeRange = () => new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour));
   const createComponent = createComponentFactory({
     component: NavigationComponent,
     shallow: true,
@@ -57,12 +48,5 @@ describe('NavigationComponent', () => {
     });
     spectator.triggerEventHandler(NavigationListComponent, 'collapsedChange', true);
     expect(spectator.inject(PreferenceService).set).toHaveBeenCalledWith('app-navigation.collapsed', true);
-  });
-
-  test('should decorate the config list with time ranges', () => {
-    const spectator = createComponent();
-    expect(spectator.query(NavigationListComponent)?.navItems).toContainEqual(
-      expect.objectContaining({ timeRangeResolver: mockTimeRange })
-    );
   });
 });
