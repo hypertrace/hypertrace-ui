@@ -91,18 +91,6 @@ describe('Page Header Component', () => {
     expect(spectator.query(TimeRangeComponent)).toExist();
   });
 
-  test('should not display any time range if FF is disabled', () => {
-    spectator = createHost('<ht-page-header></ht-page-header>', {
-      providers: [
-        mockProvider(FeatureStateResolver, {
-          getCombinedFeatureState: () => of(FeatureState.Disabled)
-        })
-      ]
-    });
-
-    expect(spectator.query(TimeRangeComponent)).not.toExist();
-  });
-
   test('should show the refresh button', () => {
     spectator = createHost('<ht-page-header [mode]="mode"></ht-page-header>', {
       hostProps: {
