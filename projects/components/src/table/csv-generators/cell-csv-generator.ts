@@ -1,9 +1,8 @@
 import { isNil } from 'lodash-es';
+import { Dictionary } from '@hypertrace/common';
 
 export abstract class CellCsvGenerator {
-  protected abstract readonly type: string;
-
-  public generate(cellData?: unknown, rowData?: unknown): string {
+  public generate(cellData?: unknown, rowData?: unknown): string | Dictionary<string> {
     if (isNil(cellData)) {
       return '-';
     }
@@ -13,7 +12,7 @@ export abstract class CellCsvGenerator {
 
   // Extended methods need to implement only this method
   // Sanity check of data and defaulting is done in generate method
-  protected abstract createCsv(cellData: unknown, rowData?: unknown): string;
+  protected abstract createCsv(cellData: unknown, rowData?: unknown): string | Dictionary<string>;
 }
 //
 // export interface CellCsvGeneratorConfig {

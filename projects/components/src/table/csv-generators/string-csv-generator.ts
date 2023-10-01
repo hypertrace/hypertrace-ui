@@ -1,8 +1,14 @@
+import { capitalize } from 'lodash-es';
 import { CellCsvGenerator } from './cell-csv-generator';
 
 export class StringCsvGenerator extends CellCsvGenerator {
-  protected readonly type: string = 'string';
+  public constructor(private readonly textType: StringType = 'enum') {
+    super();
+  }
+
   public createCsv(cellData: string): string {
-    return cellData;
+    return this.textType === 'enum' ? capitalize(cellData) : cellData;
   }
 }
+
+type StringType = 'enum' | 'string';

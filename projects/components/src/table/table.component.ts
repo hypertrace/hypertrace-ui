@@ -508,7 +508,7 @@ export class TableComponent
 
   public constructor(
     @Inject(DOCUMENT) private readonly document: Document,
-    private readonly tableColumnCsvMapper: TableCsvMapperService,
+    private readonly tableColumnCsvMapper: TableCsvMapperService<TableRow>,
     private readonly elementRef: ElementRef,
     private readonly changeDetector: ChangeDetectorRef,
     private readonly navigationService: NavigationService,
