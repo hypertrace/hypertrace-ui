@@ -31,5 +31,3 @@ export class TableCsvMapperService<TDataTypeForTableRow> {
     });
   }
 }
-
-// export const TABLE_CSV_MAPPER_CONFIGS = new InjectionToken<unknown>('TABLE_CSV_MAPPER_CONFIGS');

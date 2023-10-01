@@ -14,7 +14,3 @@ export abstract class CellCsvGenerator {
   // Sanity check of data and defaulting is done in generate method
   protected abstract createCsv(cellData: unknown, rowData?: unknown): string | Dictionary<string>;
 }
-//
-// export interface CellCsvGeneratorConfig {
-//   createCsv: (cellData: unknown, rowData?: unknown) => string;
-// }
