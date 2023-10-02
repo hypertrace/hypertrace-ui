@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, InjectionToken } from '@angular/core';
 import { FilterValue } from '../filter/filter';
-import { FilterAttributeExpression } from '../filter/parser/parsed-filter';
+import { FilterAttribute } from '../filter/filter-attribute';
 
 export const FILTER_BUTTON_WRAPPER = new InjectionToken<FilterButtonWrapperData>('INTERVAL_DATA');
 
@@ -10,17 +10,30 @@ export const FILTER_BUTTON_WRAPPER = new InjectionToken<FilterButtonWrapperData>
   template: `
     <ht-filter-button
       *ngIf="this.filterButtonWrapperData"
-      [attribute]="this.filterButtonWrapperData.targetAttribute?.attribute"
-      [value]="this.filterButtonWrapperData.value"
-      [subpath]="this.filterButtonWrapperData.targetAttribute?.subpath"
+      [attribute]="this.targetAttribute"
+      [metadata]="this.metadata"
+      [value]="this.value"
+      [subpath]="this.targetAttributeSubpath"
     ></ht-filter-button>
   `
 })
 export class FilterButtonWrapperComponent {
-  public constructor(@Inject(FILTER_BUTTON_WRAPPER) public readonly filterButtonWrapperData: FilterButtonWrapperData) {}
+  public targetAttribute: FilterAttribute;
+  public targetAttributeSubpath?: string;
+  public metadata: FilterAttribute[];
+  public value: FilterValue;
+
+  public constructor(@Inject(FILTER_BUTTON_WRAPPER) public readonly filterButtonWrapperData: FilterButtonWrapperData) {
+    this.targetAttribute = filterButtonWrapperData.targetAttribute;
+    this.targetAttributeSubpath = filterButtonWrapperData.targetAttributeSubpath;
+    this.metadata = filterButtonWrapperData.metadata;
+    this.value = filterButtonWrapperData.value;
+  }
 }
 
 export interface FilterButtonWrapperData {
-  targetAttribute: FilterAttributeExpression;
+  targetAttribute: FilterAttribute;
+  targetAttributeSubpath: string;
+  metadata: FilterAttribute[];
   value: FilterValue;
 }
