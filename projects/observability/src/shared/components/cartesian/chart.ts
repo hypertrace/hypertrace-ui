@@ -55,7 +55,7 @@ export interface Series<TInterval> {
 }
 
 interface SeriesGroupBy extends FilterAttributeExpression {
-  metadata: FilterAttribute[];
+  allMetadata: FilterAttribute[];
 }
 export interface Band<TInterval> {
   upper: Series<TInterval>;
