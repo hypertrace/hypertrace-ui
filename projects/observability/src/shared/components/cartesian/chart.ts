@@ -54,7 +54,7 @@ export interface Series<TInterval> {
   getTooltipTitle?(datum: TInterval): string;
 }
 
-export interface SeriesGroupBy extends FilterAttributeExpression {
+interface SeriesGroupBy extends FilterAttributeExpression {
   metadata: FilterAttribute[];
 }
 export interface Band<TInterval> {
