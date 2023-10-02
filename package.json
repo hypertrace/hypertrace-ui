@@ -123,7 +123,7 @@
     "lodash": "^4.17.21",
     "ng-mocks": "^14.10.0",
     "ng-packagr": "^15.2.2",
-    "postcss": "^8.4.30",
+    "postcss": "^8.4.31",
     "postcss-import": "^15.1.0",
     "postcss-preset-env": "^9.1.4",
     "postcss-url": "^10.1.1",
