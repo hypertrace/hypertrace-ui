@@ -1,11 +1,11 @@
 import { TimeRange } from '@hypertrace/common';
+import { FilterAttributeExpression } from '@hypertrace/components';
 import { AxisDomain } from 'd3-axis';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipRef } from '../utils/chart-tooltip/chart-tooltip-popover';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { ChartEvent, ChartEventListener } from './chart-interactivty';
 import { CartesianIntervalData } from './d3/legend/cartesian-interval-control.component';
-import { FilterAttribute } from '@hypertrace/components';
 
 export interface CartesianChart<TInterval> {
   destroy(): this;
@@ -44,7 +44,7 @@ export interface Series<TInterval> {
   groupName?: string;
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
-  groupByFilter?: GroupByFilter;
+  groupBy?: FilterAttributeExpression;
   stacking?: boolean;
   hide?: boolean;
 
@@ -61,11 +61,6 @@ export interface Band<TInterval> {
   opacity: number;
   name: string;
   hide?: boolean;
-}
-
-export interface GroupByFilter {
-  attribute?: FilterAttribute;
-  metadata: FilterAttribute[];
 }
 
 export interface Summary {
