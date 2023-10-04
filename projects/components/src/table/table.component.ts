@@ -38,7 +38,7 @@ import {
 } from '@hypertrace/common';
 import { isNil, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
-import { filter, map, switchMap, take } from 'rxjs/operators';
+import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
 import { PageEvent } from '../paginator/page.event';
@@ -74,6 +74,7 @@ import { TableColumnWidthUtil } from './util/column-width.util';
 import { FileDownloadService } from '../download-file/service/file-download.service';
 import { TableCsvDownloaderService } from './table-csv-downloader.service';
 import { TableCsvMapperService } from './table-csv-mapper.service';
+import { NotificationService } from '../notification/notification.service';
 
 @Component({
   selector: 'ht-table',
@@ -518,11 +519,14 @@ export class TableComponent
     private readonly modalService: ModalService,
     private readonly fileDownloadService: FileDownloadService,
     private readonly tableCsvDownloaderService: TableCsvDownloaderService,
-    private readonly preferenceService: PreferenceService
+    private readonly preferenceService: PreferenceService,
+    private readonly notificationService: NotificationService
   ) {
-    this.tableCsvDownloaderService.csvDownloadRequest$.pipe(filter(tableId => tableId === this.id)).subscribe(() => {
-      this.downloadCsv();
-    });
+    this.tableCsvDownloaderService.csvDownloadRequest$
+      .pipe(filter(tableId => !isNil(this.id) && tableId === this.id))
+      .subscribe(() => {
+        this.downloadCsv();
+      });
 
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
       .pipe(
@@ -984,6 +988,9 @@ export class TableComponent
   private downloadCsv(): void {
     combineLatest([this.columnConfigs$, this.filters$])
       .pipe(
+        tap(() => {
+          this.notificationService.createSuccessToast('Initiating download...');
+        }),
         switchMap(([columnConfigs, filters]) =>
           (!isNil(this.data)
             ? this.data.getData({
@@ -1000,7 +1007,7 @@ export class TableComponent
         ),
         switchMap((content: Dictionary<string | undefined>[]) =>
           this.fileDownloadService.downloadAsCsv({
-            fileName: 'table-data.csv',
+            fileName: `table-data-${new Date().toISOString()}.csv`,
             dataSource: of(content)
           })
         )

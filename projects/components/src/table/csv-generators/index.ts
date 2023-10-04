@@ -5,3 +5,4 @@ export * from './cell-csv-generator';
 export * from './number-csv-generator';
 export * from './string-csv-generator';
 export * from './string-array-csv-generator';
+export * from './value-extractor-csv-generator';
