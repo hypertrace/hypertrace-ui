@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ParamMap } from '@angular/router';
-import { isEmpty, isNil, omit } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { EMPTY, Observable, ReplaySubject } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, map, skip, switchMap, take } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { FixedTimeRange } from './fixed-time-range';
@@ -88,46 +87,10 @@ export class TimeRangeService {
     );
   }
 
-  private getPageTimeRangeChanges(): Observable<TimeRange> {
-    return this.navigationService.navigation$.pipe(
-      map(activeRoute => activeRoute.snapshot.queryParamMap),
-      distinctUntilChanged((prevParamMap, currParamMap) => this.shouldNotUpdateTimeRange(prevParamMap, currParamMap)),
-      skip(1), // Skip the first nav, this is handled by initializeTimeRange, but we want to populate prev for distinctUntilChanged
-      filter(queryParamMap => queryParamMap.has(TimeRangeService.TIME_RANGE_QUERY_PARAM)),
-      map(currQueryParamMap => {
-        const timeRangeQueryParamString = currQueryParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM);
-
-        return this.timeRangeFromUrlString(timeRangeQueryParamString!);
-      })
-    );
-  }
-
   private initializeTimeRange(): void {
     this.getInitialTimeRange().subscribe(timeRangeFromInitialUrl => {
       this.applyTimeRangeChange(timeRangeFromInitialUrl);
     });
-
-    this.getPageTimeRangeChanges().subscribe(timeRange => {
-      if (!this.timeRangeMatchesCurrentUrl(timeRange)) {
-        this.setTimeRangeInUrl(timeRange);
-      } else {
-        this.applyTimeRangeChange(timeRange);
-
-        const queryParams = this.navigationService.getCurrentActivatedRoute().snapshot.queryParams;
-        if (TimeRangeService.REFRESH_ON_NAVIGATION in queryParams) {
-          this.navigationService.replaceQueryParametersInUrl(omit(queryParams, TimeRangeService.REFRESH_ON_NAVIGATION));
-        }
-      }
-    });
-  }
-
-  private shouldNotUpdateTimeRange(prevParamMap: ParamMap, currParamMap: ParamMap): boolean {
-    const refreshQueryParam = currParamMap.get(TimeRangeService.REFRESH_ON_NAVIGATION);
-
-    return (
-      prevParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM) ===
-        currParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM) && isEmpty(refreshQueryParam)
-    );
   }
 
   public timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
@@ -182,12 +145,6 @@ export class TimeRangeService {
     }
 
     return queryParams;
-  }
-
-  private timeRangeMatchesCurrentUrl(timeRange: TimeRange): boolean {
-    return (
-      this.navigationService.getQueryParameter(TimeRangeService.TIME_RANGE_QUERY_PARAM, '') === timeRange.toUrlString()
-    );
   }
 
   public isInitialized(): boolean {
