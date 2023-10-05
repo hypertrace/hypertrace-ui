@@ -155,7 +155,7 @@ export class ExplorerComponent {
     private readonly preferenceService: PreferenceService,
     @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly explorerUrlParserService: ExplorerUrlParserService
+    protected readonly explorerUrlParserService: ExplorerUrlParserService
   ) {
     this.explorerDashboardBuilder = explorerDashboardBuilderFactory.build();
     this.visualizationExpanded$ = this.preferenceService.get(ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE, true);
