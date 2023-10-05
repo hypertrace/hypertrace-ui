@@ -19,6 +19,14 @@ describe('Time Ago table cell renderer component', () => {
     shallow: true
   });
 
+  test('should render everything correctly for null value', () => {
+    const spectator = buildComponent({
+      providers: [tableCellDataProvider(null)]
+    });
+
+    expect(spectator.element).toHaveText('-');
+  });
+
   test('renders less than a minute ago', () => {
     const spectator = buildComponent({
       providers: [tableCellDataProvider(new Date().getTime())]
