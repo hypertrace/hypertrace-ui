@@ -30,7 +30,7 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   alignment: TableCellAlignmentType.Right,
   parser: CoreTableCellParserType.Timestamp
 })
-export class TimeAgoTableCellRendererComponent extends TableCellRendererBase<CellData> {
+export class TimeAgoTableCellRendererComponent extends TableCellRendererBase<Date | number> {
   public readonly dateFormat: DateFormatOptions = {
     mode: DateFormatMode.DateAndTimeWithSeconds
   };
