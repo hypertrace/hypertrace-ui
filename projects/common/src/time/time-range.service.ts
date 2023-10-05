@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { isEmpty, isNil } from 'lodash-es';
-import { Observable, ReplaySubject, of } from 'rxjs';
-import { catchError, map, switchMap, take } from 'rxjs/operators';
+import { isEmpty } from 'lodash-es';
+import { EMPTY, ReplaySubject } from 'rxjs';
+import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { FixedTimeRange } from './fixed-time-range';
@@ -16,8 +16,8 @@ import { TimeUnit } from './time-unit.type';
 })
 export class TimeRangeService {
   private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
-  private static readonly REFRESH_ON_NAVIGATION: string = 'refresh';
 
+  private readonly defaultTimeRange: TimeRange = new RelativeTimeRange(new TimeDuration(1, TimeUnit.Day));
   private readonly timeRangeSubject$: ReplaySubject<TimeRange> = new ReplaySubject(1);
   private currentTimeRange?: TimeRange;
 
@@ -51,33 +51,36 @@ export class TimeRangeService {
     return this.currentTimeRange;
   }
 
-  public maybeGetCurrentTimeRange(): TimeRange | undefined {
-    return this.currentTimeRange;
-  }
-  public setTimeRange(timeRange: TimeRange): void {
-    this.setTimeRangeInUrl(timeRange);
-  }
-
   public setRelativeRange(value: number, unit: TimeUnit): this {
-    return this.setTimeRangeInUrl(TimeRangeService.toRelativeTimeRange(value, unit));
+    return this.setTimeRange(TimeRangeService.toRelativeTimeRange(value, unit));
   }
 
   public setFixedRange(startTime: Date, endTime: Date): this {
-    return this.setTimeRangeInUrl(TimeRangeService.toFixedTimeRange(startTime, endTime));
+    return this.setTimeRange(TimeRangeService.toFixedTimeRange(startTime, endTime));
   }
 
   public refresh(): void {
-    if (this.isInitialized()) {
-      const currentStringTimeRange = this.getCurrentTimeRange().toUrlString();
-      this.applyTimeRangeChange(this.timeRangeFromUrlString(currentStringTimeRange));
-    }
+    this.setTimeRange(this.getCurrentTimeRange());
   }
 
-  private isValidTimeRange(timeRange: TimeRange): boolean {
-    return timeRange.endTime.getTime() - timeRange.startTime.getTime() > 0;
+  private initializeTimeRange(): void {
+    this.navigationService.navigation$
+      .pipe(
+        take(1), // Wait for first navigation
+        switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
+        take(1), // Only the first set of params
+        map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
+        filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
+        map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
+        catchError(() => EMPTY),
+        defaultIfEmpty(this.defaultTimeRange)
+      )
+      .subscribe(timeRange => {
+        this.setTimeRange(timeRange);
+      });
   }
 
-  public timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
+  private timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
     const duration = this.timeDurationService.durationFromString(timeRangeFromUrl);
     if (duration) {
       return new RelativeTimeRange(duration);
@@ -90,9 +93,12 @@ export class TimeRangeService {
     throw new Error(); // Caught in observable
   }
 
-  private applyTimeRangeChange(newTimeRange: TimeRange): this {
+  private setTimeRange(newTimeRange: TimeRange): this {
     this.currentTimeRange = newTimeRange;
     this.timeRangeSubject$.next(newTimeRange);
+    this.navigationService.addQueryParametersToUrl({
+      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString()
+    });
 
     return this;
   }
@@ -105,51 +111,11 @@ export class TimeRangeService {
     return new FixedTimeRange(startTime, endTime);
   }
 
-  public toQueryParams(timeRange: TimeRange, refreshTimeOnNavigationParam?: boolean): QueryParamObject {
+  public toQueryParams(timeRange: TimeRange): QueryParamObject {
     const queryParams: QueryParamObject = {
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
     };
 
-    if (refreshTimeOnNavigationParam) {
-      return { ...queryParams, [TimeRangeService.REFRESH_ON_NAVIGATION]: true };
-    }
-
     return queryParams;
-  }
-
-  public isInitialized(): boolean {
-    return !isNil(this.currentTimeRange);
-  }
-
-  private initializeTimeRange(): void {
-    this.getInitialTimeRange().subscribe(timeRangeFromInitialUrl => {
-      this.applyTimeRangeChange(timeRangeFromInitialUrl);
-    });
-  }
-
-  private getInitialTimeRange(): Observable<TimeRange> {
-    return this.navigationService.navigation$.pipe(
-      take(1), // Wait for first navigation
-      switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
-      take(1), // Only the first set of params
-      map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
-      map(timeRangeString =>
-        !isEmpty(timeRangeString) ? this.timeRangeFromUrlString(timeRangeString!) : this.getGlobalDefaultTimeRange()
-      ),
-      map(timeRange => (this.isValidTimeRange(timeRange) ? timeRange : this.getGlobalDefaultTimeRange())),
-      catchError(() => of(this.getGlobalDefaultTimeRange()))
-    );
-  }
-
-  private getGlobalDefaultTimeRange(): TimeRange {
-    return new RelativeTimeRange(new TimeDuration(1, TimeUnit.Day));
-  }
-
-  private setTimeRangeInUrl(timeRange: TimeRange): this {
-    this.navigationService.addQueryParametersToUrl({
-      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
-    });
-
-    return this;
   }
 }
