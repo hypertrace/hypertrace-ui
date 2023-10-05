@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Dictionary, NavigationParams } from '@hypertrace/common';
-import { FilterOperator, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
+import { FilterOperator, FilterUrlService, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
 import { ExplorerService } from '../../../../../pages/explorer/explorer-service';
 import { ScopeQueryParam } from '../../../../../pages/explorer/explorer.component';
+import { MetadataService, toFilterAttributeType } from '@hypertrace/observability';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'ht-span-detail-call-headers',
@@ -48,16 +50,26 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
 
   public label?: string;
 
-  public constructor(private readonly explorerService: ExplorerService) {}
+  public constructor(private readonly explorerService: ExplorerService, private readonly metadataService: MetadataService, private readonly filterUrlService: FilterUrlService) {}
 
   public ngOnChanges(): void {
     this.buildRecords();
   }
 
   public buildExploreNavigationParams = (record: ListViewRecord): Observable<NavigationParams> =>
-    this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-      { field: this.fieldName, subpath: record.key, operator: FilterOperator.Equals, value: record.value }
-    ]);
+  this.metadataService.getFilterAttributes(ScopeQueryParam.EndpointTraces).pipe(
+    map(value => this.filterUrlService.getUrlFilters(value.map(attribute => ({
+        name: attribute.name,
+        displayName: attribute.displayName,
+        type: toFilterAttributeType(attribute.type)
+      })))),
+    switchMap(filters => this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
+      { field: this.fieldName, subpath: record.key, operator: FilterOperator.Equals, value: record.value },
+      ...filters.map(filter => (
+        { field: filter.field, subpath: filter.subpath, operator: filter.operator, value: filter.value }
+      ))
+    ]))
+  );
 
   private buildRecords(): void {
     if (isNil(this.data)) {

@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Dictionary, NavigationParams, TypedSimpleChanges } from '@hypertrace/common';
-import { FilterOperator, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
+import { FilterOperator, FilterUrlService, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { ExplorerService } from '../../../../pages/explorer/explorer-service';
 import { ScopeQueryParam } from '../../../../pages/explorer/explorer.component';
+import { MetadataService } from '../../../services/metadata/metadata.service';
+import { SPAN_SCOPE } from '../../../graphql/model/schema/span';
+import { toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 
 @Component({
   selector: 'ht-span-tags-detail',
@@ -34,7 +38,7 @@ export class SpanTagsDetailComponent implements OnChanges {
 
   public tagRecords$?: Observable<ListViewRecord[]>;
 
-  public constructor(private readonly explorerService: ExplorerService) {}
+  public constructor(private readonly explorerService: ExplorerService, private readonly metadataService: MetadataService, private readonly filterUrlService: FilterUrlService) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.tags && this.tags) {
@@ -43,9 +47,19 @@ export class SpanTagsDetailComponent implements OnChanges {
   }
 
   public getExploreNavigationParams = (tag: ListViewRecord): Observable<NavigationParams> =>
-    this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-      { field: 'tags', subpath: tag.key, operator: FilterOperator.Equals, value: tag.value }
-    ]);
+    this.metadataService.getAllAttributes(SPAN_SCOPE).pipe(
+      map(attributes => this.filterUrlService.getUrlFilters(attributes.map(attribute => ({
+        name: attribute.name,
+        displayName: attribute.displayName,
+        type: toFilterAttributeType(attribute.type)
+      })))),
+      switchMap(filters => this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
+        { field: 'tags', subpath: tag.key, operator: FilterOperator.Equals, value: tag.value },
+        ...filters.map(filter => (
+          { field: filter.field, subpath: filter.subpath, operator: filter.operator, value: filter.value }
+        ))
+      ]))
+    );
 
   private buildTagRecords(): void {
     if (isNil(this.tags)) {
