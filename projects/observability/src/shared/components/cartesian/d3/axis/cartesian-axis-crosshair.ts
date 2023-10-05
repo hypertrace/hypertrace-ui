@@ -14,6 +14,7 @@ export class CartesianAxisCrosshair {
   ) {}
 
   public draw(axisElement: SVGGElement, locationData: MouseLocationData<unknown, unknown>[]): void {
+    debugger;
     this.initializeCrosshairIfMissing(axisElement);
     const shouldSnap = this.axisCrosshair.snap === true;
     const snappableData = this.getSnappableData(axisElement, locationData);
@@ -62,7 +63,7 @@ export class CartesianAxisCrosshair {
     pointLocations: RelativeMouseLocation[]
   ): void {
     this.updateLinePosition(crosshairSelection, position);
-    this.updatePointPosition(crosshairSelection, pointLocations);
+    this.updatePointPosition(crosshairSelection, pointLocations.filter(pointLocation => pointLocation.x === position));
   }
 
   private updateLinePosition(crosshairSelection: Selection<SVGGElement, {}, null, undefined>, position: number): void {

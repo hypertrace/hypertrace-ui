@@ -75,7 +75,8 @@ export class ExplorerDashboardBuilder {
           ? {
               'x-axis': {
                 type: 'cartesian-axis',
-                'scale-type': ScaleType.Band
+                'scale-type': ScaleType.Band,
+                'show-tick-labels': false
               }
             }
           : {})

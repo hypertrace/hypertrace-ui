@@ -25,6 +25,15 @@ export class CartesianAxisModel {
   })
   public showGridLines?: boolean;
 
+
+  @ModelProperty({
+    key: 'show-tick-labels',
+    required: false,
+    displayName: 'Show Tick Labels',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public showTickLabels?: boolean;
+
   /**
    * The property acts as a maximum cap for smaller data values, so that the axis does not always treat
    * data max as the axis maximum
@@ -41,7 +50,8 @@ export class CartesianAxisModel {
     return {
       scale: this.scale,
       gridLines: this.showGridLines,
-      max: this.minUpperLimit
+      max: this.minUpperLimit,
+      tickLabels: this.showTickLabels
     };
   }
 }
