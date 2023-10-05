@@ -264,37 +264,21 @@ export class ExplorerComponent {
   }
 
   private mapToInitialState(param: ParamMap): InitialExplorerState {
-    const series: ExploreSeries[] = param
-      .getAll(ExplorerQueryParam.Series)
-      .flatMap((seriesString: string) => this.explorerUrlParserService.tryDecodeExploreSeries(seriesString));
-
-    const interval: IntervalValue = this.explorerUrlParserService.decodeInterval(
-      param.get(ExplorerQueryParam.Interval)
-    );
+    const explorerState = this.explorerUrlParserService.getExplorerState({
+      series: param.getAll(ExplorerQueryParam.Series),
+      interval: param.get(ExplorerQueryParam.Interval) ?? undefined,
+      groupBy: param.getAll(ExplorerQueryParam.Group),
+      includeOtherGroups: param.get(ExplorerQueryParam.OtherGroup) ?? undefined,
+      groupLimit: param.get(ExplorerQueryParam.GroupLimit) ?? '5',
+      orderBy: param.getAll(ExplorerQueryParam.Order) ?? undefined
+    });
 
     return {
       contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope) as ScopeQueryParam),
-      groupBy: param.has(ExplorerQueryParam.Group)
-        ? {
-            keyExpressions: param
-              .getAll(ExplorerQueryParam.Group)
-              .flatMap(expressionString =>
-                this.explorerUrlParserService.tryDecodeAttributeExpression(expressionString)
-              ),
-            includeRest: param.get(ExplorerQueryParam.OtherGroup) === 'true',
-
-            limit: parseInt(param.get(ExplorerQueryParam.GroupLimit)!) || 5
-          }
-        : undefined,
-      interval: interval,
-      series: series,
-      orderBy:
-        interval === 'NONE'
-          ? this.explorerUrlParserService.tryDecodeExploreOrderBy(
-              series[0],
-              param.get(ExplorerQueryParam.Order) ?? undefined
-            )
-          : undefined
+      groupBy: explorerState.groupBy,
+      interval: explorerState.interval,
+      series: explorerState.series,
+      orderBy: explorerState.orderBy
     };
   }
 
