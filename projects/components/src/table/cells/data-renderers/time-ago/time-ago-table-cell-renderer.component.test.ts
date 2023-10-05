@@ -1,4 +1,4 @@
-import { FormattingModule } from '@hypertrace/common';
+import { FormattingModule, IsNilPipeModule } from '@hypertrace/common';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { TableCellTimestampParser } from '../../data-parsers/table-cell-timestamp-parser';
 import { tableCellDataProvider, tableCellProviders } from '../../test/cell-providers';
@@ -7,7 +7,7 @@ import { TimeAgoTableCellRendererComponent } from './time-ago-table-cell-rendere
 describe('Time Ago table cell renderer component', () => {
   const buildComponent = createComponentFactory({
     component: TimeAgoTableCellRendererComponent,
-    imports: [FormattingModule],
+    imports: [FormattingModule, IsNilPipeModule],
     providers: [
       tableCellProviders(
         {
@@ -17,6 +17,14 @@ describe('Time Ago table cell renderer component', () => {
       )
     ],
     shallow: true
+  });
+
+  test('should render everything correctly for null value', () => {
+    const spectator = buildComponent({
+      providers: [tableCellDataProvider(null)]
+    });
+
+    expect(spectator.element).toHaveText('-');
   });
 
   test('renders less than a minute ago', () => {

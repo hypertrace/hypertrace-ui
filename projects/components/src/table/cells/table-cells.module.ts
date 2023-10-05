@@ -1,7 +1,7 @@
 import { CdkTableModule } from '@angular/cdk/table';
 import { CommonModule } from '@angular/common';
 import { Inject, InjectionToken, NgModule } from '@angular/core';
-import { FormattingModule, MemoizeModule } from '@hypertrace/common';
+import { FormattingModule, IsNilPipeModule, MemoizeModule } from '@hypertrace/common';
 import { CheckboxModule } from '../../checkbox/checkbox.module';
 import { CopyToClipboardModule } from '../../copy-to-clipboard/copy-to-clipboard.module';
 import { ExpanderToggleModule } from '../../expander/expander-toggle.module';
@@ -58,7 +58,8 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     CopyToClipboardModule,
     LabelModule,
     XMoreModule,
-    MemoizeModule
+    MemoizeModule,
+    IsNilPipeModule
   ],
   exports: [
     TableHeaderCellRendererComponent,
