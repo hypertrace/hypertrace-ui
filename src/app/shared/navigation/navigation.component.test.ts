@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { LoggerService, NavigationService, PreferenceService, TimeRangeService } from '@hypertrace/common';
+import { LoggerService, NavigationService, PreferenceService } from '@hypertrace/common';
 import { LetAsyncModule, NavigationListComponent, NavigationListService, NavItemConfig } from '@hypertrace/components';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -20,7 +20,6 @@ describe('NavigationComponent', () => {
           }
         })
       }),
-      mockProvider(TimeRangeService),
       mockProvider(NavigationListService, {
         decorateNavItem: jest
           .fn()

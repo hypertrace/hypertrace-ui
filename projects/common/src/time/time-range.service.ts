@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { isEmpty, isNil } from 'lodash-es';
-import { EMPTY, Observable, ReplaySubject } from 'rxjs';
-import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
+import { Observable, ReplaySubject, of } from 'rxjs';
+import { catchError, map, switchMap, take } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { FixedTimeRange } from './fixed-time-range';
@@ -54,6 +54,9 @@ export class TimeRangeService {
   public maybeGetCurrentTimeRange(): TimeRange | undefined {
     return this.currentTimeRange;
   }
+  public setTimeRange(timeRange: TimeRange): void {
+    this.setTimeRangeInUrl(timeRange);
+  }
 
   public setRelativeRange(value: number, unit: TimeUnit): this {
     return this.setTimeRangeInUrl(TimeRangeService.toRelativeTimeRange(value, unit));
@@ -74,25 +77,6 @@ export class TimeRangeService {
     return timeRange.endTime.getTime() - timeRange.startTime.getTime() > 0;
   }
 
-  private getInitialTimeRange(): Observable<TimeRange> {
-    return this.navigationService.navigation$.pipe(
-      take(1), // Wait for first navigation
-      switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
-      take(1), // Only the first set of params
-      map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
-      filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
-      map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
-      filter(timeRange => this.isValidTimeRange(timeRange)),
-      catchError(() => EMPTY)
-    );
-  }
-
-  private initializeTimeRange(): void {
-    this.getInitialTimeRange().subscribe(timeRangeFromInitialUrl => {
-      this.applyTimeRangeChange(timeRangeFromInitialUrl);
-    });
-  }
-
   public timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
     const duration = this.timeDurationService.durationFromString(timeRangeFromUrl);
     if (duration) {
@@ -111,20 +95,6 @@ export class TimeRangeService {
     this.timeRangeSubject$.next(newTimeRange);
 
     return this;
-  }
-
-  private setTimeRangeInUrl(timeRange: TimeRange): this {
-    this.navigationService.addQueryParametersToUrl({
-      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
-    });
-
-    return this;
-  }
-
-  public setDefaultTimeRange(timeRange: TimeRange): void {
-    if (!this.currentTimeRange) {
-      this.setTimeRangeInUrl(timeRange);
-    }
   }
 
   public static toRelativeTimeRange(value: number, unit: TimeUnit): RelativeTimeRange {
@@ -149,5 +119,37 @@ export class TimeRangeService {
 
   public isInitialized(): boolean {
     return !isNil(this.currentTimeRange);
+  }
+
+  private initializeTimeRange(): void {
+    this.getInitialTimeRange().subscribe(timeRangeFromInitialUrl => {
+      this.applyTimeRangeChange(timeRangeFromInitialUrl);
+    });
+  }
+
+  private getInitialTimeRange(): Observable<TimeRange> {
+    return this.navigationService.navigation$.pipe(
+      take(1), // Wait for first navigation
+      switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
+      take(1), // Only the first set of params
+      map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
+      map(timeRangeString =>
+        !isEmpty(timeRangeString) ? this.timeRangeFromUrlString(timeRangeString!) : this.getGlobalDefaultTimeRange()
+      ),
+      map(timeRange => (this.isValidTimeRange(timeRange) ? timeRange : this.getGlobalDefaultTimeRange())),
+      catchError(() => of(this.getGlobalDefaultTimeRange()))
+    );
+  }
+
+  private getGlobalDefaultTimeRange(): TimeRange {
+    return new RelativeTimeRange(new TimeDuration(1, TimeUnit.Day));
+  }
+
+  private setTimeRangeInUrl(timeRange: TimeRange): this {
+    this.navigationService.addQueryParametersToUrl({
+      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
+    });
+
+    return this;
   }
 }

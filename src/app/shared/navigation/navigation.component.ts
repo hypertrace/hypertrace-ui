@@ -1,14 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconType } from '@hypertrace/assets-library';
-import {
-  PreferenceService,
-  RelativeTimeRange,
-  TimeDuration,
-  TimeRange,
-  TimeRangeService,
-  TimeUnit
-} from '@hypertrace/common';
+import { PreferenceService } from '@hypertrace/common';
 import { NavigationListService, NavItemConfig, NavItemType } from '@hypertrace/components';
 import { ObservabilityIconType } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
@@ -85,29 +78,16 @@ export class NavigationComponent {
   public constructor(
     private readonly navigationListService: NavigationListService,
     private readonly preferenceService: PreferenceService,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly timeRangeService: TimeRangeService
+    private readonly activatedRoute: ActivatedRoute
   ) {
     this.navItems = this.navItemDefinitions.map(definition =>
       this.navigationListService.decorateNavItem(definition, this.activatedRoute)
     );
 
     this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);
-    this.updateDefaultTimeRangeIfUnset();
-  }
-
-  public updateDefaultTimeRangeIfUnset(): void {
-    // Initialize the time range service
-    if (!this.timeRangeService.isInitialized()) {
-      this.timeRangeService.setDefaultTimeRange(this.getGlobalDefaultTimeRange());
-    }
   }
 
   public onViewToggle(collapsed: boolean): void {
     this.preferenceService.set(NavigationComponent.COLLAPSED_PREFERENCE, collapsed);
-  }
-
-  private getGlobalDefaultTimeRange(): TimeRange {
-    return new RelativeTimeRange(new TimeDuration(1, TimeUnit.Day));
   }
 }
