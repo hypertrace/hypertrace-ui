@@ -20,14 +20,9 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   styleUrls: ['./time-ago-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div
-      *ngIf="!(this.value | htIsNil); else nilValueTemplate"
-      class="cell-value"
-      [htTooltip]="this.value | htDisplayDate: this.dateFormat"
-    >
+    <div class="cell-value" [htTooltip]="this.value | htDisplayDate: this.dateFormat">
       {{ this.value | htDisplayTimeAgo }}
     </div>
-    <ng-template #nilValueTemplate>-</ng-template>
   `
 })
 @TableCellRenderer({
@@ -52,4 +47,4 @@ export class TimeAgoTableCellRendererComponent extends TableCellRendererBase<Cel
   }
 }
 
-type CellData = Date | number | undefined;
+type CellData = Date | number;
