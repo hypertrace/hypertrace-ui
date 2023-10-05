@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NavigationService, TimeDurationService } from '@hypertrace/common';
+import { TimeDurationService } from '@hypertrace/common';
 import { isEmpty, isNil } from 'lodash-es';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import {
@@ -12,14 +12,10 @@ import { AttributeExpression } from '../../shared/graphql/model/attribute/attrib
 import { MetricAggregationType } from '../../shared/graphql/model/metrics/metric-aggregation';
 import { GraphQlSortDirection } from '../../shared/graphql/model/schema/sort/graphql-sort-direction';
 import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
-import { ExplorerQueryParam, ScopeQueryParam } from './explorer.component';
 
 @Injectable({ providedIn: 'root' })
 export class ExplorerUrlParserService {
-  public constructor(
-    private readonly timeDurationService: TimeDurationService,
-    private readonly navigationService: NavigationService
-  ) {}
+  public constructor(private readonly timeDurationService: TimeDurationService) {}
 
   public tryDecodeExploreSeries(seriesString: string): [ExploreSeries] | [] {
     const matches = seriesString.match(/(\w+):(\w+)\((\w+)\)/);
@@ -79,37 +75,4 @@ export class ExplorerUrlParserService {
 
     return [{ key: key, ...(!isEmpty(subpath) ? { subpath: subpath } : {}) }];
   }
-
-  public extractExplorerQueryFromUrl(): ExplorerQuery {
-    const interval = this.navigationService.getQueryParameter(ExplorerQueryParam.Interval, '');
-    const includeOtherGroups = this.navigationService.getQueryParameter(ExplorerQueryParam.OtherGroup, '');
-    const groupLimit = this.navigationService.getQueryParameter(ExplorerQueryParam.GroupLimit, '');
-
-    return {
-      scope: this.navigationService.getQueryParameter(ExplorerQueryParam.Scope, 'endpoint-trace') as ScopeQueryParam,
-      queryClauses: {
-        selection: this.navigationService.getAllValuesForQueryParameter(ExplorerQueryParam.Series),
-        interval: !isEmpty(interval) ? interval : undefined,
-        orderBy: this.navigationService.getAllValuesForQueryParameter(ExplorerQueryParam.Order),
-        groupBy: this.navigationService.getAllValuesForQueryParameter(ExplorerQueryParam.Group),
-        includeOtherGroups: !isEmpty(includeOtherGroups) ? includeOtherGroups : undefined,
-        groupLimit: !isEmpty(groupLimit) ? groupLimit : undefined,
-        filter: this.navigationService.getAllValuesForQueryParameter(ExplorerQueryParam.Filters)
-      }
-    };
-  }
-}
-
-export interface ExplorerQuery {
-  scope: ScopeQueryParam;
-  queryClauses: ExplorerQueryClauses;
-}
-export interface ExplorerQueryClauses {
-  selection: string[];
-  filter: string[];
-  groupBy: string[];
-  orderBy: string[];
-  groupLimit?: string;
-  includeOtherGroups?: string;
-  interval?: string;
 }
