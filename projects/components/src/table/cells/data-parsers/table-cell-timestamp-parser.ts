@@ -1,4 +1,5 @@
 import { DateCoercer } from '@hypertrace/common';
+import { isNil } from 'lodash-es';
 import { TableCellParser } from '../table-cell-parser';
 import { TableCellParserBase } from '../table-cell-parser-base';
 import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';
@@ -9,6 +10,10 @@ import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';
 export class TableCellTimestampParser extends TableCellParserBase<CellData, Value, Value> {
   private readonly dateCoercer: DateCoercer = new DateCoercer();
   public parseValue(cellData: CellData): Value {
+    if (isNil(cellData)) {
+      return undefined;
+    }
+
     switch (typeof cellData) {
       case 'number':
         return cellData;
@@ -24,5 +29,5 @@ export class TableCellTimestampParser extends TableCellParserBase<CellData, Valu
   }
 }
 
-type CellData = Date | number | string | { value: Date | number };
+type CellData = Date | number | string | { value: Date | number } | undefined | null;
 type Value = Date | number | undefined;
