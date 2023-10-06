@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { isEmpty } from 'lodash-es';
 import { EMPTY, ReplaySubject } from 'rxjs';
-import { catchError, defaultIfEmpty, filter, map, switchMap, take } from 'rxjs/operators';
+import { catchError, defaultIfEmpty, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
 import { ReplayObservable } from '../utilities/rxjs/rxjs-utils';
 import { FixedTimeRange } from './fixed-time-range';
@@ -10,6 +10,7 @@ import { TimeDuration } from './time-duration';
 import { TimeDurationService } from './time-duration.service';
 import { TimeRange } from './time-range';
 import { TimeUnit } from './time-unit.type';
+import { ParamMap } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -66,9 +67,8 @@ export class TimeRangeService {
   private initializeTimeRange(): void {
     this.navigationService.navigation$
       .pipe(
-        take(1), // Wait for first navigation
-        switchMap(activatedRoute => activatedRoute.queryParamMap), // Get the params from it
-        take(1), // Only the first set of params
+        map(activeRoute => activeRoute.snapshot.queryParamMap),
+        distinctUntilChanged((prevParamMap, currParamMap) => this.shouldNotUpdateTimeRange(prevParamMap, currParamMap)),
         map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
         filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
         map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
@@ -76,8 +76,16 @@ export class TimeRangeService {
         defaultIfEmpty(this.defaultTimeRange)
       )
       .subscribe(timeRange => {
-        this.setTimeRange(timeRange);
+        this.currentTimeRange = timeRange;
+        this.timeRangeSubject$.next(timeRange);
       });
+  }
+
+  private shouldNotUpdateTimeRange(prevParamMap: ParamMap, currParamMap: ParamMap): boolean {
+    return (
+      prevParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM) ===
+      currParamMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)
+    );
   }
 
   private timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
@@ -94,8 +102,6 @@ export class TimeRangeService {
   }
 
   private setTimeRange(newTimeRange: TimeRange): this {
-    this.currentTimeRange = newTimeRange;
-    this.timeRangeSubject$.next(newTimeRange);
     this.navigationService.addQueryParametersToUrl({
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString()
     });
