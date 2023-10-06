@@ -7,9 +7,10 @@ import { NavigationService } from '../navigation/navigation.service';
 import { FixedTimeRange } from './fixed-time-range';
 import { TimeRangeService } from './time-range.service';
 import { TimeUnit } from './time-unit.type';
+import { TimeDuration } from './time-duration';
 
 describe('Time range service', () => {
-  let timeRange$: Observable<string> = NEVER;
+  let timeRange$: Observable<string | undefined> = NEVER;
   const buildService = createServiceFactory({
     service: TimeRangeService,
     providers: [
@@ -39,6 +40,22 @@ describe('Time range service', () => {
     const spectator = buildService();
     expect(spectator.service.getCurrentTimeRange()).toEqual(
       new FixedTimeRange(new Date(1573255100253), new Date(1573255111159))
+    );
+  });
+
+  test('returns default time range when time param is missing', () => {
+    timeRange$ = of(undefined);
+    const spectator = buildService();
+    expect(spectator.service.getCurrentTimeRange()).toEqual(
+      expect.objectContaining({ duration: new TimeDuration(1, TimeUnit.Day) })
+    );
+  });
+
+  test('returns default time range when time param is invalid', () => {
+    timeRange$ = of('invalidTime');
+    const spectator = buildService();
+    expect(spectator.service.getCurrentTimeRange()).toEqual(
+      expect.objectContaining({ duration: new TimeDuration(1, TimeUnit.Day) })
     );
   });
 

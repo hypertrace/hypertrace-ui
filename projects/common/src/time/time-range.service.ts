@@ -70,7 +70,18 @@ export class TimeRangeService {
         map(activeRoute => activeRoute.snapshot.queryParamMap),
         distinctUntilChanged((prevParamMap, currParamMap) => this.shouldNotUpdateTimeRange(prevParamMap, currParamMap)),
         map(paramMap => paramMap.get(TimeRangeService.TIME_RANGE_QUERY_PARAM)), // Extract the time range value from it
-        filter((timeRangeString): timeRangeString is string => !isEmpty(timeRangeString)), // Only valid time ranges
+        filter((timeRangeString): timeRangeString is string => {
+          if (isEmpty(timeRangeString)) {
+            /**
+             * This will add the a time param to the url and re-trigger navigation$
+             */
+            this.setTimeRange(this.defaultTimeRange);
+
+            return false;
+          }
+
+          return true;
+        }), // Only valid time ranges
         map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
         catchError(() => EMPTY),
         defaultIfEmpty(this.defaultTimeRange)
