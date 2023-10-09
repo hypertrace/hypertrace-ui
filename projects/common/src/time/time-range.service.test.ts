@@ -2,7 +2,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { NEVER, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { NavigationService } from '../navigation/navigation.service';
 import { FixedTimeRange } from './fixed-time-range';
 import { TimeRangeService } from './time-range.service';
@@ -127,6 +127,28 @@ describe('Time range service', () => {
     const timeRange = new FixedTimeRange(new Date(1642296703000), new Date(1642396703000));
     expect(spectator.service.toQueryParams(timeRange)).toStrictEqual({
       ['time']: timeRange.toUrlString()
+    });
+  });
+
+  test('refresh call should emit on getTimeRangeAndChanges', () => {
+    timeRange$ = of('1d');
+    const spectator = buildService();
+    expect(spectator.service.getCurrentTimeRange()).toEqual(
+      expect.objectContaining({ duration: new TimeDuration(1, TimeUnit.Day) })
+    );
+
+    runFakeRxjs(({ cold, expectObservable }) => {
+      cold('x 5ms y', {
+        x: 1,
+        y: 2
+      })
+        .pipe(tap(() => spectator.service.refresh()))
+        .subscribe();
+
+      expectObservable(spectator.service.getTimeRangeAndChanges()).toBe('x 5ms y', {
+        x: expect.objectContaining({ duration: new TimeDuration(1, TimeUnit.Day) }),
+        y: expect.objectContaining({ duration: new TimeDuration(1, TimeUnit.Day) })
+      });
     });
   });
 });
