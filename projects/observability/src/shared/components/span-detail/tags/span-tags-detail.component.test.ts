@@ -22,7 +22,7 @@ describe('Span Tags Detail Component', () => {
     declarations: [MockComponents(LabelComponent, FilterButtonComponent), MockDirective(TooltipDirective)],
     providers: [
       mockProvider(FilterUrlService, {
-        getAllFilterAttributesForScope: jest.fn().mockReturnValue([]),
+        getAllFilterAttributesForScope: jest.fn().mockReturnValue([])
       })
     ],
     shallow: true

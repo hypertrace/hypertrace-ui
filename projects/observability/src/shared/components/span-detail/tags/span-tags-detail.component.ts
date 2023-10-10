@@ -39,7 +39,7 @@ export class SpanTagsDetailComponent implements OnChanges {
   public tagRecords$?: Observable<ListViewRecord[]>;
   public metadata$?: Observable<FilterAttribute[]>;
 
-  public constructor(private readonly filterUrlService: FilterUrlService){}
+  public constructor(private readonly filterUrlService: FilterUrlService) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.tags && this.tags) {
@@ -51,9 +51,8 @@ export class SpanTagsDetailComponent implements OnChanges {
     }
   }
 
-  public getFilterAttribute = (metadata: FilterAttribute[]): FilterAttribute | undefined => (
-    metadata.find(attribute => attribute.name.toLowerCase().includes('tags'.toLowerCase()))
-  )
+  public getFilterAttribute = (metadata: FilterAttribute[]): FilterAttribute | undefined =>
+    metadata.find(attribute => attribute.name.toLowerCase().includes('tags'.toLowerCase()));
 
   private buildTagRecords(): void {
     if (isNil(this.tags)) {

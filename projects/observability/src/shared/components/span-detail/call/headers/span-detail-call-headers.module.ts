@@ -11,7 +11,15 @@ import {
 import { SpanDetailCallHeadersComponent } from './span-detail-call-headers.component';
 
 @NgModule({
-  imports: [CommonModule, FilterButtonModule, LabelModule, ListViewModule, LoadAsyncModule, MemoizeModule, TooltipModule],
+  imports: [
+    CommonModule,
+    FilterButtonModule,
+    LabelModule,
+    ListViewModule,
+    LoadAsyncModule,
+    MemoizeModule,
+    TooltipModule
+  ],
   declarations: [SpanDetailCallHeadersComponent],
   exports: [SpanDetailCallHeadersComponent]
 })

@@ -11,7 +11,15 @@ import {
 import { SpanTagsDetailComponent } from './span-tags-detail.component';
 
 @NgModule({
-  imports: [CommonModule, FilterButtonModule, ListViewModule, LabelModule, LoadAsyncModule, MemoizeModule, TooltipModule],
+  imports: [
+    CommonModule,
+    FilterButtonModule,
+    ListViewModule,
+    LabelModule,
+    LoadAsyncModule,
+    MemoizeModule,
+    TooltipModule
+  ],
   declarations: [SpanTagsDetailComponent],
   exports: [SpanTagsDetailComponent]
 })

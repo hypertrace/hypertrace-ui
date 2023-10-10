@@ -59,10 +59,7 @@ import { SpanDetailTab } from './span-detail-tab';
               ></ht-span-response-detail>
             </ng-container>
             <ng-container *ngSwitchCase="'${SpanDetailTab.Attributes}'">
-              <ht-span-tags-detail
-                [tags]="this.spanData?.tags"
-                [scope]="this.scope"
-              ></ht-span-tags-detail>
+              <ht-span-tags-detail [tags]="this.spanData?.tags" [scope]="this.scope"></ht-span-tags-detail>
             </ng-container>
             <ng-container *ngSwitchCase="'${SpanDetailTab.ExitCalls}'">
               <ht-span-exit-calls [exitCalls]="this.spanData?.exitCallsBreakup"></ht-span-exit-calls>

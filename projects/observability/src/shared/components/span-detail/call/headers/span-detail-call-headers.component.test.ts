@@ -29,7 +29,7 @@ describe('Span Detail Call Headers Component', () => {
     imports: [CommonModule, ListViewModule, LoadAsyncModule],
     providers: [
       mockProvider(FilterUrlService, {
-        getAllFilterAttributesForScope: jest.fn().mockReturnValue([]),
+        getAllFilterAttributesForScope: jest.fn().mockReturnValue([])
       })
     ],
     shallow: true

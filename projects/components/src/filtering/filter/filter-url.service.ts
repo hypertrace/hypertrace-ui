@@ -66,15 +66,15 @@ export class FilterUrlService {
     });
   }
 
-  public getAllFilterAttributesForScope(scope: string): Observable<FilterAttribute[]>{
+  public getAllFilterAttributesForScope(scope: string): Observable<FilterAttribute[]> {
     return this.metadataService.getAllAttributes(scope).pipe(
-      map(attributesMetadata => attributesMetadata.map(
-        attributeMetadata => ({
+      map(attributesMetadata =>
+        attributesMetadata.map(attributeMetadata => ({
           name: attributeMetadata.name,
           displayName: attributeMetadata.displayName,
           type: toFilterAttributeType(attributeMetadata.type)
-        })
-      ))
+        }))
+      )
     );
   }
 

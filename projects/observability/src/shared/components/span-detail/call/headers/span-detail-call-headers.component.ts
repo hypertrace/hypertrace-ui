@@ -59,7 +59,7 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
 
   public metadata$?: Observable<FilterAttribute[]>;
 
-  public constructor(private readonly filterUrlService: FilterUrlService){}
+  public constructor(private readonly filterUrlService: FilterUrlService) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.data && this.data) {
@@ -71,9 +71,8 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
     }
   }
 
-  public getFilterAttribute = (metadata: FilterAttribute[]): FilterAttribute | undefined => (
-    metadata.find(attribute => attribute.name.toLowerCase().includes(this.fieldName?.toLowerCase()))
-  )
+  public getFilterAttribute = (metadata: FilterAttribute[]): FilterAttribute | undefined =>
+    metadata.find(attribute => attribute.name.toLowerCase().includes(this.fieldName?.toLowerCase()));
 
   private buildRecords(): void {
     if (isNil(this.data)) {
