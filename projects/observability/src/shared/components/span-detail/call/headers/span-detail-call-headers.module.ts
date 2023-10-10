@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MemoizeModule } from '@hypertrace/common';
 import {
   FilterButtonModule,
   LabelModule,
@@ -10,7 +11,7 @@ import {
 import { SpanDetailCallHeadersComponent } from './span-detail-call-headers.component';
 
 @NgModule({
-  imports: [CommonModule, FilterButtonModule, LabelModule, ListViewModule, LoadAsyncModule, TooltipModule],
+  imports: [CommonModule, FilterButtonModule, LabelModule, ListViewModule, LoadAsyncModule, MemoizeModule, TooltipModule],
   declarations: [SpanDetailCallHeadersComponent],
   exports: [SpanDetailCallHeadersComponent]
 })

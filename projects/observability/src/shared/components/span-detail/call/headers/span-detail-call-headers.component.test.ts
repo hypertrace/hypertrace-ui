@@ -2,12 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Dictionary } from '@hypertrace/common';
 import {
   FilterButtonComponent,
+  FilterUrlService,
   LabelComponent,
   ListViewComponent,
   ListViewModule,
   LoadAsyncModule,
   TooltipDirective
 } from '@hypertrace/components';
+import { mockProvider } from '@ngneat/spectator';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { MockComponents, MockDirective } from 'ng-mocks';
 import { SpanDetailCallHeadersComponent } from './span-detail-call-headers.component';
@@ -25,18 +27,22 @@ describe('Span Detail Call Headers Component', () => {
     component: SpanDetailCallHeadersComponent,
     declarations: [MockComponents(LabelComponent, FilterButtonComponent), MockDirective(TooltipDirective)],
     imports: [CommonModule, ListViewModule, LoadAsyncModule],
+    providers: [
+      mockProvider(FilterUrlService, {
+        getAllFilterAttributesForScope: jest.fn().mockReturnValue([]),
+      })
+    ],
     shallow: true
   });
 
   test('should display span detail call headers component', () => {
     spectator = createHost(
-      `<ht-span-detail-call-headers [data]="data" [title]="title" [fieldName]="fieldName" [metadata]="metadata"></ht-span-detail-call-headers>`,
+      `<ht-span-detail-call-headers [data]="data" [title]="title" [fieldName]="fieldName"></ht-span-detail-call-headers>`,
       {
         hostProps: {
           data: mockData,
           title: mockTitle,
-          fieldName: mockFieldName,
-          metadata: []
+          fieldName: mockFieldName
         }
       }
     );

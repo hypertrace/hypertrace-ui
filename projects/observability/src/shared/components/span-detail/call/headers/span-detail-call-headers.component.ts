@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Dictionary, TypedSimpleChanges } from '@hypertrace/common';
-import { FilterAttribute, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
+import { FilterAttribute, FilterUrlService, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
 
@@ -15,17 +15,17 @@ import { EMPTY, Observable, of } from 'rxjs';
         <ng-container *htLoadAsync="this.records$ as records">
           <ht-list-view
             [records]="records"
-            [metadata]="this.attributesMetadata"
+            [metadata]="this.metadata"
             display="${ListViewDisplay.Plain}"
             data-sensitive-pii
           >
             <div class="record-value" *htListViewValueRenderer="let record">
               <div class="value">{{ record.value }}</div>
               <ht-filter-button
-                *ngIf="this.attribute && this.metadata"
+                *htLoadAsync="this.metadata$ as metadata"
                 class="filter-button"
-                [attribute]="this.attribute"
-                [metadata]="this.metadata"
+                [attribute]="this.getFilterAttribute | htMemoize: metadata"
+                [metadata]="metadata"
                 [value]="record.value"
                 [subpath]="record.key"
                 htTooltip="See traces in Explorer"
@@ -42,7 +42,7 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
   public data?: Dictionary<unknown>;
 
   @Input()
-  public attributesMetadata?: Dictionary<Dictionary<unknown>>;
+  public metadata?: Dictionary<Dictionary<unknown>>;
 
   @Input()
   public title?: string;
@@ -51,25 +51,29 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
   public fieldName: string = '';
 
   @Input()
-  public metadata?: FilterAttribute[];
+  public scope?: string;
 
   public records$?: Observable<ListViewRecord[]>;
 
   public label?: string;
 
-  public attribute?: FilterAttribute;
+  public metadata$?: Observable<FilterAttribute[]>;
+
+  public constructor(private readonly filterUrlService: FilterUrlService){}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.data && this.data) {
       this.buildRecords();
     }
 
-    if (changes.fieldName && this.fieldName && changes.metadata && this.metadata) {
-      this.attribute = this.metadata?.find(attribute =>
-        attribute.name.toLowerCase().includes(this.fieldName?.toLowerCase())
-      );
+    if (changes.scope && this.scope) {
+      this.metadata$ = this.filterUrlService.getAllFilterAttributesForScope(this.scope);
     }
   }
+
+  public getFilterAttribute = (metadata: FilterAttribute[]): FilterAttribute | undefined => (
+    metadata.find(attribute => attribute.name.toLowerCase().includes(this.fieldName?.toLowerCase()))
+  )
 
   private buildRecords(): void {
     if (isNil(this.data)) {

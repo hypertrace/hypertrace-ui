@@ -1,12 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { FilterAttribute, ToggleItem } from '@hypertrace/components';
+import { ToggleItem } from '@hypertrace/components';
 import { isEmpty } from 'lodash-es';
 import { Observable, ReplaySubject } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { toFilterAttributeType } from '../../graphql/model/metadata/attribute-metadata';
-import { MetadataService } from '../../services/metadata/metadata.service';
 import { SpanData } from './span-data';
 import { SpanDetailLayoutStyle } from './span-detail-layout-style';
 import { SpanDetailTab } from './span-detail-tab';
@@ -47,7 +44,7 @@ import { SpanDetailTab } from './span-detail-tab';
                 [requestHeaders]="this.spanData?.requestHeaders"
                 [requestCookies]="this.spanData?.requestCookies"
                 [requestBody]="this.spanData?.requestBody"
-                [metadata]="this.metadata$ | async"
+                [scope]="this.scope"
               ></ht-span-request-detail>
             </ng-container>
             <ng-container *ngSwitchCase="'${SpanDetailTab.Response}'">
@@ -58,13 +55,13 @@ import { SpanDetailTab } from './span-detail-tab';
                 [responseCookies]="this.spanData?.responseCookies"
                 [cookieMetadata]="this.spanData?.responseCookiesMetadata"
                 [responseBody]="this.spanData?.responseBody"
-                [metadata]="this.metadata$ | async"
+                [scope]="this.scope"
               ></ht-span-response-detail>
             </ng-container>
             <ng-container *ngSwitchCase="'${SpanDetailTab.Attributes}'">
               <ht-span-tags-detail
                 [tags]="this.spanData?.tags"
-                [metadata]="this.metadata$ | async"
+                [scope]="this.scope"
               ></ht-span-tags-detail>
             </ng-container>
             <ng-container *ngSwitchCase="'${SpanDetailTab.ExitCalls}'">
@@ -99,7 +96,7 @@ export class SpanDetailComponent implements OnChanges {
   public activeTabLabel?: SpanDetailTab;
 
   @Input()
-  public scope?: string;
+  public scope: string = '';
 
   @Input()
   public showAttributesTab: boolean = true;
@@ -117,9 +114,6 @@ export class SpanDetailComponent implements OnChanges {
     ToggleItem<SpanDetailTab>
   >(1);
   public readonly activeTab$: Observable<ToggleItem<SpanDetailTab>> = this.activeTabSubject.asObservable();
-  public metadata$?: Observable<FilterAttribute[]>;
-
-  public constructor(private readonly metadataService: MetadataService) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.spanData) {
@@ -145,17 +139,6 @@ export class SpanDetailComponent implements OnChanges {
       if (this.tabs.length > 0) {
         this.changeTab(this.tabs[0]);
       }
-    }
-    if (changes.scope && this.scope) {
-      this.metadata$ = this.metadataService.getAllAttributes(this.scope).pipe(
-        map(attributes =>
-          attributes.map(attribute => ({
-            name: attribute.name,
-            displayName: attribute.displayName,
-            type: toFilterAttributeType(attribute.type)
-          }))
-        )
-      );
     }
   }
 

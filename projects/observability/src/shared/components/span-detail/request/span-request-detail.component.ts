@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
-import { FilterAttribute } from '@hypertrace/components';
 import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
 
 @Component({
@@ -13,7 +12,7 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
         <div class="section-item">
           <ht-span-detail-call-headers
             [data]="this.requestHeaders"
-            [metadata]="this.metadata"
+            [scope]="this.scope"
             fieldName="${RequestFieldName.Headers}"
             title="Headers"
           ></ht-span-detail-call-headers>
@@ -21,7 +20,7 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
         <div class="section-item">
           <ht-span-detail-call-headers
             [data]="this.requestCookies"
-            [metadata]="this.metadata"
+            [scope]="this.scope"
             fieldName="${RequestFieldName.Cookies}"
             title="Cookies"
           ></ht-span-detail-call-headers>
@@ -47,7 +46,7 @@ export class SpanRequestDetailComponent {
   public layout: SpanDetailLayoutStyle = SpanDetailLayoutStyle.Horizontal;
 
   @Input()
-  public metadata?: FilterAttribute[];
+  public scope?: string;
 }
 
 const enum RequestFieldName {
