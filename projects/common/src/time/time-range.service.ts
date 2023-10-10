@@ -53,15 +53,15 @@ export class TimeRangeService {
   }
 
   public setRelativeRange(value: number, unit: TimeUnit): this {
-    return this.setTimeRange(TimeRangeService.toRelativeTimeRange(value, unit));
+    return this.setTimeRangeInUrl(TimeRangeService.toRelativeTimeRange(value, unit));
   }
 
   public setFixedRange(startTime: Date, endTime: Date): this {
-    return this.setTimeRange(TimeRangeService.toFixedTimeRange(startTime, endTime));
+    return this.setTimeRangeInUrl(TimeRangeService.toFixedTimeRange(startTime, endTime));
   }
 
   public refresh(): void {
-    this.setTimeRange(this.getCurrentTimeRange());
+    this.updateTimeRangeAndEmit(this.getCurrentTimeRange());
   }
 
   private initializeTimeRange(): void {
@@ -75,7 +75,7 @@ export class TimeRangeService {
             /**
              * This will add the a time param to the url and re-trigger navigation$
              */
-            this.setTimeRange(this.defaultTimeRange);
+            this.setTimeRangeInUrl(this.defaultTimeRange);
 
             return false;
           }
@@ -87,8 +87,7 @@ export class TimeRangeService {
         defaultIfEmpty(this.defaultTimeRange)
       )
       .subscribe(timeRange => {
-        this.currentTimeRange = timeRange;
-        this.timeRangeSubject$.next(timeRange);
+        this.updateTimeRangeAndEmit(timeRange);
       });
   }
 
@@ -112,12 +111,17 @@ export class TimeRangeService {
     throw new Error(); // Caught in observable
   }
 
-  private setTimeRange(newTimeRange: TimeRange): this {
+  private setTimeRangeInUrl(newTimeRange: TimeRange): this {
     this.navigationService.addQueryParametersToUrl({
       [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString()
     });
 
     return this;
+  }
+
+  private updateTimeRangeAndEmit(timeRange: TimeRange): void {
+    this.currentTimeRange = timeRange;
+    this.timeRangeSubject$.next(timeRange);
   }
 
   public static toRelativeTimeRange(value: number, unit: TimeUnit): RelativeTimeRange {
