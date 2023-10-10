@@ -30,12 +30,13 @@ describe('Span Detail Call Headers Component', () => {
 
   test('should display span detail call headers component', () => {
     spectator = createHost(
-      `<ht-span-detail-call-headers [data]="data" [title]="title" [fieldName]="fieldName"></ht-span-detail-call-headers>`,
+      `<ht-span-detail-call-headers [data]="data" [title]="title" [fieldName]="fieldName" [metadata]="metadata"></ht-span-detail-call-headers>`,
       {
         hostProps: {
           data: mockData,
           title: mockTitle,
-          fieldName: mockFieldName
+          fieldName: mockFieldName,
+          metadata: []
         }
       }
     );

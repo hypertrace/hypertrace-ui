@@ -4,7 +4,6 @@ import { mockProvider } from '@ngneat/spectator';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { MockComponents } from 'ng-mocks';
 import { of } from 'rxjs';
-import { MetadataService } from '../../services/metadata/metadata.service';
 import { SpanDetailTitleHeaderComponent } from './headers/title/span-detail-title-header.component';
 import { SpanRequestDetailComponent } from './request/span-request-detail.component';
 import { SpanResponseDetailComponent } from './response/span-response-detail.component';
@@ -12,6 +11,7 @@ import { SpanData } from './span-data';
 import { SpanDetailComponent } from './span-detail.component';
 import { SpanDetailTab } from './span-detail-tab';
 import { SpanTagsDetailComponent } from './tags/span-tags-detail.component';
+import { MetadataService } from '../../services/metadata/metadata.service';
 
 describe('Span detail component', () => {
   let spectator: Spectator<SpanDetailComponent>;
@@ -25,8 +25,7 @@ describe('Span detail component', () => {
         SpanResponseDetailComponent,
         SpanTagsDetailComponent,
         ToggleGroupComponent,
-        SpanDetailTitleHeaderComponent,
-        ToggleGroupComponent
+        SpanDetailTitleHeaderComponent
       )
     ],
     providers: [
