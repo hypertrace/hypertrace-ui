@@ -1,12 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { Dictionary, NavigationParams } from '@hypertrace/common';
-import { FilterOperator, FilterUrlService, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
+import { Dictionary, TypedSimpleChanges } from '@hypertrace/common';
+import { FilterAttribute, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
-import { ExplorerService } from '../../../../../pages/explorer/explorer-service';
-import { ScopeQueryParam } from '../../../../../pages/explorer/explorer.component';
-import { MetadataService, toFilterAttributeType } from '@hypertrace/observability';
-import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'ht-span-detail-call-headers',
@@ -17,15 +13,23 @@ import { map, switchMap } from 'rxjs/operators';
       <ht-label [label]="this.title" class="title"></ht-label>
       <div class="container">
         <ng-container *htLoadAsync="this.records$ as records">
-          <ht-list-view [records]="records" [metadata]="metadata" display="${ListViewDisplay.Plain}" data-sensitive-pii>
+          <ht-list-view
+            [records]="records"
+            [metadata]="this.attributesMetadata"
+            display="${ListViewDisplay.Plain}"
+            data-sensitive-pii
+          >
             <div class="record-value" *htListViewValueRenderer="let record">
               <div class="value">{{ record.value }}</div>
-              <ht-explore-filter-link
-                class="filter-link"
-                [paramsOrUrl]="this.buildExploreNavigationParams | htMemoize: record | async"
+              <ht-filter-button
+                *ngIf="this.attribute && this.metadata"
+                class="filter-button"
+                [attribute]="this.attribute"
+                [metadata]="this.metadata"
+                [value]="record.value"
+                [subpath]="record.key"
                 htTooltip="See traces in Explorer"
-              >
-              </ht-explore-filter-link>
+              ></ht-filter-button>
             </div>
           </ht-list-view>
         </ng-container>
@@ -38,7 +42,7 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
   public data?: Dictionary<unknown>;
 
   @Input()
-  public metadata?: Dictionary<Dictionary<unknown>>;
+  public attributesMetadata?: Dictionary<Dictionary<unknown>>;
 
   @Input()
   public title?: string;
@@ -46,30 +50,26 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
   @Input()
   public fieldName: string = '';
 
+  @Input()
+  public metadata?: FilterAttribute[];
+
   public records$?: Observable<ListViewRecord[]>;
 
   public label?: string;
 
-  public constructor(private readonly explorerService: ExplorerService, private readonly metadataService: MetadataService, private readonly filterUrlService: FilterUrlService) {}
+  public attribute?: FilterAttribute;
 
-  public ngOnChanges(): void {
-    this.buildRecords();
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.data && this.data) {
+      this.buildRecords();
+    }
+
+    if (changes.fieldName && this.fieldName && changes.metadata && this.metadata) {
+      this.attribute = this.metadata?.find(attribute =>
+        attribute.name.toLowerCase().includes(this.fieldName?.toLowerCase())
+      );
+    }
   }
-
-  public buildExploreNavigationParams = (record: ListViewRecord): Observable<NavigationParams> =>
-  this.metadataService.getFilterAttributes(ScopeQueryParam.EndpointTraces).pipe(
-    map(value => this.filterUrlService.getUrlFilters(value.map(attribute => ({
-        name: attribute.name,
-        displayName: attribute.displayName,
-        type: toFilterAttributeType(attribute.type)
-      })))),
-    switchMap(filters => this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-      { field: this.fieldName, subpath: record.key, operator: FilterOperator.Equals, value: record.value },
-      ...filters.map(filter => (
-        { field: filter.field, subpath: filter.subpath, operator: filter.operator, value: filter.value }
-      ))
-    ]))
-  );
 
   private buildRecords(): void {
     if (isNil(this.data)) {

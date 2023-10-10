@@ -1,14 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { Dictionary, NavigationParams, TypedSimpleChanges } from '@hypertrace/common';
-import { FilterOperator, FilterUrlService, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
+import { Dictionary, TypedSimpleChanges } from '@hypertrace/common';
+import { FilterAttribute, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { ExplorerService } from '../../../../pages/explorer/explorer-service';
-import { ScopeQueryParam } from '../../../../pages/explorer/explorer.component';
-import { MetadataService } from '../../../services/metadata/metadata.service';
-import { SPAN_SCOPE } from '../../../graphql/model/schema/span';
-import { toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 
 @Component({
   selector: 'ht-span-tags-detail',
@@ -20,12 +14,15 @@ import { toFilterAttributeType } from '../../../graphql/model/metadata/attribute
         <ht-list-view [records]="tagRecords" display="${ListViewDisplay.Plain}" data-sensitive-pii>
           <div class="tag-value" *htListViewValueRenderer="let record">
             <div class="value">{{ record.value }}</div>
-            <ht-explore-filter-link
-              class="filter-link"
-              [paramsOrUrl]="this.getExploreNavigationParams | htMemoize: record | async"
+            <ht-filter-button
+              *ngIf="this.attribute && this.metadata"
+              class="filter-button"
+              [attribute]="this.attribute"
+              [metadata]="this.metadata"
+              [value]="record.value"
+              [subpath]="record.key"
               htTooltip="See traces in Explorer"
-            >
-            </ht-explore-filter-link>
+            ></ht-filter-button>
           </div>
         </ht-list-view>
       </ng-container>
@@ -36,30 +33,21 @@ export class SpanTagsDetailComponent implements OnChanges {
   @Input()
   public tags?: Dictionary<unknown>;
 
-  public tagRecords$?: Observable<ListViewRecord[]>;
+  @Input()
+  public metadata?: FilterAttribute[];
 
-  public constructor(private readonly explorerService: ExplorerService, private readonly metadataService: MetadataService, private readonly filterUrlService: FilterUrlService) {}
+  public tagRecords$?: Observable<ListViewRecord[]>;
+  public attribute?: FilterAttribute;
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.tags && this.tags) {
       this.buildTagRecords();
     }
-  }
 
-  public getExploreNavigationParams = (tag: ListViewRecord): Observable<NavigationParams> =>
-    this.metadataService.getAllAttributes(SPAN_SCOPE).pipe(
-      map(attributes => this.filterUrlService.getUrlFilters(attributes.map(attribute => ({
-        name: attribute.name,
-        displayName: attribute.displayName,
-        type: toFilterAttributeType(attribute.type)
-      })))),
-      switchMap(filters => this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-        { field: 'tags', subpath: tag.key, operator: FilterOperator.Equals, value: tag.value },
-        ...filters.map(filter => (
-          { field: filter.field, subpath: filter.subpath, operator: filter.operator, value: filter.value }
-        ))
-      ]))
-    );
+    if (changes.metadata && this.metadata) {
+      this.attribute = this.metadata?.find(attribute => attribute.name.toLowerCase().includes('tags'.toLowerCase()));
+    }
+  }
 
   private buildTagRecords(): void {
     if (isNil(this.tags)) {

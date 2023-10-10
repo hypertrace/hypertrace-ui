@@ -1,12 +1,16 @@
 import { fakeAsync } from '@angular/core/testing';
 import { ToggleGroupComponent } from '@hypertrace/components';
-import { SpanDetailTab } from '@hypertrace/observability';
+import { mockProvider } from '@ngneat/spectator';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
-import { MockComponent } from 'ng-mocks';
+import { MockComponents } from 'ng-mocks';
+import { of } from 'rxjs';
+import { MetadataService } from '../../services/metadata/metadata.service';
+import { SpanDetailTitleHeaderComponent } from './headers/title/span-detail-title-header.component';
 import { SpanRequestDetailComponent } from './request/span-request-detail.component';
 import { SpanResponseDetailComponent } from './response/span-response-detail.component';
 import { SpanData } from './span-data';
 import { SpanDetailComponent } from './span-detail.component';
+import { SpanDetailTab } from './span-detail-tab';
 import { SpanTagsDetailComponent } from './tags/span-tags-detail.component';
 
 describe('Span detail component', () => {
@@ -16,10 +20,19 @@ describe('Span detail component', () => {
     component: SpanDetailComponent,
     shallow: true,
     declarations: [
-      MockComponent(SpanRequestDetailComponent),
-      MockComponent(SpanResponseDetailComponent),
-      MockComponent(SpanTagsDetailComponent),
-      MockComponent(ToggleGroupComponent)
+      MockComponents(
+        SpanRequestDetailComponent,
+        SpanResponseDetailComponent,
+        SpanTagsDetailComponent,
+        ToggleGroupComponent,
+        SpanDetailTitleHeaderComponent,
+        ToggleGroupComponent
+      )
+    ],
+    providers: [
+      mockProvider(MetadataService, {
+        getAllAttributes: jest.fn().mockReturnValue(of([]))
+      })
     ]
   });
 
