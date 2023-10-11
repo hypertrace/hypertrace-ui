@@ -1,6 +1,16 @@
 import { Injectable } from '@angular/core';
 import { NavigationService, QueryParamObject } from '@hypertrace/common';
-import { Filter, FilterAttribute, FilterBuilderLookupService, FilterParserLookupService, IncompleteFilter, areCompatibleFilters, fromUrlFilterOperator, splitFilterStringByOperator, toUrlFilterOperator } from '@hypertrace/components';
+import {
+  Filter,
+  FilterAttribute,
+  FilterBuilderLookupService,
+  FilterParserLookupService,
+  IncompleteFilter,
+  areCompatibleFilters,
+  fromUrlFilterOperator,
+  splitFilterStringByOperator,
+  toUrlFilterOperator
+} from '@hypertrace/components';
 import { isEmpty, remove } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
