@@ -61,7 +61,8 @@ export class TimeRangeService {
   }
 
   public refresh(): void {
-    this.updateTimeRangeAndEmit(this.getCurrentTimeRange());
+    const newTimeRange = this.timeRangeFromUrlString(this.getCurrentTimeRange().toUrlString());
+    this.updateTimeRangeAndEmit(newTimeRange);
   }
 
   private initializeTimeRange(): void {
