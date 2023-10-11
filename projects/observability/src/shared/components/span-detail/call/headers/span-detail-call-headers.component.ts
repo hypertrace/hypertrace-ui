@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Dictionary, TypedSimpleChanges } from '@hypertrace/common';
-import { FilterAttribute, FilterUrlService, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
+import { FilterAttribute, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { toFilterAttributeType } from '../../../../graphql/model/metadata/attribute-metadata';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
 
 @Component({
   selector: 'ht-span-detail-call-headers',
@@ -22,7 +25,7 @@ import { EMPTY, Observable, of } from 'rxjs';
             <div class="record-value" *htListViewValueRenderer="let record">
               <div class="value">{{ record.value }}</div>
               <ht-filter-button
-                *htLoadAsync="this.metadata$ as metadata"
+                *htLetAsync="this.metadata$ as metadata"
                 class="filter-button"
                 [attribute]="this.getFilterAttribute | htMemoize: metadata"
                 [metadata]="metadata"
@@ -59,7 +62,7 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
 
   public metadata$?: Observable<FilterAttribute[]>;
 
-  public constructor(private readonly filterUrlService: FilterUrlService) {}
+  public constructor(private readonly metadataService: MetadataService) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.data && this.data) {
@@ -67,12 +70,20 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
     }
 
     if (changes.scope && this.scope) {
-      this.metadata$ = this.filterUrlService.getAllFilterAttributesForScope(this.scope);
+      this.metadata$ = this.metadataService.getAllAttributes(this.scope).pipe(
+        map(metadata =>
+          metadata.map(attributeMetadata => ({
+            name: attributeMetadata.name,
+            displayName: attributeMetadata.displayName,
+            type: toFilterAttributeType(attributeMetadata.type)
+          }))
+        )
+      );
     }
   }
 
-  public getFilterAttribute = (metadata: FilterAttribute[]): FilterAttribute | undefined =>
-    metadata.find(attribute => attribute.name.toLowerCase().includes(this.fieldName?.toLowerCase()));
+  public getFilterAttribute = (metadata?: FilterAttribute[]): FilterAttribute | undefined =>
+    metadata?.find(attribute => attribute.name.toLowerCase().includes(this.fieldName?.toLowerCase()));
 
   private buildRecords(): void {
     if (isNil(this.data)) {

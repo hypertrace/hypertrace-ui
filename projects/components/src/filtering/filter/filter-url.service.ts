@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { NavigationService, QueryParamObject } from '@hypertrace/common';
-import { MetadataService, toFilterAttributeType } from '@hypertrace/observability';
 import { isEmpty, remove } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -21,8 +20,7 @@ export class FilterUrlService {
   public constructor(
     private readonly navigationService: NavigationService,
     private readonly filterBuilderLookupService: FilterBuilderLookupService,
-    private readonly filterParserLookupService: FilterParserLookupService,
-    private readonly metadataService: MetadataService
+    private readonly filterParserLookupService: FilterParserLookupService
   ) {}
 
   public getUrlFilteringStateChanges$(attributes: FilterAttribute[]): Observable<UrlFilteringState> {
@@ -64,18 +62,6 @@ export class FilterUrlService {
 
       return this.filterBuilderLookupService.lookup(attribute.type).buildPartialFilter(attribute);
     });
-  }
-
-  public getAllFilterAttributesForScope(scope: string): Observable<FilterAttribute[]> {
-    return this.metadataService.getAllAttributes(scope).pipe(
-      map(attributesMetadata =>
-        attributesMetadata.map(attributeMetadata => ({
-          name: attributeMetadata.name,
-          displayName: attributeMetadata.displayName,
-          type: toFilterAttributeType(attributeMetadata.type)
-        }))
-      )
-    );
   }
 
   public getUrlFilters(attributes: FilterAttribute[]): Filter[] {

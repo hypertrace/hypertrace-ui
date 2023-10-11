@@ -4,6 +4,7 @@ import { MemoizeModule } from '@hypertrace/common';
 import {
   FilterButtonModule,
   LabelModule,
+  LetAsyncModule,
   ListViewModule,
   LoadAsyncModule,
   TooltipModule
@@ -16,6 +17,7 @@ import { SpanTagsDetailComponent } from './span-tags-detail.component';
     FilterButtonModule,
     ListViewModule,
     LabelModule,
+    LetAsyncModule,
     LoadAsyncModule,
     MemoizeModule,
     TooltipModule

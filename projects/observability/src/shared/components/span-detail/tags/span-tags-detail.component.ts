@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Dictionary, TypedSimpleChanges } from '@hypertrace/common';
-import { FilterAttribute, FilterUrlService, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
+import { FilterAttribute, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
+import { MetadataService } from '../../../services/metadata/metadata.service';
 
 @Component({
   selector: 'ht-span-tags-detail',
@@ -15,7 +18,7 @@ import { EMPTY, Observable, of } from 'rxjs';
           <div class="tag-value" *htListViewValueRenderer="let record">
             <div class="value">{{ record.value }}</div>
             <ht-filter-button
-              *htLoadAsync="this.metadata$ as metadata"
+              *htLetAsync="this.metadata$ as metadata"
               class="filter-button"
               [attribute]="this.getFilterAttribute | htMemoize: metadata"
               [metadata]="metadata"
@@ -39,7 +42,7 @@ export class SpanTagsDetailComponent implements OnChanges {
   public tagRecords$?: Observable<ListViewRecord[]>;
   public metadata$?: Observable<FilterAttribute[]>;
 
-  public constructor(private readonly filterUrlService: FilterUrlService) {}
+  public constructor(private readonly metadataService: MetadataService) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (changes.tags && this.tags) {
@@ -47,12 +50,20 @@ export class SpanTagsDetailComponent implements OnChanges {
     }
 
     if (changes.scope && this.scope) {
-      this.metadata$ = this.filterUrlService.getAllFilterAttributesForScope(this.scope);
+      this.metadata$ = this.metadataService.getAllAttributes(this.scope).pipe(
+        map(metadata =>
+          metadata.map(attributeMetadata => ({
+            name: attributeMetadata.name,
+            displayName: attributeMetadata.displayName,
+            type: toFilterAttributeType(attributeMetadata.type)
+          }))
+        )
+      );
     }
   }
 
-  public getFilterAttribute = (metadata: FilterAttribute[]): FilterAttribute | undefined =>
-    metadata.find(attribute => attribute.name.toLowerCase().includes('tags'.toLowerCase()));
+  public getFilterAttribute = (metadata?: FilterAttribute[]): FilterAttribute | undefined =>
+    metadata?.find(attribute => attribute.name.toLowerCase().includes('tags'.toLowerCase()));
 
   private buildTagRecords(): void {
     if (isNil(this.tags)) {

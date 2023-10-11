@@ -1,8 +1,7 @@
 import { NavigationService, QueryParamObject } from '@hypertrace/common';
-import { MetadataService } from '@hypertrace/observability';
 import { getAllTestFilterAttributes, getTestFilterAttribute } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
-import { EMPTY, of } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { NumberFilterBuilder } from './builder/types/number-filter-builder';
 import { StringFilterBuilder } from './builder/types/string-filter-builder';
 import { StringMapFilterBuilder } from './builder/types/string-map-filter-builder';
@@ -66,9 +65,6 @@ describe('Filter URL service', () => {
         addQueryParametersToUrl: (paramObject: QueryParamObject) =>
           (testQueryParamObject = { ...testQueryParamObject, ...paramObject }),
         getAllValuesForQueryParameter: (param: string) => testQueryParamObject[param] ?? []
-      }),
-      mockProvider(MetadataService, {
-        getAllAttributes: jest.fn().mockReturnValue(of([]))
       })
     ]
   });

@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import {
   FilterButtonComponent,
-  FilterUrlService,
   LabelComponent,
   ListViewComponent,
   ListViewModule,
   LoadAsyncModule,
   TooltipDirective
 } from '@hypertrace/components';
-import { mockProvider } from '@ngneat/spectator';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
-import { MockComponents, MockDirective } from 'ng-mocks';
+import { MockComponents, MockDirective, MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
+import { MetadataService } from '../../../services/metadata/metadata.service';
 import { SpanTagsDetailComponent } from './span-tags-detail.component';
 
 describe('Span Tags Detail Component', () => {
@@ -20,12 +20,12 @@ describe('Span Tags Detail Component', () => {
     component: SpanTagsDetailComponent,
     imports: [CommonModule, ListViewModule, LoadAsyncModule],
     declarations: [MockComponents(LabelComponent, FilterButtonComponent), MockDirective(TooltipDirective)],
+    shallow: true,
     providers: [
-      mockProvider(FilterUrlService, {
-        getAllFilterAttributesForScope: jest.fn().mockReturnValue([])
+      MockProvider(MetadataService, {
+        getAllAttributes: jest.fn().mockReturnValue(of([]))
       })
-    ],
-    shallow: true
+    ]
   });
 
   test('should display tag records', () => {
