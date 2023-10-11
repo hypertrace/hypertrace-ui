@@ -403,3 +403,6 @@ export * from './shared/utils/time-range';
 
 // CSV Downloader Service
 export * from './shared/services/global-csv-download/global-csv-download.service';
+
+// Filter Url Service
+export * from './shared/services/filter-url/filter-url.service';

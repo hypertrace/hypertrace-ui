@@ -1,14 +1,9 @@
 import { Injectable } from '@angular/core';
 import { NavigationService, QueryParamObject } from '@hypertrace/common';
+import { Filter, FilterAttribute, FilterBuilderLookupService, FilterParserLookupService, IncompleteFilter, areCompatibleFilters, fromUrlFilterOperator, splitFilterStringByOperator, toUrlFilterOperator } from '@hypertrace/components';
 import { isEmpty, remove } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FilterBuilderLookupService } from './builder/filter-builder-lookup.service';
-import { areCompatibleFilters, Filter, IncompleteFilter } from './filter';
-import { FilterAttribute } from './filter-attribute';
-import { fromUrlFilterOperator, toUrlFilterOperator } from './filter-operators';
-import { FilterParserLookupService } from './parser/filter-parser-lookup.service';
-import { splitFilterStringByOperator } from './parser/parsed-filter';
 
 @Injectable({
   providedIn: 'root'

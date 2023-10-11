@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
+import { FilterUrlService } from '@hypertrace/observability';
 import { isNil } from 'lodash-es';
 import { IconSize } from '../../icon/icon-size';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
 import { Filter, FilterValue } from '../filter/filter';
 import { FilterAttribute } from '../filter/filter-attribute';
-import { FilterUrlService } from '../filter/filter-url.service';
 
 @Component({
   selector: 'ht-filter-button',

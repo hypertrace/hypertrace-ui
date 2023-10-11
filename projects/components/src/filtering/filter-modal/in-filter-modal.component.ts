@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { sortUnknown } from '@hypertrace/common';
+import { FilterUrlService } from '@hypertrace/observability';
 import { ButtonVariant } from '../../button/button';
 import { ModalRef, MODAL_DATA } from '../../modal/modal';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
 import { FilterValue, IncompleteFilter } from '../filter/filter';
 import { FilterAttribute } from '../filter/filter-attribute';
 import { FilterOperator } from '../filter/filter-operators';
-import { FilterUrlService } from '../filter/filter-url.service';
 
 @Component({
   selector: 'ht-in-filter-modal',

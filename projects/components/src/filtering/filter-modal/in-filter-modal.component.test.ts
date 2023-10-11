@@ -1,10 +1,10 @@
+import { FilterUrlService } from '@hypertrace/observability';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { ModalRef, MODAL_DATA } from '../../modal/modal';
 import { FilterBuilderLookupService } from '../filter/builder/filter-builder-lookup.service';
 import { NumberFilterBuilder } from '../filter/builder/types/number-filter-builder';
 import { FilterAttribute } from '../filter/filter-attribute';
 import { FilterAttributeType } from '../filter/filter-attribute-type';
-import { FilterUrlService } from '../filter/filter-url.service';
 import { InFilterModalComponent } from './in-filter-modal.component';
 
 describe('In Filter Modal component', () => {

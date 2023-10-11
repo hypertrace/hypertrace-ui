@@ -1,14 +1,11 @@
 import { NavigationService, QueryParamObject } from '@hypertrace/common';
+import { Filter, FilterAttribute, FilterAttributeType, FilterOperator, IncompleteFilter } from '@hypertrace/components';
 import { getAllTestFilterAttributes, getTestFilterAttribute } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
-import { NumberFilterBuilder } from './builder/types/number-filter-builder';
-import { StringFilterBuilder } from './builder/types/string-filter-builder';
-import { StringMapFilterBuilder } from './builder/types/string-map-filter-builder';
-import { Filter, IncompleteFilter } from './filter';
-import { FilterAttribute } from './filter-attribute';
-import { FilterAttributeType } from './filter-attribute-type';
-import { FilterOperator } from './filter-operators';
+import { NumberFilterBuilder } from '../../../../../components/src/filtering/filter/builder/types/number-filter-builder';
+import { StringFilterBuilder } from '../../../../../components/src/filtering/filter/builder/types/string-filter-builder';
+import { StringMapFilterBuilder } from '../../../../../components/src/filtering/filter/builder/types/string-map-filter-builder';
 import { FilterUrlService } from './filter-url.service';
 
 describe('Filter URL service', () => {

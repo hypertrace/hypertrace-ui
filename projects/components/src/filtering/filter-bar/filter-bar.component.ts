@@ -12,13 +12,13 @@ import {
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
+import { FilterUrlService } from '@hypertrace/observability';
 import { isEqual } from 'lodash-es';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { IconSize } from '../../icon/icon-size';
 import { Filter } from '../filter/filter';
 import { FilterAttribute } from '../filter/filter-attribute';
-import { FilterUrlService } from '../filter/filter-url.service';
 import { FilterBarService } from './filter-bar.service';
 import { FilterChipComponent } from './filter-chip/filter-chip.component';
 
