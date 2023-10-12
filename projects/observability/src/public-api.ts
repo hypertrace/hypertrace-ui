@@ -200,6 +200,10 @@ export * from './pages/explorer/explorer-dashboard-builder';
 export * from './pages/explorer/explorer.component';
 
 export * from './pages/explorer/explorer-url-parser.service';
+export * from './shared/components/explore-query-editor/explore-visualization-builder';
+
+// GraphQl Group By
+export * from './shared/graphql/model/schema/groupby/graphql-group-by';
 
 // Explore Data source
 export * from './shared/dashboard/data/graphql/table/explore/explore-table-data-source.model';
