@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FeatureState, NavigationParams, NavigationParamsType, TimeRangeService } from '@hypertrace/common';
+import { FeatureState, NavigationParams, NavigationParamsType } from '@hypertrace/common';
 import { IconSize } from '../../icon/icon-size';
 import { NavItemLinkConfig, NavViewStyle } from '../navigation.config';
 
@@ -69,18 +69,8 @@ export class NavItemComponent {
       replaceCurrentHistory: item.replaceCurrentHistory
     };
 
-    if (this.config.pageLevelTimeRangeIsEnabled && this.config.timeRangeResolver) {
-      return {
-        ...navParams,
-        queryParams: this.timeRangeService.toQueryParams(this.config.timeRangeResolver(), true)
-      };
-    }
-
     return navParams;
   };
 
-  public constructor(
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly timeRangeService: TimeRangeService
-  ) {}
+  public constructor(private readonly activatedRoute: ActivatedRoute) {}
 }
