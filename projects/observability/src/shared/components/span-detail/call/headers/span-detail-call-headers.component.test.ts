@@ -1,18 +1,18 @@
-import { Dictionary, MemoizeModule, NavigationParamsType } from '@hypertrace/common';
+import { CommonModule } from '@angular/common';
+import { Dictionary } from '@hypertrace/common';
 import {
+  FilterButtonComponent,
   LabelComponent,
   ListViewComponent,
   ListViewModule,
   LoadAsyncModule,
   TooltipDirective
 } from '@hypertrace/components';
-import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
-import { MockComponents, MockDirective } from 'ng-mocks';
-import { of } from 'rxjs';
+import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { MockComponents, MockDirective, MockProvider } from 'ng-mocks';
 import { SpanDetailCallHeadersComponent } from './span-detail-call-headers.component';
-import { CommonModule } from '@angular/common';
-import { ExplorerService } from '../../../../../pages/explorer/explorer-service';
-import { ExploreFilterLinkComponent } from '../../../explore-filter-link/explore-filter-link.component';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
+import { of } from 'rxjs';
 
 describe('Span Detail Call Headers Component', () => {
   let spectator: Spectator<SpanDetailCallHeadersComponent>;
@@ -25,17 +25,12 @@ describe('Span Detail Call Headers Component', () => {
 
   const createHost = createHostFactory({
     component: SpanDetailCallHeadersComponent,
-    declarations: [MockComponents(LabelComponent, ExploreFilterLinkComponent), MockDirective(TooltipDirective)],
-    imports: [CommonModule, MemoizeModule, ListViewModule, LoadAsyncModule],
+    declarations: [MockComponents(LabelComponent, FilterButtonComponent), MockDirective(TooltipDirective)],
+    imports: [CommonModule, ListViewModule, LoadAsyncModule],
     shallow: true,
     providers: [
-      mockProvider(ExplorerService, {
-        buildNavParamsWithFilters: jest.fn().mockReturnValue(
-          of({
-            navType: NavigationParamsType.InApp,
-            path: 'test-'
-          })
-        )
+      MockProvider(MetadataService, {
+        getAllAttributes: jest.fn().mockReturnValue(of([]))
       })
     ]
   });

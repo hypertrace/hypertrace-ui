@@ -15,12 +15,11 @@
     display: grid;
     grid-template-columns: auto min-content;
 
-    .filter-link {
+    .filter-button {
       visibility: hidden;
-      margin-left: 12px;
     }
 
-    &:hover .filter-link {
+    &:hover .filter-button {
       visibility: visible;
     }
   }
