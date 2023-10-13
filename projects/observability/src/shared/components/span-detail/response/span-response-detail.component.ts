@@ -12,8 +12,9 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
         <div class="section-item">
           <ht-span-detail-call-headers
             [data]="this.responseHeaders"
-            title="Headers"
+            [scope]="this.scope"
             fieldName="${ResponseFieldName.Headers}"
+            title="Headers"
           ></ht-span-detail-call-headers>
         </div>
 
@@ -21,6 +22,7 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
           <ht-span-detail-call-headers
             [data]="this.responseCookies"
             [metadata]="this.cookieMetadata"
+            [scope]="this.scope"
             fieldName="${ResponseFieldName.Cookies}"
             title="Cookies"
           ></ht-span-detail-call-headers>
@@ -47,6 +49,9 @@ export class SpanResponseDetailComponent {
 
   @Input()
   public layout: SpanDetailLayoutStyle = SpanDetailLayoutStyle.Horizontal;
+
+  @Input()
+  public scope?: string;
 }
 
 const enum ResponseFieldName {
