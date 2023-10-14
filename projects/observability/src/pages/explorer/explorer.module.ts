@@ -23,7 +23,8 @@ import { ExplorerComponent } from './explorer.component';
     ToggleGroupModule,
     LetAsyncModule
   ],
-  declarations: [ExplorerComponent]
+  declarations: [ExplorerComponent],
+  exports: [ExplorerComponent]
 })
 export class ExplorerModule {
   public static withDashboardBuilderFactory(builderFactory: FactorySansProvider): ModuleWithProviders<ExplorerModule> {

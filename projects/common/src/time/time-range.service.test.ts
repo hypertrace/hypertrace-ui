@@ -1,14 +1,16 @@
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
+import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
-import { NEVER, Observable, of, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { NavigationService, QueryParamObject } from '../navigation/navigation.service';
+import { NEVER, Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { NavigationService } from '../navigation/navigation.service';
 import { FixedTimeRange } from './fixed-time-range';
 import { TimeRangeService } from './time-range.service';
+import { TimeUnit } from './time-unit.type';
+import { TimeDuration } from './time-duration';
 
-describe('Time range(TR) service', () => {
-  let timeRange$: Observable<string> = NEVER;
+describe('Time range service', () => {
+  let timeRange$: Observable<string | undefined> = NEVER;
   const buildService = createServiceFactory({
     service: TimeRangeService,
     providers: [
@@ -17,19 +19,13 @@ describe('Time range(TR) service', () => {
           return timeRange$.pipe(
             map(
               initialTrString =>
-                (({
-                  queryParamMap: of(convertToParamMap({ time: initialTrString, refresh: 'true' })),
-                  snapshot: { queryParamMap: convertToParamMap({ time: initialTrString, refresh: 'true' }) }
-                } as unknown) as ActivatedRoute)
+                ({
+                  snapshot: { queryParamMap: convertToParamMap({ time: initialTrString }) }
+                } as ActivatedRoute)
             )
           );
         },
-        getQueryParameter: jest
-          .fn()
-          .mockReturnValueOnce('1573255100253-1573255111159')
-          .mockReturnValue('1573255111159-1573455111990'),
-        getCurrentActivatedRoute: () =>
-          (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute)
+        addQueryParametersToUrl: jest.fn()
       })
     ]
   });
@@ -40,152 +36,119 @@ describe('Time range(TR) service', () => {
   });
 
   test('returns time range when requested after init', () => {
-    runFakeRxjs(({ cold, expectObservable }) => {
-      timeRange$ = cold('x|', {
-        x: '1573255100253-1573255111159'
-      });
+    timeRange$ = of('1573255100253-1573255111159');
+    const spectator = buildService();
+    expect(spectator.service.getCurrentTimeRange()).toEqual(
+      new FixedTimeRange(new Date(1573255100253), new Date(1573255111159))
+    );
+  });
 
-      const spectator = buildService();
+  test('returns default time range when time param is missing', () => {
+    timeRange$ = of(undefined);
+    const spectator = buildService();
+    expect(spectator.service.getCurrentTimeRange()).toEqual(
+      expect.objectContaining({ duration: new TimeDuration(1, TimeUnit.Day) })
+    );
+  });
 
-      expect(() => spectator.service.getCurrentTimeRange()).toThrow();
-
-      expectObservable(spectator.service.getTimeRangeAndChanges()).toBe('x', {
-        x: new FixedTimeRange(new Date(1573255100253), new Date(1573255111159))
-      });
-    });
+  test('returns default time range when time param is invalid', () => {
+    timeRange$ = of('invalidTime');
+    const spectator = buildService();
+    expect(spectator.service.getCurrentTimeRange()).toEqual(
+      expect.objectContaining({ duration: new TimeDuration(1, TimeUnit.Day) })
+    );
   });
 
   test('returns observable that emits future time range changes including initialization', () => {
-    const firstArrivingTimeRange = new FixedTimeRange(new Date(1573255100253), new Date(1573255111159));
-    const secondArrivingTimeRange = new FixedTimeRange(new Date(1573255111159), new Date(1573455111990));
-
+    const lateArrivingTimeRange = new FixedTimeRange(new Date(1573255111159), new Date(1573255111160));
     runFakeRxjs(({ cold, expectObservable }) => {
-      const spectator = buildService({
-        providers: [
-          mockProvider(NavigationService, {
-            navigation$: cold('-x---y', {
-              x: ({
-                queryParamMap: of(convertToParamMap({ time: firstArrivingTimeRange.toUrlString(), refresh: 'true' })),
-                snapshot: {
-                  queryParamMap: convertToParamMap({ time: firstArrivingTimeRange.toUrlString(), refresh: 'true' })
-                }
-              } as unknown) as ActivatedRoute,
-              y: ({
-                queryParamMap: of(convertToParamMap({ time: secondArrivingTimeRange.toUrlString(), refresh: 'true' })),
-                snapshot: {
-                  queryParamMap: convertToParamMap({ time: secondArrivingTimeRange.toUrlString(), refresh: 'true' })
-                }
-              } as unknown) as ActivatedRoute
-            }),
-            getQueryParameter: jest.fn().mockReturnValue(secondArrivingTimeRange.toUrlString()),
-            getCurrentActivatedRoute: () =>
-              (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute)
-          })
-        ]
+      timeRange$ = cold('1ms x 3ms y', {
+        x: '1573255100253-1573255111159',
+        y: lateArrivingTimeRange.toUrlString()
       });
 
-      const recordedTimeRanges = recordObservable(spectator.service.getTimeRangeAndChanges());
-
+      const spectator = buildService();
       expect(() => spectator.service.getCurrentTimeRange()).toThrow();
 
-      expectObservable(recordedTimeRanges).toBe('-x---y', {
-        x: firstArrivingTimeRange,
-        y: secondArrivingTimeRange
+      expectObservable(spectator.service.getTimeRangeAndChanges()).toBe('1ms x 3ms y', {
+        x: new FixedTimeRange(new Date(1573255100253), new Date(1573255111159)),
+        y: lateArrivingTimeRange
       });
     });
   });
 
-  test('Emits default TR when set, then subsequent first and second TRs from query param changes', () => {
-    const defaultTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100999));
-    const firstArrivingTimeRange = new FixedTimeRange(new Date(1573255100253), new Date(1573255111159));
-    const secondArrivingTimeRange = new FixedTimeRange(new Date(1573255111159), new Date(1573455111990));
-    const mockNavigation$ = new Subject();
-    runFakeRxjs(({ expectObservable, cold }) => {
-      const spectator = buildService({
-        providers: [
-          mockProvider(NavigationService, {
-            navigation$: mockNavigation$.asObservable().pipe(
-              map(
-                timeRangeString =>
-                  (({
-                    queryParamMap: of(convertToParamMap({ time: timeRangeString, refresh: 'true' })),
-                    snapshot: {
-                      queryParamMap: convertToParamMap({ time: timeRangeString, refresh: 'true' })
-                    }
-                  } as unknown) as ActivatedRoute)
-              )
-            ),
-            addQueryParametersToUrl: (newParams: QueryParamObject) => mockNavigation$.next(newParams.time as string),
-            getQueryParameter: jest
-              .fn()
-              .mockReturnValueOnce(firstArrivingTimeRange.toUrlString())
-              .mockReturnValue(secondArrivingTimeRange.toUrlString()),
-            getCurrentActivatedRoute: () =>
-              (({ snapshot: { queryParams: { time: 'test-value' } } } as unknown) as ActivatedRoute),
-            replaceQueryParametersInUrl: jest.fn()
-          })
-        ]
+  test('returns observable that emits current time range', () => {
+    runFakeRxjs(() => {
+      timeRange$ = of('1573255100253-1573255111159');
+
+      const spectator = buildService();
+      expect(spectator.service.getCurrentTimeRange()).toEqual(
+        new FixedTimeRange(new Date(1573255100253), new Date(1573255111159))
+      );
+    });
+  });
+
+  test('returns observable that emits later changes', () => {
+    const lateArrivingTimeRange = new FixedTimeRange(new Date(1573255111159), new Date(1573255111160));
+
+    runFakeRxjs(({ cold, expectObservable }) => {
+      timeRange$ = cold('x 5ms y', {
+        x: '1573255100253-1573255111159',
+        y: lateArrivingTimeRange.toUrlString()
       });
 
-      cold('x').subscribe(() => spectator.service.setDefaultTimeRange(defaultTimeRange));
+      const spectator = buildService();
+      expect(() => spectator.service.getCurrentTimeRange()).toThrow();
 
-      cold('2ms y').subscribe(() =>
-        spectator.service.setFixedRange(firstArrivingTimeRange.startTime, firstArrivingTimeRange.endTime)
-      );
-
-      cold('5ms z').subscribe(() =>
-        spectator.service.setFixedRange(secondArrivingTimeRange.startTime, secondArrivingTimeRange.endTime)
-      );
-
-      expectObservable(spectator.service.getTimeRangeAndChanges()).toBe('x 1ms y 2ms z', {
-        x: defaultTimeRange,
-        y: firstArrivingTimeRange,
-        z: secondArrivingTimeRange
+      expectObservable(spectator.service.getTimeRangeAndChanges()).toBe('x 5ms y', {
+        x: new FixedTimeRange(new Date(1573255100253), new Date(1573255111159)),
+        y: lateArrivingTimeRange
       });
     });
   });
 
-  test('Skips invalid URL time range and emits default TR when set', () => {
-    const invalidTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100277));
-    const defaultTimeRange = new FixedTimeRange(new Date(1573277100277), new Date(1573277100999));
-    const mockNavigation$ = new Subject();
-    runFakeRxjs(({ expectObservable }) => {
-      const spectator = buildService({
-        providers: [
-          mockProvider(NavigationService, {
-            navigation$: mockNavigation$.asObservable().pipe(
-              map(
-                timeRangeString =>
-                  (({
-                    queryParamMap: of(convertToParamMap({ time: timeRangeString, refresh: 'true' })),
-                    snapshot: {
-                      queryParamMap: convertToParamMap({ time: timeRangeString, refresh: 'true' })
-                    }
-                  } as unknown) as ActivatedRoute)
-              )
-            ),
-            addQueryParametersToUrl: (newParams: QueryParamObject) => mockNavigation$.next(newParams.time as string),
-            getQueryParameter: jest.fn().mockReturnValue(defaultTimeRange.toUrlString())
-          })
-        ]
-      });
+  test('set methods should call navigation service methods', () => {
+    const fixedRange = new FixedTimeRange(new Date(1573255111159), new Date(1573255111160));
 
-      mockNavigation$.next(invalidTimeRange.toUrlString());
+    const spectator = buildService();
+    spectator.service.setFixedRange(fixedRange.startTime, fixedRange.endTime);
+    expect(spectator.inject(NavigationService).addQueryParametersToUrl).toHaveBeenLastCalledWith({
+      ['time']: fixedRange.toUrlString()
+    });
 
-      spectator.service.setDefaultTimeRange(defaultTimeRange);
-
-      expectObservable(spectator.service.getTimeRangeAndChanges()).toBe('x', {
-        x: defaultTimeRange
-      });
+    spectator.service.setRelativeRange(1, TimeUnit.Hour);
+    expect(spectator.inject(NavigationService).addQueryParametersToUrl).toHaveBeenLastCalledWith({
+      ['time']: '1h'
     });
   });
 
   test('returns custom time filter', () => {
     const spectator = buildService();
-    expect(
-      spectator.service.toQueryParams(new FixedTimeRange(new Date(1642296703000), new Date(1642396703000)))
-    ).toStrictEqual({
-      ['time']: new FixedTimeRange(new Date(1642296703000), new Date(1642396703000)).toUrlString()
+    const timeRange = new FixedTimeRange(new Date(1642296703000), new Date(1642396703000));
+    expect(spectator.service.toQueryParams(timeRange)).toStrictEqual({
+      ['time']: timeRange.toUrlString()
+    });
+  });
+
+  test('refresh call should emit on getTimeRangeAndChanges', () => {
+    timeRange$ = of('1d');
+    const spectator = buildService();
+    expect(spectator.service.getCurrentTimeRange()).toEqual(
+      expect.objectContaining({ duration: new TimeDuration(1, TimeUnit.Day) })
+    );
+
+    runFakeRxjs(({ cold, expectObservable }) => {
+      cold('x 5ms y', {
+        x: 1,
+        y: 2
+      })
+        .pipe(tap(() => spectator.service.refresh()))
+        .subscribe();
+
+      expectObservable(spectator.service.getTimeRangeAndChanges()).toBe('x 5ms y', {
+        x: expect.objectContaining({ duration: new TimeDuration(1, TimeUnit.Day) }),
+        y: expect.objectContaining({ duration: new TimeDuration(1, TimeUnit.Day) })
+      });
     });
   });
 });

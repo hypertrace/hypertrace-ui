@@ -8,6 +8,7 @@
     @include body-1-medium($gray-7);
     border-radius: 4px;
     height: 36px;
+    width: 100%;
 
     &.with-background {
       border: 1px solid $gray-1;

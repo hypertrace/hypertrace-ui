@@ -12,5 +12,19 @@
   .container {
     overflow: auto;
     flex: 1;
+
+    .record-value {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto min-content;
+
+      .filter-button {
+        visibility: hidden;
+      }
+
+      &:hover .filter-button {
+        visibility: visible;
+      }
+    }
   }
 }

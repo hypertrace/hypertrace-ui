@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy-radio';
 import { InfoIconModule } from '../info-icon/info-icon.module';
 import { LabelModule } from '../label/label.module';
+import { TooltipModule } from '../tooltip/tooltip.module';
 import { RadioGroupComponent } from './radio-group.component';
 
 @NgModule({
-  imports: [CommonModule, InfoIconModule, FormsModule, MatRadioModule, LabelModule],
+  imports: [CommonModule, InfoIconModule, FormsModule, MatRadioModule, LabelModule, TooltipModule],
   declarations: [RadioGroupComponent],
   exports: [RadioGroupComponent]
 })

@@ -1,4 +1,5 @@
 import { TimeRange } from '@hypertrace/common';
+import { FilterAttribute, FilterAttributeExpression } from '@hypertrace/components';
 import { AxisDomain } from 'd3-axis';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipRef } from '../utils/chart-tooltip/chart-tooltip-popover';
@@ -43,6 +44,7 @@ export interface Series<TInterval> {
   groupName?: string;
   symbol?: SeriesSymbol;
   type: CartesianSeriesVisualizationType;
+  groupBy?: SeriesGroupBy; // Todo: this will be refactored soon
   stacking?: boolean;
   hide?: boolean;
 
@@ -52,6 +54,9 @@ export interface Series<TInterval> {
   getTooltipTitle?(datum: TInterval): string;
 }
 
+interface SeriesGroupBy extends FilterAttributeExpression {
+  allMetadata: FilterAttribute[];
+}
 export interface Band<TInterval> {
   upper: Series<TInterval>;
   lower: Series<TInterval>;

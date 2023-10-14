@@ -2,6 +2,7 @@
 
 .splitter-container {
   @include m.fill-container();
+  position: relative;
   display: flex;
 
   &.horizontal {
@@ -14,6 +15,9 @@
 
   .splitter-content {
     display: flex;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .splitter-content > p {
@@ -21,17 +25,22 @@
   }
 
   .splitter {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     /* Prevent the browser's built-in drag from interfering */
     user-select: none;
+    padding: 6px;
     opacity: 0;
-    border-radius: 4px;
 
     &:hover {
-      background-color: m.$gray-2;
       opacity: 1;
+    }
+
+    .background {
+      @include m.fill-container();
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: m.$gray-2;
+      border-radius: 6px;
     }
 
     .cursor {
@@ -42,8 +51,8 @@
       height: 100%;
 
       .cursor {
+        height: 48px;
         width: 100%;
-        height: 50px;
       }
 
       &:hover {
@@ -52,11 +61,10 @@
     }
 
     &.vertical {
-      width: calc(100% - 72px);
-      margin: 0px 72px;
+      width: 100%;
 
       .cursor {
-        width: 50px;
+        width: 72px;
         height: 100%;
       }
 

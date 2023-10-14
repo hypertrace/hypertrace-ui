@@ -64,7 +64,7 @@ export class EntityTopologyGraphQlQueryHandlerService
     entityType: ObservabilityEntityType
   ): GraphQlSelection[] {
     return [
-      { path: 'id' },
+      { path: 'id', alias: 'entityId' },
       ...this.selectionBuilder.fromSpecifications([nodeSpec.titleSpecification]),
       ...this.selectionBuilder.fromSpecifications(this.buildEntityTypeSpecificSpecs(entityType)),
       ...this.selectionBuilder.fromSpecifications(nodeSpec.metricSpecifications)
@@ -154,8 +154,8 @@ export class EntityTopologyGraphQlQueryHandlerService
     nodeMap: Map<string, EntityNode>,
     serverEntity: TopologyEntity
   ): EntityNode {
-    if (nodeMap.has(serverEntity.id)) {
-      return nodeMap.get(serverEntity.id)!;
+    if (nodeMap.has(serverEntity.entityId)) {
+      return nodeMap.get(serverEntity.entityId)!;
     }
 
     const newNode = {
@@ -164,7 +164,7 @@ export class EntityTopologyGraphQlQueryHandlerService
       data: this.buildEntity(entityType, serverEntity, nodeSpec)
     };
 
-    nodeMap.set(serverEntity.id, newNode);
+    nodeMap.set(serverEntity.entityId, newNode);
 
     return newNode;
   }
@@ -175,7 +175,7 @@ export class EntityTopologyGraphQlQueryHandlerService
     nodeSpec: TopologyNodeSpecification
   ): Entity {
     return {
-      [entityIdKey]: serverResult.id,
+      [entityIdKey]: serverResult.entityId,
       [entityTypeKey]: entityType,
       ...this.extractSpecsFromServerResult(
         [
@@ -297,7 +297,7 @@ interface TopologyServerResponse {
   results: TopologyEntityWithEdges[];
 }
 
-type TopologyEntity = { id: string } & Dictionary<unknown> & Dictionary<Dictionary<GraphQlMetricAggregation>>;
+type TopologyEntity = { entityId: string } & Dictionary<unknown> & Dictionary<Dictionary<GraphQlMetricAggregation>>;
 
 type TopologyEntityWithEdges = TopologyEntity & Dictionary<TopologyEdgeContainer>;
 

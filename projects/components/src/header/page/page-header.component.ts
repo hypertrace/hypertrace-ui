@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
-  ApplicationFeature,
   Breadcrumb,
   isNonEmptyString,
   NavigationService,
@@ -24,11 +23,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
       class="page-header"
       [class.bottom-border]="!this.tabs?.length"
     >
-      <!--      Code Path 1-->
-      <div
-        *htIfFeature="'${ApplicationFeature.PageTimeRange}' | htFeature; else noTimeRangeHeaderLayoutTemplate"
-        class="column-alignment"
-      >
+      <div class="column-alignment">
         <div class="primary-row">
           <ng-container *ngTemplateOutlet="this.breadCrumbContainerTemplate"></ng-container>
 
@@ -36,7 +31,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
             <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
           </ng-container>
           <ng-container *ngIf="this.shouldShowTimeRange">
-            <ht-page-time-range class="time-range"></ht-page-time-range>
+            <ht-time-range class="time-range"></ht-time-range>
           </ng-container>
           <ng-container *ngIf="this.shouldShowRefreshButton">
             <ht-refresh-button class="refresh-only-button" (click)="this.refresh.emit()"></ht-refresh-button>
@@ -46,15 +41,6 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
           <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
         </ng-container>
       </div>
-
-      <!--      Code Path 2-->
-      <ng-template #noTimeRangeHeaderLayoutTemplate>
-        <div [ngClass]="this.contentAlignment">
-          <ng-container *ngTemplateOutlet="this.breadCrumbContainerTemplate"></ng-container>
-
-          <ng-container *ngTemplateOutlet="this.projectedContentTemplate"></ng-container>
-        </div>
-      </ng-template>
 
       <ht-navigable-tab-group *ngIf="this.tabs?.length" class="tabs" (tabChange)="this.onTabChange($event)">
         <ht-navigable-tab

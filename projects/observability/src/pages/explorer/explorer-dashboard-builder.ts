@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { Injectable, InjectionToken } from '@angular/core';
-import { assertUnreachable, forkJoinSafeEmpty, isEqualIgnoreFunctions } from '@hypertrace/common';
+import { assertUnreachable, isEqualIgnoreFunctions } from '@hypertrace/common';
 import {
   CoreTableCellRendererType,
   FilterBuilderLookupService,
@@ -8,9 +8,9 @@ import {
   TableSortDirection,
   TableStyle
 } from '@hypertrace/components';
-import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
+import { Dashboard, JsonPrimitive, ModelJson } from '@hypertrace/hyperdash';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, map, switchMap, take } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { LegendPosition } from '../../shared/components/legend/legend.component';
 import { ObservabilityTableCellType } from '../../shared/components/table/observability-table-cell-type';
@@ -26,6 +26,9 @@ import { GraphQlFilter } from '../../shared/graphql/model/schema/filter/graphql-
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import { SPAN_SCOPE } from '../../shared/graphql/model/schema/span';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
+import { isEmpty, uniqBy } from 'lodash-es';
+import { ScaleType } from '../../shared/components/cartesian/chart';
+import { Specification } from '../../shared/graphql/model/schema/specifier/specification';
 
 @Injectable()
 export class ExplorerDashboardBuilder {
@@ -67,7 +70,15 @@ export class ExplorerDashboardBuilder {
         'selection-handler': {
           type: 'cartesian-explorer-selection-handler',
           'show-context-menu': false
-        }
+        },
+        ...(!isEmpty(request.groupBy) && isEmpty(request.interval)
+          ? {
+              'x-axis': {
+                type: 'cartesian-axis',
+                'scale-type': ScaleType.Band
+              }
+            }
+          : {})
       },
       onReady: dashboard => {
         dashboard.createAndSetRootDataFromModelClass(ExplorerVisualizationCartesianDataSourceModel);
@@ -91,14 +102,18 @@ export class ExplorerDashboardBuilder {
   private buildDashboardData(request: ExploreVisualizationRequest): Observable<ResultsDashboardData> {
     return request.resultsQuery$.pipe(
       switchMap(resultsQuery =>
-        forkJoinSafeEmpty(
-          resultsQuery.properties.map(property => this.metadataService.getAttribute(request.context, property.name))
-        ).pipe(
+        this.metadataService.getSelectionAttributes(request.context).pipe(
+          take(1),
           map(attributes => [
             ...this.getDefaultTableColumns(request.context as ExplorerGeneratedDashboardContext),
-            ...this.getUserRequestedNonDefaultColumns(attributes, request.context as ExplorerGeneratedDashboardContext)
+            ...this.getGeneratedTableColumns(
+              attributes,
+              request.context as ExplorerGeneratedDashboardContext,
+              resultsQuery.properties
+            )
           ]),
-          map(columns => this.buildColumnModelJson(request.context, columns)),
+          map(columnsMetadata => this.removeDuplicatedColumns(columnsMetadata)),
+          map(columnsMetadata => this.buildColumnModelJson(request.context, columnsMetadata)),
           map(json => ({
             json: json,
             filters: resultsQuery.filters || []
@@ -165,7 +180,7 @@ export class ExplorerDashboardBuilder {
     }
   }
 
-  protected getDefaultTableColumns(context: ExplorerGeneratedDashboardContext): ModelJson[] {
+  protected getDefaultTableColumns(context: ExplorerGeneratedDashboardContext): SpecificationBackedColumnModelJson[] {
     switch (context) {
       case ObservabilityTraceType.Api:
         return [
@@ -176,7 +191,7 @@ export class ExplorerDashboardBuilder {
             display: CoreTableCellRendererType.Text,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'protocol'
             },
             'click-handler': {
@@ -189,7 +204,7 @@ export class ExplorerDashboardBuilder {
             width: 2,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'serviceName'
             },
             'click-handler': {
@@ -202,7 +217,7 @@ export class ExplorerDashboardBuilder {
             width: 2,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'apiName'
             },
             'click-handler': {
@@ -215,14 +230,14 @@ export class ExplorerDashboardBuilder {
             filterable: false,
             display: ObservabilityTableCellType.ExitCalls,
             value: {
-              type: 'composite-specification',
+              type: ValueSpecificationType.Composite,
               specifications: [
                 {
-                  type: 'attribute-specification',
+                  type: ValueSpecificationType.Attribute,
                   attribute: 'apiExitCalls'
                 },
                 {
-                  type: 'attribute-specification',
+                  type: ValueSpecificationType.Attribute,
                   attribute: 'apiCalleeNameCount'
                 }
               ],
@@ -239,7 +254,7 @@ export class ExplorerDashboardBuilder {
             display: TracingTableCellType.TraceStatus,
             filterable: true,
             value: {
-              type: 'trace-status-specification'
+              type: ValueSpecificationType.Status
             },
             'click-handler': {
               type: 'api-trace-navigation-handler'
@@ -251,7 +266,7 @@ export class ExplorerDashboardBuilder {
             width: '100px',
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'apiTraceErrorSpanCount'
             },
             'click-handler': {
@@ -265,7 +280,7 @@ export class ExplorerDashboardBuilder {
             display: TracingTableCellType.Metric,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'duration'
             },
             'click-handler': {
@@ -278,7 +293,7 @@ export class ExplorerDashboardBuilder {
             width: '220px',
             display: CoreTableCellRendererType.Timestamp,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'startTime'
             },
             sort: TableSortDirection.Descending,
@@ -293,7 +308,7 @@ export class ExplorerDashboardBuilder {
             display: CoreTableCellRendererType.Timestamp,
             visible: false,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'endTime'
             },
             'click-handler': {
@@ -307,7 +322,7 @@ export class ExplorerDashboardBuilder {
             visible: false,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'apiBoundaryType'
             },
             'click-handler': {
@@ -321,7 +336,7 @@ export class ExplorerDashboardBuilder {
             visible: false,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'apiDiscoveryState'
             },
             'click-handler': {
@@ -335,7 +350,7 @@ export class ExplorerDashboardBuilder {
             visible: false,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'apiId'
             },
             'click-handler': {
@@ -349,7 +364,7 @@ export class ExplorerDashboardBuilder {
             visible: false,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'apiTraceId'
             },
             'click-handler': {
@@ -363,7 +378,7 @@ export class ExplorerDashboardBuilder {
             visible: false,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'serviceId'
             },
             'click-handler': {
@@ -377,7 +392,7 @@ export class ExplorerDashboardBuilder {
             visible: false,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'traceId'
             },
             'click-handler': {
@@ -391,7 +406,7 @@ export class ExplorerDashboardBuilder {
             visible: false,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'requestUrl'
             },
             'click-handler': {
@@ -407,7 +422,7 @@ export class ExplorerDashboardBuilder {
             width: '100px',
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'protocolName'
             },
             'click-handler': {
@@ -420,7 +435,7 @@ export class ExplorerDashboardBuilder {
             width: 2,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'serviceName'
             },
             'click-handler': {
@@ -433,7 +448,7 @@ export class ExplorerDashboardBuilder {
             width: 2,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'displaySpanName'
             },
             'click-handler': {
@@ -446,7 +461,7 @@ export class ExplorerDashboardBuilder {
             width: '90px', // Use Status Cell Renderer
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'statusCode'
             },
             'click-handler': {
@@ -459,7 +474,7 @@ export class ExplorerDashboardBuilder {
             width: '100px',
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'errorCount'
             },
             'click-handler': {
@@ -473,7 +488,7 @@ export class ExplorerDashboardBuilder {
             display: TracingTableCellType.Metric,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'duration'
             },
             'click-handler': {
@@ -486,7 +501,7 @@ export class ExplorerDashboardBuilder {
             width: '220px',
             display: CoreTableCellRendererType.Timestamp,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'startTime'
             },
             sort: TableSortDirection.Descending,
@@ -501,7 +516,7 @@ export class ExplorerDashboardBuilder {
             display: CoreTableCellRendererType.Timestamp,
             visible: false,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'endTime'
             },
             'click-handler': {
@@ -513,7 +528,7 @@ export class ExplorerDashboardBuilder {
             visible: false,
             filterable: true,
             value: {
-              type: 'attribute-specification',
+              type: ValueSpecificationType.Attribute,
               attribute: 'traceId'
             },
             'click-handler': {
@@ -555,10 +570,17 @@ export class ExplorerDashboardBuilder {
     }
   }
 
-  private getUserRequestedNonDefaultColumns(
+  private removeDuplicatedColumns(columns: SpecificationBackedColumnModelJson[]): ModelJson[] {
+    return uniqBy(columns, column =>
+      column.value?.type === ValueSpecificationType.Attribute ? column.value.attribute : column
+    );
+  }
+
+  private getGeneratedTableColumns(
     attributes: AttributeMetadata[],
-    context: ExplorerGeneratedDashboardContext
-  ): ModelJson[] {
+    context: ExplorerGeneratedDashboardContext,
+    selectedProperties: Specification[]
+  ): SpecificationBackedColumnModelJson[] {
     const attributesToExclude = this.getAttributesToExcludeFromUserDisplay(context);
 
     return attributes
@@ -570,9 +592,10 @@ export class ExplorerDashboardBuilder {
         display: this.getRendererForType(attribute.type),
         filterable: this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type)),
         value: {
-          type: 'attribute-specification',
+          type: ValueSpecificationType.Attribute,
           attribute: attribute.name
         },
+        visible: selectedProperties.find(selectedProperty => selectedProperty.name === attribute.name) ? true : false,
         'click-handler': {
           type: context === SPAN_SCOPE ? 'span-trace-navigation-handler' : 'api-trace-navigation-handler'
         }
@@ -583,6 +606,27 @@ export class ExplorerDashboardBuilder {
 export interface ExplorerGeneratedDashboard {
   json: ModelJson;
   onReady(dashboard: Dashboard): void;
+}
+
+export interface SpecificationBackedColumnModelJson extends ModelJson {
+  value:
+    | {
+        type: ValueSpecificationType.Attribute;
+        attribute: string;
+      }
+    | {
+        type: ValueSpecificationType.Composite;
+        [key: string]: JsonPrimitive;
+      }
+    | {
+        type: ValueSpecificationType.Status;
+      };
+}
+
+export const enum ValueSpecificationType {
+  Attribute = 'attribute-specification',
+  Composite = 'composite-specification',
+  Status = 'trace-status-specification'
 }
 
 export type ExplorerGeneratedDashboardContext = ObservabilityTraceType.Api | 'SPAN';

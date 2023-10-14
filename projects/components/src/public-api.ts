@@ -135,6 +135,10 @@ export * from './filtering/filter-button/filter-button.module';
 export * from './filtering/filter-button/filter-button.component';
 export * from './filtering/filter-modal/in-filter-modal.component';
 
+// Filter Button Wrapper
+export * from './filtering/filter-button-wrapper/filter-button-wrapper.component';
+export * from './filtering/filter-button-wrapper/filter-button-wrapper.module';
+
 // Filter Parser
 export * from './filtering/filter/parser/filter-parser-lookup.service';
 
@@ -414,13 +418,15 @@ export { TooltipDirective } from './tooltip/tooltip.directive';
 // Filter Url Service
 export * from './filtering/filter/filter-url.service';
 
-// User Page Time Range
-export * from './page-time-range/page-time-range.component';
-export * from './page-time-range/page-time-range.module';
-
 // Stepper
-export * from './stepper';
+export * from './stepper/stepper.module';
+export * from './stepper/stepper.component';
+export * from './stepper/tab/stepper-tab.component';
+export * from './stepper/tab-controls/stepper-tab-controls.component';
 
 // Pill list
 export * from './input-pill-list/input-pill-list.component';
 export * from './input-pill-list/input-pill-list.module';
+
+// Parsed Filter
+export * from './filtering/filter/parser/parsed-filter';

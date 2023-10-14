@@ -1,3 +1,4 @@
+@use 'mixins' as m;
 @import 'interaction';
 
 .menu-popover-container {
@@ -12,6 +13,8 @@
 
 .trigger-content {
   @include disableable;
+  @include m.body-2-regular();
+  font-weight: 500;
   width: 100%;
   height: 100%;
   display: flex;
@@ -25,7 +28,7 @@
   }
 
   &:hover {
-    background-color: $gray-2;
+    background-color: m.$gray-2;
     border-radius: 50%;
   }
 

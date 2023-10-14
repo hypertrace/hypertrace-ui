@@ -10,13 +10,20 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
     <div class="span-response-detail" [ngClass]="this.layout">
       <div class="section">
         <div class="section-item">
-          <ht-span-detail-call-headers [data]="this.responseHeaders" title="Headers"></ht-span-detail-call-headers>
+          <ht-span-detail-call-headers
+            [data]="this.responseHeaders"
+            [scope]="this.scope"
+            fieldName="${ResponseFieldName.Headers}"
+            title="Headers"
+          ></ht-span-detail-call-headers>
         </div>
 
         <div class="section-item">
           <ht-span-detail-call-headers
             [data]="this.responseCookies"
             [metadata]="this.cookieMetadata"
+            [scope]="this.scope"
+            fieldName="${ResponseFieldName.Cookies}"
             title="Cookies"
           ></ht-span-detail-call-headers>
         </div>
@@ -42,4 +49,12 @@ export class SpanResponseDetailComponent {
 
   @Input()
   public layout: SpanDetailLayoutStyle = SpanDetailLayoutStyle.Horizontal;
+
+  @Input()
+  public scope?: string;
+}
+
+const enum ResponseFieldName {
+  Headers = 'responseHeaders',
+  Cookies = 'responseCookies'
 }

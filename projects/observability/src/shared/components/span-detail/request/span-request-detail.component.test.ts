@@ -1,9 +1,14 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NavigationService } from '@hypertrace/common';
+import { ActivatedRoute } from '@angular/router';
+import { NavigationParamsType, NavigationService } from '@hypertrace/common';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { JsonViewerComponent, ListViewComponent, ToggleButtonGroupComponent } from '@hypertrace/components';
+import { MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
+import { ExplorerService } from '../../../../pages/explorer/explorer-service';
+import { MetadataService } from '../../../services/metadata/metadata.service';
 import { SpanRequestDetailComponent } from './span-request-detail.component';
 import { SpanRequestDetailModule } from './span-request-detail.module';
 
@@ -14,7 +19,21 @@ describe('Span request detail component', () => {
     component: SpanRequestDetailComponent,
     imports: [SpanRequestDetailModule, HttpClientTestingModule, IconLibraryTestingModule],
     declareComponent: false,
-    providers: [mockProvider(NavigationService)]
+    providers: [
+      mockProvider(NavigationService),
+      mockProvider(ExplorerService, {
+        buildNavParamsWithFilters: jest.fn().mockReturnValue(
+          of({
+            navType: NavigationParamsType.InApp,
+            path: 'test-'
+          })
+        )
+      }),
+      mockProvider(ActivatedRoute),
+      MockProvider(MetadataService, {
+        getAllAttributes: jest.fn().mockReturnValue(of([]))
+      })
+    ]
   });
 
   test('should display headers and body title', () => {

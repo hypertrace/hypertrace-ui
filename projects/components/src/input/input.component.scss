@@ -44,6 +44,7 @@
         }
       }
       .mat-input-element {
+        @include ellipsis-overflow();
         height: inherit;
         width: inherit;
         margin: 0;

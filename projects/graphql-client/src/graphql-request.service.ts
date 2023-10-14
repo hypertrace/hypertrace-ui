@@ -13,6 +13,14 @@ import {
   GraphQlRequestOptions,
   GRAPHQL_OPTIONS
 } from './graphql-config';
+import { GraphqlExecutionError } from './graphql-execution-error';
+import { GraphqlRequestError } from './graphql-request-error';
+import {
+  GraphQlRequest,
+  GraphQlResultStatus,
+  RequestTypeForHandler,
+  ResponseTypeForHandler
+} from './graphql-request.api';
 import { GraphQlSelection } from './model/graphql-selection';
 import { GraphQlRequestBuilder } from './utils/builders/request/graphql-request-builder';
 import { GraphQlDataExtractor } from './utils/extractor/graphql-data-extractor';
@@ -131,7 +139,7 @@ export class GraphQlRequestService {
     );
   }
 
-  private executeRequest<TResponse extends { [key: string]: unknown }>(
+  private executeRequest<TResponse extends Dictionary<unknown>>(
     requestString: string,
     type: GraphQlHandlerType,
     options: GraphQlRequestOptions
@@ -141,7 +149,7 @@ export class GraphQlRequestService {
       : this.executeQuery(requestString, options);
   }
 
-  private executeQuery<TResponse extends { [key: string]: unknown }>(
+  private executeQuery<TResponse extends Dictionary<unknown>>(
     requestString: string,
     options: GraphQlRequestOptions
   ): Observable<TResponse> {
@@ -154,15 +162,14 @@ export class GraphQlRequestService {
       .pipe(
         tap(response => {
           if (!isNil(response.errors)) {
-            // eslint-disable-next-line  no-console
-            console.error(`Query response error(s) for request '${requestString}'`, response.errors);
+            throw new GraphqlExecutionError(`Query response error(s) for request '${requestString}'`, requestString);
           }
         }),
         map(response => response.data)
       );
   }
 
-  private executeMutation<TResponse extends { [key: string]: unknown }>(requestString: string): Observable<TResponse> {
+  private executeMutation<TResponse extends Dictionary<unknown>>(requestString: string): Observable<TResponse> {
     return this.apollo
       .mutate<TResponse>({
         mutation: gql(`mutation ${requestString}`)
@@ -170,8 +177,7 @@ export class GraphQlRequestService {
       .pipe(
         tap(response => {
           if (!isNil(response.errors)) {
-            // eslint-disable-next-line  no-console
-            console.error(`Mutation response error(s) for request '${requestString}'`, response.errors);
+            throw new GraphqlExecutionError(`Mutation response error(s) for request '${requestString}'`, requestString);
           }
         }),
         mergeMap(response => (response.data ? of(response.data) : EMPTY))
@@ -197,11 +203,10 @@ export class GraphQlRequestService {
           return result.value as T;
         }
 
-        const errorValue = String(result.value);
         // eslint-disable-next-line  no-console
-        console.error(errorValue);
+        console.error(`${result.error.message}\n\nExpand output to see request, result.`, request, result);
 
-        throw Error(errorValue);
+        throw result.error;
       })
     );
   }
@@ -240,7 +245,7 @@ export class GraphQlRequestService {
 
   private buildResponseGetter(
     queryBuilder: GraphQlRequestBuilder,
-    selectionResponseMap: Map<GraphQlSelection, Observable<{ [key: string]: unknown }>>,
+    selectionResponseMap: Map<GraphQlSelection, Observable<Dictionary<unknown>>>,
     selectionMultiMap: Map<GraphQlRequest, Map<unknown, GraphQlSelection>>
   ): ResponseGetter {
     return request => {
@@ -277,15 +282,18 @@ export class GraphQlRequestService {
     return [
       request,
       responseGetter(request).pipe(
-        map(response => ({
-          status: GraphQlResultStatus.Success,
-          value: response
-        })),
-        catchError(err =>
+        map(
+          response =>
+            ({
+              status: GraphQlResultStatus.Success,
+              value: response
+            } as GraphQlSuccessResult)
+        ),
+        catchError((err: GraphqlExecutionError) =>
           of({
             status: GraphQlResultStatus.Error,
-            value: err
-          })
+            error: new GraphqlRequestError(err, request)
+          } as GraphQlErrorResult)
         )
       )
     ];
@@ -329,14 +337,20 @@ export class GraphQlRequestService {
   }
 }
 
-const enum GraphQlResultStatus {
-  Success = 'SUCCESS',
-  Error = 'ERROR'
+interface Dictionary<T> {
+  [key: string]: T;
 }
 
-interface GraphQlResult {
-  status: GraphQlResultStatus;
+type GraphQlResult = GraphQlSuccessResult | GraphQlErrorResult;
+
+interface GraphQlSuccessResult {
+  status: GraphQlResultStatus.Success;
   value: unknown;
+}
+
+interface GraphQlErrorResult {
+  status: GraphQlResultStatus.Error;
+  error: GraphqlRequestError;
 }
 
 interface RequestWithOptions {
@@ -345,19 +359,3 @@ interface RequestWithOptions {
 }
 
 type ResponseGetter = (request: unknown) => Observable<unknown>;
-
-type GraphQlRequest = unknown;
-
-export type RequestTypeForHandler<T extends GraphQlHandler<unknown, unknown>> = T extends GraphQlHandler<
-  infer TRequest,
-  unknown
->
-  ? TRequest
-  : never;
-
-export type ResponseTypeForHandler<T extends GraphQlHandler<unknown, unknown>> = T extends GraphQlHandler<
-  unknown,
-  infer TResponse
->
-  ? TResponse
-  : never;

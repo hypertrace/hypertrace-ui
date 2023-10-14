@@ -1,7 +1,13 @@
 /* eslint-disable max-lines */
 import { fakeAsync, flush } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { DomElementMeasurerService, NavigationService } from '@hypertrace/common';
+import {
+  DomElementMeasurerService,
+  NavigationService,
+  PreferenceService,
+  PreferenceValue,
+  StorageType
+} from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -20,6 +26,7 @@ import { TableColumnConfigExtended, TableService } from './table.service';
 import { ModalService } from '../modal/modal.service';
 
 describe('Table component', () => {
+  let localStorage: PreferenceValue = { columns: [] };
   // TODO remove builders once table stops mutating inputs
   const buildData = () => [
     {
@@ -56,7 +63,6 @@ describe('Table component', () => {
     imports: [LetAsyncModule],
     providers: [
       mockProvider(NavigationService),
-      mockProvider(ActivatedRoute),
       mockProvider(ActivatedRoute, {
         queryParamMap: EMPTY
       }),
@@ -75,6 +81,10 @@ describe('Table component', () => {
       }),
       mockProvider(ModalService, {
         createModal: jest.fn().mockReturnValue({ closed$: of([]) })
+      }),
+      mockProvider(PreferenceService, {
+        getOnce: jest.fn().mockReturnValue(localStorage),
+        set: (_: unknown, value: PreferenceValue) => (localStorage = value)
       })
     ],
     declarations: [MockComponent(PaginatorComponent), MockComponent(SearchBoxComponent)],
@@ -256,12 +266,15 @@ describe('Table component', () => {
     });
     spectator.tick();
 
-    expect(spectator.component.columnConfigs![0]).toEqual(
-      expect.objectContaining({
-        sort: TableSortDirection.Ascending,
-        id: 'firstId'
-      })
-    );
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.columnConfigs$.pipe(map(columns => columns[0]))).toBe('x', {
+        x: expect.objectContaining({
+          sort: TableSortDirection.Ascending,
+          id: 'firstId'
+        })
+      });
+    });
+    flush();
   }));
 
   test('does not alter the URL on sorting if syncWithUrl false', fakeAsync(() => {
@@ -580,5 +593,157 @@ describe('Table component', () => {
         ]
       });
     });
+    flush();
+  }));
+
+  test('saved preferences should be accounted for while building column configs', fakeAsync(() => {
+    const columns = buildColumns();
+    let localStorageOverride: PreferenceValue = {
+      columns: [
+        {
+          id: 'firstId',
+          visible: false
+        },
+        { id: 'secondId', visible: true }
+      ]
+    };
+    const spectator = createHost(
+      '<ht-table id="test-table" [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
+      {
+        hostProps: {
+          columnConfigs: columns,
+          data: buildData(),
+          selectionMode: TableSelectionMode.Single,
+          mode: TableMode.Flat
+        },
+        providers: [
+          mockProvider(PreferenceService, {
+            getOnce: jest.fn().mockReturnValue(localStorageOverride),
+            set: jest.fn().mockImplementation((_key: string, value: PreferenceValue, _storageType: StorageType) => {
+              localStorageOverride = value;
+            })
+          })
+        ]
+      }
+    );
+    spectator.tick();
+
+    runFakeRxjs(({ expectObservable }) => {
+      expectObservable(spectator.component.columnConfigs$).toBe('x', {
+        x: [
+          expect.objectContaining({
+            id: 'firstId',
+            visible: false
+          }),
+          expect.objectContaining({
+            id: 'secondId',
+            visible: true
+          })
+        ]
+      });
+    });
+
+    expect(spectator.inject(PreferenceService).getOnce).toHaveBeenLastCalledWith(
+      'test-table',
+      { columns: [] },
+      StorageType.Local
+    );
+    flush();
+  }));
+
+  test('should save user preferences for columns when a column is hidden', fakeAsync(() => {
+    const columns = buildColumns();
+    let localStorageOverride: PreferenceValue = {
+      columns: []
+    };
+    const spectator = createHost(
+      '<ht-table id="test-table" [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
+      {
+        hostProps: {
+          columnConfigs: columns,
+          data: buildData(),
+          selectionMode: TableSelectionMode.Single,
+          mode: TableMode.Flat
+        },
+        providers: [
+          mockProvider(PreferenceService, {
+            getOnce: jest.fn().mockReturnValue(localStorageOverride),
+            set: jest.fn().mockImplementation((_key: string, value: PreferenceValue, _storageType: StorageType) => {
+              localStorageOverride = value;
+            })
+          })
+        ]
+      }
+    );
+    spectator.component.onHideColumn({ ...columns[0] });
+    spectator.tick();
+    expect(spectator.inject(PreferenceService).set).toHaveBeenCalledWith(
+      'test-table',
+      {
+        columns: expect.arrayContaining([
+          {
+            id: 'firstId',
+            visible: false
+          },
+          {
+            id: 'secondId',
+            visible: true
+          }
+        ])
+      },
+      StorageType.Local
+    );
+
+    flush();
+  }));
+
+  test('should save user preferences for columns when columns are edited', fakeAsync(() => {
+    const columns = buildColumns();
+    let localStorageOverride: PreferenceValue = {
+      columns: []
+    };
+    const spectator = createHost(
+      '<ht-table id="test-table" [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
+      {
+        hostProps: {
+          columnConfigs: columns,
+          data: buildData(),
+          selectionMode: TableSelectionMode.Single,
+          mode: TableMode.Flat
+        },
+        providers: [
+          mockProvider(PreferenceService, {
+            getOnce: jest.fn().mockReturnValue(localStorageOverride),
+            set: jest.fn().mockImplementation((_key: string, value: PreferenceValue, _storageType: StorageType) => {
+              localStorageOverride = value;
+            })
+          }),
+          mockProvider(ModalService, {
+            createModal: jest.fn().mockReturnValue({ closed$: of([columns[0], { ...columns[1], visible: false }]) })
+          })
+        ]
+      }
+    );
+    spectator.tick();
+    spectator.component.showEditColumnsModal();
+    spectator.tick();
+    expect(spectator.inject(PreferenceService).set).toHaveBeenCalledWith(
+      'test-table',
+      {
+        columns: expect.arrayContaining([
+          {
+            id: 'firstId',
+            visible: true
+          },
+          {
+            id: 'secondId',
+            visible: false
+          }
+        ])
+      },
+      StorageType.Local
+    );
+
+    flush();
   }));
 });

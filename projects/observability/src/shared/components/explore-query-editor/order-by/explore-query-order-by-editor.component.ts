@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { SelectOption, SelectSearchMode } from '@hypertrace/components';
+import { difference } from 'lodash-es';
 import { combineLatest, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { AttributeMetadata } from '../../../graphql/model/metadata/attribute-metadata';
@@ -9,6 +10,7 @@ import { GraphQlSortDirection } from '../../../graphql/model/schema/sort/graphql
 import { TraceType } from '../../../graphql/model/schema/trace';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { ExploreOrderBy } from '../explore-visualization-builder';
+
 @Component({
   selector: 'ht-explore-query-order-by-editor',
   styleUrls: ['./explore-query-order-by-editor.component.scss'],
@@ -98,6 +100,10 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   private readonly defaultDirection: GraphQlSortDirection = SortDirection.Asc;
   private readonly incomingOrderByExpressionSubject: Subject<ExploreOrderBy> = new ReplaySubject(1);
   private readonly contextSubject: Subject<TraceType> = new ReplaySubject(1);
+  private readonly redundantOrderingAggregations: MetricAggregationType[] = [
+    MetricAggregationType.AvgrateSecond,
+    MetricAggregationType.AvgrateMinute
+  ];
 
   public constructor(private readonly metadataService: MetadataService) {
     this.selectedAggregation$ = combineLatest([this.contextSubject, this.incomingOrderByExpressionSubject]).pipe(
@@ -206,6 +212,8 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
     }
 
     return this.metadataService.getSelectionAttributes(context).pipe(
+      map(attributes => this.removeRedundantOrderingAggregations(attributes, this.redundantOrderingAggregations)),
+      map(attributes => attributes.filter(attribute => attribute.allowedAggregations.length > 0)), // Removes attributes without aggregations
       map(attributes =>
         attributes.map(attribute => ({
           value: attribute,
@@ -213,6 +221,16 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
         }))
       )
     );
+  }
+
+  private removeRedundantOrderingAggregations(
+    attributes: AttributeMetadata[],
+    redundantOrderingAggregations: MetricAggregationType[]
+  ): AttributeMetadata[] {
+    return attributes.map(attribute => ({
+      ...attribute,
+      allowedAggregations: difference(attribute.allowedAggregations, redundantOrderingAggregations)
+    }));
   }
 
   private buildOrderExpression(
