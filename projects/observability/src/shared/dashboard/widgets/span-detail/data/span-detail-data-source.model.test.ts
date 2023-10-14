@@ -117,7 +117,7 @@ describe('Span Detail data source model', () => {
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.model.getData()).toBe('(x|)', {
         x: expect.objectContaining({
-          [spanIdKey]: 'test-id',
+          id: 'test-id',
           traceId: 'test-trace-id',
           statusCode: '200',
           tags: { param1: 'email' }
