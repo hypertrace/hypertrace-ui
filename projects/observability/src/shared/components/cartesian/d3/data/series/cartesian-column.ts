@@ -86,7 +86,7 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
 
   private getColumnWidth(): number {
     return Math.min(
-      this.xScale.getBandwidth() / this.xScale.getGroupedColumnSeriesLength(this.series),
+      this.hasArrayData(this.series) ? this.xScale.getBandwidth() : this.xScale.getBandwidth() / this.xScale.getGroupedColumnSeriesLength(this.series),
       CartesianColumn.MAX_COLUMN_WIDTH
     );
   }

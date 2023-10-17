@@ -102,13 +102,12 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       // Setting series through an observable would assign it a null/undefined value
       return;
     }
-
     this.chart = this.chartBuilderService
       .build<TData>(this.strategy, this.container.nativeElement, this.renderer, this.groupId)
       .withSeries(...this.series)
       .withTooltip(
         this.chartTooltipBuilderService.constructTooltip<TData, Series<TData>>(data =>
-          this.convertToDefaultTooltipRenderData(data)
+          this.convertToDefaultTooltipRenderData(Array.isArray(data?.[0].dataPoint) ? [data[3]] : data)
         )
       )
       .withEventListener(ChartEvent.Hover, data => {
