@@ -166,10 +166,7 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     groupByExpressions: AttributeExpression[],
     result: ExploreResult
   ): SeriesData[] {
-    return result
-      .getGroupedSeriesData(groupByExpressions, spec.name, spec.aggregation).map(
-      (data) =>
-        ({
+    return result.getGroupedSeriesData(groupByExpressions, spec.name, spec.aggregation).map(data => ({
       data: [[this.buildGroupedSeriesName(data.keys), data.value]],
       groupName: this.buildGroupedSeriesName(data.keys),
       spec: spec

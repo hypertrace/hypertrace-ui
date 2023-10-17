@@ -64,7 +64,10 @@ export class CartesianAxisCrosshair {
     singlePointLocation: boolean = false
   ): void {
     this.updateLinePosition(crosshairSelection, position);
-    this.updatePointPosition(crosshairSelection, singlePointLocation ? pointLocations.filter(pointLocation => pointLocation.x === position) : pointLocations);
+    this.updatePointPosition(
+      crosshairSelection,
+      singlePointLocation ? pointLocations.filter(pointLocation => pointLocation.x === position) : pointLocations
+    );
   }
 
   private updateLinePosition(crosshairSelection: Selection<SVGGElement, {}, null, undefined>, position: number): void {

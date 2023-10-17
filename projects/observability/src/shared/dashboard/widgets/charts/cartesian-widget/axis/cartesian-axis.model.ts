@@ -25,7 +25,6 @@ export class CartesianAxisModel {
   })
   public showGridLines?: boolean;
 
-
   @ModelProperty({
     key: 'show-tick-labels',
     required: false,
