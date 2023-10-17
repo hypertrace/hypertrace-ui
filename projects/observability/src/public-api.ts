@@ -351,6 +351,7 @@ export * from './shared/dashboard/data/graphql/specifiers/metric-aggregation-spe
 
 // Timeseries
 export * from './shared/graphql/model/metric/metric-timeseries';
+export * from './shared/dashboard/data/graphql/specifiers/metric-timeseries-specification.model';
 
 // Card list
 export * from './shared/components/card-list/card-list.component';
