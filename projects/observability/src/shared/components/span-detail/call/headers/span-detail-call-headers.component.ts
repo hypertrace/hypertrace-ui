@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { Dictionary, NavigationParams } from '@hypertrace/common';
-import { FilterOperator, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
+import { Dictionary, TypedSimpleChanges } from '@hypertrace/common';
+import { FilterAttribute, ListViewDisplay, ListViewRecord } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable, of } from 'rxjs';
-import { ExplorerService } from '../../../../../pages/explorer/explorer-service';
-import { ScopeQueryParam } from '../../../../../pages/explorer/explorer.component';
+import { map } from 'rxjs/operators';
+import { toFilterAttributeType } from '../../../../graphql/model/metadata/attribute-metadata';
+import { MetadataService } from '../../../../services/metadata/metadata.service';
 
 @Component({
   selector: 'ht-span-detail-call-headers',
@@ -15,15 +16,23 @@ import { ScopeQueryParam } from '../../../../../pages/explorer/explorer.componen
       <ht-label [label]="this.title" class="title"></ht-label>
       <div class="container">
         <ng-container *htLoadAsync="this.records$ as records">
-          <ht-list-view [records]="records" [metadata]="metadata" display="${ListViewDisplay.Plain}" data-sensitive-pii>
+          <ht-list-view
+            [records]="records"
+            [metadata]="this.metadata"
+            display="${ListViewDisplay.Plain}"
+            data-sensitive-pii
+          >
             <div class="record-value" *htListViewValueRenderer="let record">
               <div class="value">{{ record.value }}</div>
-              <ht-explore-filter-link
-                class="filter-link"
-                [paramsOrUrl]="this.buildExploreNavigationParams | htMemoize: record | async"
+              <ht-filter-button
+                *htLetAsync="this.metadata$ as metadata"
+                class="filter-button"
+                [attribute]="this.getFilterAttribute | htMemoize: metadata"
+                [metadata]="metadata"
+                [value]="record.value"
+                [subpath]="record.key"
                 htTooltip="See traces in Explorer"
-              >
-              </ht-explore-filter-link>
+              ></ht-filter-button>
             </div>
           </ht-list-view>
         </ng-container>
@@ -44,20 +53,37 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
   @Input()
   public fieldName: string = '';
 
+  @Input()
+  public scope?: string;
+
   public records$?: Observable<ListViewRecord[]>;
 
   public label?: string;
 
-  public constructor(private readonly explorerService: ExplorerService) {}
+  public metadata$?: Observable<FilterAttribute[]>;
 
-  public ngOnChanges(): void {
-    this.buildRecords();
+  public constructor(private readonly metadataService: MetadataService) {}
+
+  public ngOnChanges(changes: TypedSimpleChanges<this>): void {
+    if (changes.data && this.data) {
+      this.buildRecords();
+    }
+
+    if (changes.scope && this.scope) {
+      this.metadata$ = this.metadataService.getAllAttributes(this.scope).pipe(
+        map(metadata =>
+          metadata.map(attributeMetadata => ({
+            name: attributeMetadata.name,
+            displayName: attributeMetadata.displayName,
+            type: toFilterAttributeType(attributeMetadata.type)
+          }))
+        )
+      );
+    }
   }
 
-  public buildExploreNavigationParams = (record: ListViewRecord): Observable<NavigationParams> =>
-    this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-      { field: this.fieldName, subpath: record.key, operator: FilterOperator.Equals, value: record.value }
-    ]);
+  public getFilterAttribute = (metadata?: FilterAttribute[]): FilterAttribute | undefined =>
+    metadata?.find(attribute => attribute.name.toLowerCase().includes(this.fieldName?.toLowerCase()));
 
   private buildRecords(): void {
     if (isNil(this.data)) {

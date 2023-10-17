@@ -1,13 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import {
-  ApplicationFeature,
-  FeatureState,
-  FeatureStateResolver,
-  GlobalHeaderHeightProviderService,
-  NavigationService
-} from '@hypertrace/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { GlobalHeaderHeightProviderService, NavigationService } from '@hypertrace/common';
 
 @Component({
   selector: 'ht-application-header',
@@ -24,7 +16,7 @@ import { map } from 'rxjs/operators';
           <ng-content select="[left]"></ng-content>
         </div>
         <ng-container *ngIf="this.showTimeRange">
-          <div class="time-range" *ngIf="this.pageLevelTimeRangeDisabled$ | async">
+          <div class="time-range">
             <ht-time-range></ht-time-range>
           </div>
         </ng-container>
@@ -40,17 +32,10 @@ export class ApplicationHeaderComponent {
   @Input()
   public showTimeRange: boolean = true;
 
-  public pageLevelTimeRangeDisabled$: Observable<boolean>;
-
   public constructor(
     public readonly headerHeightProvider: GlobalHeaderHeightProviderService,
-    private readonly navigationService: NavigationService,
-    private readonly featureStateResolver: FeatureStateResolver
-  ) {
-    this.pageLevelTimeRangeDisabled$ = this.featureStateResolver
-      .getFeatureState(ApplicationFeature.PageTimeRange)
-      .pipe(map(featureState => featureState === FeatureState.Disabled));
-  }
+    private readonly navigationService: NavigationService
+  ) {}
 
   public onLogoClick(): void {
     this.navigationService.navigateWithinApp(['']); // Empty route so we go to default screen

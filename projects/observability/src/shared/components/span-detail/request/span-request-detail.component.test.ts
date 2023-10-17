@@ -5,8 +5,10 @@ import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/je
 
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { JsonViewerComponent, ListViewComponent, ToggleButtonGroupComponent } from '@hypertrace/components';
+import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { ExplorerService } from '../../../../pages/explorer/explorer-service';
+import { MetadataService } from '../../../services/metadata/metadata.service';
 import { SpanRequestDetailComponent } from './span-request-detail.component';
 import { SpanRequestDetailModule } from './span-request-detail.module';
 
@@ -27,7 +29,10 @@ describe('Span request detail component', () => {
           })
         )
       }),
-      mockProvider(ActivatedRoute)
+      mockProvider(ActivatedRoute),
+      MockProvider(MetadataService, {
+        getAllAttributes: jest.fn().mockReturnValue(of([]))
+      })
     ]
   });
 

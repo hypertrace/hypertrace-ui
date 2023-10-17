@@ -116,7 +116,7 @@ export class FilterUrlService {
     };
   }
 
-  private parseUrlFilterString(attributes: FilterAttribute[], filterString: string): Filter | undefined {
+  public parseUrlFilterString(attributes: FilterAttribute[], filterString: string): Filter | undefined {
     return attributes
       .filter(attribute => this.filterBuilderLookupService.isBuildableType(attribute.type))
       .flatMap(attribute => {
