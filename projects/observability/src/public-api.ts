@@ -329,12 +329,7 @@ export * from './shared/components/cartesian/cartesian-chart.component';
 export * from './shared/components/cartesian/cartesian-chart.module';
 export * from './shared/components/cartesian/chart';
 export * from './shared/components/cartesian/chart-interactivty';
-export {
-  MetricSeries,
-  MetricSeriesDataFetcher,
-  SeriesModel
-} from './shared/dashboard/widgets/charts/cartesian-widget/series.model';
-export { SERIES_ARRAY_TYPE } from './shared/dashboard/widgets/charts/cartesian-widget/series-array/series-array-type';
+export { MetricSeries, MetricSeriesDataFetcher } from './shared/dashboard/widgets/charts/cartesian-widget/series.model';
 export {
   CartesianDataFetcher,
   CartesianResult
