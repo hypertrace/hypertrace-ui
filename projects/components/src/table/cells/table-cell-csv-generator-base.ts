@@ -1,22 +1,14 @@
-import { Injector } from '@angular/core';
-import { CoreTableCellCsvGeneratorType } from './types/core-table-cell-csv-generator-type';
-import { isNil } from 'lodash-es';
 import { Dictionary } from '@hypertrace/common';
+import { CoreTableCellRendererType } from './types/core-table-cell-renderer-type';
+import { InjectionToken } from '@angular/core';
 
-export abstract class TableCellCsvGeneratorBase<TCellData, TRowData = unknown> {
-  public static readonly type: CoreTableCellCsvGeneratorType | string;
+export const TABLE_CELL_CSV_GENERATORS = new InjectionToken<unknown[][]>('TABLE_CELL_CSV_GENERATORS');
 
-  public constructor(protected readonly rootInjector: Injector) {}
+export interface TableCellCsvGeneratorBase<TCellData, TRowData = unknown> {
+  readonly type: CSV_GENERATOR_TYPE;
+  readonly cellType: CoreTableCellRendererType | string;
 
-  public generateSafeCsv(cellData?: TCellData, rowData?: TRowData): string | Dictionary<string> | undefined {
-    if (isNil(cellData)) {
-      return '';
-    } else {
-      const csvString = this.generateCsv(cellData, rowData);
-
-      return isNil(csvString) ? '' : csvString;
-    }
-  }
-
-  protected abstract generateCsv(cellData: TCellData, rowData?: TRowData): string | Dictionary<string> | undefined;
+  generateSafeCsv(cellData?: TCellData, rowData?: TRowData): string | Dictionary<string> | undefined;
 }
+
+type CSV_GENERATOR_TYPE = 'CSV_GENERATOR';

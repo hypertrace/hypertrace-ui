@@ -39,19 +39,9 @@ import { TableCellParserConstructor } from './table-cell-parser';
 import { TableCellParserLookupService } from './table-cell-parser-lookup.service';
 import { TableCellRendererConstructor } from './table-cell-renderer';
 import { TableCellRendererLookupService } from './table-cell-renderer-lookup.service';
-import {
-  TableCellCsvGeneratorConstructor,
-  TableCellCsvGeneratorLookupService
-} from './table-cell-csv-generator-lookup.service';
-import { TableCellStringArrayCsvGenerator } from './csv-generators/table-cell-string-array-csv-generator';
-import { TableCellBooleanCsvGenerator } from './csv-generators/table-cell-boolean-csv-generator';
-import { TableCellNumberCsvGenerator } from './csv-generators/table-cell-number-csv-generator';
-import { TableCellStringCsvGenerator } from './csv-generators/table-cell-string-csv-generator';
-import { TableCellTimestampCsvGenerator } from './csv-generators/table-cell-timestamp-csv-generator';
 
 export const TABLE_CELL_RENDERERS = new InjectionToken<unknown[][]>('TABLE_CELL_RENDERERS');
 export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PARSERS');
-export const TABLE_CELL_CSV_GENERATORS = new InjectionToken<unknown[][]>('TABLE_CELL_CSV_GENERATORS');
 
 @NgModule({
   imports: [
@@ -125,17 +115,6 @@ export const TABLE_CELL_CSV_GENERATORS = new InjectionToken<unknown[][]>('TABLE_
         TableCellNoOpParser
       ],
       multi: true
-    },
-    {
-      provide: TABLE_CELL_CSV_GENERATORS,
-      useValue: [
-        TableCellStringArrayCsvGenerator,
-        TableCellBooleanCsvGenerator,
-        TableCellNumberCsvGenerator,
-        TableCellStringCsvGenerator,
-        TableCellTimestampCsvGenerator
-      ],
-      multi: true
     }
   ]
 })
@@ -143,14 +122,11 @@ export class TableCellsModule {
   public constructor(
     private readonly tableCellParserLookupService: TableCellParserLookupService,
     private readonly tableCellRendererLookupService: TableCellRendererLookupService,
-    private readonly tableCellCsvGeneratorLookupService: TableCellCsvGeneratorLookupService,
     @Inject(TABLE_CELL_PARSERS) cellParsers: TableCellParserConstructor<unknown, unknown, unknown>[][],
-    @Inject(TABLE_CELL_RENDERERS) cellRenderers: TableCellRendererConstructor[][],
-    @Inject(TABLE_CELL_CSV_GENERATORS) cellCsvGenerators: TableCellCsvGeneratorConstructor<unknown, unknown>[][]
+    @Inject(TABLE_CELL_RENDERERS) cellRenderers: TableCellRendererConstructor[][]
   ) {
     this.registerAllParsers(cellParsers.flat());
     this.registerAllRenderers(cellRenderers.flat());
-    this.registerAllCsvGenerators(cellCsvGenerators.flat());
   }
 
   private registerAllParsers(cellParsers: TableCellParserConstructor<unknown, unknown, unknown>[] = []): void {
@@ -159,9 +135,5 @@ export class TableCellsModule {
 
   private registerAllRenderers(cellRenderers: TableCellRendererConstructor[] = []): void {
     this.tableCellRendererLookupService.registerAll(cellRenderers, TextTableCellRendererComponent);
-  }
-
-  private registerAllCsvGenerators(csvGenerators: TableCellCsvGeneratorConstructor<unknown, unknown>[]) {
-    this.tableCellCsvGeneratorLookupService.register(...csvGenerators);
   }
 }

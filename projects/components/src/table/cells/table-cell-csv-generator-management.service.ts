@@ -1,25 +1,26 @@
 import { Injectable, Type } from '@angular/core';
 import { TableCellCsvGeneratorBase } from './table-cell-csv-generator-base';
 import { CoreTableCellCsvGeneratorType } from './types/core-table-cell-csv-generator-type';
+import { includes, isArray } from 'lodash-es';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TableCellCsvGeneratorLookupService {
-  private readonly csvGenerator: Map<string, TableCellCsvGeneratorConstructor<unknown, unknown>> = new Map();
+export class TableCellCsvGeneratorManagementService {
+  private readonly csvGenerators: TableCellCsvGeneratorBase<unknown>[] = [];
 
-  public register(...csvGenerators: TableCellCsvGeneratorConstructor<unknown, unknown>[]): void {
-    csvGenerators.forEach(csvGenerator => {
-      this.csvGenerator.set(csvGenerator.type, csvGenerator);
-    });
+  public register(csvGenerators: TableCellCsvGeneratorBase<unknown> | TableCellCsvGeneratorBase<unknown>[]): void {
+    isArray(csvGenerators) ? csvGenerators.forEach(item => this.addGenerator(item)) : this.addGenerator(csvGenerators);
   }
 
-  public lookup<C, R>(type: string): TableCellCsvGeneratorConstructor<C, R> {
-    if (!this.csvGenerator.has(type)) {
-      throw Error(`Table cell csv generator of type '${type}' not registered.`);
+  private addGenerator(csvGenerator: TableCellCsvGeneratorBase<unknown>): void {
+    if (!includes(this.csvGenerators, csvGenerator)) {
+      this.csvGenerators.push(csvGenerator);
     }
+  }
 
-    return this.csvGenerator.get(type)! as TableCellCsvGeneratorConstructor<C, R>;
+  public findMatchingGenerator(type?: string): TableCellCsvGeneratorBase<unknown> | undefined {
+    return this.csvGenerators.find(generator => generator.cellType === type);
   }
 }
 

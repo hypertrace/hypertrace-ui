@@ -1,14 +1,15 @@
-import { TableCellCsvGenerator } from '../table-cell-csv-generator-lookup.service';
 import { TableCellCsvGeneratorBase } from '../table-cell-csv-generator-base';
-import { CoreTableCellCsvGeneratorType } from '../types/core-table-cell-csv-generator-type';
 import { DateFormatMode, DisplayDatePipe } from '@hypertrace/common';
+import { CoreTableCellRendererType } from '../types/core-table-cell-renderer-type';
+import { Injectable } from '@angular/core';
 
-@TableCellCsvGenerator({
-  type: CoreTableCellCsvGeneratorType.Timestamp
-})
-export class TableCellTimestampCsvGenerator extends TableCellCsvGeneratorBase<Date | number | string> {
+@Injectable({ providedIn: 'root' })
+export class TableCellTimestampCsvGenerator implements TableCellCsvGeneratorBase<Date | number | string> {
+  public readonly type = 'CSV_GENERATOR';
+  public cellType: string = CoreTableCellRendererType.Timestamp;
   private readonly displayDate: DisplayDatePipe = new DisplayDatePipe();
-  protected generateCsv(cellData: Date | number | string): string {
+
+  public generateSafeCsv(cellData?: Date | number | string): string {
     return this.displayDate.transform(cellData, { mode: DateFormatMode.TimeWithSeconds });
   }
 }

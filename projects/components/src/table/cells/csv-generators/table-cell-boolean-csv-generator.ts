@@ -1,12 +1,13 @@
-import { TableCellCsvGenerator } from '../table-cell-csv-generator-lookup.service';
 import { TableCellCsvGeneratorBase } from '../table-cell-csv-generator-base';
-import { CoreTableCellCsvGeneratorType } from '../types/core-table-cell-csv-generator-type';
+import { Injectable } from '@angular/core';
+import { isUndefined } from 'lodash-es';
 
-@TableCellCsvGenerator({
-  type: CoreTableCellCsvGeneratorType.Boolean
-})
-export class TableCellBooleanCsvGenerator extends TableCellCsvGeneratorBase<boolean> {
-  protected generateCsv(cellData?: boolean): string {
-    return String(cellData);
+@Injectable({ providedIn: 'root' })
+export class TableCellBooleanCsvGenerator implements TableCellCsvGeneratorBase<boolean> {
+  public readonly type = 'CSV_GENERATOR';
+  public readonly cellType: string = 'boolean';
+
+  public generateSafeCsv(cellData?: boolean): string | undefined {
+    return isUndefined(cellData) ? undefined : String(cellData);
   }
 }

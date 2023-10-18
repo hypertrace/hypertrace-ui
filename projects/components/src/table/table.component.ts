@@ -36,8 +36,8 @@ import {
   StorageType,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { isNil, isString, without } from 'lodash-es';
-import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
+import { isEmpty, isNil, isString, without } from 'lodash-es';
+import { BehaviorSubject, combineLatest, EMPTY, merge, Observable, of, Subject } from 'rxjs';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
@@ -73,6 +73,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TableColumnWidthUtil } from './util/column-width.util';
 import { FileDownloadService } from '../download-file/service/file-download.service';
 import { TableCsvDownloaderService } from './table-csv-downloader.service';
+import { NotificationService } from '../notification/notification.service';
 
 @Component({
   selector: 'ht-table',
@@ -516,6 +517,7 @@ export class TableComponent
     private readonly modalService: ModalService,
     private readonly fileDownloadService: FileDownloadService,
     private readonly tableCsvDownloaderService: TableCsvDownloaderService,
+    private readonly notificationService: NotificationService,
     private readonly preferenceService: PreferenceService
   ) {
     this.tableCsvDownloaderService.csvDownloadRequest$.pipe(filter(tableId => tableId === this.id)).subscribe(() => {
@@ -677,33 +679,42 @@ export class TableComponent
                   .map(column => [column.id, column.csvGenerator])
               );
 
-              return rows.map(row => {
-                let rowValue: Dictionary<string | undefined> = {};
-                Array.from(csvGeneratorMap.keys()).forEach(columnKey => {
-                  const value = row[columnKey];
-                  const csvGenerator = csvGeneratorMap.get(columnKey)!; // Safe to assert here since we are processing columns with valid csv generators only
-                  const csvContent = csvGenerator.generateSafeCsv(value, row);
+              return rows
+                .map(row => {
+                  let rowValue: Dictionary<string | undefined> = {};
+                  Array.from(csvGeneratorMap.keys()).forEach(columnKey => {
+                    const value = row[columnKey];
+                    const csvGenerator = csvGeneratorMap.get(columnKey)!; // Safe to assert here since we are processing columns with valid csv generators only
 
-                  if (!isNil(csvContent)) {
-                    if (isString(csvContent)) {
-                      rowValue[columnKey] = csvContent;
-                    } else {
-                      rowValue = { ...rowValue, ...csvContent };
+                    const csvContent = csvGenerator.generateSafeCsv(value, row);
+
+                    if (!isNil(csvContent)) {
+                      if (isString(csvContent)) {
+                        rowValue[columnKey] = csvContent;
+                      } else {
+                        rowValue = { ...rowValue, ...csvContent };
+                      }
                     }
-                  }
-                });
+                  });
 
-                return rowValue;
-              });
+                  return rowValue;
+                })
+                .filter(row => !isEmpty(row));
             })
           )
         ),
-        switchMap((content: Dictionary<string | undefined>[]) =>
-          this.fileDownloadService.downloadAsCsv({
-            fileName: 'table-data.csv',
+        switchMap((content: Dictionary<string | undefined>[]) => {
+          if (isEmpty(content)) {
+            this.notificationService.createInfoToast('No data to download');
+
+            return EMPTY;
+          }
+
+          return this.fileDownloadService.downloadAsCsv({
+            fileName: `table-data-${this.id}-${new Date().toISOString()}.csv`,
             dataSource: of(content)
-          })
-        )
+          });
+        })
       )
       .subscribe();
   }

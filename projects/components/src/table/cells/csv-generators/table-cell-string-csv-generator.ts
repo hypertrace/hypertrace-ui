@@ -1,12 +1,13 @@
-import { TableCellCsvGenerator } from '../table-cell-csv-generator-lookup.service';
 import { TableCellCsvGeneratorBase } from '../table-cell-csv-generator-base';
-import { CoreTableCellCsvGeneratorType } from '../types/core-table-cell-csv-generator-type';
+import { Injectable } from '@angular/core';
+import { CoreTableCellRendererType } from '../types/core-table-cell-renderer-type';
 
-@TableCellCsvGenerator({
-  type: CoreTableCellCsvGeneratorType.String
-})
-export class TableCellStringCsvGenerator extends TableCellCsvGeneratorBase<string> {
-  protected generateCsv(cellData: string): string {
-    return cellData;
+@Injectable({ providedIn: 'root' })
+export class TableCellStringCsvGenerator implements TableCellCsvGeneratorBase<string> {
+  public readonly type = 'CSV_GENERATOR';
+  public cellType: string = CoreTableCellRendererType.Text;
+
+  public generateSafeCsv(cellData?: string): string | undefined {
+    return cellData ?? undefined;
   }
 }

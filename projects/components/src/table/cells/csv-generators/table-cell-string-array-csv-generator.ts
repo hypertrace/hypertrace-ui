@@ -1,12 +1,14 @@
-import { TableCellCsvGenerator } from '../table-cell-csv-generator-lookup.service';
 import { TableCellCsvGeneratorBase } from '../table-cell-csv-generator-base';
-import { CoreTableCellCsvGeneratorType } from '../types/core-table-cell-csv-generator-type';
+import { CoreTableCellRendererType } from '../types/core-table-cell-renderer-type';
+import { Injectable } from '@angular/core';
+import { isUndefined } from 'lodash-es';
 
-@TableCellCsvGenerator({
-  type: CoreTableCellCsvGeneratorType.StringArray
-})
-export class TableCellStringArrayCsvGenerator extends TableCellCsvGeneratorBase<string[]> {
-  protected generateCsv(cellData: string[]): string {
-    return cellData.join(', ');
+@Injectable({ providedIn: 'root' })
+export class TableCellStringArrayCsvGenerator implements TableCellCsvGeneratorBase<string[]> {
+  public readonly type = 'CSV_GENERATOR';
+  public readonly cellType: string = CoreTableCellRendererType.StringArray;
+
+  public generateSafeCsv(cellData?: string[]): string | undefined {
+    return isUndefined(cellData) ? undefined : cellData.join(', ');
   }
 }
