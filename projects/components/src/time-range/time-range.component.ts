@@ -72,10 +72,7 @@ import { PopoverRef } from '../popover/popover-ref';
 export class TimeRangeComponent {
   @Input()
   public dropdownLocationPreference: PopoverRelativePositionLocation[] = [
-    PopoverRelativePositionLocation.BelowLeftAligned,
-    PopoverRelativePositionLocation.BelowRightAligned,
-    PopoverRelativePositionLocation.AboveLeftAligned,
-    PopoverRelativePositionLocation.AboveRightAligned
+    PopoverRelativePositionLocation.BelowRightAligned
   ];
 
   public timeRange$: Observable<TimeRange> = this.timeRangeService.getTimeRangeAndChanges();

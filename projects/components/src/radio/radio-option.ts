@@ -6,4 +6,5 @@ export interface RadioOption {
   description?: string;
   disabled?: boolean;
   infoText?: string;
+  tooltip?: string;
 }

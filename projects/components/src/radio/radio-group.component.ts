@@ -40,6 +40,7 @@ import { RadioOption } from './radio-option';
         [ngClass]="[this.optionsDirection, this.disabled || option.disabled ? 'disabled' : '']"
         [value]="option.value"
         [disabled]="option.disabled"
+        [htTooltip]="option.tooltip"
       >
         <div class="radio-button-item">
           <ng-container
