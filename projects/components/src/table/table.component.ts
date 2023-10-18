@@ -34,6 +34,7 @@ import {
   NumberCoercer,
   PreferenceService,
   StorageType,
+  SubscriptionLifecycle,
   TypedSimpleChanges
 } from '@hypertrace/common';
 import { isEmpty, isNil, isString, without } from 'lodash-es';
@@ -518,11 +519,14 @@ export class TableComponent
     private readonly fileDownloadService: FileDownloadService,
     private readonly tableCsvDownloaderService: TableCsvDownloaderService,
     private readonly notificationService: NotificationService,
-    private readonly preferenceService: PreferenceService
+    private readonly preferenceService: PreferenceService,
+    private readonly subscriptionLifecycle: SubscriptionLifecycle
   ) {
-    this.tableCsvDownloaderService.csvDownloadRequest$.pipe(filter(tableId => tableId === this.id)).subscribe(() => {
-      this.downloadCsv();
-    });
+    this.subscriptionLifecycle.add(
+      this.tableCsvDownloaderService.csvDownloadRequest$.pipe(filter(tableId => tableId === this.id)).subscribe(() => {
+        this.downloadCsv();
+      })
+    );
 
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
       .pipe(

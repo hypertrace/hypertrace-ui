@@ -6,7 +6,8 @@ import {
   NavigationService,
   PreferenceService,
   PreferenceValue,
-  StorageType
+  StorageType,
+  SubscriptionLifecycle
 } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
@@ -98,6 +99,9 @@ describe('Table component', () => {
       }),
       mockProvider(NotificationService, {
         createInfoToast: jest.fn()
+      }),
+      mockProvider(SubscriptionLifecycle, {
+        add: jest.fn()
       })
     ],
     declarations: [MockComponent(PaginatorComponent), MockComponent(SearchBoxComponent)],
