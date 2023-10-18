@@ -1,10 +1,10 @@
-import { TableCellCsvGeneratorBase } from '../table-cell-csv-generator-base';
+import { TableCellCsvGenerator } from '../table-cell-csv-generator';
 import { DateFormatMode, DisplayDatePipe } from '@hypertrace/common';
 import { CoreTableCellRendererType } from '../types/core-table-cell-renderer-type';
 import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
-export class TableCellTimestampCsvGenerator implements TableCellCsvGeneratorBase<Date | number | string> {
+export class TableCellTimestampCsvGenerator implements TableCellCsvGenerator<Date | number | string> {
   public readonly type = 'CSV_GENERATOR';
   public cellType: string = CoreTableCellRendererType.Timestamp;
   private readonly displayDate: DisplayDatePipe = new DisplayDatePipe();

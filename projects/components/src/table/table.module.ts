@@ -20,7 +20,7 @@ import { MemoizeModule } from '@hypertrace/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { LayoutChangeModule } from '../layout/layout-change.module';
 import { TableCellCsvGeneratorManagementService } from './cells/table-cell-csv-generator-management.service';
-import { TABLE_CELL_CSV_GENERATORS, TableCellCsvGeneratorBase } from './cells/table-cell-csv-generator-base';
+import { TABLE_CELL_CSV_GENERATORS, TableCellCsvGenerator } from './cells/table-cell-csv-generator';
 import { TableCellStringArrayCsvGenerator } from './cells/csv-generators/table-cell-string-array-csv-generator';
 import { TableCellBooleanCsvGenerator } from './cells/csv-generators/table-cell-boolean-csv-generator';
 import { TableCellNumberCsvGenerator } from './cells/csv-generators/table-cell-number-csv-generator';
@@ -67,7 +67,7 @@ export class TableModule {
   public constructor(
     csvGeneratorLookupService: TableCellCsvGeneratorManagementService,
     injector: Injector,
-    @Inject(TABLE_CELL_CSV_GENERATORS) csvGeneratorTokens: InjectionToken<TableCellCsvGeneratorBase<unknown>>[][]
+    @Inject(TABLE_CELL_CSV_GENERATORS) csvGeneratorTokens: InjectionToken<TableCellCsvGenerator<unknown>>[][]
   ) {
     csvGeneratorTokens
       .flat()

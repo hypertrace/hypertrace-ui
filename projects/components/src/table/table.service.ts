@@ -9,13 +9,13 @@ import { CoreTableCellRendererType } from './cells/types/core-table-cell-rendere
 import { TableCdkDataSource } from './data/table-cdk-data-source';
 import { TableColumnConfig } from './table-api';
 import { TableCellCsvGeneratorManagementService } from './cells/table-cell-csv-generator-management.service';
-import { TableCellCsvGeneratorBase } from './cells/table-cell-csv-generator-base';
+import { TableCellCsvGenerator } from './cells/table-cell-csv-generator';
 
 export interface TableColumnConfigExtended extends TableColumnConfig {
   attribute?: FilterAttribute; // Undefined if we can't determine scope yet (e.g. Interactions)
   renderer: TableCellRendererConstructor;
   parser: TableCellParserBase<unknown, unknown, unknown>;
-  csvGenerator?: TableCellCsvGeneratorBase<unknown>;
+  csvGenerator?: TableCellCsvGenerator<unknown>;
   filterValues: unknown[];
 }
 

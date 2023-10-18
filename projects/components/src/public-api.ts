@@ -380,7 +380,7 @@ export * from './table/cells/csv-generators/table-cell-number-csv-generator';
 export * from './table/cells/csv-generators/table-cell-string-csv-generator';
 export * from './table/cells/csv-generators/table-cell-timestamp-csv-generator';
 export * from './table/cells/csv-generators/table-cell-string-array-csv-generator';
-export * from './table/cells/table-cell-csv-generator-base';
+export * from './table/cells/table-cell-csv-generator';
 export * from './table/cells/types/core-table-cell-csv-generator-type';
 
 // TextArea
