@@ -11,7 +11,7 @@ import {
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { EMPTY, of } from 'rxjs';
+import { EMPTY, of, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LetAsyncModule } from '../let-async/let-async.module';
 import { PaginatorComponent } from '../paginator/paginator.component';
@@ -24,9 +24,12 @@ import { StatefulTableRow, TableColumnConfig, TableMode, TableSelectionMode, Tab
 import { TableComponent } from './table.component';
 import { TableColumnConfigExtended, TableService } from './table.service';
 import { ModalService } from '../modal/modal.service';
+import { FileDownloadService, NotificationService, TableCsvDownloaderService } from '@hypertrace/components';
 
 describe('Table component', () => {
   let localStorage: PreferenceValue = { columns: [] };
+
+  const mockDownloadSubject = new Subject();
   // TODO remove builders once table stops mutating inputs
   const buildData = () => [
     {
@@ -85,6 +88,16 @@ describe('Table component', () => {
       mockProvider(PreferenceService, {
         getOnce: jest.fn().mockReturnValue(localStorage),
         set: (_: unknown, value: PreferenceValue) => (localStorage = value)
+      }),
+      mockProvider(TableCsvDownloaderService, {
+        csvDownloadRequest$: mockDownloadSubject.asObservable(),
+        triggerDownload: jest.fn().mockImplementation(id => mockDownloadSubject.next(id))
+      }),
+      mockProvider(FileDownloadService, {
+        downloadAsCsv: jest.fn().mockReturnValue(of(undefined))
+      }),
+      mockProvider(NotificationService, {
+        createInfoToast: jest.fn()
       })
     ],
     declarations: [MockComponent(PaginatorComponent), MockComponent(SearchBoxComponent)],
