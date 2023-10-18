@@ -95,7 +95,6 @@ describe('Table component', () => {
         triggerDownload: jest.fn().mockImplementation(id => mockDownloadSubject.next(id)),
         executeDownload: jest.fn()
       }),
-      ,
       mockProvider(SubscriptionLifecycle, {
         add: jest.fn()
       })
