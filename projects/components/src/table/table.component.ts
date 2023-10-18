@@ -36,7 +36,7 @@ import {
   StorageType,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { isNil, without } from 'lodash-es';
+import { isNil, isString, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
@@ -678,12 +678,19 @@ export class TableComponent
               );
 
               return rows.map(row => {
-                const rowValue: Dictionary<string | undefined> = {};
+                let rowValue: Dictionary<string | undefined> = {};
                 Array.from(csvGeneratorMap.keys()).forEach(columnKey => {
                   const value = row[columnKey];
                   const csvGenerator = csvGeneratorMap.get(columnKey)!; // Safe to assert here since we are processing columns with valid csv generators only
+                  const csvContent = csvGenerator.generateSafeCsv(value, row);
 
-                  rowValue[columnKey] = csvGenerator.generateSafeCsvString(value, row);
+                  if (!isNil(csvContent)) {
+                    if (isString(csvContent)) {
+                      rowValue[columnKey] = csvContent;
+                    } else {
+                      rowValue = { ...rowValue, ...csvContent };
+                    }
+                  }
                 });
 
                 return rowValue;

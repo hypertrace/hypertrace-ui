@@ -46,6 +46,8 @@ import {
 import { TableCellStringArrayCsvGenerator } from './csv-generators/table-cell-string-array-csv-generator';
 import { TableCellBooleanCsvGenerator } from './csv-generators/table-cell-boolean-csv-generator';
 import { TableCellNumberCsvGenerator } from './csv-generators/table-cell-number-csv-generator';
+import { TableCellStringCsvGenerator } from './csv-generators/table-cell-string-csv-generator';
+import { TableCellTimestampCsvGenerator } from './csv-generators/table-cell-timestamp-csv-generator';
 
 export const TABLE_CELL_RENDERERS = new InjectionToken<unknown[][]>('TABLE_CELL_RENDERERS');
 export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PARSERS');
@@ -126,7 +128,14 @@ export const TABLE_CELL_CSV_GENERATORS = new InjectionToken<unknown[][]>('TABLE_
     },
     {
       provide: TABLE_CELL_CSV_GENERATORS,
-      useValue: [TableCellStringArrayCsvGenerator, TableCellBooleanCsvGenerator, TableCellNumberCsvGenerator]
+      useValue: [
+        TableCellStringArrayCsvGenerator,
+        TableCellBooleanCsvGenerator,
+        TableCellNumberCsvGenerator,
+        TableCellStringCsvGenerator,
+        TableCellTimestampCsvGenerator
+      ],
+      multi: true
     }
   ]
 })
