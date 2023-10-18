@@ -758,4 +758,28 @@ describe('Table component', () => {
 
     flush();
   }));
+
+  test('should trigger csv download as expected if ID matches', fakeAsync(() => {
+    const columns = buildColumns();
+    const spectator = createHost(
+      '<ht-table id="test-table" [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
+      {
+        hostProps: {
+          columnConfigs: columns,
+          data: buildData(),
+          selectionMode: TableSelectionMode.Single,
+          mode: TableMode.Flat
+        }
+      }
+    );
+    spectator.tick();
+
+    mockDownloadSubject.next('test-table');
+    expect(spectator.inject(TableCsvDownloaderService).executeDownload).toHaveBeenCalledTimes(1);
+
+    // This should not trigger a download event in this table.
+    mockDownloadSubject.next('test-table-no-match');
+    expect(spectator.inject(TableCsvDownloaderService).executeDownload).toHaveBeenCalledTimes(1);
+    flush();
+  }));
 });
