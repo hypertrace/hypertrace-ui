@@ -6,7 +6,7 @@ import { CoreTableCellRendererType } from '../types/core-table-cell-renderer-typ
 export class TableCellStringCsvGenerator implements TableCellCsvGenerator<string> {
   public cellType: string = CoreTableCellRendererType.Text;
 
-  public generateSafeCsv(cellData?: string): string | undefined {
+  public generateSafeCsv(cellData: string | null | undefined): string | undefined {
     return cellData ?? undefined;
   }
 }

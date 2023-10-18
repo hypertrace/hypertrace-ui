@@ -7,7 +7,7 @@ import { isNil } from 'lodash-es';
 export class TableCellStringArrayCsvGenerator implements TableCellCsvGenerator<string[]> {
   public readonly cellType: string = CoreTableCellRendererType.StringArray;
 
-  public generateSafeCsv(cellData?: string[]): string | undefined {
+  public generateSafeCsv(cellData: string[] | null | undefined): string | undefined {
     return isNil(cellData) ? undefined : cellData.join(', ');
   }
 }

@@ -6,7 +6,7 @@ import { isNil } from 'lodash-es';
 export class TableCellBooleanCsvGenerator implements TableCellCsvGenerator<boolean> {
   public readonly cellType: string = 'boolean';
 
-  public generateSafeCsv(cellData?: boolean): string | undefined {
+  public generateSafeCsv(cellData: boolean | null | undefined): string | undefined {
     return isNil(cellData) ? undefined : String(cellData);
   }
 }

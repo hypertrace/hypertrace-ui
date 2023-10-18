@@ -8,7 +8,7 @@ export class TableCellTimestampCsvGenerator implements TableCellCsvGenerator<Dat
   public cellType: string = CoreTableCellRendererType.Timestamp;
   private readonly displayDate: DisplayDatePipe = new DisplayDatePipe();
 
-  public generateSafeCsv(cellData?: Date | number | string): string {
+  public generateSafeCsv(cellData: Date | number | string | null | undefined): string {
     return this.displayDate.transform(cellData, { mode: DateFormatMode.TimeWithSeconds });
   }
 }
