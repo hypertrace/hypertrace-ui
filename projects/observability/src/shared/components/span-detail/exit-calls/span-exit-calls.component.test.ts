@@ -5,9 +5,10 @@ import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
-import { EMPTY } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { SpanExitCallsComponent } from './span-exit-calls.component';
 import { SpanExitCallsModule } from './span-exit-calls.module';
+import { FileDownloadService, NotificationService } from '@hypertrace/components';
 
 describe('SpanExitCallsComponent', () => {
   let spectator: Spectator<SpanExitCallsComponent>;
@@ -22,6 +23,12 @@ describe('SpanExitCallsComponent', () => {
       }),
       mockProvider(NavigationService, {
         navigation$: EMPTY
+      }),
+      mockProvider(FileDownloadService, {
+        downloadAsCsv: jest.fn().mockReturnValue(of(undefined))
+      }),
+      mockProvider(NotificationService, {
+        createInfoToast: jest.fn()
       })
     ]
   });
