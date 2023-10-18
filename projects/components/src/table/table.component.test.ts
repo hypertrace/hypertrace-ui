@@ -25,7 +25,7 @@ import { StatefulTableRow, TableColumnConfig, TableMode, TableSelectionMode, Tab
 import { TableComponent } from './table.component';
 import { TableColumnConfigExtended, TableService } from './table.service';
 import { ModalService } from '../modal/modal.service';
-import { FileDownloadService, NotificationService, TableCsvDownloaderService } from '@hypertrace/components';
+import { TableCsvDownloaderService } from '@hypertrace/components';
 
 describe('Table component', () => {
   let localStorage: PreferenceValue = { columns: [] };
@@ -92,14 +92,10 @@ describe('Table component', () => {
       }),
       mockProvider(TableCsvDownloaderService, {
         csvDownloadRequest$: mockDownloadSubject.asObservable(),
-        triggerDownload: jest.fn().mockImplementation(id => mockDownloadSubject.next(id))
+        triggerDownload: jest.fn().mockImplementation(id => mockDownloadSubject.next(id)),
+        executeDownload: jest.fn()
       }),
-      mockProvider(FileDownloadService, {
-        downloadAsCsv: jest.fn().mockReturnValue(of(undefined))
-      }),
-      mockProvider(NotificationService, {
-        createInfoToast: jest.fn()
-      }),
+      ,
       mockProvider(SubscriptionLifecycle, {
         add: jest.fn()
       })

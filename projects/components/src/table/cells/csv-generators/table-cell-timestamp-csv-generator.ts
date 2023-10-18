@@ -5,7 +5,6 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class TableCellTimestampCsvGenerator implements TableCellCsvGenerator<Date | number | string> {
-  public readonly type = 'CSV_GENERATOR';
   public cellType: string = CoreTableCellRendererType.Timestamp;
   private readonly displayDate: DisplayDatePipe = new DisplayDatePipe();
 

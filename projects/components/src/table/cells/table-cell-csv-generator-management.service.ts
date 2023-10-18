@@ -13,7 +13,7 @@ export class TableCellCsvGeneratorManagementService {
   }
 
   private addGenerator(csvGenerator: TableCellCsvGenerator<unknown>): void {
-    if (!isUndefined(this.findMatchingGenerator(csvGenerator.cellType))) {
+    if (isUndefined(this.findMatchingGenerator(csvGenerator.cellType))) {
       this.csvGenerators.push(csvGenerator);
     }
   }

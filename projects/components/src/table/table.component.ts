@@ -37,8 +37,8 @@ import {
   SubscriptionLifecycle,
   TypedSimpleChanges
 } from '@hypertrace/common';
-import { isEmpty, isNil, isString, without } from 'lodash-es';
-import { BehaviorSubject, combineLatest, EMPTY, merge, Observable, of, Subject } from 'rxjs';
+import { isNil, without } from 'lodash-es';
+import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
@@ -72,14 +72,13 @@ import { ModalSize } from '../modal/modal';
 import { DOCUMENT } from '@angular/common';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TableColumnWidthUtil } from './util/column-width.util';
-import { FileDownloadService } from '../download-file/service/file-download.service';
 import { TableCsvDownloaderService } from './table-csv-downloader.service';
-import { NotificationService } from '../notification/notification.service';
 
 @Component({
   selector: 'ht-table',
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SubscriptionLifecycle],
   template: `
     <div class="table" (htLayoutChange)="this.onLayoutChange()" #table>
       <cdk-table
@@ -516,9 +515,7 @@ export class TableComponent
     private readonly domElementMeasurerService: DomElementMeasurerService,
     private readonly tableService: TableService,
     private readonly modalService: ModalService,
-    private readonly fileDownloadService: FileDownloadService,
     private readonly tableCsvDownloaderService: TableCsvDownloaderService,
-    private readonly notificationService: NotificationService,
     private readonly preferenceService: PreferenceService,
     private readonly subscriptionLifecycle: SubscriptionLifecycle
   ) {
@@ -663,64 +660,23 @@ export class TableComponent
   }
 
   private downloadCsv(): void {
-    combineLatest([this.columnConfigs$, this.filters$])
-      .pipe(
-        switchMap(([columnConfigs, filters]) =>
-          (!isNil(this.data)
-            ? this.data.getData({
-                columns: columnConfigs,
-                position: { limit: 1000, startIndex: 0 },
-                filters: filters ?? []
-              })
-            : of({ data: [], totalCount: 0 })
-          ).pipe(
-            take(1),
-            map((response: TableDataResponse<TableRow>) => response.data),
-            map(rows => {
-              const csvGeneratorMap = new Map(
-                columnConfigs
-                  .filter(column => !isNil(column.csvGenerator))
-                  .map(column => [column.id, column.csvGenerator])
-              );
-
-              return rows
-                .map(row => {
-                  let rowValue: Dictionary<string | undefined> = {};
-                  Array.from(csvGeneratorMap.keys()).forEach(columnKey => {
-                    const value = row[columnKey];
-                    const csvGenerator = csvGeneratorMap.get(columnKey)!; // Safe to assert here since we are processing columns with valid csv generators only
-
-                    const csvContent = csvGenerator.generateSafeCsv(value, row);
-
-                    if (!isNil(csvContent)) {
-                      if (isString(csvContent)) {
-                        rowValue[columnKey] = csvContent;
-                      } else {
-                        rowValue = { ...rowValue, ...csvContent };
-                      }
-                    }
-                  });
-
-                  return rowValue;
-                })
-                .filter(row => !isEmpty(row));
+    const downloadConfig$ = combineLatest([this.columnConfigs$, this.filters$]).pipe(
+      switchMap(([columnConfigs, filters]) =>
+        (!isNil(this.data)
+          ? this.data.getData({
+              columns: columnConfigs,
+              position: { limit: 1000, startIndex: 0 },
+              filters: filters ?? []
             })
-          )
-        ),
-        switchMap((content: Dictionary<string | undefined>[]) => {
-          if (isEmpty(content)) {
-            this.notificationService.createInfoToast('No data to download');
-
-            return EMPTY;
-          }
-
-          return this.fileDownloadService.downloadAsCsv({
-            fileName: `table-data-${this.id}-${new Date().toISOString()}.csv`,
-            dataSource: of(content)
-          });
-        })
+          : of({ data: [], totalCount: 0 })
+        ).pipe(
+          take(1),
+          map((response: TableDataResponse<TableRow>) => ({ rows: response.data, columnConfigs: columnConfigs }))
+        )
       )
-      .subscribe();
+    );
+
+    this.tableCsvDownloaderService.executeDownload(downloadConfig$, this.id);
   }
 
   private addEventListeners(): void {

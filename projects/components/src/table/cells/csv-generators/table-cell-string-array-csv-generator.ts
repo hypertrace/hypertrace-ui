@@ -5,7 +5,6 @@ import { isNil } from 'lodash-es';
 
 @Injectable({ providedIn: 'root' })
 export class TableCellStringArrayCsvGenerator implements TableCellCsvGenerator<string[]> {
-  public readonly type = 'CSV_GENERATOR';
   public readonly cellType: string = CoreTableCellRendererType.StringArray;
 
   public generateSafeCsv(cellData?: string[]): string | undefined {
