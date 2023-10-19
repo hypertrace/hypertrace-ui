@@ -17,6 +17,7 @@ export class TableCsvDownloaderService {
     private readonly fileDownloadService: FileDownloadService,
     private readonly notificationService: NotificationService
   ) {}
+
   public triggerDownload(tableId: string): void {
     this.csvDownloadRequestSubject.next(tableId);
   }
@@ -37,8 +38,8 @@ export class TableCsvDownloaderService {
               let rowValue: Dictionary<string | undefined> = {};
               Array.from(csvGeneratorMap.keys()).forEach(columnKey => {
                 const columnConfig: TableColumnConfigExtended = csvGeneratorMap.get(columnKey)!; // Safe to assert since all columns will have a config
-                const value = row[columnKey];
                 const csvGenerator = columnConfig.csvGenerator!; // Safe to assert here since we are processing columns with valid csv generators only
+                const value = row[columnKey];
 
                 const csvContent = csvGenerator.generateSafeCsv(value, row);
 

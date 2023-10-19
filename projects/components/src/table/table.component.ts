@@ -1287,6 +1287,6 @@ interface TableLocalPreferences {
 type PersistedTableColumnConfig = Pick<TableColumnConfig, 'id' | 'visible'>;
 
 export interface TableCsvDownloadConfig {
-  limit: number;
-  filename: CsvFileName;
+  limit?: number;
+  filename?: CsvFileName;
 }
