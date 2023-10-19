@@ -6,12 +6,13 @@ import {
   NavigationService,
   PreferenceService,
   PreferenceValue,
-  StorageType
+  StorageType,
+  SubscriptionLifecycle
 } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
-import { EMPTY, of } from 'rxjs';
+import { EMPTY, of, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LetAsyncModule } from '../let-async/let-async.module';
 import { PaginatorComponent } from '../paginator/paginator.component';
@@ -24,9 +25,12 @@ import { StatefulTableRow, TableColumnConfig, TableMode, TableSelectionMode, Tab
 import { TableComponent } from './table.component';
 import { TableColumnConfigExtended, TableService } from './table.service';
 import { ModalService } from '../modal/modal.service';
+import { TableCsvDownloaderService } from '@hypertrace/components';
 
 describe('Table component', () => {
   let localStorage: PreferenceValue = { columns: [] };
+
+  const mockDownloadSubject = new Subject();
   // TODO remove builders once table stops mutating inputs
   const buildData = () => [
     {
@@ -85,6 +89,14 @@ describe('Table component', () => {
       mockProvider(PreferenceService, {
         getOnce: jest.fn().mockReturnValue(localStorage),
         set: (_: unknown, value: PreferenceValue) => (localStorage = value)
+      }),
+      mockProvider(TableCsvDownloaderService, {
+        csvDownloadRequest$: mockDownloadSubject.asObservable(),
+        triggerDownload: jest.fn().mockImplementation(id => mockDownloadSubject.next(id)),
+        executeDownload: jest.fn()
+      }),
+      mockProvider(SubscriptionLifecycle, {
+        add: jest.fn()
       })
     ],
     declarations: [MockComponent(PaginatorComponent), MockComponent(SearchBoxComponent)],
@@ -744,6 +756,30 @@ describe('Table component', () => {
       StorageType.Local
     );
 
+    flush();
+  }));
+
+  test('should trigger csv download as expected if ID matches', fakeAsync(() => {
+    const columns = buildColumns();
+    const spectator = createHost(
+      '<ht-table id="test-table" [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
+      {
+        hostProps: {
+          columnConfigs: columns,
+          data: buildData(),
+          selectionMode: TableSelectionMode.Single,
+          mode: TableMode.Flat
+        }
+      }
+    );
+    spectator.tick();
+
+    mockDownloadSubject.next('test-table');
+    expect(spectator.inject(TableCsvDownloaderService).executeDownload).toHaveBeenCalledTimes(1);
+
+    // This should not trigger a download event in this table.
+    mockDownloadSubject.next('test-table-no-match');
+    expect(spectator.inject(TableCsvDownloaderService).executeDownload).toHaveBeenCalledTimes(1);
     flush();
   }));
 });

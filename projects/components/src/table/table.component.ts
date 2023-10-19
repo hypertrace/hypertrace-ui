@@ -34,10 +34,11 @@ import {
   NumberCoercer,
   PreferenceService,
   StorageType,
+  SubscriptionLifecycle,
   TypedSimpleChanges
 } from '@hypertrace/common';
 import { isNil, without } from 'lodash-es';
-import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
@@ -54,7 +55,7 @@ import {
   TableDataSourceProvider
 } from './data/table-cdk-data-source-api';
 import { TableCdkRowUtil } from './data/table-cdk-row-util';
-import { TableDataSource } from './data/table-data-source';
+import { TableDataResponse, TableDataSource } from './data/table-data-source';
 import {
   StatefulTableRow,
   TableColumnConfig,
@@ -71,11 +72,13 @@ import { ModalSize } from '../modal/modal';
 import { DOCUMENT } from '@angular/common';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TableColumnWidthUtil } from './util/column-width.util';
+import { TableCsvDownloaderService } from './table-csv-downloader.service';
 
 @Component({
   selector: 'ht-table',
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SubscriptionLifecycle],
   template: `
     <div class="table" (htLayoutChange)="this.onLayoutChange()" #table>
       <cdk-table
@@ -512,8 +515,16 @@ export class TableComponent
     private readonly domElementMeasurerService: DomElementMeasurerService,
     private readonly tableService: TableService,
     private readonly modalService: ModalService,
-    private readonly preferenceService: PreferenceService
+    private readonly tableCsvDownloaderService: TableCsvDownloaderService,
+    private readonly preferenceService: PreferenceService,
+    private readonly subscriptionLifecycle: SubscriptionLifecycle
   ) {
+    this.subscriptionLifecycle.add(
+      this.tableCsvDownloaderService.csvDownloadRequest$.pipe(filter(tableId => tableId === this.id)).subscribe(() => {
+        this.downloadCsv();
+      })
+    );
+
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
       .pipe(
         map(([queryParamMap, columns]) => this.sortDataFromUrl(queryParamMap, columns)),
@@ -646,6 +657,26 @@ export class TableComponent
   public onResizeMouseUp(event: MouseEvent): void {
     this.checkAndResizeColumn(event);
     this.changeDetector.detectChanges();
+  }
+
+  private downloadCsv(): void {
+    const downloadConfig$ = combineLatest([this.columnConfigs$, this.filters$]).pipe(
+      switchMap(([columnConfigs, filters]) =>
+        (!isNil(this.data)
+          ? this.data.getData({
+              columns: columnConfigs,
+              position: { limit: 1000, startIndex: 0 },
+              filters: filters ?? []
+            })
+          : of({ data: [], totalCount: 0 })
+        ).pipe(
+          take(1),
+          map((response: TableDataResponse<TableRow>) => ({ rows: response.data, columnConfigs: columnConfigs }))
+        )
+      )
+    );
+
+    this.tableCsvDownloaderService.executeDownload(downloadConfig$, this.id);
   }
 
   private addEventListeners(): void {

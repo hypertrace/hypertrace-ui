@@ -4,11 +4,12 @@ import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { DEFAULT_COLOR_PALETTE, NavigationService } from '@hypertrace/common';
 import { getMockFlexLayoutProviders } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
-import { EMPTY } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { SpanType } from '../../../../graphql/model/schema/span';
 import { WaterfallData } from './waterfall-chart';
 import { WaterfallChartComponent } from './waterfall-chart.component';
 import { WaterfallChartModule } from './waterfall-chart.module';
+import { FileDownloadService, NotificationService } from '@hypertrace/components';
 
 describe('Waterfall Chart component', () => {
   const data: WaterfallData[] = [
@@ -92,6 +93,12 @@ describe('Waterfall Chart component', () => {
       },
       mockProvider(ActivatedRoute, {
         queryParamMap: EMPTY
+      }),
+      mockProvider(FileDownloadService, {
+        downloadAsCsv: jest.fn().mockReturnValue(of(undefined))
+      }),
+      mockProvider(NotificationService, {
+        createInfoToast: jest.fn()
       }),
       ...getMockFlexLayoutProviders()
     ],
