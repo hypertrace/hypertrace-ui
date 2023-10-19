@@ -107,7 +107,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       .withSeries(...this.series)
       .withTooltip(
         this.chartTooltipBuilderService.constructTooltip<TData, Series<TData>>(data =>
-          this.convertToDefaultTooltipRenderData(Array.isArray(data?.[0].dataPoint) ? [data[3]] : data)
+          this.convertToDefaultTooltipRenderData(data)
         )
       )
       .withEventListener(ChartEvent.Hover, data => {
@@ -210,7 +210,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     }
 
     return {
-      title: this.resolveTooltipTitle(data[0]),
+      title: Array.isArray(data?.[0].dataPoint) ? '' : this.resolveTooltipTitle(data[0]),
       labeledValues: data.map(singleValue => ({
         label: singleValue.context.name,
         value: defaultYDataAccessor<number | string>(singleValue.dataPoint),
