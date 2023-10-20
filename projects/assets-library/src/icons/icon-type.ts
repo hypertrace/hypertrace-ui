@@ -65,6 +65,7 @@ export const enum IconType {
   FileCode = 'svg:file-code',
   Filter = 'svg:filter',
   First = 'first_page',
+  Folder = 'svg:folder',
   Go = 'svg:go',
   Helm = 'svg:helm',
   Home = 'home',

@@ -113,6 +113,23 @@ export interface TopologyNeighborhood {
   edges: TopologyEdge[];
 }
 
+export const enum TopologyInternalNodeType {
+  GroupNode = 'group-node'
+}
+
+export interface TopologyGroupNode {
+  nodeType: TopologyInternalNodeType.GroupNode;
+  edges: TopologyEdge[];
+  expanded: boolean;
+  data: TopologyGroupNodeData;
+  children: TopologyNode[];
+}
+
+export interface TopologyGroupNodeData {
+  title: string;
+  suffixIcon?: string;
+}
+
 export interface TopologyNodeRenderer {
   drawNode(parentElement: SVGSVGElement | SVGGElement, node: RenderableTopologyNode): void;
   getRenderedNodeData(node: RenderableTopologyNode): RenderableTopologyNodeRenderedData | undefined;
@@ -226,3 +243,7 @@ export interface TopologyInteractionHandler<T = unknown> {
 
 export type TopologyNodeInteractionHandler = TopologyInteractionHandler<TopologyNode>;
 export type TopologyEdgeInteractionHandler = TopologyInteractionHandler<TopologyEdge>;
+
+export const isTopologyGroupNode = (node: TopologyNode): node is TopologyGroupNode =>
+  'nodeType' in node &&
+  (node as TopologyNode & Partial<TopologyGroupNode>).nodeType === TopologyInternalNodeType.GroupNode;

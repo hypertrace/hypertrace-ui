@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import {
   ApplicationRef,
@@ -10,7 +11,7 @@ import {
 } from '@angular/core';
 import { assertUnreachable, Key } from '@hypertrace/common';
 import { Selection } from 'd3-selection';
-import { isNil, throttle } from 'lodash-es';
+import { cloneDeep, isNil, throttle } from 'lodash-es';
 import { take } from 'rxjs/operators';
 import { D3UtilService } from '../../utils/d3/d3-util.service';
 import {
@@ -22,12 +23,14 @@ import {
   TopologyEdge,
   TopologyEdgeRenderer,
   TopologyElementVisibility,
+  TopologyGroupNode,
   TopologyLayout,
   TopologyLayoutType,
   TopologyNeighborhood,
   TopologyNode,
   TopologyNodeRenderer,
-  TopologyTooltip
+  TopologyTooltip,
+  isTopologyGroupNode
 } from '../topology';
 import { TopologyConverter } from '../utils/topology-converter';
 import { TopologyNeighborhoodFinder } from '../utils/topology-neighborhood-finder';
@@ -63,7 +66,8 @@ export class D3Topology implements Topology {
   protected tooltip?: TopologyTooltip;
   protected layout: TopologyLayout;
 
-  protected readonly userNodes: TopologyNode[];
+  protected userNodes: TopologyNode[];
+  protected readonly initialUserNodes: TopologyNode[];
   protected readonly nodeRenderer: TopologyNodeRenderer;
   protected readonly edgeRenderer: TopologyEdgeRenderer;
   protected readonly domRenderer: Renderer2;
@@ -80,6 +84,7 @@ export class D3Topology implements Topology {
     protected readonly config: TopologyConfiguration
   ) {
     this.userNodes = config.nodes;
+    this.initialUserNodes = cloneDeep(config.nodes);
     this.nodeRenderer = config.nodeRenderer;
     this.edgeRenderer = config.edgeRenderer;
     this.domRenderer = injector.get(Renderer2 as Type<Renderer2>);
@@ -95,7 +100,7 @@ export class D3Topology implements Topology {
     this.hover = new TopologyHover(this.d3Util, this.domRenderer);
     this.click = new TopologyClick(this.d3Util, this.domRenderer);
     this.zoom = new TopologyZoom();
-    this.layout = this.initializeLayout(config.layoutType);
+    this.layout = this.initializeLayout(TopologyLayoutType.GraphLayout);
   }
 
   private initializeLayout(layoutType?: TopologyLayoutType): TopologyLayout {
@@ -159,8 +164,10 @@ export class D3Topology implements Topology {
   }
 
   private updateLayout(): void {
+    this.runAndDrainCallbacks(this.dataClearCallbacks);
+    this.collapseGroupNodesIfPresent();
     this.layout.layout(this.topologyData, this.width, this.height);
-    this.updatePositions();
+    this.drawData(this.topologyData, this.nodeRenderer, this.edgeRenderer);
   }
 
   private initializeContainer(): HTMLDivElement {
@@ -410,6 +417,8 @@ export class D3Topology implements Topology {
       this.neighborhoodFinder.singleNodeNeighborhood(node.userNode)
     );
 
+    this.checkAndHandleGroupNodeClick(node);
+
     if (!isNil(this.config.nodeInteractionHandler?.click)) {
       this.config.nodeInteractionHandler?.click(node.userNode).subscribe(() => this.resetVisibility());
     } else if (this.tooltip) {
@@ -418,6 +427,97 @@ export class D3Topology implements Topology {
       this.showNodeTooltip(node, true);
       this.tooltip.hidden$.pipe(take(1)).subscribe(() => this.resetVisibility());
     }
+  }
+
+  private checkAndHandleGroupNodeClick(node: RenderableTopologyNode): void {
+    const userNode = node.userNode;
+
+    if (!isTopologyGroupNode(userNode)) {
+      return;
+    }
+
+    const childNodes = userNode.children;
+    this.runAndDrainCallbacks(this.dataClearCallbacks);
+    userNode.expanded = !userNode.expanded;
+
+    if (!userNode.expanded) {
+      this.userNodes = this.userNodes.filter(n => !childNodes.includes(n));
+    } else {
+      this.userNodes = [this.userNodes, childNodes].flat();
+    }
+
+    this.topologyData = this.topologyConverter.convertTopology(
+      this.userNodes,
+      this.stateManager,
+      this.nodeRenderer,
+      this.domRenderer,
+      this.topologyData
+    );
+
+    this.updateLayoutForGroupNode(this.topologyData, userNode);
+    this.drawData(this.topologyData, this.nodeRenderer, this.edgeRenderer);
+  }
+
+  private updateLayoutForGroupNode(
+    topology: RenderableTopology<TopologyNode, TopologyEdge>,
+    groupNode: TopologyGroupNode
+  ): void {
+    const renderableGroupNode = topology.nodes.find(n => n.userNode === groupNode);
+    const renderableChildNodes = topology.nodes.filter(n => groupNode.children.includes(n.userNode));
+    const paddingLeft = 20;
+
+    if (!renderableGroupNode) {
+      return;
+    }
+
+    const boundingBox = renderableGroupNode.renderedData()?.getBoudingBox();
+    if (!boundingBox) {
+      return;
+    }
+
+    const nodesInPlane = topology.nodes.filter(
+      n => !groupNode.children.includes(n.userNode) && n.x > boundingBox.left && n.x < boundingBox.right
+    );
+    const space = (boundingBox.height + 20) * groupNode.children.length;
+
+    if (!groupNode.expanded) {
+      nodesInPlane.forEach(n => (n.y = n.y - space));
+
+      return;
+    }
+
+    if (renderableChildNodes.length === 0) {
+      return;
+    }
+
+    let curY = boundingBox.bottom + 20;
+
+    renderableChildNodes.forEach(childNode => {
+      childNode.x = renderableGroupNode.x + paddingLeft;
+      childNode.y = curY;
+      curY += (childNode.renderedData()?.getBoudingBox()?.height ?? 36) + 20;
+    });
+
+    nodesInPlane.forEach(n => (n.y = n.y + space));
+  }
+
+  private collapseGroupNodesIfPresent(): void {
+    const groupNodes = this.userNodes.filter((userNode): userNode is TopologyGroupNode =>
+      isTopologyGroupNode(userNode)
+    );
+    groupNodes.forEach(groupNode => {
+      const childNodes = groupNode.children;
+      groupNode.expanded = false;
+      this.userNodes = this.userNodes.filter(n => !childNodes.includes(n));
+    });
+
+    this.topologyData = this.topologyConverter.convertTopology(
+      this.userNodes,
+      this.stateManager,
+      this.nodeRenderer,
+      this.domRenderer,
+      this.topologyData
+    );
   }
 
   private onEdgeClick(edge: RenderableTopologyEdge): void {
@@ -445,12 +545,28 @@ export class D3Topology implements Topology {
         });
         break;
       case 'drag':
+        const userNode = dragEvent.node.userNode;
+        if (isTopologyGroupNode(userNode)) {
+          const childNodes = userNode.children;
+          let curY = dragEvent.node.y + (dragEvent.node.renderedData()?.getBoudingBox()?.height ?? 36) + 20;
+
+          this.topologyData.nodes.forEach(n => {
+            if (childNodes.includes(n.userNode)) {
+              n.x = 20 + dragEvent.node.x;
+              n.y = curY;
+              curY += (n.renderedData()?.getBoudingBox()?.height ?? 36) + 20;
+            }
+          });
+        }
+
         this.updatePositions();
         break;
       default:
         assertUnreachable(dragEvent.type);
     }
   }
+
+  // TODO (Sandeep): Handle drag for group node and its children
 
   private select<T extends Element>(selector: string | T): Selection<T, unknown, null, undefined> {
     return this.d3Util.select<T>(selector, this.domRenderer);

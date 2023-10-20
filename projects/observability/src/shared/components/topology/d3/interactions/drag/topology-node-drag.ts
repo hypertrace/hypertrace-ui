@@ -5,8 +5,10 @@ import {
   RenderableTopology,
   RenderableTopologyNode,
   TopologyEdge,
+  TopologyGroupNode,
   TopologyNode,
-  TopologyNodeRenderer
+  TopologyNodeRenderer,
+  isTopologyGroupNode
 } from '../../../topology';
 import { TopologyEventBehavior } from '../topology-event-behavior';
 
@@ -22,7 +24,16 @@ export class TopologyNodeDrag extends TopologyEventBehavior {
     if (topologyData.nodes.length === 0) {
       return EMPTY;
     }
-    const nodeLookup = this.buildLookupMap(topologyData.nodes, node => nodeRenderer.getElementForNode(node));
+
+    const childUserNodesOfGroup = topologyData.nodes
+      .filter(n => isTopologyGroupNode(n.userNode))
+      .flatMap(n => (n.userNode as TopologyGroupNode).children);
+    const childRenderableNodesOfGroup = topologyData.nodes.filter(n => childUserNodesOfGroup.includes(n.userNode));
+
+    const nodeLookup = this.buildLookupMap(
+      topologyData.nodes.filter(n => !childRenderableNodesOfGroup.includes(n)),
+      node => nodeRenderer.getElementForNode(node)
+    );
     const dragSubect = new Subject<TopologyDragEvent>();
 
     this.d3Utils.selectAll(Array.from(nodeLookup.keys()), this.domRenderer).call(

@@ -8,7 +8,8 @@ import {
   TopologyEdgeState,
   TopologyNode,
   TopologyNodeRenderer,
-  TopologyNodeState
+  TopologyNodeState,
+  isTopologyGroupNode
 } from '../topology';
 
 export class TopologyConverter {
@@ -90,12 +91,26 @@ export class TopologyConverter {
     domRenderer: Renderer2,
     stateManager: TopologyStateManager
   ): RenderableTopologyEdge[] {
-    return edges.map(edge => {
-      const sourceNode = nodeMap.get(edge.fromNode)!;
-      const targetNode = nodeMap.get(edge.toNode)!;
+    return edges
+      .filter(edge => nodeMap.get(edge.fromNode) !== undefined && nodeMap.get(edge.toNode) !== undefined)
+      .filter(edge => this.handleEdgeFilteringBasedOnGroupNode(edge))
+      .map(edge => {
+        const sourceNode = nodeMap.get(edge.fromNode)!;
+        const targetNode = nodeMap.get(edge.toNode)!;
 
-      return this.buildNewTopologyEdge(edge, sourceNode, targetNode, stateManager.getEdgeState(edge), domRenderer);
-    });
+        return this.buildNewTopologyEdge(edge, sourceNode, targetNode, stateManager.getEdgeState(edge), domRenderer);
+      });
+  }
+
+  private handleEdgeFilteringBasedOnGroupNode(edge: TopologyEdge): boolean {
+    if (
+      (isTopologyGroupNode(edge.fromNode) && edge.fromNode.expanded) ||
+      (isTopologyGroupNode(edge.toNode) && edge.toNode.expanded)
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   private buildNewTopologyNode(
