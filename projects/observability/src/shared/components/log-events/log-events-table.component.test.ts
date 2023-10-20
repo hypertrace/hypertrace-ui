@@ -3,7 +3,7 @@ import { fakeAsync, flush } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
-import { TableComponent, TableModule } from '@hypertrace/components';
+import { TableComponent, TableCsvDownloaderService, TableModule } from '@hypertrace/components';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
@@ -23,6 +23,11 @@ describe('LogEventsTableComponent', () => {
       }),
       mockProvider(NavigationService, {
         navigation$: EMPTY
+      }),
+      mockProvider(TableCsvDownloaderService, {
+        csvDownloadRequest$: EMPTY,
+        triggerDownload: jest.fn(),
+        executeDownload: jest.fn()
       })
     ]
   });
