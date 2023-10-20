@@ -90,7 +90,13 @@ export class FilterButtonComponent implements OnChanges {
         .buildFilter(attribute, FilterOperator.Equals, value ?? FilterButtonComponent.DEFAULT_VALUE),
       this.filterBuilderLookupService
         .lookup(attribute.type)
-        .buildFilter(attribute, FilterOperator.NotEquals, value ?? FilterButtonComponent.DEFAULT_VALUE)
+        .buildFilter(attribute, FilterOperator.NotEquals, value ?? FilterButtonComponent.DEFAULT_VALUE),
+      this.filterBuilderLookupService
+        .lookup(attribute.type)
+        .buildFilter(attribute, FilterOperator.In, value ?? FilterButtonComponent.DEFAULT_VALUE),
+      this.filterBuilderLookupService
+        .lookup(attribute.type)
+        .buildFilter(attribute, FilterOperator.NotIn, value ?? FilterButtonComponent.DEFAULT_VALUE)
     ];
   }
 }
