@@ -682,7 +682,7 @@ export class TableComponent
 
     this.tableCsvDownloaderService.executeDownload(
       downloadConfig$,
-      this.csvDownloadConfig?.filename ?? `table-data-${this.id}-${new Date()}.csv`
+      this.csvDownloadConfig?.fileName ?? `table-data-${this.id}-${new Date()}.csv`
     );
   }
 
@@ -1288,5 +1288,5 @@ type PersistedTableColumnConfig = Pick<TableColumnConfig, 'id' | 'visible'>;
 
 export interface TableCsvDownloadConfig {
   limit?: number;
-  filename?: CsvFileName;
+  fileName?: CsvFileName;
 }
