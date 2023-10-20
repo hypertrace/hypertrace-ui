@@ -12,6 +12,7 @@ import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/h
 import { GraphQlExploreRequest } from '../../../../graphql/request/handlers/explore/explore-query';
 import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreCartesianDataSourceModel, ExplorerData } from '../explore/explore-cartesian-data-source.model';
+
 @Model({
   type: 'explorer-visualization-cartesian-data-source'
 })
@@ -38,6 +39,10 @@ export class ExplorerVisualizationCartesianDataSourceModel extends ExploreCartes
     );
   }
 
+  protected getImplicitFilters(): GraphQlFilter[] {
+    return [];
+  }
+
   protected appendFilters(
     request: Omit<GraphQlExploreRequest, 'timeRange'>,
     filters: GraphQlFilter[],
@@ -46,7 +51,7 @@ export class ExplorerVisualizationCartesianDataSourceModel extends ExploreCartes
     return {
       ...request,
       timeRange: timeRange,
-      filters: [...(request.filters ?? []), ...filters]
+      filters: [...this.getImplicitFilters(), ...(request.filters ?? []), ...filters]
     };
   }
 
