@@ -26,6 +26,7 @@ import { TableCellBooleanCsvGenerator } from './cells/csv-generators/table-cell-
 import { TableCellNumberCsvGenerator } from './cells/csv-generators/table-cell-number-csv-generator';
 import { TableCellStringCsvGenerator } from './cells/csv-generators/table-cell-string-csv-generator';
 import { TableCellTimestampCsvGenerator } from './cells/csv-generators/table-cell-timestamp-csv-generator';
+import { TableCellStringEnumCsvGenerator } from './cells/csv-generators/table-cell-string-enum-csv-generator';
 
 @NgModule({
   imports: [
@@ -57,7 +58,8 @@ import { TableCellTimestampCsvGenerator } from './cells/csv-generators/table-cel
         TableCellBooleanCsvGenerator,
         TableCellNumberCsvGenerator,
         TableCellStringCsvGenerator,
-        TableCellTimestampCsvGenerator
+        TableCellTimestampCsvGenerator,
+        TableCellStringEnumCsvGenerator
       ],
       multi: true
     }

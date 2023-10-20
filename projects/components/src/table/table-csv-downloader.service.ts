@@ -2,7 +2,7 @@ import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { TableColumnConfigExtended } from './table.service';
 import { TableRow } from './table-api';
-import { FileDownloadService } from '../download-file/service/file-download.service';
+import { CsvFileName, FileDownloadService } from '../download-file/service/file-download.service';
 import { map, switchMap } from 'rxjs/operators';
 import { isEmpty, isNil, isString } from 'lodash-es';
 import { Dictionary } from '@hypertrace/common';
@@ -17,33 +17,35 @@ export class TableCsvDownloaderService {
     private readonly fileDownloadService: FileDownloadService,
     private readonly notificationService: NotificationService
   ) {}
+
   public triggerDownload(tableId: string): void {
     this.csvDownloadRequestSubject.next(tableId);
   }
 
   public executeDownload(
     dataAndConfigs$: Observable<{ rows: TableRow[]; columnConfigs: TableColumnConfigExtended[] }>,
-    id?: string
+    fileName: CsvFileName
   ): void {
     dataAndConfigs$
       .pipe(
         map(({ rows, columnConfigs }) => {
           const csvGeneratorMap = new Map(
-            columnConfigs.filter(column => !isNil(column.csvGenerator)).map(column => [column.id, column.csvGenerator])
+            columnConfigs.filter(column => !isNil(column.csvGenerator)).map(column => [column.id, column])
           );
 
           return rows
             .map(row => {
               let rowValue: Dictionary<string | undefined> = {};
               Array.from(csvGeneratorMap.keys()).forEach(columnKey => {
+                const columnConfig: TableColumnConfigExtended = csvGeneratorMap.get(columnKey)!; // Safe to assert since all columns will have a config
+                const csvGenerator = columnConfig.csvGenerator!; // Safe to assert here since we are processing columns with valid csv generators only
                 const value = row[columnKey];
-                const csvGenerator = csvGeneratorMap.get(columnKey)!; // Safe to assert here since we are processing columns with valid csv generators only
 
                 const csvContent = csvGenerator.generateSafeCsv(value, row);
 
                 if (!isNil(csvContent)) {
                   if (isString(csvContent)) {
-                    rowValue[columnKey] = csvContent;
+                    rowValue[columnConfig.title ?? columnConfig.name ?? columnConfig.id] = csvContent;
                   } else {
                     rowValue = { ...rowValue, ...csvContent };
                   }
@@ -62,7 +64,7 @@ export class TableCsvDownloaderService {
           }
 
           return this.fileDownloadService.downloadAsCsv({
-            fileName: `table-data-${id}-${new Date().toISOString()}.csv`,
+            fileName: fileName,
             dataSource: of(content)
           });
         })

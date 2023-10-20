@@ -73,6 +73,7 @@ import { DOCUMENT } from '@angular/common';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TableColumnWidthUtil } from './util/column-width.util';
 import { TableCsvDownloaderService } from './table-csv-downloader.service';
+import { CsvFileName } from '../download-file/service/file-download.service';
 
 @Component({
   selector: 'ht-table',
@@ -377,6 +378,9 @@ export class TableComponent
   @Input()
   public loadingConfig?: LoadAsyncConfig;
 
+  @Input()
+  public csvDownloadConfig?: TableCsvDownloadConfig;
+
   // TODO: Rename rowHeight to minRowHeight
   @Input()
   public rowHeight: string = '44px';
@@ -665,7 +669,7 @@ export class TableComponent
         (!isNil(this.data)
           ? this.data.getData({
               columns: columnConfigs,
-              position: { limit: 1000, startIndex: 0 },
+              position: { limit: this.csvDownloadConfig?.limit ?? 1000, startIndex: 0 },
               filters: filters ?? []
             })
           : of({ data: [], totalCount: 0 })
@@ -676,7 +680,10 @@ export class TableComponent
       )
     );
 
-    this.tableCsvDownloaderService.executeDownload(downloadConfig$, this.id);
+    this.tableCsvDownloaderService.executeDownload(
+      downloadConfig$,
+      this.csvDownloadConfig?.fileName ?? `table-data-${this.id}-${new Date()}.csv`
+    );
   }
 
   private addEventListeners(): void {
@@ -1278,3 +1285,8 @@ interface TableLocalPreferences {
 }
 
 type PersistedTableColumnConfig = Pick<TableColumnConfig, 'id' | 'visible'>;
+
+export interface TableCsvDownloadConfig {
+  limit?: number;
+  fileName?: CsvFileName;
+}
