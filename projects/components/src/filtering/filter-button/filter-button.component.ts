@@ -55,7 +55,7 @@ export class FilterButtonComponent implements OnChanges {
   @Output()
   public readonly popoverOpen: EventEmitter<boolean> = new EventEmitter();
 
-  private static readonly DEFAULT_VALUE: string = 'null';
+  private static readonly NULL_VALUE: string = 'null';
   public availableFilters: Filter[] = [];
 
   public constructor(
@@ -67,7 +67,7 @@ export class FilterButtonComponent implements OnChanges {
     if (isNil(this.attribute)) {
       this.availableFilters = [];
     } else if (isNil(this.value)) {
-      this.availableFilters = this.buildSimplifiedFilters(this.attribute);
+      this.availableFilters = this.buildFiltersForNullValue(this.attribute);
     } else {
       this.availableFilters = this.buildAvailableFilters(this.attribute, this.value, this.subpath);
     }
@@ -83,20 +83,20 @@ export class FilterButtonComponent implements OnChanges {
       .buildFiltersForSupportedOperators(attribute, value, subpath);
   }
 
-  private buildSimplifiedFilters(attribute: FilterAttribute, value?: FilterValue): Filter[] {
+  private buildFiltersForNullValue(attribute: FilterAttribute): Filter[] {
     return [
       this.filterBuilderLookupService
         .lookup(attribute.type)
-        .buildFilter(attribute, FilterOperator.Equals, value ?? FilterButtonComponent.DEFAULT_VALUE),
+        .buildFilter(attribute, FilterOperator.Equals, FilterButtonComponent.NULL_VALUE),
       this.filterBuilderLookupService
         .lookup(attribute.type)
-        .buildFilter(attribute, FilterOperator.NotEquals, value ?? FilterButtonComponent.DEFAULT_VALUE),
+        .buildFilter(attribute, FilterOperator.NotEquals, FilterButtonComponent.NULL_VALUE),
       this.filterBuilderLookupService
         .lookup(attribute.type)
-        .buildFilter(attribute, FilterOperator.In, value ?? FilterButtonComponent.DEFAULT_VALUE),
+        .buildFilter(attribute, FilterOperator.In, FilterButtonComponent.NULL_VALUE),
       this.filterBuilderLookupService
         .lookup(attribute.type)
-        .buildFilter(attribute, FilterOperator.NotIn, value ?? FilterButtonComponent.DEFAULT_VALUE)
+        .buildFilter(attribute, FilterOperator.NotIn, FilterButtonComponent.NULL_VALUE)
     ];
   }
 }
