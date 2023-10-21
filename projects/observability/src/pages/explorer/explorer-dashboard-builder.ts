@@ -60,7 +60,7 @@ export class ExplorerDashboardBuilder {
     this.requestSubject.next(request);
   }
 
-  private buildVisualizationDashboard(request: ExploreVisualizationRequest): Observable<ExplorerGeneratedDashboard> {
+  protected buildVisualizationDashboard(request: ExploreVisualizationRequest): Observable<ExplorerGeneratedDashboard> {
     return of({
       json: {
         type: 'cartesian-widget',

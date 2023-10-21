@@ -9,6 +9,6 @@ export class TableCellTimestampCsvGenerator implements TableCellCsvGenerator<Dat
   private readonly displayDate: DisplayDatePipe = new DisplayDatePipe();
 
   public generateSafeCsv(cellData: Date | number | string | null | undefined): string {
-    return this.displayDate.transform(cellData, { mode: DateFormatMode.TimeWithSeconds });
+    return this.displayDate.transform(cellData, { mode: DateFormatMode.DateAndTimeWithSeconds });
   }
 }

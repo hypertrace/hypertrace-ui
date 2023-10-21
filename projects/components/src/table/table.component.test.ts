@@ -762,13 +762,17 @@ describe('Table component', () => {
   test('should trigger csv download as expected if ID matches', fakeAsync(() => {
     const columns = buildColumns();
     const spectator = createHost(
-      '<ht-table id="test-table" [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
+      '<ht-table id="test-table" [csvDownloadConfig]="csvDownloadConfig" [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
       {
         hostProps: {
           columnConfigs: columns,
           data: buildData(),
           selectionMode: TableSelectionMode.Single,
-          mode: TableMode.Flat
+          mode: TableMode.Flat,
+          csvDownloadConfig: {
+            limit: 1000,
+            fileName: 'different-name.csv'
+          }
         }
       }
     );
@@ -776,6 +780,10 @@ describe('Table component', () => {
 
     mockDownloadSubject.next('test-table');
     expect(spectator.inject(TableCsvDownloaderService).executeDownload).toHaveBeenCalledTimes(1);
+    expect(spectator.inject(TableCsvDownloaderService).executeDownload).toHaveBeenCalledWith(
+      expect.anything(),
+      'different-name.csv'
+    );
 
     // This should not trigger a download event in this table.
     mockDownloadSubject.next('test-table-no-match');

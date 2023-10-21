@@ -120,8 +120,10 @@ export class FileDownloadService {
 
 export interface CsvDownloadFileConfig extends FileDownloadBaseConfig<Dictionary<unknown>[]> {
   header?: string[];
-  fileName: `${string}.csv`; // Only csv files allowed here
+  fileName: CsvFileName; // Only csv files allowed here
 }
+
+export type CsvFileName = `${string}.csv`;
 
 export interface FileDownloadBaseConfig<T = string> {
   dataSource: Observable<T>;

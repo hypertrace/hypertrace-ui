@@ -48,7 +48,8 @@ export class TableService {
       const rendererConstructor = this.tableCellRendererLookupService.lookup(
         columnConfig.display !== undefined ? columnConfig.display : CoreTableCellRendererType.Text
       );
-      const csvGenerator = this.tableCellCsvGeneratorManagementService.findMatchingGenerator(columnConfig.display);
+      // Pick up a CSV Generator based on the resolved renderer type
+      const csvGenerator = this.tableCellCsvGeneratorManagementService.findMatchingGenerator(rendererConstructor.type);
 
       const parserConstructor = this.tableCellParserLookupService.lookup(rendererConstructor.parser);
 

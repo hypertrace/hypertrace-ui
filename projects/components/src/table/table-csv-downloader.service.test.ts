@@ -20,7 +20,7 @@ describe('TableCsvDownloaderService', () => {
 
   test('execute download should behave as expected for no data', fakeAsync(() => {
     const spectator = createService();
-    spectator.service.executeDownload(of({ rows: [], columnConfigs: [] }), 'table-id');
+    spectator.service.executeDownload(of({ rows: [], columnConfigs: [] }), 'table-id.csv');
 
     tick();
     expect(spectator.inject(NotificationService).createInfoToast).toHaveBeenCalledWith('No data to download');
@@ -40,7 +40,7 @@ describe('TableCsvDownloaderService', () => {
           }
         ] as TableColumnConfigExtended[]
       }),
-      'table-id'
+      'table-id.csv'
     );
     tick();
 
