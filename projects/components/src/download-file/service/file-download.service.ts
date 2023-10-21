@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
-import { isEmpty, startCase } from 'lodash-es';
+import { isEmpty, startCase, uniq } from 'lodash-es';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, map, take } from 'rxjs/operators';
 import { NotificationService } from '../../notification/notification.service';
@@ -31,11 +31,14 @@ export class FileDownloadService {
    * @param config Csv download config
    */
   public downloadAsCsv(config: CsvDownloadFileConfig): Observable<FileDownloadEvent> {
+    const getAllDataKeys = (data: Dictionary<unknown>[]): string[] => uniq(data.map(row => Object.keys(row)).flat());
     // If given header is empty, then create header from the data keys
     const header$ = isEmpty(config.header)
       ? config.dataSource.pipe(
-          map(data => Object.keys(data[0] ?? [])),
-          map(keys => keys.map(startCase))
+          map(
+            data => getAllDataKeys(data),
+            map((keys: string[]) => keys.map(startCase))
+          )
         )
       : of(config.header!);
 
@@ -44,6 +47,13 @@ export class FileDownloadService {
 
     // Convert values into strings
     const values$ = config.dataSource.pipe(
+      // All rows are not guaranteed to have all keys, so add all keys to all rows
+      map(data => {
+        const allKeys = getAllDataKeys(data);
+        const allKeysDict = allKeys.reduce((acc, key) => ({ ...acc, [key]: undefined }), {});
+
+        return data.map(row => ({ ...allKeysDict, ...row }));
+      }),
       map(data => data.map(datum => Object.values(datum).map(value => JSON.stringify(value, replacer))))
     );
 
