@@ -46,15 +46,13 @@ export class FileDownloadService {
     const replacer = (_: string, value: string) => value ?? '-';
 
     // Convert values into strings
-    const values$ = config.dataSource.pipe(
+    const values$: Observable<string[][]> = config.dataSource.pipe(
       // All rows are not guaranteed to have all keys, so add all keys to all rows
       map(data => {
         const allKeys = getAllDataKeys(data);
-        const allKeysDict = allKeys.reduce((acc, key) => ({ ...acc, [key]: undefined }), {});
 
-        return data.map(row => ({ ...allKeysDict, ...row }));
-      }),
-      map(data => data.map(datum => Object.values(datum).map(value => JSON.stringify(value, replacer))))
+        return data.map(row => allKeys.flatMap(key => JSON.stringify(row?.[key], replacer)));
+      })
     );
 
     // Create csv data as string

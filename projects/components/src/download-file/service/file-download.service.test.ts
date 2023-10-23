@@ -50,7 +50,7 @@ describe('File Download Service', () => {
   test('should download as csv correctly', () => {
     const spectator = createService();
     const csvData$ = of([
-      { name: 'traceable', headCount: 123 },
+      { name: 'example', headCount: 123 },
       { name: 'hypertrace', headCount: 456, optionalValue: 1 }
     ]);
     // With correct data
