@@ -339,5 +339,6 @@ export const enum ExplorerQueryParam {
   GroupLimit = 'limit',
   Series = 'series',
   Order = 'order',
-  Filters = 'filter'
+  Filters = 'filter',
+  Time = 'time'
 }
