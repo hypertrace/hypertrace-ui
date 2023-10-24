@@ -97,6 +97,8 @@ export interface TopologyConfiguration {
   edgeInteractionHandler?: TopologyEdgeInteractionHandler;
 
   layoutType?: TopologyLayoutType;
+
+  customLayout?: TopologyLayout;
 }
 
 export interface TopologyNode {

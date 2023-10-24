@@ -100,7 +100,7 @@ export class D3Topology implements Topology {
     this.hover = new TopologyHover(this.d3Util, this.domRenderer);
     this.click = new TopologyClick(this.d3Util, this.domRenderer);
     this.zoom = new TopologyZoom();
-    this.layout = this.initializeLayout(TopologyLayoutType.GraphLayout);
+    this.layout = this.config.customLayout ?? this.initializeLayout(TopologyLayoutType.GraphLayout);
   }
 
   private initializeLayout(layoutType?: TopologyLayoutType): TopologyLayout {
