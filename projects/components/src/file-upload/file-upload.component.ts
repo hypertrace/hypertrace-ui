@@ -135,16 +135,22 @@ export class FileUploadComponent {
       return false;
     }
 
-    if (!this.areFileTypesValid(fileList)) {
-      this.showFileTypeErrorToast();
-
-      return false;
-    }
-
     if (this.areFilesEmpty(fileList)) {
       this.showEmptyFilesErrorToast();
 
       return false;
+    }
+
+    /**
+     * It's not advised to rely on mime based validation as there is limitations.
+     * So we use an info toast rather than stopping the flow.
+     *
+     * @see - https://developer.mozilla.org/en-US/docs/Web/API/File/type#result
+     */
+    if (!this.areFileTypesValid(fileList)) {
+      this.showFileTypeInfoToast();
+
+      return true;
     }
 
     return true;
@@ -177,9 +183,9 @@ export class FileUploadComponent {
     this.notificationService.createFailureToast(`File should not be empty`);
   }
 
-  private showFileTypeErrorToast(): void {
-    this.notificationService.createFailureToast(
-      `File type should be any of ${this.config.supportedFileTypes.join(', ')}`
+  private showFileTypeInfoToast(): void {
+    this.notificationService.createInfoToast(
+      `Make sure to choose file of type ${this.config.supportedFileTypes.join(', ')}`
     );
   }
 
