@@ -77,7 +77,7 @@ export const tryParseStringForAttribute = (
     }
     const potentialSubpath = stringAfterAttributeName.slice(MAP_LHS_DELIMITER.length);
     // Subpaths support alphanumeric, -, - and . characters
-    const firstNonSubpathCharacterIndex = potentialSubpath.search(/[^\w\-\.]/);
+    const firstNonSubpathCharacterIndex = potentialSubpath.search(/[^\w\-\.\:]/);
     const subpath =
       firstNonSubpathCharacterIndex === -1
         ? potentialSubpath
