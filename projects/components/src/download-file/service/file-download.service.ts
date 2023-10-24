@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Dictionary } from '@hypertrace/common';
 import { isEmpty, startCase, uniq } from 'lodash-es';
-import { combineLatest, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, map, take } from 'rxjs/operators';
 import { NotificationService } from '../../notification/notification.service';
 
@@ -32,32 +32,16 @@ export class FileDownloadService {
    */
   public downloadAsCsv(config: CsvDownloadFileConfig): Observable<FileDownloadEvent> {
     const getAllDataKeys = (data: Dictionary<unknown>[]): string[] => uniq(data.map(row => Object.keys(row)).flat());
-    // If given header is empty, then create header from the data keys
-    const header$ = isEmpty(config.header)
-      ? config.dataSource.pipe(
-          map(
-            data => getAllDataKeys(data),
-            map((keys: string[]) => keys.map(startCase))
-          )
-        )
-      : of(config.header!);
-
     // Value replacer for null and undefined values
     const replacer = (_: string, value: string) => value ?? '-';
-
-    // Convert values into strings
-    const values$: Observable<string[][]> = config.dataSource.pipe(
-      // All rows are not guaranteed to have all keys, so add all keys to all rows
+    const csvData$ = config.dataSource.pipe(
       map(data => {
-        const allKeys = getAllDataKeys(data);
+        const allKeys = isEmpty(config.header) ? getAllDataKeys(data) : config.header!;
+        const header = allKeys.map(startCase);
+        const values = data.map(row => allKeys.flatMap(key => JSON.stringify(row?.[key], replacer)));
 
-        return data.map(row => allKeys.flatMap(key => JSON.stringify(row?.[key], replacer)));
-      })
-    );
-
-    // Create csv data as string
-    const csvData$ = combineLatest([header$, values$]).pipe(
-      map(([header, values]) => [header, ...values]), // Merge header and values
+        return [header, ...values];
+      }),
       map(data => data.map(datum => datum.join(',')).join('\r\n')) // Join data to create a string
     );
 
