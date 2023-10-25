@@ -99,7 +99,7 @@ export class TimeRangeService {
     );
   }
 
-  private timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
+  public timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
     const duration = this.timeDurationService.durationFromString(timeRangeFromUrl);
     if (duration) {
       return new RelativeTimeRange(duration);
