@@ -44,6 +44,7 @@ import { SpanDetailTab } from './span-detail-tab';
                 [requestHeaders]="this.spanData?.requestHeaders"
                 [requestCookies]="this.spanData?.requestCookies"
                 [requestBody]="this.spanData?.requestBody"
+                [scope]="this.scope"
               ></ht-span-request-detail>
             </ng-container>
             <ng-container *ngSwitchCase="'${SpanDetailTab.Response}'">
@@ -54,10 +55,11 @@ import { SpanDetailTab } from './span-detail-tab';
                 [responseCookies]="this.spanData?.responseCookies"
                 [cookieMetadata]="this.spanData?.responseCookiesMetadata"
                 [responseBody]="this.spanData?.responseBody"
+                [scope]="this.scope"
               ></ht-span-response-detail>
             </ng-container>
             <ng-container *ngSwitchCase="'${SpanDetailTab.Attributes}'">
-              <ht-span-tags-detail [tags]="this.spanData?.tags"></ht-span-tags-detail>
+              <ht-span-tags-detail [tags]="this.spanData?.tags" [scope]="this.scope"></ht-span-tags-detail>
             </ng-container>
             <ng-container *ngSwitchCase="'${SpanDetailTab.ExitCalls}'">
               <ht-span-exit-calls [exitCalls]="this.spanData?.exitCallsBreakup"></ht-span-exit-calls>
@@ -89,6 +91,9 @@ export class SpanDetailComponent implements OnChanges {
 
   @Input()
   public activeTabLabel?: SpanDetailTab;
+
+  @Input()
+  public scope: string = '';
 
   @Input()
   public showAttributesTab: boolean = true;

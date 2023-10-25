@@ -22,6 +22,7 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData, TColu
   private _value!: TValue;
   private _units!: string;
   private _tooltip!: string;
+
   public readonly clickable: boolean = false;
   public readonly isFirstColumn: boolean = false;
   protected readonly columnConfigOptions: TColumnConfigOptions | undefined;

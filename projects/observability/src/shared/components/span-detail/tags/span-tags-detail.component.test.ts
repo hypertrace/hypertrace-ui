@@ -1,18 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MemoizeModule } from '@hypertrace/common';
 import {
-  JsonViewerModule,
-  LabelModule,
+  FilterButtonComponent,
+  LabelComponent,
   ListViewComponent,
   ListViewModule,
   LoadAsyncModule,
-  ToggleButtonModule
+  TooltipDirective
 } from '@hypertrace/components';
-import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
-import { MockComponent } from 'ng-mocks';
-import { ExplorerService } from '../../../../pages/explorer/explorer-service';
-import { ExploreFilterLinkComponent } from '../../explore-filter-link/explore-filter-link.component';
+import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
+import { MockComponents, MockDirective, MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
+import { MetadataService } from '../../../services/metadata/metadata.service';
 import { SpanTagsDetailComponent } from './span-tags-detail.component';
 
 describe('Span Tags Detail Component', () => {
@@ -20,18 +18,14 @@ describe('Span Tags Detail Component', () => {
 
   const createHost = createHostFactory({
     component: SpanTagsDetailComponent,
-    imports: [
-      CommonModule,
-      ToggleButtonModule,
-      ListViewModule,
-      JsonViewerModule,
-      LabelModule,
-      LoadAsyncModule,
-      HttpClientTestingModule,
-      MemoizeModule
-    ],
-    declarations: [MockComponent(ExploreFilterLinkComponent)],
-    providers: [mockProvider(ExplorerService)]
+    imports: [CommonModule, ListViewModule, LoadAsyncModule],
+    declarations: [MockComponents(LabelComponent, FilterButtonComponent), MockDirective(TooltipDirective)],
+    shallow: true,
+    providers: [
+      MockProvider(MetadataService, {
+        getAllAttributes: jest.fn().mockReturnValue(of([]))
+      })
+    ]
   });
 
   test('should display tag records', () => {

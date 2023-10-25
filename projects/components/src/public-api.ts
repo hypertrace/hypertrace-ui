@@ -373,6 +373,15 @@ export * from './table/cells/data-parsers/table-cell-icon-parser';
 export * from './table/controls/table-controls.module';
 export * from './table/controls/table-controls.component';
 
+// CSV Generators
+export * from './table/table-csv-downloader.service';
+export * from './table/cells/csv-generators/table-cell-boolean-csv-generator';
+export * from './table/cells/csv-generators/table-cell-number-csv-generator';
+export * from './table/cells/csv-generators/table-cell-string-csv-generator';
+export * from './table/cells/csv-generators/table-cell-timestamp-csv-generator';
+export * from './table/cells/csv-generators/table-cell-string-array-csv-generator';
+export * from './table/cells/table-cell-csv-generator';
+
 // TextArea
 export * from './textarea/textarea.component';
 export * from './textarea/textarea.module';
@@ -419,7 +428,10 @@ export { TooltipDirective } from './tooltip/tooltip.directive';
 export * from './filtering/filter/filter-url.service';
 
 // Stepper
-export * from './stepper';
+export * from './stepper/stepper.module';
+export * from './stepper/stepper.component';
+export * from './stepper/tab/stepper-tab.component';
+export * from './stepper/tab-controls/stepper-tab-controls.component';
 
 // Pill list
 export * from './input-pill-list/input-pill-list.component';

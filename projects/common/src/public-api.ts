@@ -4,7 +4,15 @@
 
 // Angular
 export * from './utilities/angular/angular-utils';
-export * from './utilities/angular/pipes';
+export * from './utilities/angular/pipes/is-nil/is-nil.pipe';
+export * from './utilities/angular/pipes/is-nil/is-nil-pipe.module';
+
+export * from './utilities/angular/pipes/extract-value/extract-values.pipe';
+export * from './utilities/angular/pipes/extract-value/extract-values-pipe.module';
+
+export * from './utilities/angular/pipes/is-empty/is-empty.pipe';
+export * from './utilities/angular/pipes/is-empty/is-empty.pipe.module';
+
 export { DynamicComponentService } from './utilities/angular/dynamic-component.service';
 
 // Browser
@@ -130,7 +138,10 @@ export * from './time/time-unit.type';
 export * from './time/time';
 
 // Validators
-export * from './utilities/validators';
+export * from './utilities/validators/domain-validator';
+export * from './utilities/validators/email-validator';
+export * from './utilities/validators/regex-validator';
+export * from './utilities/validators/form-validators';
 
 // Color Palette
 export * from './color/color-palette';

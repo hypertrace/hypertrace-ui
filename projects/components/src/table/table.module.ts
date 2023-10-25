@@ -1,6 +1,6 @@
 import { CdkTableModule } from '@angular/cdk/table';
 import { CommonModule } from '@angular/common';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { Inject, InjectionToken, Injector, ModuleWithProviders, NgModule } from '@angular/core';
 import { ButtonModule } from '../button/button.module';
 import { CheckboxModule } from '../checkbox/checkbox.module';
 import { IconModule } from '../icon/icon.module';
@@ -11,7 +11,7 @@ import { TraceSearchBoxModule } from '../search-box/search-box.module';
 import { TooltipModule } from '../tooltip/tooltip.module';
 import { TableCellParserConstructor } from './cells/table-cell-parser';
 import { TableCellRendererConstructor } from './cells/table-cell-renderer';
-import { TableCellsModule, TABLE_CELL_PARSERS, TABLE_CELL_RENDERERS } from './cells/table-cells.module';
+import { TABLE_CELL_PARSERS, TABLE_CELL_RENDERERS, TableCellsModule } from './cells/table-cells.module';
 import { TableEditColumnsModalComponent } from './columns/table-edit-columns-modal.component';
 import { TableComponent } from './table.component';
 import { DraggableListModule } from '../draggable-list/draggable-list.module';
@@ -19,6 +19,14 @@ import { ExpanderToggleModule } from '../expander/expander-toggle.module';
 import { MemoizeModule } from '@hypertrace/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { LayoutChangeModule } from '../layout/layout-change.module';
+import { TableCellCsvGeneratorManagementService } from './cells/table-cell-csv-generator-management.service';
+import { TABLE_CELL_CSV_GENERATORS, TableCellCsvGenerator } from './cells/table-cell-csv-generator';
+import { TableCellStringArrayCsvGenerator } from './cells/csv-generators/table-cell-string-array-csv-generator';
+import { TableCellBooleanCsvGenerator } from './cells/csv-generators/table-cell-boolean-csv-generator';
+import { TableCellNumberCsvGenerator } from './cells/csv-generators/table-cell-number-csv-generator';
+import { TableCellStringCsvGenerator } from './cells/csv-generators/table-cell-string-csv-generator';
+import { TableCellTimestampCsvGenerator } from './cells/csv-generators/table-cell-timestamp-csv-generator';
+import { TableCellStringEnumCsvGenerator } from './cells/csv-generators/table-cell-string-enum-csv-generator';
 
 @NgModule({
   imports: [
@@ -41,9 +49,46 @@ import { LayoutChangeModule } from '../layout/layout-change.module';
     LayoutChangeModule
   ],
   declarations: [TableComponent, TableEditColumnsModalComponent],
-  exports: [TableComponent]
+  exports: [TableComponent],
+  providers: [
+    {
+      provide: TABLE_CELL_CSV_GENERATORS,
+      useValue: [
+        TableCellStringArrayCsvGenerator,
+        TableCellBooleanCsvGenerator,
+        TableCellNumberCsvGenerator,
+        TableCellStringCsvGenerator,
+        TableCellTimestampCsvGenerator,
+        TableCellStringEnumCsvGenerator
+      ],
+      multi: true
+    }
+  ]
 })
 export class TableModule {
+  public constructor(
+    csvGeneratorLookupService: TableCellCsvGeneratorManagementService,
+    injector: Injector,
+    @Inject(TABLE_CELL_CSV_GENERATORS) csvGeneratorTokens: InjectionToken<TableCellCsvGenerator<unknown>>[][]
+  ) {
+    csvGeneratorTokens
+      .flat()
+      .map(token => injector.get(token))
+      .forEach(generator => csvGeneratorLookupService.register(generator));
+  }
+
+  public static withCsvGenerators(csvGenerators: unknown[]): ModuleWithProviders<TableModule> {
+    return {
+      ngModule: TableModule,
+      providers: [
+        {
+          provide: TABLE_CELL_CSV_GENERATORS,
+          useValue: csvGenerators,
+          multi: true
+        }
+      ]
+    };
+  }
   public static withCellParsers(
     cellParsers: TableCellParserConstructor<unknown, unknown, unknown>[]
   ): ModuleWithProviders<TableModule> {
