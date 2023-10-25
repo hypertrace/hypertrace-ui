@@ -92,9 +92,9 @@ describe('File Upload Component', () => {
     });
     const filesAddedSpy = jest.spyOn(spectator.component.filesAdded, 'emit');
     spectator.triggerEventHandler('input', 'change', { target: { files: fileList } });
-    expect(filesAddedSpy).not.toHaveBeenCalled();
-    expect(spectator.inject(NotificationService).createFailureToast).toHaveBeenCalledWith(
-      `File type should be any of ${config.supportedFileTypes.join(', ')}`
+    expect(filesAddedSpy).toHaveBeenCalled();
+    expect(spectator.inject(NotificationService).createInfoToast).toHaveBeenCalledWith(
+      `Make sure to choose file of type ${config.supportedFileTypes.join(', ')}`
     );
   });
 
