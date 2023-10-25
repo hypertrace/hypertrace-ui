@@ -175,6 +175,7 @@ import { SelectSize } from './select-size';
               (click)="this.onSelectionChange(item)"
               class="select-option"
               [ngClass]="this.getStyleClassesForSelectItem | htMemoize: this.size:item"
+              [htTooltip]="item?.tooltip"
             >
               <ng-container
                 *ngTemplateOutlet="item.selectOptionRenderer?.getTemplateRef() ?? defaultSelectOptionTemplate; context: {$implicit: item}"
