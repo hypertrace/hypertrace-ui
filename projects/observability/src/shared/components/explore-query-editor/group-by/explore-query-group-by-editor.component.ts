@@ -32,7 +32,9 @@ import { MetadataService } from '../../../services/metadata/metadata.service';
         </ht-select>
       </div>
       <div class="group-by-input-container" *ngIf="this.supportsSubpath(currentGroupByExpression?.metadata)">
-        <span class="group-by-label"> {{ currentGroupByExpression.metadata.displayName }} Key </span>
+        <span class="group-by-label" [htTooltip]="currentGroupByExpression.metadata.displayName">
+          {{ currentGroupByExpression.metadata.displayName }} Key
+        </span>
         <div class="group-by-path-wrapper">
           <ht-form-field
             errorLabel="Key required"
