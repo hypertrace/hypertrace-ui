@@ -99,7 +99,7 @@
     "@types/jest": "^28.0.0",
     "@types/lodash-es": "^4.17.9",
     "@types/mixpanel-browser": "^2.47.4",
-    "@types/node": "^18.18.4",
+    "@types/node": "^18.18.7",
     "@types/uuid": "^9.0.5",
     "@types/webpack-env": "^1.18.2",
     "@typescript-eslint/eslint-plugin": "5.57.1",
