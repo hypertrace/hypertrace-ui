@@ -11,10 +11,7 @@ import { CartesianSelectedData } from '../../../../components/cartesian/chart-in
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
 import { CartesianAxisModel } from './axis/cartesian-axis.model';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
-import {
-  GlobalCsvDownloadDataType,
-  GlobalCsvDownloadService
-} from '../../../../services/global-csv-download/global-csv-download.service';
+import { GlobalCsvDownloadDataType, GlobalCsvDownloadService } from '../../../../services/global-csv-download/global-csv-download.service';
 
 @Renderer({ modelClass: CartesianWidgetModel })
 @Component({
@@ -89,20 +86,18 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
       }),
       switchMap(() => this.buildDataObservable()),
       tap(value => {
-        console.log(value);
-        debugger;
-        return this.globalCsvDownloadService.registerDataSource(`cartesian-widget-renderer-${this.model?.id}`, {
-          type: GlobalCsvDownloadDataType.DataSource,
-          data: of([
-            {
-              example: 'asd',
-              example2: 'basd'
-            },
-            {
-              example: 'ddd',
-              example2: 'dd1'
-            }
-          ])
+          return this.globalCsvDownloadService.registerDataSource(`cartesian-widget-renderer-${this.model?.id}`, {
+            type: GlobalCsvDownloadDataType.DataSource,
+            data: of([
+              {
+                example: 'asd',
+                example2: 'basd'
+              },
+              {
+                example: 'ddd',
+                example2: 'dd1'
+              },
+            ])
         });
       })
     );
