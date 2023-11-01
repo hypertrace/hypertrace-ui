@@ -4,13 +4,17 @@ import { IntervalDurationService, TimeDuration } from '@hypertrace/common';
 import { InteractiveDataWidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
-import { NEVER, Observable } from 'rxjs';
+import { NEVER, Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { Axis, Band, Series } from '../../../../components/cartesian/chart';
 import { CartesianSelectedData } from '../../../../components/cartesian/chart-interactivty';
 import { IntervalValue } from '../../../../components/interval-select/interval-select.component';
 import { CartesianAxisModel } from './axis/cartesian-axis.model';
 import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './cartesian-widget.model';
+import {
+  GlobalCsvDownloadDataType,
+  GlobalCsvDownloadService
+} from '../../../../services/global-csv-download/global-csv-download.service';
 
 @Renderer({ modelClass: CartesianWidgetModel })
 @Component({
@@ -46,7 +50,8 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<CartesianWidgetModel<TSeriesInterval>>,
     changeDetector: ChangeDetectorRef,
-    private readonly intervalDurationService: IntervalDurationService
+    private readonly intervalDurationService: IntervalDurationService,
+    private readonly globalCsvDownloadService: GlobalCsvDownloadService
   ) {
     super(api, changeDetector);
   }
@@ -82,7 +87,24 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
           this.selectedInterval = this.getBestIntervalMatch(intervalOptions, defaultInterval);
         }
       }),
-      switchMap(() => this.buildDataObservable())
+      switchMap(() => this.buildDataObservable()),
+      tap(value => {
+        console.log(value);
+        debugger;
+        return this.globalCsvDownloadService.registerDataSource(`cartesian-widget-renderer-${this.model?.id}`, {
+          type: GlobalCsvDownloadDataType.DataSource,
+          data: of([
+            {
+              example: 'asd',
+              example2: 'basd'
+            },
+            {
+              example: 'ddd',
+              example2: 'dd1'
+            }
+          ])
+        });
+      })
     );
   }
 

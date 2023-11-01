@@ -1,5 +1,5 @@
 import { ColorPaletteKey, ColorService, forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
-import { EnumPropertyTypeInstance, ENUM_TYPE, TimeDurationModel } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE, TimeDurationModel, BaseModel } from '@hypertrace/dashboards';
 import {
   BOOLEAN_PROPERTY,
   Model,
@@ -28,7 +28,7 @@ import { MetricSeries, MetricSeriesDataFetcher, SeriesModel } from './series.mod
   type: 'cartesian-widget',
   displayName: 'Cartesian Widget'
 })
-export class CartesianWidgetModel<TInterval> {
+export class CartesianWidgetModel<TInterval> extends BaseModel {
   @ModelProperty({
     key: 'title',
     displayName: 'Title',

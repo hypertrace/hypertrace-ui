@@ -63,6 +63,7 @@ export class ExplorerDashboardBuilder {
   protected buildVisualizationDashboard(request: ExploreVisualizationRequest): Observable<ExplorerGeneratedDashboard> {
     return of({
       json: {
+        id: 'explorer.visualization',
         type: 'cartesian-widget',
         'selectable-interval': false,
         'series-from-data': true,
