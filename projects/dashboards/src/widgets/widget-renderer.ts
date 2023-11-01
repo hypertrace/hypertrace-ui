@@ -28,9 +28,11 @@ export abstract class WidgetRenderer<TModel extends object, TData = unknown> imp
 
   public ngOnInit(): void {
     this.fetchAndRunChangeDetection();
-    this.api.dataRefresh$.subscribe(() => this.onDashboardRefresh());
-    this.api.change$.subscribe(() => this.onModelChange());
-    this.api.timeRangeChanged$.subscribe(timeRange => this.onTimeRangeChange(timeRange));
+    this.api.dataRefresh$.pipe(takeUntil(this.destroyed$)).subscribe(() => this.onDashboardRefresh());
+    this.api.change$.pipe(takeUntil(this.destroyed$)).subscribe(() => this.onModelChange());
+    this.api.timeRangeChanged$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(timeRange => this.onTimeRangeChange(timeRange));
   }
 
   public ngOnDestroy(): void {

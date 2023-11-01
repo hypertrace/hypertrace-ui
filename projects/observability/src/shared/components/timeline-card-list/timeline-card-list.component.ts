@@ -1,5 +1,5 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList } from '@angular/core';
-import { DateFormatMode, DateFormatOptions, queryListAndChanges$ } from '@hypertrace/common';
+import { DateFormatMode, DateFormatOptions, SubscriptionLifecycle, queryListAndChanges$ } from '@hypertrace/common';
 import { ButtonVariant, ButtonStyle } from '@hypertrace/components';
 import { map } from 'rxjs/operators';
 import { TimelineCardContainerComponent } from './container/timeline-card-container.component';
@@ -43,6 +43,7 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
     </ng-template>
   `,
   styleUrls: ['./timeline-card-list.component.scss'],
+  providers: [SubscriptionLifecycle],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelineCardListComponent implements AfterContentInit {
@@ -62,13 +63,17 @@ export class TimelineCardListComponent implements AfterContentInit {
   public items: TimelineListItem[] = [];
   public allCards: TimelineCardContainerComponent[] = [];
 
+  public constructor(private readonly subscriptionLifecycle: SubscriptionLifecycle) {}
+
   public ngAfterContentInit(): void {
-    queryListAndChanges$(this.cards)
-      .pipe(map(list => list.toArray()))
-      .subscribe(allCards => {
-        this.allCards = allCards;
-        this.buildItems(allCards);
-      });
+    this.subscriptionLifecycle.add(
+      queryListAndChanges$(this.cards)
+        .pipe(map(list => list.toArray()))
+        .subscribe(allCards => {
+          this.allCards = allCards;
+          this.buildItems(allCards);
+        })
+    );
   }
 
   public readonly isSelectedCard = (card: TimelineCardContainerComponent, selectedIndex?: number): boolean =>

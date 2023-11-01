@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { TypedSimpleChanges } from '@hypertrace/common';
+import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { Filter } from '@hypertrace/components';
 import { Observable } from 'rxjs';
 import { AttributeExpression } from '../../graphql/model/attribute/attribute-expression';
@@ -17,7 +17,7 @@ import {
   selector: 'ht-explore-query-editor',
   styleUrls: ['./explore-query-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ExploreVisualizationBuilder],
+  providers: [ExploreVisualizationBuilder, SubscriptionLifecycle],
   template: `
     <div *ngIf="this.visualizationRequest$ | async as currentVisualization" class="query-editor">
       <ht-explore-query-series-group-editor
@@ -94,14 +94,19 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
 
   public readonly visualizationRequest$: Observable<ExploreVisualizationRequest>;
 
-  public constructor(private readonly visualizationBuilder: ExploreVisualizationBuilder) {
+  public constructor(
+    private readonly visualizationBuilder: ExploreVisualizationBuilder,
+    private readonly subscriptionLifecycle: SubscriptionLifecycle
+  ) {
     this.visualizationRequest$ = visualizationBuilder.visualizationRequest$;
   }
 
   public ngOnInit(): void {
-    this.visualizationRequest$.subscribe(query => {
-      this.visualizationRequestChange.emit(query);
-    });
+    this.subscriptionLifecycle.add(
+      this.visualizationRequest$.subscribe(query => {
+        this.visualizationRequestChange.emit(query);
+      })
+    );
   }
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {

@@ -528,13 +528,14 @@ export class TableComponent
         this.downloadCsv();
       })
     );
-
-    combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
-      .pipe(
-        map(([queryParamMap, columns]) => this.sortDataFromUrl(queryParamMap, columns)),
-        filter((sort): sort is Required<SortedColumn<TableColumnConfigExtended>> => sort !== undefined)
-      )
-      .subscribe(sort => this.updateSort(sort));
+    this.subscriptionLifecycle.add(
+      combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
+        .pipe(
+          map(([queryParamMap, columns]) => this.sortDataFromUrl(queryParamMap, columns)),
+          filter((sort): sort is Required<SortedColumn<TableColumnConfigExtended>> => sort !== undefined)
+        )
+        .subscribe(sort => this.updateSort(sort))
+    );
   }
 
   public onLayoutChange(): void {
@@ -840,10 +841,11 @@ export class TableComponent
 
     this.dataSource?.disconnect();
     this.dataSource = this.buildDataSource();
-
-    this.dataSource?.loadingStateChange$.subscribe(() => {
-      this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
-    });
+    this.subscriptionLifecycle.add(
+      this.dataSource?.loadingStateChange$.subscribe(() => {
+        this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
+      })
+    );
     this.filtersSubject.next(this.filters || []);
     this.queryPropertiesSubject.next(this.queryProperties || {});
 
@@ -928,7 +930,6 @@ export class TableComponent
   public showEditColumnsModal(): void {
     this.columnConfigs$
       .pipe(
-        take(1),
         switchMap(
           availableColumns =>
             this.modalService.createModal<TableEditColumnsModalConfig, TableColumnConfigExtended[]>({
@@ -941,7 +942,8 @@ export class TableComponent
                 defaultColumns: this.columnDefaultConfigs ?? []
               }
             }).closed$
-        )
+        ),
+        take(1)
       )
       .subscribe(editedColumnConfigs => {
         this.saveTablePreferences(editedColumnConfigs);
