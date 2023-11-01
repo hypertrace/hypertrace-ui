@@ -1,5 +1,5 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, QueryList } from '@angular/core';
-import { queryListAndChanges$ } from '@hypertrace/common';
+import { SubscriptionLifecycle, queryListAndChanges$ } from '@hypertrace/common';
 import { asyncScheduler } from 'rxjs';
 import { observeOn } from 'rxjs/operators';
 import { SelectGroupPosition } from './select-group-position';
@@ -8,6 +8,7 @@ import { SelectComponent } from './select.component';
 @Component({
   selector: 'ht-select-group',
   styleUrls: ['./select-group.component.scss'],
+  providers: [SubscriptionLifecycle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="select-group-container">
@@ -19,10 +20,13 @@ export class SelectGroupComponent implements AfterContentInit {
   @ContentChildren(SelectComponent)
   private readonly selectChildren!: QueryList<SelectComponent<unknown>>;
 
+  public constructor(private readonly subscriptionLifecycle: SubscriptionLifecycle) {}
   public ngAfterContentInit(): void {
-    queryListAndChanges$(this.selectChildren)
-      .pipe(observeOn(asyncScheduler))
-      .subscribe(list => this.setPositions(list));
+    this.subscriptionLifecycle.add(
+      queryListAndChanges$(this.selectChildren)
+        .pipe(observeOn(asyncScheduler))
+        .subscribe(list => this.setPositions(list))
+    );
   }
 
   private setPositions(list: QueryList<SelectComponent<unknown>>): void {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { TypedSimpleChanges } from '@hypertrace/common';
+import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { InputAppearance, SelectOption, SelectSearchMode } from '@hypertrace/components';
 import { isEmpty, isNil, omit } from 'lodash-es';
 import { combineLatest, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
@@ -12,6 +12,7 @@ import { MetadataService } from '../../../services/metadata/metadata.service';
   selector: 'ht-explore-query-group-by-editor',
   styleUrls: ['./explore-query-group-by-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SubscriptionLifecycle],
   template: `
     <div class="group-by-container" *htLetAsync="this.currentGroupByExpression$ as currentGroupByExpression">
       <div class="group-by-input-container">
@@ -72,7 +73,10 @@ export class ExploreQueryGroupByEditorComponent implements OnChanges {
   public readonly currentGroupByExpression$: Observable<AttributeExpressionWithMetadata | undefined>;
   public readonly groupByAttributeOptions$: Observable<SelectOption<AttributeMetadata | undefined>[]>;
 
-  public constructor(private readonly metadataService: MetadataService) {
+  public constructor(
+    private readonly metadataService: MetadataService,
+    private readonly subscriptionLifecycle: SubscriptionLifecycle
+  ) {
     this.groupByAttributeOptions$ = this.contextSubject.pipe(
       switchMap(context => this.getGroupByOptionsForContext(context))
     );
@@ -82,13 +86,15 @@ export class ExploreQueryGroupByEditorComponent implements OnChanges {
       merge(this.incomingGroupByExpressionSubject, this.groupByExpressionsToEmit)
     ]).pipe(map(optionsAndKey => this.resolveAttributeFromOptions(...optionsAndKey)));
 
-    this.groupByExpressionsToEmit
-      .pipe(
-        filter(expression => this.isValidExpressionToEmit(expression)),
-        debounceTime(500),
-        map(expression => (isEmpty(expression) ? undefined : omit(expression, 'metadata')))
-      )
-      .subscribe(this.groupByExpressionChange);
+    this.subscriptionLifecycle.add(
+      this.groupByExpressionsToEmit
+        .pipe(
+          filter(expression => this.isValidExpressionToEmit(expression)),
+          debounceTime(500),
+          map(expression => (isEmpty(expression) ? undefined : omit(expression, 'metadata')))
+        )
+        .subscribe(this.groupByExpressionChange)
+    );
   }
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {

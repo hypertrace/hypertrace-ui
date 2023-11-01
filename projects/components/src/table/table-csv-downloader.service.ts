@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { TableColumnConfigExtended } from './table.service';
 import { TableRow } from './table-api';
 import { CsvFileName, FileDownloadService } from '../download-file/service/file-download.service';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { isEmpty, isNil, isString } from 'lodash-es';
 import { Dictionary } from '@hypertrace/common';
 import { NotificationService } from '../notification/notification.service';
@@ -67,7 +67,8 @@ export class TableCsvDownloaderService {
             fileName: fileName,
             dataSource: of(content)
           });
-        })
+        }),
+        take(1)
       )
       .subscribe();
   }

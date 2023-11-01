@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
-import { Dictionary, TimeRangeService } from '@hypertrace/common';
+import { Dictionary, SubscriptionLifecycle, TimeRangeService } from '@hypertrace/common';
 import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { TypedSimpleChanges } from '@hypertrace/hyperdash-angular/util/angular-change-object';
 import { Subject } from 'rxjs';
@@ -10,6 +10,7 @@ import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-fil
   selector: 'ht-application-aware-dashboard',
   styleUrls: ['./application-aware-dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SubscriptionLifecycle],
   template: `
     <div class="application-aware-dashboard" [style.padding.px]="this.padding">
       <hda-dashboard
@@ -52,7 +53,10 @@ export class ApplicationAwareDashboardComponent implements OnDestroy, OnChanges 
   public widgetSelection?: object;
   private readonly destroyDashboard$: Subject<void> = new Subject();
 
-  public constructor(private readonly timeRangeService: TimeRangeService) {}
+  public constructor(
+    private readonly timeRangeService: TimeRangeService,
+    private readonly subscriptionLifecycle: SubscriptionLifecycle
+  ) {}
 
   public onDashboardReady(dashboard: Dashboard): void {
     this.destroyDashboard$.next();
@@ -62,10 +66,12 @@ export class ApplicationAwareDashboardComponent implements OnDestroy, OnChanges 
     this.dashboard = dashboard;
     this.widgetSelection = dashboard.root;
 
-    this.timeRangeService
-      .getTimeRangeAndChanges()
-      .pipe(takeUntil(this.destroyDashboard$))
-      .subscribe(timeRange => dashboard.setTimeRange(timeRange));
+    this.subscriptionLifecycle.add(
+      this.timeRangeService
+        .getTimeRangeAndChanges()
+        .pipe(takeUntil(this.destroyDashboard$))
+        .subscribe(timeRange => dashboard.setTimeRange(timeRange))
+    );
 
     this.dashboardReady.emit(dashboard);
   }

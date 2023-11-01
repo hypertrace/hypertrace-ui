@@ -4,6 +4,7 @@ import { ButtonSize, ButtonStyle } from '../button/button';
 import { IconSize } from '../icon/icon-size';
 import { DownloadFileMetadata } from './download-file-metadata';
 import { FileDownloadService } from './service/file-download.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'ht-download-file',
@@ -36,9 +37,12 @@ export class DownloadFileComponent {
 
   public triggerDownload(metadata: DownloadFileMetadata): void {
     this.dataLoading = true;
-    this.fileDownloadService.downloadAsText(metadata).subscribe(() => {
-      this.dataLoading = false;
-      this.cdr.detectChanges();
-    });
+    this.fileDownloadService
+      .downloadAsText(metadata)
+      .pipe(take(1))
+      .subscribe(() => {
+        this.dataLoading = false;
+        this.cdr.detectChanges();
+      });
   }
 }
