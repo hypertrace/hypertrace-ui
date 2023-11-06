@@ -99,6 +99,8 @@ export interface TopologyConfiguration {
   layoutType?: TopologyLayoutType;
 
   customLayout?: TopologyLayout;
+
+  supportGroupNode?: boolean;
 }
 
 export interface TopologyNode {
@@ -245,7 +247,3 @@ export interface TopologyInteractionHandler<T = unknown> {
 
 export type TopologyNodeInteractionHandler = TopologyInteractionHandler<TopologyNode>;
 export type TopologyEdgeInteractionHandler = TopologyInteractionHandler<TopologyEdge>;
-
-export const isTopologyGroupNode = (node: TopologyNode): node is TopologyGroupNode =>
-  'nodeType' in node &&
-  (node as TopologyNode & Partial<TopologyGroupNode>).nodeType === TopologyInternalNodeType.GroupNode;

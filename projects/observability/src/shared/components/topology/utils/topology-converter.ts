@@ -8,9 +8,9 @@ import {
   TopologyEdgeState,
   TopologyNode,
   TopologyNodeRenderer,
-  TopologyNodeState,
-  isTopologyGroupNode
+  TopologyNodeState
 } from '../topology';
+import { TopologyGroupNodeUtil } from './topology-group-node.util';
 
 export class TopologyConverter {
   public convertTopology(
@@ -104,8 +104,8 @@ export class TopologyConverter {
 
   private handleEdgeFilteringBasedOnGroupNode(edge: TopologyEdge): boolean {
     if (
-      (isTopologyGroupNode(edge.fromNode) && edge.fromNode.expanded) ||
-      (isTopologyGroupNode(edge.toNode) && edge.toNode.expanded)
+      (TopologyGroupNodeUtil.isTopologyGroupNode(edge.fromNode) && edge.fromNode.expanded) ||
+      (TopologyGroupNodeUtil.isTopologyGroupNode(edge.toNode) && edge.toNode.expanded)
     ) {
       return false;
     }

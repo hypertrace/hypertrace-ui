@@ -65,6 +65,9 @@ export class TopologyComponent implements OnChanges, OnDestroy {
   @Input()
   public customLayout?: TopologyLayout; // This will override `layoutType` property
 
+  @Input()
+  public supportGroupNode?: boolean;
+
   @ViewChild('topologyContainer', { static: true })
   private readonly container!: ElementRef;
 
@@ -93,7 +96,8 @@ export class TopologyComponent implements OnChanges, OnDestroy {
       nodeInteractionHandler: this.nodeInteractionHandler,
       edgeInteractionHandler: this.edgeInteractionHandler,
       layoutType: this.layoutType,
-      customLayout: this.customLayout
+      customLayout: this.customLayout,
+      supportGroupNode: this.supportGroupNode
     });
 
     // Angular doesn't like introducing new child views mid-change detection

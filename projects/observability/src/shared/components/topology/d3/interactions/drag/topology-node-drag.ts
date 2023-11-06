@@ -7,10 +7,10 @@ import {
   TopologyEdge,
   TopologyGroupNode,
   TopologyNode,
-  TopologyNodeRenderer,
-  isTopologyGroupNode
+  TopologyNodeRenderer
 } from '../../../topology';
 import { TopologyEventBehavior } from '../topology-event-behavior';
+import { TopologyGroupNodeUtil } from '../../../utils/topology-group-node.util';
 
 export class TopologyNodeDrag extends TopologyEventBehavior {
   /**
@@ -26,7 +26,7 @@ export class TopologyNodeDrag extends TopologyEventBehavior {
     }
 
     const childUserNodesOfGroup = topologyData.nodes
-      .filter(n => isTopologyGroupNode(n.userNode))
+      .filter(n => TopologyGroupNodeUtil.isTopologyGroupNode(n.userNode))
       .flatMap(n => (n.userNode as TopologyGroupNode).children);
     const childRenderableNodesOfGroup = topologyData.nodes.filter(n => childUserNodesOfGroup.includes(n.userNode));
 

@@ -6,14 +6,14 @@ import {
   TopologyElementVisibility,
   TopologyGroupNode,
   TopologyNode,
-  TopologyNodeState,
-  isTopologyGroupNode
+  TopologyNodeState
 } from '../../../../../../components/topology/topology';
 import { D3UtilService } from '../../../../../../components/utils/d3/d3-util.service';
 import { Color } from '../../../../../../../../../common/src/public-api';
 import { IconType } from '../../../../../../../../../assets-library/src/public-api';
 import { take } from 'rxjs/operators';
 import { SvgUtilService } from '../../../../../../components/utils/svg/svg-util.service';
+import { TopologyGroupNodeUtil } from '../../../../../../components/topology/utils/topology-group-node.util';
 
 @Injectable()
 export class GroupNodeBoxRendererService implements TopologyNodeRendererDelegate<TopologyGroupNode> {
@@ -25,7 +25,7 @@ export class GroupNodeBoxRendererService implements TopologyNodeRendererDelegate
   public constructor(protected readonly d3Utils: D3UtilService, private readonly svgUtils: SvgUtilService) {}
 
   public matches(node: TopologyNode & Partial<TopologyGroupNode>): node is TopologyGroupNode {
-    return isTopologyGroupNode(node);
+    return TopologyGroupNodeUtil.isTopologyGroupNode(node);
   }
 
   public draw(
