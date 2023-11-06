@@ -24,15 +24,17 @@ import { MetadataService } from '../../../../services/metadata/metadata.service'
           >
             <div class="record-value" *htListViewValueRenderer="let record">
               <div class="value">{{ record.value }}</div>
-              <ht-filter-button
-                *htLetAsync="this.metadata$ as metadata"
-                class="filter-button"
-                [attribute]="this.getFilterAttribute | htMemoize: metadata"
-                [metadata]="metadata"
-                [value]="record.value"
-                [subpath]="record.key"
-                htTooltip="See traces in Explorer"
-              ></ht-filter-button>
+              <ng-container *ngIf="this.showFilters">
+                <ht-filter-button
+                  *htLetAsync="this.metadata$ as metadata"
+                  class="filter-button"
+                  [attribute]="this.getFilterAttribute | htMemoize: metadata"
+                  [metadata]="metadata"
+                  [value]="record.value"
+                  [subpath]="record.key"
+                  htTooltip="See traces in Explorer"
+                ></ht-filter-button>
+              </ng-container>
             </div>
           </ht-list-view>
         </ng-container>
@@ -56,6 +58,9 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
   @Input()
   public scope?: string;
 
+  @Input()
+  public showFilters: boolean = true;
+
   public records$?: Observable<ListViewRecord[]>;
 
   public label?: string;
@@ -69,7 +74,7 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
       this.buildRecords();
     }
 
-    if (changes.scope && this.scope) {
+    if (changes.scope && this.scope && this.showFilters) {
       this.metadata$ = this.metadataService.getAllAttributes(this.scope).pipe(
         map(metadata =>
           metadata.map(attributeMetadata => ({

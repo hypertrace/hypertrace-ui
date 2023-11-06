@@ -45,6 +45,7 @@ import { SpanDetailTab } from './span-detail-tab';
                 [requestCookies]="this.spanData?.requestCookies"
                 [requestBody]="this.spanData?.requestBody"
                 [scope]="this.scope"
+                [showFilters]="this.showFilters"
               ></ht-span-request-detail>
             </ng-container>
             <ng-container *ngSwitchCase="'${SpanDetailTab.Response}'">
@@ -56,10 +57,15 @@ import { SpanDetailTab } from './span-detail-tab';
                 [cookieMetadata]="this.spanData?.responseCookiesMetadata"
                 [responseBody]="this.spanData?.responseBody"
                 [scope]="this.scope"
+                [showFilters]="this.showFilters"
               ></ht-span-response-detail>
             </ng-container>
             <ng-container *ngSwitchCase="'${SpanDetailTab.Attributes}'">
-              <ht-span-tags-detail [tags]="this.spanData?.tags" [scope]="this.scope"></ht-span-tags-detail>
+              <ht-span-tags-detail
+                [tags]="this.spanData?.tags"
+                [scope]="this.scope"
+                [showFilters]="this.showFilters"
+              ></ht-span-tags-detail>
             </ng-container>
             <ng-container *ngSwitchCase="'${SpanDetailTab.ExitCalls}'">
               <ht-span-exit-calls [exitCalls]="this.spanData?.exitCallsBreakup"></ht-span-exit-calls>
@@ -94,6 +100,9 @@ export class SpanDetailComponent implements OnChanges {
 
   @Input()
   public scope: string = '';
+
+  @Input()
+  public showFilters: boolean = true;
 
   @Input()
   public showAttributesTab: boolean = true;
