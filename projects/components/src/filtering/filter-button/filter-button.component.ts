@@ -6,6 +6,7 @@ import { FilterBuilderLookupService } from '../filter/builder/filter-builder-loo
 import { Filter, FilterValue } from '../filter/filter';
 import { FilterAttribute } from '../filter/filter-attribute';
 import { FilterUrlService } from '../filter/filter-url.service';
+import { FilterOperator } from '../filter/filter-operators';
 
 @Component({
   selector: 'ht-filter-button',
@@ -54,6 +55,7 @@ export class FilterButtonComponent implements OnChanges {
   @Output()
   public readonly popoverOpen: EventEmitter<boolean> = new EventEmitter();
 
+  private static readonly NULL_VALUE: string = 'null';
   public availableFilters: Filter[] = [];
 
   public constructor(
@@ -62,10 +64,13 @@ export class FilterButtonComponent implements OnChanges {
   ) {}
 
   public ngOnChanges(): void {
-    this.availableFilters =
-      !isNil(this.attribute) && !isNil(this.value)
-        ? this.buildAvailableFilters(this.attribute, this.value, this.subpath)
-        : [];
+    if (isNil(this.attribute)) {
+      this.availableFilters = [];
+    } else if (isNil(this.value)) {
+      this.availableFilters = this.buildFiltersForNullValue(this.attribute);
+    } else {
+      this.availableFilters = this.buildAvailableFilters(this.attribute, this.value, this.subpath);
+    }
   }
 
   public onFilterClick(filter: Filter): void {
@@ -76,5 +81,22 @@ export class FilterButtonComponent implements OnChanges {
     return this.filterBuilderLookupService
       .lookup(attribute.type)
       .buildFiltersForSupportedOperators(attribute, value, subpath);
+  }
+
+  private buildFiltersForNullValue(attribute: FilterAttribute): Filter[] {
+    return [
+      this.filterBuilderLookupService
+        .lookup(attribute.type)
+        .buildFilter(attribute, FilterOperator.Equals, FilterButtonComponent.NULL_VALUE),
+      this.filterBuilderLookupService
+        .lookup(attribute.type)
+        .buildFilter(attribute, FilterOperator.NotEquals, FilterButtonComponent.NULL_VALUE),
+      this.filterBuilderLookupService
+        .lookup(attribute.type)
+        .buildFilter(attribute, FilterOperator.In, FilterButtonComponent.NULL_VALUE),
+      this.filterBuilderLookupService
+        .lookup(attribute.type)
+        .buildFilter(attribute, FilterOperator.NotIn, FilterButtonComponent.NULL_VALUE)
+    ];
   }
 }
