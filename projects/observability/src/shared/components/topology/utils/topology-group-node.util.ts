@@ -46,9 +46,19 @@ export abstract class TopologyGroupNodeUtil {
       return;
     }
 
-    const nodesInPlane = topology.nodes.filter(
-      n => !groupNode.children.includes(n.userNode) && n.x > boundingBox.left && n.x < boundingBox.right
-    );
+    const nodesInPlane = topology.nodes.filter(n => {
+      const nodeBox = n.renderedData()?.getBoudingBox();
+      if (!nodeBox) {
+        return false;
+      }
+
+      return (
+        !groupNode.children.includes(n.userNode) &&
+        ((nodeBox.left > boundingBox.left && nodeBox.left < boundingBox.right) ||
+          (nodeBox.right > boundingBox.left && nodeBox.right < boundingBox.right)) &&
+        nodeBox.top > boundingBox.bottom
+      );
+    });
     const space = (boundingBox.height + 20) * groupNode.children.length;
 
     if (!groupNode.expanded) {

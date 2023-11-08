@@ -60,6 +60,9 @@ export class TopologyComponent implements OnChanges, OnDestroy {
   public shouldAutoZoomToFit?: boolean = false;
 
   @Input()
+  public draggableNodes?: boolean = true;
+
+  @Input()
   public layoutType?: TopologyLayoutType;
 
   @Input()
@@ -93,6 +96,7 @@ export class TopologyComponent implements OnChanges, OnDestroy {
       tooltipRenderer: this.tooltipRenderer,
       showBrush: this.showBrush,
       shouldAutoZoomToFit: this.shouldAutoZoomToFit,
+      draggableNodes: this.draggableNodes,
       nodeInteractionHandler: this.nodeInteractionHandler,
       edgeInteractionHandler: this.edgeInteractionHandler,
       layoutType: this.layoutType,
