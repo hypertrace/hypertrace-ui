@@ -16,6 +16,9 @@
     grid-template-columns: auto min-content;
 
     .filter-button {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2px;
       visibility: hidden;
     }
 

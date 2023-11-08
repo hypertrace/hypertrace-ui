@@ -68,6 +68,7 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
           [showTitleHeader]="true"
           layout="${SpanDetailLayoutStyle.Vertical}"
           [activeTabLabel]="this.activeTabLabel"
+          [showFilters]="this.model.showFilters"
           (closed)="this.closeSheet()"
         >
           <div class="filterable-summary-value">

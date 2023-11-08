@@ -13,6 +13,7 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
           <ht-span-detail-call-headers
             [data]="this.responseHeaders"
             [scope]="this.scope"
+            [showFilters]="this.showFilters"
             fieldName="${ResponseFieldName.Headers}"
             title="Headers"
           ></ht-span-detail-call-headers>
@@ -23,6 +24,7 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
             [data]="this.responseCookies"
             [metadata]="this.cookieMetadata"
             [scope]="this.scope"
+            [showFilters]="this.showFilters"
             fieldName="${ResponseFieldName.Cookies}"
             title="Cookies"
           ></ht-span-detail-call-headers>
@@ -52,6 +54,9 @@ export class SpanResponseDetailComponent {
 
   @Input()
   public scope?: string;
+
+  @Input()
+  public showFilters?: boolean;
 }
 
 const enum ResponseFieldName {
