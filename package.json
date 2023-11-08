@@ -37,7 +37,7 @@
     "@fullstory/browser": "^1.7.1",
     "@hypertrace/hyperdash": "^1.2.1",
     "@hypertrace/hyperdash-angular": "4.0.0",
-    "@types/d3-hierarchy": "^2.0.3",
+    "@types/d3-hierarchy": "^2.0.4",
     "@types/d3-transition": "1.1.5",
     "apollo-angular": "^5.0.2",
     "core-js": "^3.33.2",
