@@ -3,7 +3,7 @@ import { Dashboard } from '@hypertrace/hyperdash';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { MockService } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
-import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
+import { CartesianSeriesVisualizationType, ScaleType } from '../../shared/components/cartesian/chart';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { LegendPosition } from '../../shared/components/legend/legend.component';
 import { ExplorerVisualizationCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
@@ -45,6 +45,11 @@ describe('Explorer dashboard builder', () => {
             'selection-handler': {
               type: 'cartesian-explorer-selection-handler',
               'show-context-menu': false
+            },
+            'x-axis': {
+              type: 'cartesian-axis',
+              'scale-type': ScaleType.Band,
+              'show-tick-labels': false
             }
           },
           onReady: expect.any(Function)

@@ -37,11 +37,20 @@ export class CartesianAxisModel {
   })
   public minUpperLimit?: number;
 
+  @ModelProperty({
+    key: 'show-tick-labels',
+    required: false,
+    displayName: 'Show Tick Labels',
+    type: BOOLEAN_PROPERTY.type
+  })
+  public showTickLabels?: boolean;
+
   public getAxisOption(): Partial<Axis> {
     return {
       scale: this.scale,
       gridLines: this.showGridLines,
-      max: this.minUpperLimit
+      max: this.minUpperLimit,
+      tickLabels: this.showTickLabels
     };
   }
 }

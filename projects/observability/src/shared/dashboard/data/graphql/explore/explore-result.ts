@@ -39,6 +39,10 @@ export class ExploreResult {
     );
   }
 
+  public getMetricAggregationSeriesData(metricKey: string, aggregation: MetricAggregationType): MetricAggregationData {
+    return this.extractMetricAggregationForSpec(this.specBuilder.exploreSpecificationForKey(metricKey, aggregation));
+  }
+
   public getGroupedTimeSeriesData(
     groupExpressions: AttributeExpression[],
     metricKey: string,
@@ -64,8 +68,22 @@ export class ExploreResult {
     return this.resultsContainingSpec(spec).map(result => this.resultToGroupData(result, groupBySpecs, spec));
   }
 
+  private extractMetricAggregationForSpec(spec: ExploreSpecification): MetricAggregationData {
+    return this.resultToMetricAggregationDataData(this.resultsContainingSpec(spec)?.[0]!, spec);
+  }
+
   private extractTimeseriesForSpec(spec: ExploreSpecification): MetricTimeseriesInterval[] {
     return this.resultsToTimeseriesIntervals(this.resultsContainingSpec(spec), spec);
+  }
+
+  private resultToMetricAggregationDataData(
+    result: GraphQlExploreResult,
+    spec: ExploreSpecification
+  ): MetricAggregationData {
+    return {
+      key: spec.name,
+      value: result[spec.resultAlias()].value as number
+    };
   }
 
   private resultToGroupData(
@@ -141,5 +159,10 @@ export class ExploreResult {
 
 interface GroupData {
   keys: string[];
+  value: number;
+}
+
+interface MetricAggregationData {
+  key: string;
   value: number;
 }

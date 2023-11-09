@@ -78,6 +78,15 @@ export class ExplorerDashboardBuilder {
                 'scale-type': ScaleType.Band
               }
             }
+          : {}),
+        ...(isEmpty(request.groupBy) && isEmpty(request.interval)
+          ? {
+              'x-axis': {
+                type: 'cartesian-axis',
+                'scale-type': ScaleType.Band,
+                'show-tick-labels': false
+              }
+            }
           : {})
       },
       onReady: dashboard => {
