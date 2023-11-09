@@ -86,18 +86,26 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
 
   private getColumnWidth(): number {
     return Math.min(
-      this.xScale.getBandwidth() / this.xScale.getGroupedColumnSeriesLength(this.series),
+      this.hasArrayData(this.series)
+        ? this.xScale.getBandwidth()
+        : this.xScale.getBandwidth() / this.xScale.getGroupedColumnSeriesLength(this.series),
       CartesianColumn.MAX_COLUMN_WIDTH
     );
   }
 
   private getOriginXAdjustment(columnWidth: number): number {
-    const totalGroupedSeries = this.xScale.getGroupedColumnSeriesLength(this.series);
+    const totalGroupedSeries = this.hasArrayData(this.series)
+      ? 1
+      : this.xScale.getGroupedColumnSeriesLength(this.series);
     const groupedColumnAdjustment = (this.xScale.getBandwidth() - columnWidth * totalGroupedSeries) / 2;
 
     return totalGroupedSeries === 1
       ? groupedColumnAdjustment
       : groupedColumnAdjustment + this.xScale.getGroupedColumnSeriesPosition(this.series) * columnWidth;
+  }
+
+  private hasArrayData(series: Series<TData>): boolean {
+    return Array.isArray(series.data?.[0]);
   }
 
   private isShowBarTopRounding(): boolean {

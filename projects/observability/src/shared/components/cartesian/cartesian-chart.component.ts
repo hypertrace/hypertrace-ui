@@ -102,7 +102,6 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       // Setting series through an observable would assign it a null/undefined value
       return;
     }
-
     this.chart = this.chartBuilderService
       .build<TData>(this.strategy, this.container.nativeElement, this.renderer, this.groupId)
       .withSeries(...this.series)
@@ -211,7 +210,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     }
 
     return {
-      title: this.resolveTooltipTitle(data[0]),
+      title: Array.isArray(data?.[0].dataPoint) ? '' : this.resolveTooltipTitle(data[0]),
       labeledValues: data.map(singleValue => ({
         label: singleValue.context.name,
         value: defaultYDataAccessor<number | string>(singleValue.dataPoint),

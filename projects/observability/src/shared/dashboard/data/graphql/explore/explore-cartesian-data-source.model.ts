@@ -116,7 +116,7 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     }
 
     if (isGroupBy && !request.interval) {
-      return aggregatableSpecs.map(spec => this.buildGroupedSeriesData(spec, groupByExpressions, result));
+      return aggregatableSpecs.map(spec => this.buildGroupedSeriesData(spec, groupByExpressions, result)).flat();
     }
 
     if (isGroupBy && request.interval) {
@@ -165,13 +165,12 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     spec: AggregatableSpec,
     groupByExpressions: AttributeExpression[],
     result: ExploreResult
-  ): SeriesData {
-    return {
-      data: result
-        .getGroupedSeriesData(groupByExpressions, spec.name, spec.aggregation)
-        .map(({ keys, value }) => [this.buildGroupedSeriesName(keys), value]),
+  ): SeriesData[] {
+    return result.getGroupedSeriesData(groupByExpressions, spec.name, spec.aggregation).map(data => ({
+      data: [[this.buildGroupedSeriesName(data.keys), data.value]],
+      groupName: this.buildGroupedSeriesName(data.keys),
       spec: spec
-    };
+    }));
   }
 
   public buildGroupedTimeseriesData(
