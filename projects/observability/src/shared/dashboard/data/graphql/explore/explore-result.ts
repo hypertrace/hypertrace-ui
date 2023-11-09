@@ -82,11 +82,7 @@ export class ExploreResult {
   ): MetricAggregationData {
     return {
       key: spec.name,
-      ...(result
-        ? {
-            value: result?.[spec.resultAlias()].value as number
-          }
-        : {})
+      value: result?.[spec.resultAlias()].value as number
     };
   }
 
@@ -168,5 +164,5 @@ interface GroupData {
 
 interface MetricAggregationData {
   key: string;
-  value?: number;
+  value: number | undefined;
 }
