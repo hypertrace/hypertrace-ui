@@ -69,7 +69,7 @@ export class ExploreResult {
   }
 
   private extractMetricAggregationForSpec(spec: ExploreSpecification): MetricAggregationData {
-    return this.resultToMetricAggregationDataData(this.resultsContainingSpec(spec)?.[0]!, spec);
+    return this.resultToMetricAggregationDataData(this.resultsContainingSpec(spec)?.[0], spec);
   }
 
   private extractTimeseriesForSpec(spec: ExploreSpecification): MetricTimeseriesInterval[] {
@@ -77,12 +77,16 @@ export class ExploreResult {
   }
 
   private resultToMetricAggregationDataData(
-    result: GraphQlExploreResult,
+    result: GraphQlExploreResult | undefined,
     spec: ExploreSpecification
   ): MetricAggregationData {
     return {
       key: spec.name,
-      value: result[spec.resultAlias()].value as number
+      ...(result
+        ? {
+            value: result?.[spec.resultAlias()].value as number
+          }
+        : {})
     };
   }
 
@@ -164,5 +168,5 @@ interface GroupData {
 
 interface MetricAggregationData {
   key: string;
-  value: number;
+  value?: number;
 }

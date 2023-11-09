@@ -71,23 +71,7 @@ export class ExplorerDashboardBuilder {
           type: 'cartesian-explorer-selection-handler',
           'show-context-menu': false
         },
-        ...(!isEmpty(request.groupBy) && isEmpty(request.interval)
-          ? {
-              'x-axis': {
-                type: 'cartesian-axis',
-                'scale-type': ScaleType.Band
-              }
-            }
-          : {}),
-        ...(isEmpty(request.groupBy) && isEmpty(request.interval)
-          ? {
-              'x-axis': {
-                type: 'cartesian-axis',
-                'scale-type': ScaleType.Band,
-                'show-tick-labels': false
-              }
-            }
-          : {})
+        ...this.buildXAxis(request)
       },
       onReady: dashboard => {
         dashboard.createAndSetRootDataFromModelClass(ExplorerVisualizationCartesianDataSourceModel);
@@ -175,6 +159,29 @@ export class ExplorerDashboardBuilder {
         trace: context
       }
     };
+  }
+
+  private buildXAxis(request: ExploreVisualizationRequest): object {
+    if (isEmpty(request.interval)) {
+      if (isEmpty(request.groupBy)) {
+        return {
+          'x-axis': {
+            type: 'cartesian-axis',
+            'scale-type': ScaleType.Band,
+            'show-tick-labels': false
+          }
+        };
+      } else {
+        return {
+          'x-axis': {
+            type: 'cartesian-axis',
+            'scale-type': ScaleType.Band
+          }
+        };
+      }
+    }
+
+    return {};
   }
 
   private getRendererForType(type: AttributeMetadataType): string {

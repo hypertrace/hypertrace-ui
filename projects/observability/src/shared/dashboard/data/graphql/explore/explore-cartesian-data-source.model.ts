@@ -175,8 +175,10 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
   }
 
   public buildMetricAggregationSeriesData(spec: AggregatableSpec, result: ExploreResult): SeriesData {
+    const metricAggregationData = result.getMetricAggregationSeriesData(spec.name, spec.aggregation);
+
     return {
-      data: [['', result.getMetricAggregationSeriesData(spec.name, spec.aggregation).value]],
+      data: metricAggregationData?.value ? [['', metricAggregationData.value]] : [],
       spec: spec
     };
   }
