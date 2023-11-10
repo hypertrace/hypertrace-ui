@@ -132,7 +132,7 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
       attribute: this.metadataService.getAttribute(request.context, result.spec.name)
     }).pipe(
       map(obj => ({
-        data: result.data,
+        data: result.explorerData,
         units: obj.attribute.units !== '' ? obj.attribute.units : undefined,
         type: request.series.find(series => series.specification === result.spec)!.visualizationOptions.type,
         name: !isEmpty(result.groupName) ? result.groupName! : obj.specDisplayName,
@@ -156,7 +156,9 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
 
   public buildTimeseriesData(spec: AggregatableSpec, result: ExploreResult): SeriesData {
     return {
-      data: result.getTimeSeriesData(spec.name, spec.aggregation),
+      explorerData: result.getTimeSeriesData(spec.name, spec.aggregation).map(metricTimeseriesInterval => ({
+        data: metricTimeseriesInterval
+      })),
       spec: spec
     };
   }
@@ -167,9 +169,11 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     result: ExploreResult
   ): SeriesData {
     return {
-      data: result
+      explorerData: result
         .getGroupedSeriesData(groupByExpressions, spec.name, spec.aggregation)
-        .map(({ keys, value }) => [this.buildGroupedSeriesName(keys), value]),
+        .map(({ keys, value }) => ({
+          data: [this.buildGroupedSeriesName(keys), value]
+        })),
       spec: spec
     };
   }
@@ -178,7 +182,13 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     const metricAggregationData = result.getMetricAggregationSeriesData(spec.name, spec.aggregation);
 
     return {
-      data: metricAggregationData?.value ? [['', metricAggregationData.value]] : [],
+      explorerData: metricAggregationData?.value
+        ? [
+            {
+              data: ['', metricAggregationData.value]
+            }
+          ]
+        : [],
       spec: spec
     };
   }
@@ -190,7 +200,9 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
   ): SeriesData[] {
     return Array.from(result.getGroupedTimeSeriesData(groupByExpressions, spec.name, spec.aggregation).entries()).map(
       ([groupNames, data]) => ({
-        data: data,
+        explorerData: data.map(metricTimeseriesInterval => ({
+          data: metricTimeseriesInterval
+        })),
         groupName: this.buildGroupedSeriesName(groupNames),
         spec: spec
       })
@@ -202,10 +214,14 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
   }
 }
 
-export type ExplorerData = MetricTimeseriesInterval | [string, number];
+export type ExplorerData = {
+  data: MetricTimeseriesInterval | [string, number];
+  color?: string;
+};
+
 type ExplorerSeries = Series<ExplorerData>;
 interface SeriesData {
-  data: ExplorerData[];
+  explorerData: ExplorerData[];
   spec: AggregatableSpec;
   groupName?: string;
 }

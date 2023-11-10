@@ -163,22 +163,13 @@ export class ExplorerDashboardBuilder {
 
   private buildXAxis(request: ExploreVisualizationRequest): object {
     if (isEmpty(request.interval)) {
-      if (isEmpty(request.groupBy)) {
-        return {
-          'x-axis': {
-            type: 'cartesian-axis',
-            'scale-type': ScaleType.Band,
-            'show-tick-labels': false
-          }
-        };
-      } else {
-        return {
-          'x-axis': {
-            type: 'cartesian-axis',
-            'scale-type': ScaleType.Band
-          }
-        };
-      }
+      return {
+        'x-axis': {
+          type: 'cartesian-axis',
+          'scale-type': ScaleType.Band,
+          'show-tick-labels': false
+        }
+      };
     }
 
     return {};
