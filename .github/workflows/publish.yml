@@ -8,27 +8,18 @@ on:
 
 jobs:
   publish-docker:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       # Set fetch-depth: 0 to fetch commit history and tags for use in version calculation
       - name: Check out code
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 18
           cache: 'npm'
-
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ hashFiles('package.json') }}-
-            ${{ runner.os }}-node-
 
       - name: NPM Install
         run: npm ci
@@ -36,35 +27,26 @@ jobs:
       - name: Build
         run: npm run build:ci
 
-      - name: Create checksum file
-        uses: hypertrace/github-actions/checksum@main
-
-      - name: Cache gradle
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/checksum.txt') }}
-          restore-keys: |
-            gradle-${{ runner.os }}
-
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_READ_USER }}
           password: ${{ secrets.DOCKERHUB_READ_TOKEN }}
 
       - name: Publish docker image
-        run: ./gradlew dockerPushImages
+        uses: hypertrace/github-actions/gradle@main
+        with:
+          args: dockerPushImages
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKERHUB_PUBLISH_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PUBLISH_TOKEN }}
 
   publish-charts:
     needs: publish-docker
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v4
 
       - name: Package and release charts
         uses: hypertrace/github-actions/helm-gcs-publish@main
@@ -73,9 +55,9 @@ jobs:
           helm-gcs-credentials: ${{ secrets.HELM_GCS_CREDENTIALS }}
 
   publish-release-notes:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: hypertrace/github-actions/release-notes@main
