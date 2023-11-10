@@ -89,7 +89,6 @@ import { CsvFileName } from '../download-file/service/file-download.service';
         [dataSource]="this.dataSource"
         [ngClass]="[
           this.display,
-          this.pageable && this.isTableFullPage ? 'bottom-margin' : '',
           !this.showFloatingPaginator ? 'table' : ''
         ]"
         cdkDropList
@@ -262,7 +261,7 @@ import { CsvFileName } from '../download-file/service/file-download.service';
       <div
         class="pagination-controls"
         *ngIf="this.pageable"
-        [style.position]="!this.showFloatingPaginator ? (this.isTableFullPage ? 'fixed' : 'sticky') : ''"
+        [style.position]="!this.showFloatingPaginator ? 'sticky' : ''"
       >
         <ht-paginator
           *htLetAsync="this.currentPage$ as pagination"
