@@ -25,5 +25,5 @@ export interface TraceStatus {
 
 export const enum TraceStatusType {
   SUCCESS = 'SUCCESS',
-  FAIL = 'FAIL'
+  FAIL = 'FAIL',
 }

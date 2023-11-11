@@ -5,7 +5,7 @@ export const type = Symbol('type');
 export const enum SpanType {
   Entry = 'ENTRY',
   Exit = 'EXIT',
-  Internal = 'INTERNAL'
+  Internal = 'INTERNAL',
 }
 
 export interface Span {

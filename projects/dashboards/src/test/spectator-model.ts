@@ -50,5 +50,5 @@ export interface SpectatorModel<M extends object> {
 
 export type SpectatorModelFactory = <M extends object>(
   modelClass: Type<M>,
-  overrides?: SpectatorModelOverrides<M>
+  overrides?: SpectatorModelOverrides<M>,
 ) => SpectatorModel<M>;

@@ -13,7 +13,7 @@ export type EntityType = string;
 export const enum ObservabilityEntityType {
   Api = 'API',
   Service = 'SERVICE',
-  Backend = 'BACKEND'
+  Backend = 'BACKEND',
 }
 
 export interface Interaction {
@@ -44,5 +44,5 @@ export const enum BackendType {
   Tyk = 'TYK',
   JDBC = 'JDBC',
   KAFKA = 'KAFKA',
-  SQS = 'SQS'
+  SQS = 'SQS',
 }
