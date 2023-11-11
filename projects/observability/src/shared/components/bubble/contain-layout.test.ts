@@ -11,13 +11,13 @@ describe('Contain Layout Test', () => {
     {
       x: 0,
       y: 20,
-      r: 5
+      r: 5,
     },
     {
       x: 5,
       y: 5,
-      r: 10
-    }
+      r: 10,
+    },
   ];
 
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('Contain Layout Test', () => {
   test('build scale layout using dimensions width', () => {
     const dimensions: EasyRect = {
       width: 100,
-      height: 400
+      height: 400,
     };
 
     const scaledLayout = containLayout.getLayout(bubbleData, dimensions);
@@ -40,7 +40,7 @@ describe('Contain Layout Test', () => {
   test('build scale layout using dimensions height', () => {
     const dimensions: EasyRect = {
       width: 400,
-      height: 120
+      height: 120,
     };
 
     const scaledLayout = containLayout.getLayout(bubbleData, dimensions);

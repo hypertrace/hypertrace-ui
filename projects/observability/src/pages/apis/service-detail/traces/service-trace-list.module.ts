@@ -9,9 +9,9 @@ import { serviceTraceListDashboard } from './service-trace-list.dashboard';
   imports: [
     ObservabilityDashboardModule,
     LoadAsyncModule,
-    NavigableDashboardModule.withDefaultDashboards(serviceTraceListDashboard)
+    NavigableDashboardModule.withDefaultDashboards(serviceTraceListDashboard),
   ],
   declarations: [ServiceTraceListComponent],
-  exports: [ServiceTraceListComponent]
+  exports: [ServiceTraceListComponent],
 })
 export class ServiceTraceListModule {}

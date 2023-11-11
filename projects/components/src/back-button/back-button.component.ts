@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
-import { ButtonVariant, ButtonStyle } from '../button/button';
+import { ButtonStyle, ButtonVariant } from '../button/button';
 
 @Component({
   selector: 'ht-back-button',
@@ -16,7 +16,7 @@ import { ButtonVariant, ButtonStyle } from '../button/button';
     ></ht-button>
   `,
   styleUrls: ['./back-button.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BackButtonComponent {
   public constructor(private readonly navigationService: NavigationService) {}

@@ -12,7 +12,7 @@ import {
   GraphQlTimeRange,
   MetricAggregationType,
   ObservabilityTraceType,
-  ObservedGraphQlRequest
+  ObservedGraphQlRequest,
 } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
@@ -27,7 +27,7 @@ describe('Total Errors label data source model', () => {
   const modelFactory = createModelFactory();
 
   const mockApi: Partial<ModelApi> = {
-    getTimeRange: jest.fn(() => testTimeRange)
+    getTimeRange: jest.fn(() => testTimeRange),
   };
 
   const exploreRequest = (timeRange: GraphQlTimeRange, selection: Partial<ExploreSpecification>) => ({
@@ -35,12 +35,12 @@ describe('Total Errors label data source model', () => {
     timeRange: timeRange,
     context: ObservabilityTraceType.Api,
     limit: 1,
-    selections: [expect.objectContaining(selection)]
+    selections: [expect.objectContaining(selection)],
   });
 
   const buildSelection = (name: string, aggregation: MetricAggregationType) => ({
     name: name,
-    aggregation: aggregation
+    aggregation: aggregation,
   });
 
   beforeEach(() => {
@@ -50,10 +50,10 @@ describe('Total Errors label data source model', () => {
       providers: [
         mockProvider(TimeDurationService, {
           getTimeRangeDuration: (timeRange: Pick<TimeRange, 'startTime' | 'endTime'>) =>
-            new TimeDuration(timeRange.endTime.getTime() - timeRange.startTime.getTime(), TimeUnit.Millisecond)
+            new TimeDuration(timeRange.endTime.getTime() - timeRange.startTime.getTime(), TimeUnit.Millisecond),
         }),
-        mockProvider(GraphQlQueryEventService)
-      ]
+        mockProvider(GraphQlQueryEventService),
+      ],
     });
 
     spectator.model.api = mockApi as ModelApi;
@@ -65,10 +65,10 @@ describe('Total Errors label data source model', () => {
           {
             'sum(errorCount)': {
               type: AttributeMetadataType.Long,
-              value: 23
-            }
-          }
-        ]
+              value: 23,
+            },
+          },
+        ],
       });
       query.responseObserver.complete();
     });
@@ -91,8 +91,8 @@ describe('Total Errors label data source model', () => {
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.model.getData()).toBe('(x|)', {
         x: {
-          totalErrors: 23
-        }
+          totalErrors: 23,
+        },
       });
     });
   }));

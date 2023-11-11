@@ -3,14 +3,14 @@ import { PieArcDatum } from 'd3-shape';
 import {
   MouseDataLookupStrategy,
   MouseLocationData,
-  RelativeMouseLocation
+  RelativeMouseLocation,
 } from '../utils/mouse-tracking/mouse-tracking';
 import { DonutSeries } from './donut';
 
 export class DonutDataLookupStrategy implements MouseDataLookupStrategy<Required<DonutSeries>, undefined> {
   public constructor(
     private readonly pieData: PieArcDatum<Required<DonutSeries>>[],
-    private readonly invertedY: boolean = true
+    private readonly invertedY: boolean = true,
   ) {}
 
   public dataForLocation(location: RelativeMouseLocation): MouseLocationData<Required<DonutSeries>, undefined>[] {
@@ -24,8 +24,8 @@ export class DonutDataLookupStrategy implements MouseDataLookupStrategy<Required
       {
         dataPoint: closestSlice.data,
         context: undefined,
-        location: location
-      }
+        location: location,
+      },
     ];
   }
 

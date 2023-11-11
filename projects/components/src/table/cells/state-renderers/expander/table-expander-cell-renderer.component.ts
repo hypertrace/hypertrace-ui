@@ -18,11 +18,11 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
         [showTooltip]="false"
       ></ht-expander-toggle>
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: CoreTableCellRendererType.RowExpander,
   alignment: TableCellAlignmentType.Center,
-  parser: CoreTableCellParserType.State
+  parser: CoreTableCellParserType.State,
 })
 export class TableExpanderCellRendererComponent extends TableCellRendererBase<TableRowState> {}

@@ -15,7 +15,7 @@ export class TableCsvDownloaderService {
 
   public constructor(
     private readonly fileDownloadService: FileDownloadService,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
   ) {}
 
   public triggerDownload(tableId: string): void {
@@ -24,13 +24,13 @@ export class TableCsvDownloaderService {
 
   public executeDownload(
     dataAndConfigs$: Observable<{ rows: TableRow[]; columnConfigs: TableColumnConfigExtended[] }>,
-    fileName: CsvFileName
+    fileName: CsvFileName,
   ): void {
     dataAndConfigs$
       .pipe(
         map(({ rows, columnConfigs }) => {
           const csvGeneratorMap = new Map(
-            columnConfigs.filter(column => !isNil(column.csvGenerator)).map(column => [column.id, column])
+            columnConfigs.filter(column => !isNil(column.csvGenerator)).map(column => [column.id, column]),
           );
 
           return rows
@@ -65,9 +65,9 @@ export class TableCsvDownloaderService {
 
           return this.fileDownloadService.downloadAsCsv({
             fileName: fileName,
-            dataSource: of(content)
+            dataSource: of(content),
           });
-        })
+        }),
       )
       .subscribe();
   }

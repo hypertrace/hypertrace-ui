@@ -7,7 +7,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { LegendFontSize, LegendPosition } from '../legend/legend.component';
 import { TooltipOption } from '../utils/d3/d3-visualization-builder.service';
@@ -25,7 +25,7 @@ import { DonutBuilderService } from './donut-builder.service';
       [ngClass]="alignment"
       #donutContainer
     ></div>
-  `
+  `,
 })
 export class DonutComponent implements OnChanges, OnDestroy, AfterViewInit {
   @Input()
@@ -74,7 +74,7 @@ export class DonutComponent implements OnChanges, OnDestroy, AfterViewInit {
       legendPosition: this.legendPosition,
       tooltipOption: this.tooltipOption,
       displayLegendCounts: this.displayLegendCounts,
-      legendFontSize: this.legendFontSize
+      legendFontSize: this.legendFontSize,
     });
   }
 

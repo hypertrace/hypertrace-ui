@@ -28,7 +28,7 @@ export class TopologyEdgeRendererService implements TopologyEdgeRenderer {
     matchedDelegate.draw(edgeElement, edge.userEdge, edgePosition, edge.state, edge.domElementRenderer);
     this.rendererEdgeMap.set(edge, {
       element: edgeElement,
-      delegate: matchedDelegate
+      delegate: matchedDelegate,
     });
   }
 
@@ -90,7 +90,7 @@ export class TopologyEdgeRendererService implements TopologyEdgeRenderer {
         source: targetAttachPoint,
         sourceRad: targetRad,
         target: sourceAttachPoint,
-        targetRad: sourceRad
+        targetRad: sourceRad,
       };
     }
 
@@ -98,7 +98,7 @@ export class TopologyEdgeRendererService implements TopologyEdgeRenderer {
       source: sourceAttachPoint,
       sourceRad: sourceRad,
       target: targetAttachPoint,
-      targetRad: targetRad
+      targetRad: targetRad,
     };
   }
 

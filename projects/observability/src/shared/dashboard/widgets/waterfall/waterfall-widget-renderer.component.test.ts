@@ -11,7 +11,7 @@ import { WaterfallChartComponent } from './waterfall/waterfall-chart.component';
 
 describe('Waterfall widget renderer component', () => {
   const mockModel = {
-    getData: jest.fn(() => of([{}]))
+    getData: jest.fn(() => of([{}])),
   };
 
   const createComponent = createComponentFactory<WaterfallWidgetRendererComponent>({
@@ -21,9 +21,9 @@ describe('Waterfall widget renderer component', () => {
     providers: [
       ...mockDashboardWidgetProviders(mockModel),
       mockProvider(OverlayService),
-      mockProvider(ExplorerService)
+      mockProvider(ExplorerService),
     ],
-    declarations: [MockComponent(WaterfallChartComponent), MockComponent(ExploreFilterLinkComponent)]
+    declarations: [MockComponent(WaterfallChartComponent), MockComponent(ExploreFilterLinkComponent)],
   });
 
   test('renders the widget', () => {

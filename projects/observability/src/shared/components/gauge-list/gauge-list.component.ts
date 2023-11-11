@@ -29,7 +29,7 @@ import { maxBy, sum } from 'lodash-es';
         </div>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnChanges {
   @Input()
@@ -85,7 +85,7 @@ export class GaugeListComponent<T extends GaugeItem = GaugeItem> implements OnCh
       width: `${((option.value / maxValue!) * 100).toFixed(2)}%`,
       value: option.value,
       percentage: totalCount > 0 ? (option.value / totalCount) * 100 : 100,
-      original: option
+      original: option,
     }));
   }
 

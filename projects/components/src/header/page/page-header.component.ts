@@ -4,7 +4,7 @@ import {
   isNonEmptyString,
   NavigationService,
   PreferenceService,
-  SubscriptionLifecycle
+  SubscriptionLifecycle,
 } from '@hypertrace/common';
 import { Observable, of } from 'rxjs';
 import { first, map } from 'rxjs/operators';
@@ -75,7 +75,7 @@ import { NavigableTab } from '../../tabs/navigable/navigable-tab';
         </div>
       </ng-template>
     </div>
-  `
+  `,
 })
 export class PageHeaderComponent implements OnInit {
   @Input()
@@ -107,23 +107,23 @@ export class PageHeaderComponent implements OnInit {
   public readonly refresh: EventEmitter<void> = new EventEmitter<void>();
 
   public breadcrumbs$: Observable<Breadcrumb[] | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
-    map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs : undefined))
+    map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs : undefined)),
   );
 
   public titleCrumb$: Observable<Breadcrumb | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
-    map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1] : {}))
+    map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1] : {})),
   );
 
   public constructor(
     protected readonly navigationService: NavigationService,
     protected readonly preferenceService: PreferenceService,
     protected readonly subscriptionLifecycle: SubscriptionLifecycle,
-    protected readonly breadcrumbsService: BreadcrumbsService
+    protected readonly breadcrumbsService: BreadcrumbsService,
   ) {}
 
   public ngOnInit(): void {
     this.subscriptionLifecycle.add(
-      this.getPreferences().subscribe(preferences => this.navigateIfPersistedActiveTab(preferences))
+      this.getPreferences().subscribe(preferences => this.navigateIfPersistedActiveTab(preferences)),
     );
   }
 
@@ -139,7 +139,7 @@ export class PageHeaderComponent implements OnInit {
     if (isNonEmptyString(this.persistenceId) && isNonEmptyString(preferences.selectedTabPath)) {
       this.navigationService.navigateWithinApp(
         preferences.selectedTabPath,
-        this.navigationService.getCurrentActivatedRoute().parent!
+        this.navigationService.getCurrentActivatedRoute().parent!,
       );
     }
   }
@@ -157,7 +157,7 @@ export class PageHeaderComponent implements OnInit {
   private setPreferences(selectedTabPath?: string): void {
     if (isNonEmptyString(this.persistenceId)) {
       this.preferenceService.set(this.persistenceId, {
-        selectedTabPath: selectedTabPath
+        selectedTabPath: selectedTabPath,
       });
     }
   }
@@ -169,7 +169,7 @@ interface PageHeaderPreferences {
 
 export const enum PageHeaderContentAlignment {
   Column = 'column-alignment',
-  Row = 'row-alignment'
+  Row = 'row-alignment',
 }
 
 /**
@@ -178,5 +178,5 @@ export const enum PageHeaderContentAlignment {
 export const enum PageHeaderDisplayMode {
   Default = 'default',
   WithTimeRange = 'with-time-range',
-  WithRefreshButton = 'with-refresh'
+  WithRefreshButton = 'with-refresh',
 }

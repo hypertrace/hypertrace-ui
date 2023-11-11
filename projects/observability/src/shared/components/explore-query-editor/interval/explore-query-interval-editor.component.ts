@@ -19,7 +19,7 @@ import { IntervalValue } from '../../interval-select/interval-select.component';
       >
       </ht-interval-select>
     </div>
-  `
+  `,
 })
 export class ExploreQueryIntervalEditorComponent implements OnChanges {
   @Input()
@@ -37,7 +37,7 @@ export class ExploreQueryIntervalEditorComponent implements OnChanges {
   public constructor(private readonly intervalDurationService: IntervalDurationService) {
     let autoDuration: TimeDuration | undefined;
     this.intervalOptions$ = intervalDurationService.availableIntervals$.pipe(
-      map((concreteIntervals): IntervalValue[] => ['NONE', 'AUTO', ...concreteIntervals])
+      map((concreteIntervals): IntervalValue[] => ['NONE', 'AUTO', ...concreteIntervals]),
     );
 
     this.selectedInterval$ = combineLatest([this.intervalOptions$, this.intervalInputSubject]).pipe(
@@ -55,7 +55,7 @@ export class ExploreQueryIntervalEditorComponent implements OnChanges {
         }
 
         return match;
-      })
+      }),
     );
   }
 
@@ -78,7 +78,7 @@ export class ExploreQueryIntervalEditorComponent implements OnChanges {
     // If an explicit time, try to match it, otherwise switch to auto
     const match = this.intervalDurationService.getExactMatch(
       request,
-      options.filter((option): option is TimeDuration => option instanceof TimeDuration)
+      options.filter((option): option is TimeDuration => option instanceof TimeDuration),
     );
 
     return match || 'AUTO';

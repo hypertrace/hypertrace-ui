@@ -24,7 +24,7 @@ export const enum MetricAggregationType {
   AvgrateMinute = 'avgrate_min',
   Count = 'count',
   DistinctCount = 'distinct_count',
-  DistinctArray = 'distinct_array'
+  DistinctArray = 'distinct_array',
 }
 
 export const getAggregationDisplayName = (aggregation: MetricAggregationType): string => {
@@ -62,7 +62,7 @@ export const getAggregationDisplayName = (aggregation: MetricAggregationType): s
 
 export const getAggregationUnitDisplayName = (
   attribute?: AttributeMetadata,
-  aggregation?: MetricAggregationType
+  aggregation?: MetricAggregationType,
 ): string => {
   if (attribute === undefined || aggregation === undefined) {
     return '';

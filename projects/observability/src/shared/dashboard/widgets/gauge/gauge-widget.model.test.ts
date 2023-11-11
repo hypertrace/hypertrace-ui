@@ -12,7 +12,7 @@ describe('Gauge widget model', () => {
 
     const spectator = modelFactory(GaugeWidgetModel, {
       api: {
-        getData: () => of(value)
+        getData: () => of(value),
       },
       properties: {
         title: 'Test Title',
@@ -22,10 +22,10 @@ describe('Gauge widget model', () => {
             start: 0,
             end: 6,
             label: 'Medium',
-            color: Color.Brown1
-          }
-        ]
-      }
+            color: Color.Brown1,
+          },
+        ],
+      },
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -38,10 +38,10 @@ describe('Gauge widget model', () => {
               start: 0,
               end: 6,
               label: 'Medium',
-              color: Color.Brown1
-            }
-          ]
-        }
+              color: Color.Brown1,
+            },
+          ],
+        },
       });
     });
   });

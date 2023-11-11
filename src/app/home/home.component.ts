@@ -8,6 +8,6 @@ import { homeDashboard } from './home.dashboard';
     <div class="home">
       <ht-navigable-dashboard navLocation="${homeDashboard.location}"> </ht-navigable-dashboard>
     </div>
-  `
+  `,
 })
 export class HomeComponent {}

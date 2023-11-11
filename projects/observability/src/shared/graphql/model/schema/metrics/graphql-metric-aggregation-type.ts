@@ -10,11 +10,11 @@ export const enum GraphQlMetricAggregationType {
   Count = 'COUNT',
   Percentile = 'PERCENTILE',
   DistinctCount = 'DISTINCTCOUNT',
-  DistinctArray = 'DISTINCT_ARRAY'
+  DistinctArray = 'DISTINCT_ARRAY',
 }
 
 export const convertFromGraphQlMetricAggregationType = (
-  value: GraphQlMetricAggregationType
+  value: GraphQlMetricAggregationType,
 ): MetricAggregationType[] => {
   switch (value) {
     case GraphQlMetricAggregationType.Average:
@@ -24,7 +24,7 @@ export const convertFromGraphQlMetricAggregationType = (
         MetricAggregationType.P99,
         MetricAggregationType.P95,
         MetricAggregationType.P90,
-        MetricAggregationType.P50
+        MetricAggregationType.P50,
       ];
     case GraphQlMetricAggregationType.Max:
       return [MetricAggregationType.Max];

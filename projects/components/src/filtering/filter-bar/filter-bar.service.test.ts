@@ -16,34 +16,34 @@ describe('Filter Bar service', () => {
     new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.NotEquals,
-      217
+      217,
     ),
     new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.NotEquals,
-      415
+      415,
     ),
     new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.LessThanOrEqualTo,
-      707
+      707,
     ),
     new StringFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.String),
       FilterOperator.Equals,
-      'myValue'
+      'myValue',
     ),
     new StringMapFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.StringMap),
       FilterOperator.Equals,
       'myValue',
-      'myKey'
-    )
+      'myKey',
+    ),
   ];
 
   const buildService = createServiceFactory({
     service: FilterBarService,
-    providers: []
+    providers: [],
   });
 
   beforeEach(() => {
@@ -60,7 +60,7 @@ describe('Filter Bar service', () => {
     const stringFilter = new StringFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.String),
       FilterOperator.NotEquals,
-      'test'
+      'test',
     );
 
     testFilters = spectator.service.addFilter(testFilters, stringFilter);
@@ -74,7 +74,7 @@ describe('Filter Bar service', () => {
     const leftBoundNumberFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.GreaterThanOrEqualTo,
-      217
+      217,
     );
 
     testFilters = spectator.service.addFilter(testFilters, leftBoundNumberFilter);
@@ -88,7 +88,7 @@ describe('Filter Bar service', () => {
     const replacementLeftBoundNumberFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.GreaterThan,
-      415
+      415,
     );
 
     testFilters = spectator.service.addFilter(testFilters, replacementLeftBoundNumberFilter);
@@ -102,7 +102,7 @@ describe('Filter Bar service', () => {
     const rightBoundNumberFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.LessThanOrEqualTo,
-      707
+      707,
     );
 
     testFilters = spectator.service.addFilter(testFilters, rightBoundNumberFilter);
@@ -116,7 +116,7 @@ describe('Filter Bar service', () => {
     const replacementRightBoundNumberFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.LessThan,
-      949
+      949,
     );
 
     testFilters = spectator.service.addFilter(testFilters, replacementRightBoundNumberFilter);
@@ -130,7 +130,7 @@ describe('Filter Bar service', () => {
     const notEqualsNumberFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.NotEquals,
-      2020
+      2020,
     );
 
     testFilters = spectator.service.addFilter(testFilters, notEqualsNumberFilter);
@@ -139,7 +139,7 @@ describe('Filter Bar service', () => {
       stringFilter,
       replacementLeftBoundNumberFilter,
       replacementRightBoundNumberFilter,
-      notEqualsNumberFilter
+      notEqualsNumberFilter,
     ]);
 
     /*
@@ -149,7 +149,7 @@ describe('Filter Bar service', () => {
     const equalsNumberFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.Equals,
-      2020
+      2020,
     );
 
     testFilters = spectator.service.addFilter(testFilters, equalsNumberFilter);
@@ -163,7 +163,7 @@ describe('Filter Bar service', () => {
     const replacementNotEqualsNumberFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.NotEquals,
-      2020
+      2020,
     );
 
     testFilters = spectator.service.addFilter(testFilters, replacementNotEqualsNumberFilter);
@@ -177,7 +177,7 @@ describe('Filter Bar service', () => {
     const inNumberFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.In,
-      1984
+      1984,
     );
 
     testFilters = spectator.service.addFilter(testFilters, inNumberFilter);
@@ -192,7 +192,7 @@ describe('Filter Bar service', () => {
       getTestFilterAttribute(FilterAttributeType.StringMap),
       FilterOperator.Equals,
       'myValue',
-      'myKey'
+      'myKey',
     );
 
     testFilters = spectator.service.addFilter(testFilters, firstStringMapFilter);
@@ -206,7 +206,7 @@ describe('Filter Bar service', () => {
       getTestFilterAttribute(FilterAttributeType.StringMap),
       FilterOperator.Equals,
       'myValue',
-      'mySecondKey'
+      'mySecondKey',
     );
 
     testFilters = spectator.service.addFilter(testFilters, secondStringMapFilter);
@@ -220,7 +220,7 @@ describe('Filter Bar service', () => {
     const ckStringMapFilter = new StringMapFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.StringMap),
       FilterOperator.ContainsKey,
-      'myTestKey'
+      'myTestKey',
     );
 
     testFilters = spectator.service.addFilter(testFilters, ckStringMapFilter);
@@ -230,7 +230,7 @@ describe('Filter Bar service', () => {
       inNumberFilter,
       firstStringMapFilter,
       secondStringMapFilter,
-      ckStringMapFilter
+      ckStringMapFilter,
     ]);
   });
 
@@ -238,20 +238,20 @@ describe('Filter Bar service', () => {
     const testBooleanFilter = new BooleanFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Boolean),
       FilterOperator.NotEquals,
-      true
+      true,
     );
 
     const testStringMapFilter = new StringMapFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.StringMap),
       FilterOperator.Equals,
       'myTestValue',
-      'myTestKey'
+      'myTestKey',
     );
 
     const testNumberFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.LessThanOrEqualTo,
-      2020
+      2020,
     );
 
     /*
@@ -275,14 +275,14 @@ describe('Filter Bar service', () => {
       filters[0],
       filters[2],
       filters[3],
-      filters[4]
+      filters[4],
     ]);
 
     expect(spectator.service.deleteFilter(filters, filters[3])).toEqual([
       filters[0],
       filters[1],
       filters[2],
-      filters[4]
+      filters[4],
     ]);
   });
 });

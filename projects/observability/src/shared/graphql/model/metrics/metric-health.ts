@@ -3,7 +3,7 @@ export const enum MetricHealth {
   Warning = 'warning',
   Severe = 'severe',
   Critical = 'critical',
-  NotSpecified = 'notspecified'
+  NotSpecified = 'notspecified',
 }
 
 export const allMetricHealthValues = [
@@ -11,5 +11,5 @@ export const allMetricHealthValues = [
   MetricHealth.Critical,
   MetricHealth.Warning,
   MetricHealth.Severe,
-  MetricHealth.NotSpecified
+  MetricHealth.NotSpecified,
 ] as const;

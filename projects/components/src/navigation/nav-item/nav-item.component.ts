@@ -46,7 +46,7 @@ import { NavItemLinkConfig, NavViewStyle } from '../navigation.config';
         </div>
       </div>
     </ht-link>
-  `
+  `,
 })
 export class NavItemComponent {
   @Input()
@@ -66,7 +66,7 @@ export class NavItemComponent {
       navType: NavigationParamsType.InApp,
       path: item.matchPaths[0],
       relativeTo: this.activatedRoute,
-      replaceCurrentHistory: item.replaceCurrentHistory
+      replaceCurrentHistory: item.replaceCurrentHistory,
     };
 
     return navParams;

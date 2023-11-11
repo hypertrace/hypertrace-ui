@@ -9,20 +9,20 @@ describe('Card List component', () => {
     declareComponent: false,
     component: CardListComponent,
     imports: [CardListModule],
-    providers: []
+    providers: [],
   });
 
   test('should display all cards', () => {
     const data = [
       {
-        name: 'first'
+        name: 'first',
       },
       {
-        name: 'second'
+        name: 'second',
       },
       {
-        name: 'third'
-      }
+        name: 'third',
+      },
     ];
 
     spectator = createHost(
@@ -38,9 +38,9 @@ describe('Card List component', () => {
       {
         hostProps: {
           data: data,
-          mode: CardListMode.Card
-        }
-      }
+          mode: CardListMode.Card,
+        },
+      },
     );
 
     // Add test logic
@@ -67,16 +67,16 @@ describe('Card List component', () => {
     const data = [
       {
         name: 'first',
-        grouped: true
+        grouped: true,
       },
       {
         name: 'second',
-        grouped: false
+        grouped: false,
       },
       {
         name: 'third',
-        grouped: false
-      }
+        grouped: false,
+      },
     ];
 
     spectator = createHost(
@@ -92,9 +92,9 @@ describe('Card List component', () => {
       {
         hostProps: {
           data: data,
-          mode: CardListMode.Card
-        }
-      }
+          mode: CardListMode.Card,
+        },
+      },
     );
 
     // Test selection style

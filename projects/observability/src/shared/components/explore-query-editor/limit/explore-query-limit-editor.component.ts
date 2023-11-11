@@ -25,7 +25,7 @@ import { InputAppearance } from '@hypertrace/components';
         <ht-checkbox [checked]="this.includeRest" (checkedChange)="this.includeRestChange.emit($event)"> </ht-checkbox>
       </div>
     </div>
-  `
+  `,
 })
 export class ExploreQueryLimitEditorComponent {
   @Input()

@@ -8,7 +8,7 @@ import { GreetingLabelWidgetModel } from './greeting-label-widget.model';
 @Component({
   selector: 'ht-greeting-label-widget-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <ht-greeting-label [suffixLabel]="this.model.suffixLabel"></ht-greeting-label> `
+  template: ` <ht-greeting-label [suffixLabel]="this.model.suffixLabel"></ht-greeting-label> `,
 })
 export class GreetingLabelWidgetRendererComponent extends WidgetRenderer<GreetingLabelWidgetModel> {
   protected fetchData(): Observable<never> {

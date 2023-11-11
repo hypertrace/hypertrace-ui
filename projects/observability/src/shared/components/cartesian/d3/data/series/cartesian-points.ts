@@ -6,7 +6,7 @@ import {
   symbolCross,
   symbolSquare,
   symbolTriangle,
-  SymbolType
+  SymbolType,
 } from 'd3-shape';
 import { MouseDataLookupStrategy } from '../../../../utils/mouse-tracking/mouse-tracking';
 import { Series, SeriesSymbol } from '../../../chart';

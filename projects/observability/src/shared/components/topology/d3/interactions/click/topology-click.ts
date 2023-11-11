@@ -5,7 +5,7 @@ import {
   RenderableTopologyEdge,
   RenderableTopologyNode,
   TopologyEdgeRenderer,
-  TopologyNodeRenderer
+  TopologyNodeRenderer,
 } from '../../../topology';
 import { TopologyEventBehavior } from '../topology-event-behavior';
 
@@ -16,21 +16,21 @@ export class TopologyClick extends TopologyEventBehavior {
 
   public addNodeClickBehavior(
     nodes: RenderableTopologyNode[],
-    nodeRenderer: TopologyNodeRenderer
+    nodeRenderer: TopologyNodeRenderer,
   ): Observable<RenderableTopologyNode> {
     return this.buildObservableForEvents(nodes, node => nodeRenderer.getElementForNode(node), {
       eventName: 'click',
-      callback: (element, observer) => this.onNodeClick(element, observer)
+      callback: (element, observer) => this.onNodeClick(element, observer),
     });
   }
 
   public addEdgeClickBehavior(
     edges: RenderableTopologyEdge[],
-    edgeRenderer: TopologyEdgeRenderer
+    edgeRenderer: TopologyEdgeRenderer,
   ): Observable<RenderableTopologyEdge> {
     return this.buildObservableForEvents(edges, edge => edgeRenderer.getElementForEdge(edge), {
       eventName: 'click',
-      callback: (element, observer) => this.onEdgeClick(element, observer)
+      callback: (element, observer) => this.onEdgeClick(element, observer),
     });
   }
 

@@ -7,14 +7,14 @@ export const createModelFactory = (options: SpectatorModelFactoryOptions = {}): 
   const serviceFactory = createServiceFactory({
     service: ModelManagerService,
     providers: options.providers || [],
-    imports: [DashboardCoreModule, ...(options.imports || [])]
+    imports: [DashboardCoreModule, ...(options.imports || [])],
   });
 
   return <M extends object>(modelClass: Type<M>, overrides: SpectatorModelOverrides<M> = {}): SpectatorModel<M> => {
     const spectator = serviceFactory(overrides);
     spectator.service.registerModelApiBuilder({
       matches: () => !!overrides.api,
-      build: () => overrides.api as ModelApi
+      build: () => overrides.api as ModelApi,
     });
     spectator.inject(DefaultConfigurationService).configure();
 
@@ -26,7 +26,7 @@ export const createModelFactory = (options: SpectatorModelFactoryOptions = {}): 
 
     return {
       model: model,
-      get: spectator.inject.bind(spectator)
+      get: spectator.inject.bind(spectator),
     };
   };
 };

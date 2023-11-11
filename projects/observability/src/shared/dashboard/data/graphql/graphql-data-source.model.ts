@@ -6,7 +6,7 @@ import {
   ModelEventPublisher,
   ModelModelPropertyTypeInstance,
   ModelProperty,
-  ModelPropertyType
+  ModelPropertyType,
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { GraphQlRequestOptionsModel } from './request-option/graphql-request-options.model';
@@ -15,7 +15,7 @@ import {
   GraphQlQueryHandler,
   GraphQlRequestOptions,
   RequestTypeForHandler,
-  ResponseTypeForHandler
+  ResponseTypeForHandler,
 } from '@hypertrace/graphql-client';
 import { Observable, Observer, ReplaySubject, Subject } from 'rxjs';
 import { GraphQlFilter, GraphQlFilterable } from '../../../graphql/model/schema/filter/graphql-filter';
@@ -31,15 +31,15 @@ export abstract class GraphQlDataSourceModel<TData> implements DataSource<TData>
 
   @ModelProperty({
     key: 'filters',
-    type: ARRAY_PROPERTY.type
+    type: ARRAY_PROPERTY.type,
   })
   public filters: GraphQlFilter[] = [];
 
   @ModelProperty({
     type: {
-      key: ModelPropertyType.TYPE
+      key: ModelPropertyType.TYPE,
     } as ModelModelPropertyTypeInstance,
-    key: 'request-options'
+    key: 'request-options',
   })
   public requestOptions?: GraphQlRequestOptionsModel;
 
@@ -66,21 +66,21 @@ export abstract class GraphQlDataSourceModel<TData> implements DataSource<TData>
     TResponse extends ResponseTypeForHandler<THandler> = ResponseTypeForHandler<THandler>
   >(
     requestOrBuilder: RequestOrBuilder<RequestTypeForHandler<THandler>>,
-    requestOptions?: GraphQlRequestOptions
+    requestOptions?: GraphQlRequestOptions,
   ): Observable<TResponse> {
     const resultSubject = new ReplaySubject<TResponse>();
 
     this.querySubject.next({
       buildRequest: this.convertToBuilder(requestOrBuilder),
       requestOptions: requestOptions ?? this.requestOptions,
-      responseObserver: resultSubject as Observer<unknown>
+      responseObserver: resultSubject as Observer<unknown>,
     });
 
     return resultSubject.asObservable();
   }
 
   private convertToBuilder<THandler extends GraphQlQueryHandler<unknown, unknown>>(
-    requestOrBuilder: RequestOrBuilder<RequestTypeForHandler<THandler>>
+    requestOrBuilder: RequestOrBuilder<RequestTypeForHandler<THandler>>,
   ): RequestBuilder<RequestTypeForHandler<THandler>> {
     if (typeof requestOrBuilder === 'function') {
       return requestOrBuilder as RequestBuilder<RequestTypeForHandler<THandler>>;

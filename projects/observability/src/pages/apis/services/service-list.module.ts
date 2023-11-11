@@ -9,8 +9,8 @@ import { serviceListDashboard } from './service-list.dashboard';
   imports: [
     ObservabilityDashboardModule,
     PageHeaderModule,
-    NavigableDashboardModule.withDefaultDashboards(serviceListDashboard)
+    NavigableDashboardModule.withDefaultDashboards(serviceListDashboard),
   ],
-  declarations: [ServiceListComponent]
+  declarations: [ServiceListComponent],
 })
 export class ServiceListModule {}

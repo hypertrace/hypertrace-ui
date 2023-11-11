@@ -1,34 +1,34 @@
 import { Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 
 @Model({
-  type: 'cell-span-model'
+  type: 'cell-span-model',
 })
 export class CellSpanModel {
   @ModelProperty({
     key: 'col-start',
     type: NUMBER_PROPERTY.type,
-    required: true
+    required: true,
   })
   public colStart!: number;
 
   @ModelProperty({
     key: 'col-end',
     type: NUMBER_PROPERTY.type,
-    required: true
+    required: true,
   })
   public colEnd!: number;
 
   @ModelProperty({
     key: 'row-start',
     type: NUMBER_PROPERTY.type,
-    required: true
+    required: true,
   })
   public rowStart!: number;
 
   @ModelProperty({
     key: 'row-end',
     type: NUMBER_PROPERTY.type,
-    required: true
+    required: true,
   })
   public rowEnd!: number;
 

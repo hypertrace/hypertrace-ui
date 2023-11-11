@@ -15,7 +15,7 @@ describe('Titled content component', () => {
     imports: [TitledContentModule],
     declarations: [MockDirective(LayoutChangeTriggerDirective)],
     componentProviders: [LayoutChangeService],
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService)],
   });
 
   test('should render content with no title provided', () => {
@@ -24,7 +24,7 @@ describe('Titled content component', () => {
     <ht-titled-content>
       My content
     </ht-titled-content>
-    `
+    `,
     );
 
     expect(spectator.query('.content')).toHaveText('My content');
@@ -40,9 +40,9 @@ describe('Titled content component', () => {
       `,
       {
         props: {
-          title: 'Example title'
-        }
-      }
+          title: 'Example title',
+        },
+      },
     );
 
     expect(spectator.query('.title')).toHaveText('Example title');
@@ -56,7 +56,7 @@ describe('Titled content component', () => {
         My content
         <div *htTitledHeaderControl class="projected-control">Header Control</div>
       </ht-titled-content>
-      `
+      `,
     );
     spectator.tick();
     expect(spectator.query('.controls')).toExist();

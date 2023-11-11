@@ -12,9 +12,9 @@ describe('Track directive', () => {
     imports: [CommonModule],
     providers: [
       mockProvider(UserTelemetryImplService, {
-        trackEvent: jest.fn()
-      })
-    ]
+        trackEvent: jest.fn(),
+      }),
+    ],
   });
 
   test('propagates events with default config', fakeAsync(() => {
@@ -25,9 +25,9 @@ describe('Track directive', () => {
       {
         hostProps: {
           events: ['click'],
-          label: 'Content'
-        }
-      }
+          label: 'Content',
+        },
+      },
     );
 
     const telemetryService = spectator.inject(UserTelemetryImplService);
@@ -37,7 +37,7 @@ describe('Track directive', () => {
 
     expect(telemetryService.trackEvent).toHaveBeenCalledWith(
       'click: Content',
-      expect.objectContaining({ type: 'click' })
+      expect.objectContaining({ type: 'click' }),
     );
   }));
 
@@ -49,9 +49,9 @@ describe('Track directive', () => {
       {
         hostProps: {
           events: ['mouseover'],
-          label: 'Content'
-        }
-      }
+          label: 'Content',
+        },
+      },
     );
 
     const telemetryService = spectator.inject(UserTelemetryImplService);
@@ -61,7 +61,7 @@ describe('Track directive', () => {
 
     expect(telemetryService.trackEvent).toHaveBeenCalledWith(
       'mouseover: Content',
-      expect.objectContaining({ type: 'mouseover' })
+      expect.objectContaining({ type: 'mouseover' }),
     );
   }));
 });

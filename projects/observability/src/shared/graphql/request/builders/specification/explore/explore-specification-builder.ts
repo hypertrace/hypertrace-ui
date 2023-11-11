@@ -7,7 +7,7 @@ import { MetricAggregationType } from '../../../../model/metrics/metric-aggregat
 import { INTERVAL_START_QUERY_KEY } from '../../../../model/schema/explore';
 import {
   convertToGraphQlMetricAggregationType,
-  GraphQlMetricAggregationType
+  GraphQlMetricAggregationType,
 } from '../../../../model/schema/metrics/graphql-metric-aggregation-type';
 import { GraphQlSortWithoutDirection } from '../../../../model/schema/sort/graphql-sort-without-direction';
 import { ExploreSpecification } from '../../../../model/schema/specifications/explore-specification';
@@ -24,11 +24,11 @@ export class ExploreSpecificationBuilder {
       asGraphQlSelections: () => [],
       extractFromServerData: serverData => ({
         value: this.dateCoercer.coerce(serverData[INTERVAL_START_QUERY_KEY]),
-        type: AttributeMetadataType.Timestamp
+        type: AttributeMetadataType.Timestamp,
       }),
       asGraphQlOrderByFragment: () => ({
-        expression: { key: 'intervalStart' }
-      })
+        expression: { key: 'intervalStart' },
+      }),
     };
   }
 
@@ -38,7 +38,7 @@ export class ExploreSpecificationBuilder {
 
   public exploreSpecificationForAttributeExpression(
     expression: AttributeExpression,
-    aggregation?: MetricAggregationType
+    aggregation?: MetricAggregationType,
   ): ExploreSpecification {
     const expressionString = this.attributeExpressionAsString(expression).replace(/[^\w]/gi, '_');
     const queryAlias = aggregation === undefined ? expressionString : `${aggregation}_${expressionString}`;
@@ -53,14 +53,14 @@ export class ExploreSpecificationBuilder {
         arguments: [
           this.argBuilder.forAttributeExpression(expression),
           ...this.argBuilder.forAggregation(aggregation),
-          ...this.argBuilder.forAggregationArgs(aggregation)
+          ...this.argBuilder.forAggregationArgs(aggregation),
         ],
-        children: [{ path: 'value' }, { path: 'type' }]
+        children: [{ path: 'value' }, { path: 'type' }],
       }),
       extractFromServerData: serverData => serverData[queryAlias],
       asGraphQlOrderByFragment: () => {
         const fragment: GraphQlSortWithoutDirection & Dictionary<unknown> = {
-          expression: expression
+          expression: expression,
         };
 
         if (aggregation !== undefined) {
@@ -69,7 +69,7 @@ export class ExploreSpecificationBuilder {
         }
 
         return fragment;
-      }
+      },
     };
   }
 

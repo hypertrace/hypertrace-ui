@@ -83,7 +83,7 @@ import { SpanDetailTab } from './span-detail-tab';
         <ht-message-display icon="${IconType.NoData}" description="Span Details Not Available"></ht-message-display>
       </div>
     </ng-template>
-  `
+  `,
 })
 export class SpanDetailComponent implements OnChanges {
   @Input()

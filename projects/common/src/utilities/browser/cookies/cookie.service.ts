@@ -39,8 +39,8 @@ export class CookieService {
         .split(';')
         .map(keyValue => [
           keyValue.substring(0, keyValue.indexOf('=')).trim(),
-          decodeURIComponent(keyValue.substring(keyValue.indexOf('=') + 1).trim())
-        ])
+          decodeURIComponent(keyValue.substring(keyValue.indexOf('=') + 1).trim()),
+        ]),
     );
   }
 }

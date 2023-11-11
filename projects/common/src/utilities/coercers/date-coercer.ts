@@ -5,7 +5,7 @@ import { Coercer, CoercerOptions } from './coercer';
 export class DateCoercer extends Coercer<Date, DateCoercerOptions> {
   private static readonly DEFAULT_TIME_WINDOW: DateCoercerOptions = {
     earliestDate: new Date(Date.now() - new TimeDuration(10, TimeUnit.Year).toMillis()),
-    latestDate: new Date(Date.now() + new TimeDuration(10, TimeUnit.Year).toMillis())
+    latestDate: new Date(Date.now() + new TimeDuration(10, TimeUnit.Year).toMillis()),
   };
 
   public constructor(options: DateCoercerOptions = {}) {
@@ -15,7 +15,7 @@ export class DateCoercer extends Coercer<Date, DateCoercerOptions> {
   protected assignDefaults(options: DateCoercerOptions): DateCoercerOptions {
     return {
       ...DateCoercer.DEFAULT_TIME_WINDOW,
-      ...super.assignDefaults(options)
+      ...super.assignDefaults(options),
     };
   }
 

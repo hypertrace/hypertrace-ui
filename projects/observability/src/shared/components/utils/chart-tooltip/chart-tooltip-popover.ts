@@ -7,7 +7,7 @@ export class ChartTooltipPopover<TData, TContext> implements ChartTooltipRef<TDa
 
   public constructor(
     private readonly popoverRef: PopoverRef,
-    private readonly dataObserver: Observer<MouseLocationData<TData, TContext>[]>
+    private readonly dataObserver: Observer<MouseLocationData<TData, TContext>[]>,
   ) {}
 
   public showWithData(element: Element, data: MouseLocationData<TData, TContext>[]): void {
@@ -31,7 +31,7 @@ export class ChartTooltipPopover<TData, TContext> implements ChartTooltipRef<TDa
         type: PopoverPositionType.FollowMouse,
         boundingElement: element,
         offsetX: 20,
-        offsetY: 30
+        offsetY: 30,
       });
       this.boundElement = element;
     }

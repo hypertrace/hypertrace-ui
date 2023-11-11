@@ -4,14 +4,14 @@ import { Model, ModelProperty } from '@hypertrace/hyperdash';
 import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import {
   ErrorPercentageMetricAggregation,
-  ErrorPercentageMetricAggregationSpecification
+  ErrorPercentageMetricAggregationSpecification,
 } from '../../../../graphql/model/schema/specifications/error-percentage-aggregation-specification';
 import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/builders/selections/observability-specification-builder';
 import { SpecificationModel } from './specification.model';
 
 @Model({
   type: 'error-percentage-metric-aggregation',
-  displayName: 'Error Percentage'
+  displayName: 'Error Percentage',
 })
 export class ErrorPercentageMetricAggregationSpecificationModel extends SpecificationModel<ErrorPercentageMetricAggregationSpecification> {
   @ModelProperty({
@@ -30,16 +30,16 @@ export class ErrorPercentageMetricAggregationSpecificationModel extends Specific
         MetricAggregationType.Sum,
         MetricAggregationType.AvgrateMinute,
         MetricAggregationType.AvgrateSecond,
-        MetricAggregationType.Count
-      ]
-    } as EnumPropertyTypeInstance
+        MetricAggregationType.Count,
+      ],
+    } as EnumPropertyTypeInstance,
   })
   public aggregation!: MetricAggregationType;
 
   protected buildInnerSpec(): ErrorPercentageMetricAggregationSpecification {
     return new ObservabilitySpecificationBuilder().metricAggregationSpecForErrorPercentage(
       this.aggregation,
-      this.displayName
+      this.displayName,
     );
   }
 

@@ -11,9 +11,9 @@ import { DashboardWidgetsModule } from './widgets/dashboard-widgets.module';
     DashboardWidgetsModule,
     DashboardPropertyEditorsModule,
     DashboardCoreModule.with({
-      models: [TimeDurationModel]
-    })
-  ]
+      models: [TimeDurationModel],
+    }),
+  ],
 })
 export class DashboardModule {
   public constructor(defaultConfigurationService: DefaultConfigurationService) {

@@ -11,7 +11,7 @@ import {
   TABLE_COLUMN_CONFIG,
   TABLE_COLUMN_INDEX,
   TABLE_DATA_PARSER,
-  TABLE_ROW_DATA
+  TABLE_ROW_DATA,
 } from '@hypertrace/components';
 import { MetricAggregation } from '../../../../graphql/model/metrics/metric-aggregation';
 import { TracingTableCellType } from '../../tracing-table-cell-type';
@@ -28,12 +28,12 @@ import { TracingTableCellType } from '../../tracing-table-cell-type';
       >
       <span *ngIf="this.value === undefined">-</span>
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: TracingTableCellType.Metric,
   alignment: TableCellAlignmentType.Right,
-  parser: TracingTableCellType.Metric
+  parser: TracingTableCellType.Metric,
 })
 export class MetricTableCellRendererComponent extends TableCellRendererBase<CellData, number> {
   public readonly formatter: FormatterStyle = FormatterStyle.None;
@@ -44,7 +44,7 @@ export class MetricTableCellRendererComponent extends TableCellRendererBase<Cell
     @Inject(TABLE_COLUMN_INDEX) index: number,
     @Inject(TABLE_DATA_PARSER) parser: TableCellParserBase<CellData, number, unknown>,
     @Inject(TABLE_CELL_DATA) cellData: number | Partial<MetricAggregation>,
-    @Inject(TABLE_ROW_DATA) rowData: TableRow
+    @Inject(TABLE_ROW_DATA) rowData: TableRow,
   ) {
     super(columnConfig, index, parser, cellData, rowData);
   }

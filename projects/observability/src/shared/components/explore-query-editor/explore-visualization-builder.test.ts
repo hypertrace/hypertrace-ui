@@ -7,7 +7,7 @@ import {
   IntervalDurationService,
   TimeDuration,
   TimeRangeService,
-  TimeUnit
+  TimeUnit,
 } from '@hypertrace/common';
 import { patchRouterNavigateForTest, recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
@@ -30,17 +30,17 @@ describe('Explore visualization builder', () => {
           of({
             name: key,
             onlySupportsAggregation: false,
-            onlySupportsGrouping: false
-          })
-        )
+            onlySupportsGrouping: false,
+          }),
+        ),
       }),
       mockProvider(IntervalDurationService, {
-        getAutoDuration: () => new TimeDuration(3, TimeUnit.Minute)
+        getAutoDuration: () => new TimeDuration(3, TimeUnit.Minute),
       }),
       mockProvider(FeatureStateResolver, {
-        getFeatureState: () => of(FeatureState.Enabled)
-      })
-    ]
+        getFeatureState: () => of(FeatureState.Enabled),
+      }),
+    ],
   });
 
   let spectator: SpectatorService<ExploreVisualizationBuilder>;
@@ -49,8 +49,8 @@ describe('Explore visualization builder', () => {
   const matchSeriesWithName = (name: string) =>
     expect.objectContaining({
       specification: expect.objectContaining({
-        name: name
-      })
+        name: name,
+      }),
     });
 
   const expectedQuery = (queryPartial: Partial<ExploreVisualizationRequest> = {}): ExploreVisualizationRequest =>
@@ -58,14 +58,14 @@ describe('Explore visualization builder', () => {
       context: ObservabilityTraceType.Api,
       interval: 'AUTO',
       series: [matchSeriesWithName('calls')],
-      ...queryPartial
+      ...queryPartial,
     });
 
   const buildSeries = (key: string, aggregation?: MetricAggregationType) => ({
     specification: new ExploreSpecificationBuilder().exploreSpecificationForKey(key, aggregation),
     visualizationOptions: {
-      type: CartesianSeriesVisualizationType.Column
-    }
+      type: CartesianSeriesVisualizationType.Column,
+    },
   });
 
   beforeEach(() => {
@@ -97,15 +97,15 @@ describe('Explore visualization builder', () => {
         .setSeries([buildSeries('test1')])
         .groupBy({
           keyExpressions: [{ key: 'testGroupBy' }],
-          limit: 15
+          limit: 15,
         })
         .setSeries([buildSeries('test2')]);
 
       expectObservable(recordedRequests).toBe('10ms x', {
         x: expectedQuery({
           series: [matchSeriesWithName('test2')],
-          groupBy: { keyExpressions: [{ key: 'testGroupBy' }], limit: 15 }
-        })
+          groupBy: { keyExpressions: [{ key: 'testGroupBy' }], limit: 15 },
+        }),
       });
     });
   });
@@ -116,7 +116,7 @@ describe('Explore visualization builder', () => {
       spectator.service.setSeries([buildSeries('test1')]).reset();
 
       expectObservable(recordedRequests).toBe('10ms x', {
-        x: expectedQuery()
+        x: expectedQuery(),
       });
     });
   });
@@ -138,21 +138,21 @@ describe('Explore visualization builder', () => {
       // Send first time range immediately, then change it 50ms later
       cold('x 50ms y', {
         x: new TimeDuration(1, TimeUnit.Hour),
-        y: new TimeDuration(1, TimeUnit.Day)
+        y: new TimeDuration(1, TimeUnit.Day),
       }).subscribe(duration => timeRangeService.setRelativeRange(duration.value, duration.unit));
 
       const recordedIntervals = recordObservable(
         spectator.service.visualizationRequest$.pipe(
           switchMap(request => request.exploreQuery$),
-          map(query => query.interval)
-        )
+          map(query => query.interval),
+        ),
       );
       spectator.service.setSeries([buildSeries('test1')]);
 
       // First time range is 10ms due to debounced explorer emission, but interval will update as soon as time range changes (50ms total)
       expectObservable(recordedIntervals).toBe('10ms x 40ms y', {
         x: new TimeDuration(1, TimeUnit.Minute),
-        y: new TimeDuration(1, TimeUnit.Hour)
+        y: new TimeDuration(1, TimeUnit.Hour),
       });
     });
   });

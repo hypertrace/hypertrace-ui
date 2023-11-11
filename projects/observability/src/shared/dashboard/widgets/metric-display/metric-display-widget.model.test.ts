@@ -10,15 +10,15 @@ describe('Metric display widget model', () => {
   const buildModel = (data: MetricAggregation): SpectatorModel<MetricDisplayWidgetModel> =>
     modelFactory(MetricDisplayWidgetModel, {
       api: {
-        getData: () => of(data)
-      }
+        getData: () => of(data),
+      },
     });
 
   test('can normalize data', () => {
     const spectator = buildModel({
       value: 10,
       health: MetricHealth.Healthy,
-      units: 'ms'
+      units: 'ms',
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -26,8 +26,8 @@ describe('Metric display widget model', () => {
         x: {
           value: 10,
           health: MetricHealth.Healthy,
-          units: 'ms'
-        }
+          units: 'ms',
+        },
       });
     });
   });

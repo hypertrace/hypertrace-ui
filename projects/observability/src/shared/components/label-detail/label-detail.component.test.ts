@@ -5,7 +5,7 @@ import {
   IconComponent,
   LabelComponent,
   PopoverComponent,
-  PopoverModule
+  PopoverModule,
 } from '@hypertrace/components';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -22,9 +22,9 @@ describe('Label Detail Component', () => {
     declarations: [MockComponent(ButtonComponent), MockComponent(LabelComponent), MockComponent(IconComponent)],
     providers: [
       mockProvider(NavigationService, {
-        navigation$: NEVER
-      })
-    ]
+        navigation$: NEVER,
+      }),
+    ],
   });
 
   test('should render all trigger contents for default/with-label view mode', () => {
@@ -35,9 +35,9 @@ describe('Label Detail Component', () => {
           icon: IconType.Add,
           label: 'Impact',
           description: 'This is a test description',
-          additionalDetails: ['Additional Detail 1', 'Additional Detail 2']
-        }
-      }
+          additionalDetails: ['Additional Detail 1', 'Additional Detail 2'],
+        },
+      },
     );
 
     expect(spectator.query('.label-detail-trigger')).toExist();
@@ -73,9 +73,9 @@ describe('Label Detail Component', () => {
           label: 'Impact',
           description: 'This is a test description',
           additionalDetails: ['Additional Detail 1', 'Additional Detail 2'],
-          view: LabelDetailView.IconOnly
-        }
-      }
+          view: LabelDetailView.IconOnly,
+        },
+      },
     );
 
     expect(spectator.query('.label-detail-trigger')).toExist();
@@ -112,9 +112,9 @@ describe('Label Detail Component', () => {
           icon: IconType.Add,
           label: 'Impact',
           description: 'This is a test description',
-          additionalDetails: ['Additional Detail 1', 'Additional Detail 2']
-        }
-      }
+          additionalDetails: ['Additional Detail 1', 'Additional Detail 2'],
+        },
+      },
     );
 
     spectator.click('.label-detail-trigger');

@@ -55,7 +55,7 @@ export class TopologyZoom<TContainer extends Element = Element, TTarget extends 
       left: containerdBox.width - TopologyZoom.DATA_BRUSH_OVERLAY_WIDTH,
       right: containerdBox.right,
       width: TopologyZoom.DATA_BRUSH_OVERLAY_WIDTH,
-      height: TopologyZoom.DATA_BRUSH_OVERLAY_HEIGHT
+      height: TopologyZoom.DATA_BRUSH_OVERLAY_HEIGHT,
     };
 
     const overlayZoomScale = this.determineZoomScale(nodes, boundingBox);

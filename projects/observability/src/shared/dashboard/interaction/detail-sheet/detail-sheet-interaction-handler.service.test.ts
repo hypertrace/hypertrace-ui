@@ -10,9 +10,9 @@ describe('Overlay service', () => {
     service: DetailSheetInteractionHandlerService,
     providers: [
       mockProvider(OverlayService, {
-        createSheet: jest.fn()
-      })
-    ]
+        createSheet: jest.fn(),
+      }),
+    ],
   });
 
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe('Overlay service', () => {
       showHeader: true,
       size: SheetSize.Medium,
       title: 'Test Title',
-      data: detailModel
+      data: detailModel,
     });
   });
 });

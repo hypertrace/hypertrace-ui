@@ -6,18 +6,18 @@ import {
   OnChanges,
   OnDestroy,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
 import { LoadAsyncConfig, LoadAsyncContext, LoadAsyncService } from './load-async.service';
 import {
   ASYNC_WRAPPER_PARAMETERS$,
   LoadAsyncWrapperComponent,
-  LoadAsyncWrapperParameters
+  LoadAsyncWrapperParameters,
 } from './wrapper/load-async-wrapper.component';
 
 @Directive({
-  selector: '[htLoadAsync]'
+  selector: '[htLoadAsync]',
 })
 export class LoadAsyncDirective<T> implements OnChanges, OnDestroy {
   @Input('htLoadAsync')
@@ -32,16 +32,16 @@ export class LoadAsyncDirective<T> implements OnChanges, OnDestroy {
   public constructor(
     private readonly viewContainer: ViewContainerRef,
     private readonly loadAsyncService: LoadAsyncService,
-    public readonly templateRef: TemplateRef<LoadAsyncContext<T>>
+    public readonly templateRef: TemplateRef<LoadAsyncContext<T>>,
   ) {
     this.wrapperInjector = Injector.create({
       providers: [
         {
           provide: ASYNC_WRAPPER_PARAMETERS$,
-          useValue: this.wrapperParamsSubject.asObservable()
-        }
+          useValue: this.wrapperParamsSubject.asObservable(),
+        },
       ],
-      parent: this.viewContainer.injector
+      parent: this.viewContainer.injector,
     });
   }
 
@@ -51,7 +51,7 @@ export class LoadAsyncDirective<T> implements OnChanges, OnDestroy {
       this.wrapperParamsSubject.next({
         state$: this.loadAsyncService.mapObservableState<T>(this.data$),
         content: this.templateRef,
-        config: this.config
+        config: this.config,
       });
     } else {
       // If observable is cleared, clear the DOM
@@ -70,7 +70,7 @@ export class LoadAsyncDirective<T> implements OnChanges, OnDestroy {
 
   private buildWrapperView(): ComponentRef<LoadAsyncWrapperComponent<T>> {
     return this.viewContainer.createComponent<LoadAsyncWrapperComponent<T>>(LoadAsyncWrapperComponent, {
-      injector: this.wrapperInjector
+      injector: this.wrapperInjector,
     });
   }
 }

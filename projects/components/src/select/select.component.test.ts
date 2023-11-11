@@ -21,9 +21,9 @@ describe('Select Component', () => {
     providers: [
       mockProvider(NavigationService, {
         navigation$: EMPTY,
-        navigateWithinApp: jest.fn()
-      })
-    ]
+        navigateWithinApp: jest.fn(),
+      }),
+    ],
   });
 
   let spectator: SpectatorHost<SelectComponent<string>>;
@@ -31,7 +31,7 @@ describe('Select Component', () => {
   const selectionOptions = [
     { label: 'first', value: 'first-value' },
     { label: 'second', value: 'second-value' },
-    { label: 'third', value: 'third-value', selectedLabel: 'Third Value!!!', icon: 'test-icon', iconColor: 'red' }
+    { label: 'third', value: 'third-value', selectedLabel: 'Third Value!!!', icon: 'test-icon', iconColor: 'red' },
   ];
 
   test('should display initial selection', fakeAsync(() => {
@@ -44,16 +44,16 @@ describe('Select Component', () => {
       {
         hostProps: {
           options: selectionOptions,
-          selected: selectionOptions[1].value
-        }
-      }
+          selected: selectionOptions[1].value,
+        },
+      },
     );
     spectator.tick();
 
     expect(spectator.element).toHaveText(selectionOptions[1].label);
 
     spectator.setHostInput({
-      selected: selectionOptions[2].value
+      selected: selectionOptions[2].value,
     });
 
     spectator.tick();
@@ -71,9 +71,9 @@ describe('Select Component', () => {
       {
         hostProps: {
           options: selectionOptions,
-          selected: selectionOptions[1].value
-        }
-      }
+          selected: selectionOptions[1].value,
+        },
+      },
     );
     spectator.tick();
 
@@ -90,9 +90,9 @@ describe('Select Component', () => {
       {
         hostProps: {
           options: selectionOptions,
-          selected: selectionOptions[1].value
-        }
-      }
+          selected: selectionOptions[1].value,
+        },
+      },
     );
     spectator.tick();
 
@@ -115,9 +115,9 @@ describe('Select Component', () => {
         hostProps: {
           options: selectionOptions,
           selected: selectionOptions[1].value,
-          displayMode: SelectTriggerDisplayMode.MenuWithBorder
-        }
-      }
+          displayMode: SelectTriggerDisplayMode.MenuWithBorder,
+        },
+      },
     );
 
     expect(spectator.query('.menu-with-border')).toExist();
@@ -135,9 +135,9 @@ describe('Select Component', () => {
         hostProps: {
           options: selectionOptions,
           selected: selectionOptions[1].value,
-          displayMode: SelectTriggerDisplayMode.Icon
-        }
-      }
+          displayMode: SelectTriggerDisplayMode.Icon,
+        },
+      },
     );
 
     expect(spectator.query('.menu-with-border')).not.toExist();
@@ -158,9 +158,9 @@ describe('Select Component', () => {
         hostProps: {
           options: selectionOptions,
           selected: selectionOptions[1].value,
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     spectator.tick();
@@ -185,15 +185,15 @@ describe('Select Component', () => {
       {
         hostProps: {
           options: selectionOptions,
-          icon: 'select-level-icon'
-        }
-      }
+          icon: 'select-level-icon',
+        },
+      },
     );
     spectator.tick();
 
     // No selection -> select component level icon and no color
     expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.icon).toBe(
-      'select-level-icon'
+      'select-level-icon',
     );
 
     expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.color).toBe(null);
@@ -204,7 +204,7 @@ describe('Select Component', () => {
     spectator.click(optionElements[1]);
     spectator.tick();
     expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.icon).toBe(
-      'select-level-icon'
+      'select-level-icon',
     );
     expect(spectator.debugElement.query(By.css('.trigger-prefix-icon')).componentInstance.color).toBe(undefined);
 
@@ -231,9 +231,9 @@ describe('Select Component', () => {
         hostProps: {
           options: selectionOptions,
           selected: selectionOptions[1].value,
-          showBorder: true
-        }
-      }
+          showBorder: true,
+        },
+      },
     );
     spectator.tick();
 
@@ -241,28 +241,28 @@ describe('Select Component', () => {
     expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-left'));
 
     spectator.setInput({
-      showBorder: false
+      showBorder: false,
     });
 
     expect(spectator.element).toHaveText(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-right'));
 
     spectator.setInput({
-      justify: SelectJustify.Left
+      justify: SelectJustify.Left,
     });
 
     expect(spectator.element).toHaveText(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-left'));
 
     spectator.setInput({
-      justify: SelectJustify.Right
+      justify: SelectJustify.Right,
     });
 
     expect(spectator.element).toHaveText(selectionOptions[1].label);
     expect(spectator.query('.trigger-content')).toBe(spectator.query('.justify-right'));
 
     spectator.setInput({
-      justify: SelectJustify.Center
+      justify: SelectJustify.Center,
     });
 
     expect(spectator.element).toHaveText(selectionOptions[1].label);
@@ -285,9 +285,9 @@ describe('Select Component', () => {
           controlValue: 'none-id',
           controlIcon: IconType.Debug,
           controlPosition: SelectControlOptionPosition.Top,
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     spectator.tick();
@@ -321,12 +321,12 @@ describe('Select Component', () => {
               value: 'third-value',
               selectedLabel: 'Third Value!!!',
               icon: 'test-icon',
-              iconColor: 'red'
-            }
+              iconColor: 'red',
+            },
           ],
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     spectator.tick();
@@ -353,9 +353,9 @@ describe('Select Component', () => {
       {
         hostProps: {
           options: selectionOptions,
-          selected: selectionOptions[1].value
-        }
-      }
+          selected: selectionOptions[1].value,
+        },
+      },
     );
 
     spectator.tick();

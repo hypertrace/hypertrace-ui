@@ -24,7 +24,7 @@ export interface SplitFilter<TOperator extends string> extends FilterAttributeEx
 export const splitFilterStringByOperator = <TOperator extends string>(
   attribute: FilterAttribute,
   possibleOperators: TOperator[],
-  filterString: string
+  filterString: string,
 ): SplitFilter<TOperator> | undefined => {
   const matchingOperator = possibleOperators
     .sort((a, b) => b.length - a.length) // Prefer longer matches
@@ -49,14 +49,14 @@ export const splitFilterStringByOperator = <TOperator extends string>(
 export const tryParseStringForAttribute = (
   attributeToTest: FilterAttribute,
   text: string,
-  nameFields: KeysWithType<FilterAttribute, string>[] = ['displayName']
+  nameFields: KeysWithType<FilterAttribute, string>[] = ['displayName'],
 ): FilterAttributeExpression | undefined => {
   const [stringContainingFullAttribute] = text.trim().split(MAP_LHS_DELIMITER, 1);
   // The string to the left of any delimeter must start with the attribute otherwise no match
   const matchingNameField = nameFields
     .sort((key1, key2) => attributeToTest[key2].length - attributeToTest[key1].length)
     .find(nameField =>
-      stringContainingFullAttribute.toLowerCase().startsWith(attributeToTest[nameField].toLowerCase())
+      stringContainingFullAttribute.toLowerCase().startsWith(attributeToTest[nameField].toLowerCase()),
     );
 
   if (!matchingNameField) {

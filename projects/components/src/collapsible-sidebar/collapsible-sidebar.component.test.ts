@@ -9,12 +9,12 @@ describe('Collapsible Sidebar Component', () => {
   const createHost = createHostFactory({
     component: CollapsibleSidebarComponent,
     shallow: true,
-    declarations: [MockComponents(EventBlockerComponent, IconComponent)]
+    declarations: [MockComponents(EventBlockerComponent, IconComponent)],
   });
 
   test('should render content correclty', () => {
     const spectator = createHost(
-      `<ht-collapsible-sidebar label="test-label"><div class="test-content"></div></ht-collapsible-sidebar>`
+      `<ht-collapsible-sidebar label="test-label"><div class="test-content"></div></ht-collapsible-sidebar>`,
     );
 
     expect(spectator.query(IconComponent)?.icon).toBe(IconType.TriangleRight);

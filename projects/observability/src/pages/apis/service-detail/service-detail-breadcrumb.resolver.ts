@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import {
   EntityBreadcrumb,
-  EntityBreadcrumbResolver
+  EntityBreadcrumbResolver,
 } from '../../../shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
 import { EntityIconLookupService } from './../../../shared/services/entity/entity-icon-lookup.service';
 
@@ -15,7 +15,7 @@ export class ServiceDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends
   public constructor(
     timeRangeService: TimeRangeService,
     graphQlQueryService: GraphQlRequestService,
-    iconLookupService: EntityIconLookupService
+    iconLookupService: EntityIconLookupService,
   ) {
     super(timeRangeService, graphQlQueryService, iconLookupService);
   }

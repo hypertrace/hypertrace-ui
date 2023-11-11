@@ -6,7 +6,7 @@ import {
   OnChanges,
   OnInit,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { FilterAttribute } from '../../../filtering/filter/filter-attribute';
@@ -41,7 +41,7 @@ import { TableCellAlignmentType } from '../types/table-cell-alignment-type';
         ></ht-filter-button>
       </ng-template>
     </div>
-  `
+  `,
 })
 export class TableDataCellRendererComponent implements OnInit, OnChanges {
   @Input()
@@ -91,8 +91,8 @@ export class TableDataCellRendererComponent implements OnInit, OnChanges {
         this.columnConfig.parser,
         this.cellData,
         this.rowData,
-        this.injector
-      )
+        this.injector,
+      ),
     });
 
     // Allow columnConfig to override default alignment for cell renderer

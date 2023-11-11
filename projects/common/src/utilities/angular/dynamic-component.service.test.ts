@@ -6,7 +6,7 @@ import {
   InjectionToken,
   Injector,
   Optional,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { createComponentFactory, createServiceFactory } from '@ngneat/spectator/jest';
@@ -19,7 +19,7 @@ describe('Dynamic component service', () => {
   @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'dynamic-component',
-    template: 'Dynamic component {{this.injected}}'
+    template: 'Dynamic component {{this.injected}}',
   })
   class DynamicComponent {
     public constructor(@Inject(injectionToken) public readonly injected: string) {}
@@ -28,10 +28,10 @@ describe('Dynamic component service', () => {
   const componentFactory = createComponentFactory({
     component: Component({
       selector: 'host-component',
-      template: '<div class="host-container"></div>'
+      template: '<div class="host-container"></div>',
     })(class {}),
     declarations: [DynamicComponent],
-    entryComponents: [DynamicComponent]
+    entryComponents: [DynamicComponent],
   });
 
   test('can create a component', () => {
@@ -42,7 +42,7 @@ describe('Dynamic component service', () => {
     const injector = spectator.inject(Injector);
 
     const componentRef = dynamicComponentService.insertComponent(container, DynamicComponent, injector, [
-      { provide: injectionToken, useValue: 'injected value' }
+      { provide: injectionToken, useValue: 'injected value' },
     ]);
 
     expect(componentRef.instance).toBeInstanceOf(DynamicComponent);
@@ -60,21 +60,21 @@ describe('Dynamic component service', () => {
           {{ this.title }}
         </div>
       `,
-      changeDetection: ChangeDetectionStrategy.OnPush
+      changeDetection: ChangeDetectionStrategy.OnPush,
     })
     class MockComponent {
       public constructor(
         public readonly vcr: ViewContainerRef,
-        @Optional() @Inject(MOCK_TOKEN) public readonly title: string
+        @Optional() @Inject(MOCK_TOKEN) public readonly title: string,
       ) {}
     }
 
     const createService = createServiceFactory({
-      service: DynamicComponentService
+      service: DynamicComponentService,
     });
 
     const createComponent = createComponentFactory({
-      component: MockComponent
+      component: MockComponent,
     });
 
     test('should render the component correctly with the props passed', fakeAsync(() => {
@@ -86,9 +86,9 @@ describe('Dynamic component service', () => {
         [
           {
             provide: MOCK_TOKEN,
-            useValue: 'test'
-          }
-        ]
+            useValue: 'test',
+          },
+        ],
       );
 
       mockComponent.tick();

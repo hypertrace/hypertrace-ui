@@ -8,7 +8,7 @@ describe('Number Input Component', () => {
   const hostFactory = createHostFactory({
     component: NumberInputComponent,
     imports: [FormsModule],
-    shallow: true
+    shallow: true,
   });
 
   test('should apply disabled attribute when disabled', fakeAsync(() => {
@@ -27,9 +27,9 @@ describe('Number Input Component', () => {
     </ht-number-input>`,
       {
         hostProps: {
-          appearance: NumberInputAppearance.Border
-        }
-      }
+          appearance: NumberInputAppearance.Border,
+        },
+      },
     );
 
     spectator.tick();
@@ -43,9 +43,9 @@ describe('Number Input Component', () => {
     </ht-number-input>`,
       {
         hostProps: {
-          appearance: NumberInputAppearance.Underline
-        }
-      }
+          appearance: NumberInputAppearance.Underline,
+        },
+      },
     );
 
     spectator.tick();

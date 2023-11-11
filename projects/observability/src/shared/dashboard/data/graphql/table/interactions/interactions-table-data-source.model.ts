@@ -8,13 +8,13 @@ import { Specification } from '../../../../../graphql/model/schema/specifier/spe
 import {
   GraphQlInteractionsRequest,
   InteractionsResponse,
-  INTERACTIONS_GQL_REQUEST
+  INTERACTIONS_GQL_REQUEST,
 } from '../../../../../graphql/request/handlers/entities/query/interactions/interactions-graphql-query-handler.service';
 import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model';
 import { TableDataSourceModel } from '../table-data-source.model';
 
 @Model({
-  type: 'interactions-table-data-source'
+  type: 'interactions-table-data-source',
 })
 export class InteractionsTableDataSourceModel extends TableDataSourceModel {
   public getScope(): undefined {
@@ -23,7 +23,7 @@ export class InteractionsTableDataSourceModel extends TableDataSourceModel {
 
   protected buildGraphQlRequest(
     filters: GraphQlFilter[],
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
   ): GraphQlInteractionsRequest {
     this.assertRequestSupported(request);
     const entityFilter = findEntityFilterOrThrow(filters);
@@ -35,14 +35,14 @@ export class InteractionsTableDataSourceModel extends TableDataSourceModel {
       neighborType: neighborType === undefined ? entityFilter.type : neighborType,
       entityId: entityFilter.id,
       entityType: entityFilter.type,
-      ...this.getSpecificationPartial(request)
+      ...this.getSpecificationPartial(request),
     };
   }
 
   protected buildTableResponse(response: InteractionsResponse): TableDataResponse<TableRow> {
     return {
       data: response.results,
-      totalCount: response.results.length
+      totalCount: response.results.length,
     };
   }
 
@@ -59,11 +59,11 @@ export class InteractionsTableDataSourceModel extends TableDataSourceModel {
   }
 
   private getSpecificationPartial(
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
   ): Pick<GraphQlInteractionsRequest, 'interactionSpecifications' | 'neighborSpecifications'> {
     const partial = {
       interactionSpecifications: [] as Specification[],
-      neighborSpecifications: [] as Specification[]
+      neighborSpecifications: [] as Specification[],
     };
 
     request.columns.forEach(column => {
@@ -78,7 +78,7 @@ export class InteractionsTableDataSourceModel extends TableDataSourceModel {
   }
 
   private getNeighborType(
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
   ): ObservabilityEntityType | undefined {
     return request.columns.reduce<ObservabilityEntityType | undefined>((neighborType, column) => {
       if (!specificationDefinesNeighbor(column.specification)) {

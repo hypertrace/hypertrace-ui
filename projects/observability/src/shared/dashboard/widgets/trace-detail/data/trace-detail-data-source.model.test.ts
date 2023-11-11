@@ -3,7 +3,7 @@ import { spanIdKey } from '../../../../graphql/model/schema/span';
 import { traceIdKey, traceTypeKey, TRACE_SCOPE } from '../../../../graphql/model/schema/trace';
 import {
   TraceGraphQlQueryHandlerService,
-  TRACE_GQL_REQUEST
+  TRACE_GQL_REQUEST,
 } from '../../../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
 import { ObservedGraphQlRequest } from '../../../data/graphql/graphql-query-event.service';
 import { ApiTraceDetailDataSourceModel } from './api-trace-detail-data-source.model';
@@ -15,12 +15,12 @@ describe('API Trace detail data source model', () => {
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     model = new ApiTraceDetailDataSourceModel();
     model.trace = {
       [traceIdKey]: 'test',
-      [traceTypeKey]: TRACE_SCOPE
+      [traceTypeKey]: TRACE_SCOPE,
     };
     model.api = mockApi as ModelApi;
     model.query$.subscribe((query: ObservedGraphQlRequest<TraceGraphQlQueryHandlerService>) => {
@@ -39,9 +39,9 @@ describe('API Trace detail data source model', () => {
           spans: [
             {
               test: 'test',
-              [spanIdKey]: 'test'
-            }
-          ]
+              [spanIdKey]: 'test',
+            },
+          ],
         });
 
         responseObserver.complete();
@@ -56,9 +56,9 @@ describe('API Trace detail data source model', () => {
           spans: [
             {
               test: 'test',
-              [spanIdKey]: 'test'
-            }
-          ]
+              [spanIdKey]: 'test',
+            },
+          ],
         });
 
         responseObserver.complete();
@@ -79,9 +79,9 @@ describe('API Trace detail data source model', () => {
         traceProperties: expect.arrayContaining([
           expect.objectContaining({ name: 'tags' }),
           expect.objectContaining({ name: 'statusCode' }),
-          expect.not.objectContaining({ name: 'traceId' })
-        ])
-      })
+          expect.not.objectContaining({ name: 'traceId' }),
+        ]),
+      }),
     );
   });
 
@@ -99,9 +99,9 @@ describe('API Trace detail data source model', () => {
         traceProperties: expect.arrayContaining([
           expect.objectContaining({ name: 'tags' }),
           expect.objectContaining({ name: 'statusCode' }),
-          expect.not.objectContaining({ name: 'traceId' })
-        ])
-      })
+          expect.not.objectContaining({ name: 'traceId' }),
+        ]),
+      }),
     );
   });
 });

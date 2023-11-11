@@ -7,6 +7,6 @@ import { SummaryValuesComponent } from './summary-values.component';
 @NgModule({
   imports: [CommonModule, TooltipModule, SummaryValueModule],
   declarations: [SummaryValuesComponent],
-  exports: [SummaryValuesComponent]
+  exports: [SummaryValuesComponent],
 })
 export class SummaryValuesModule {}

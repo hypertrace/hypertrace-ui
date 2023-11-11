@@ -12,7 +12,7 @@ export class TimeDuration {
     TimeUnit.Hour,
     TimeUnit.Minute,
     TimeUnit.Second,
-    TimeUnit.Millisecond
+    TimeUnit.Millisecond,
   ];
   private readonly millis: number;
 
@@ -40,7 +40,7 @@ export class TimeDuration {
   public toMultiUnitString(
     smallestUnit: ConvertibleTimeUnit = TimeUnit.Second,
     displayZero: boolean = true,
-    unitStringType: UnitStringType = UnitStringType.Short
+    unitStringType: UnitStringType = UnitStringType.Short,
   ): string {
     const mostSignificantPortion = this.getMostSignificantUnitOnly();
     const remainingMillis = this.millis - mostSignificantPortion.toMillis();
@@ -55,7 +55,7 @@ export class TimeDuration {
 
     return [
       mostSignificantPortion.toFormattedString(unitStringType),
-      new TimeDuration(remainingMillis, TimeUnit.Millisecond).toMultiUnitString(smallestUnit, false, unitStringType)
+      new TimeDuration(remainingMillis, TimeUnit.Millisecond).toMultiUnitString(smallestUnit, false, unitStringType),
     ].join(joiningStr);
   }
 
@@ -175,5 +175,5 @@ type ConvertibleTimeUnit =
 
 export enum UnitStringType {
   Long = 'long',
-  Short = 'short'
+  Short = 'short',
 }

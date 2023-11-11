@@ -8,23 +8,23 @@ describe('Gauge List Component', () => {
   const createHost = createHostFactory({
     component: GaugeListComponent,
     shallow: true,
-    imports: [FormattingModule]
+    imports: [FormattingModule],
   });
 
   test('should convert data in valid options', () => {
     const data: GaugeItem[] = [
       {
         label: 'POST /api 1',
-        value: 80
+        value: 80,
       },
       {
         label: 'POST /api 3',
-        value: 40
+        value: 40,
       },
       {
         label: 'POST /api 2',
-        value: 120
-      }
+        value: 120,
+      },
     ];
 
     spectator = createHost(
@@ -32,21 +32,21 @@ describe('Gauge List Component', () => {
       </ht-gauge-list>`,
       {
         hostProps: {
-          data: data
-        }
-      }
+          data: data,
+        },
+      },
     );
 
     expect(spectator.component.itemOptions).toEqual([
       expect.objectContaining({
-        label: 'POST /api 1'
+        label: 'POST /api 1',
       }),
       expect.objectContaining({
-        label: 'POST /api 3'
+        label: 'POST /api 3',
       }),
       expect.objectContaining({
-        label: 'POST /api 2'
-      })
+        label: 'POST /api 2',
+      }),
     ]);
   });
 
@@ -54,8 +54,8 @@ describe('Gauge List Component', () => {
     const data = [
       {
         label: 'POST /api 1',
-        value: 120
-      }
+        value: 120,
+      },
     ];
 
     const onItemClick: jest.Mock = jest.fn();
@@ -67,9 +67,9 @@ describe('Gauge List Component', () => {
         hostProps: {
           data: data,
           labelClickable: true,
-          onItemClick: onItemClick
-        }
-      }
+          onItemClick: onItemClick,
+        },
+      },
     );
 
     spectator.click(spectator.query('.label')!);
@@ -80,8 +80,8 @@ describe('Gauge List Component', () => {
     const data = [
       {
         label: 'POST /api 1',
-        value: 120
-      }
+        value: 120,
+      },
     ];
 
     spectator = createHost(
@@ -89,9 +89,9 @@ describe('Gauge List Component', () => {
       </ht-gauge-list>`,
       {
         hostProps: {
-          data: data
-        }
-      }
+          data: data,
+        },
+      },
     );
 
     expect(spectator.query('.progress-value')).toExist();
@@ -102,16 +102,16 @@ describe('Gauge List Component', () => {
     const data: GaugeItem[] = [
       {
         label: 'POST /api 1',
-        value: 80
+        value: 80,
       },
       {
         label: 'POST /api 3',
-        value: 40
+        value: 40,
       },
       {
         label: 'POST /api 2',
-        value: 120
-      }
+        value: 120,
+      },
     ];
 
     spectator = createHost(
@@ -127,24 +127,24 @@ describe('Gauge List Component', () => {
               default:
                 return 'blue';
             }
-          }
-        }
-      }
+          },
+        },
+      },
     );
 
     expect(spectator.component.itemOptions).toEqual([
       expect.objectContaining({
         label: 'POST /api 1',
-        color: 'red'
+        color: 'red',
       }),
       expect.objectContaining({
         label: 'POST /api 3',
-        color: 'blue'
+        color: 'blue',
       }),
       expect.objectContaining({
         label: 'POST /api 2',
-        color: 'blue'
-      })
+        color: 'blue',
+      }),
     ]);
   });
 
@@ -153,17 +153,17 @@ describe('Gauge List Component', () => {
       {
         label: 'POST /api 1',
         value: 80,
-        colorKey: 'true'
+        colorKey: 'true',
       },
       {
         label: 'POST /api 3',
         value: 40,
-        colorKey: 'false'
+        colorKey: 'false',
       },
       {
         label: 'POST /api 2',
-        value: 120
-      }
+        value: 120,
+      },
     ];
 
     spectator = createHost(
@@ -181,24 +181,24 @@ describe('Gauge List Component', () => {
               default:
                 return 'blue';
             }
-          }
-        }
-      }
+          },
+        },
+      },
     );
 
     expect(spectator.component.itemOptions).toEqual([
       expect.objectContaining({
         label: 'POST /api 1',
-        color: 'red'
+        color: 'red',
       }),
       expect.objectContaining({
         label: 'POST /api 3',
-        color: 'black'
+        color: 'black',
       }),
       expect.objectContaining({
         label: 'POST /api 2',
-        color: 'blue'
-      })
+        color: 'blue',
+      }),
     ]);
   });
 });

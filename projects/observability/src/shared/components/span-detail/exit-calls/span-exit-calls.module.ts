@@ -6,6 +6,6 @@ import { SpanExitCallsComponent } from './span-exit-calls.component';
 @NgModule({
   declarations: [SpanExitCallsComponent],
   exports: [SpanExitCallsComponent],
-  imports: [CommonModule, TableModule]
+  imports: [CommonModule, TableModule],
 })
 export class SpanExitCallsModule {}

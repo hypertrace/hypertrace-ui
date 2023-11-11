@@ -9,7 +9,7 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { BubbleChart, BubbleChartData, BubbleChartTooltipOption } from './bubble-chart';
@@ -22,7 +22,7 @@ import { BubbleChartBuilderService } from './bubble-chart-builder.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="fill-container bubble-chart-container" (htLayoutChange)="this.reflow()" #bubbleChartContainer></div>
-  `
+  `,
 })
 export class BubbleChartComponent<TData extends BubbleChartData> implements OnChanges, OnDestroy, AfterViewInit {
   @Input()
@@ -60,7 +60,7 @@ export class BubbleChartComponent<TData extends BubbleChartData> implements OnCh
   public constructor(
     private readonly bubbleChartBuilder: BubbleChartBuilderService<TData>,
     private readonly injector: Injector,
-    private readonly subscriptionLifeCycle: SubscriptionLifecycle
+    private readonly subscriptionLifeCycle: SubscriptionLifecycle,
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -89,7 +89,7 @@ export class BubbleChartComponent<TData extends BubbleChartData> implements OnCh
       yMax: this.yMax,
       tooltipOption: this.tooltipOption,
       selections: this.selections ?? [],
-      maxAllowedSelectionsCount: this.maxAllowedSelectionsCount
+      maxAllowedSelectionsCount: this.maxAllowedSelectionsCount,
     });
 
     this.setSelectionsChangeSubscription(this.bubbleChart);
@@ -104,7 +104,7 @@ export class BubbleChartComponent<TData extends BubbleChartData> implements OnCh
     this.subscriptionLifeCycle.add(
       bubbleChart.selections$.subscribe(selections => {
         this.selectionsChange.emit([...selections]);
-      })
+      }),
     );
   }
 }

@@ -21,7 +21,7 @@ export const INTERVAL_DATA = new InjectionToken<CartesianIntervalData>('INTERVAL
       >
       </ht-interval-select>
     </div>
-  `
+  `,
 })
 export class CartesianIntervalControlComponent {
   public readonly interval: IntervalValue;

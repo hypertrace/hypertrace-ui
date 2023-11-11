@@ -14,7 +14,7 @@ describe('Sequence Chart component', () => {
   const createHost = createHostFactory({
     component: SequenceChartComponent,
     imports: [CommonModule, TooltipModule, LayoutChangeModule],
-    providers: [SequenceChartService, SequenceChartAxisService, SequenceChartLayoutService, SequenceBarRendererService]
+    providers: [SequenceChartService, SequenceChartAxisService, SequenceChartLayoutService, SequenceBarRendererService],
   });
 
   test('should render data', () => {
@@ -25,7 +25,7 @@ describe('Sequence Chart component', () => {
         end: 1569357465346,
         label: 'Segment 1',
         color: 'blue',
-        markers: []
+        markers: [],
       },
       {
         id: '2',
@@ -33,7 +33,7 @@ describe('Sequence Chart component', () => {
         end: 1569357465346,
         label: 'Segment 2',
         color: 'green',
-        markers: []
+        markers: [],
       },
       {
         id: '3',
@@ -41,7 +41,7 @@ describe('Sequence Chart component', () => {
         end: 1569357465346,
         label: 'Segment 3',
         color: 'green',
-        markers: []
+        markers: [],
       },
       {
         id: '4',
@@ -49,13 +49,13 @@ describe('Sequence Chart component', () => {
         end: 1569357465346,
         label: 'Segment 4',
         color: 'green',
-        markers: []
-      }
+        markers: [],
+      },
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data"></ht-sequence-chart>`, {
       hostProps: {
-        data: segmentsData
-      }
+        data: segmentsData,
+      },
     });
 
     const dataRows = chart.queryAll('.data-row', { root: true });
@@ -96,14 +96,14 @@ describe('Sequence Chart component', () => {
         end: 1569357465346,
         label: 'Segment 1',
         color: 'blue',
-        markers: []
-      }
+        markers: [],
+      },
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data" [unit]="unit"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
-        unit: 'ms'
-      }
+        unit: 'ms',
+      },
     });
 
     const dataRow = chart.query('.data-row', { root: true });
@@ -123,14 +123,14 @@ describe('Sequence Chart component', () => {
         end: 1569357465346,
         label: 'Segment 1',
         color: 'blue',
-        markers: []
-      }
+        markers: [],
+      },
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data" [rowHeight]="rowHeight"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
-        rowHeight: 50
-      }
+        rowHeight: 50,
+      },
     });
 
     const dataRow = chart.query('.data-row', { root: true });
@@ -150,16 +150,16 @@ describe('Sequence Chart component', () => {
           {
             id: '1',
             markerTime: 1569357460347,
-            timestamps: ['1569357460347']
-          }
-        ]
-      }
+            timestamps: ['1569357460347'],
+          },
+        ],
+      },
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
-        rowHeight: 50
-      }
+        rowHeight: 50,
+      },
     });
 
     const markers = chart.queryAll('.marker', { root: true });
@@ -177,14 +177,14 @@ describe('Sequence Chart component', () => {
         end: 1569357465346,
         label: 'Segment 1',
         color: 'blue',
-        markers: []
-      }
+        markers: [],
+      },
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data" [barHeight]="barHeight"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
-        barHeight: 30
-      }
+        barHeight: 30,
+      },
     });
 
     const dataRow = chart.query('.data-row', { root: true });
@@ -203,14 +203,14 @@ describe('Sequence Chart component', () => {
         end: 1569357465346,
         label: 'Segment 1',
         color: 'blue',
-        markers: []
-      }
+        markers: [],
+      },
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data" [headerHeight]="headerHeight"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
-        headerHeight: 20
-      }
+        headerHeight: 20,
+      },
     });
 
     const headerElement = chart.query('.axis-header', { root: true });
@@ -226,7 +226,7 @@ describe('Sequence Chart component', () => {
         end: 1569357465346,
         label: 'Segment 1',
         color: 'blue',
-        markers: []
+        markers: [],
       },
       {
         id: '2',
@@ -234,14 +234,14 @@ describe('Sequence Chart component', () => {
         end: 1569357465346,
         label: 'Segment 2',
         color: 'green',
-        markers: []
-      }
+        markers: [],
+      },
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data" [hovered]="hovered"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
-        hovered: segmentsData[0]
-      }
+        hovered: segmentsData[0],
+      },
     });
 
     const dataRows = chart.queryAll('.data-row', { root: true });
@@ -272,7 +272,7 @@ describe('Sequence Chart component', () => {
         end: 1569357465346,
         label: 'Segment 1',
         color: 'blue',
-        markers: []
+        markers: [],
       },
       {
         id: '2',
@@ -280,14 +280,14 @@ describe('Sequence Chart component', () => {
         end: 1569357465346,
         label: 'Segment 2',
         color: 'green',
-        markers: []
-      }
+        markers: [],
+      },
     ];
     const chart = createHost(`<ht-sequence-chart [data]="data" [selection]="selection"></ht-sequence-chart>`, {
       hostProps: {
         data: segmentsData,
-        selection: segmentsData[0]
-      }
+        selection: segmentsData[0],
+      },
     });
 
     let dataRows = chart.queryAll('.data-row', { root: true });

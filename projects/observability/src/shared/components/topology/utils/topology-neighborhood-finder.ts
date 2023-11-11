@@ -5,28 +5,28 @@ export class TopologyNeighborhoodFinder {
   public neighborhoodForNode(node: TopologyNode): TopologyNeighborhood {
     return {
       nodes: uniq([node, ...node.edges.flatMap(edge => [edge.fromNode, edge.toNode])]),
-      edges: [...node.edges]
+      edges: [...node.edges],
     };
   }
 
   public neighborhoodForEdge(edge: TopologyEdge): TopologyNeighborhood {
     return {
       nodes: [edge.fromNode, edge.toNode],
-      edges: [edge]
+      edges: [edge],
     };
   }
 
   public singleNodeNeighborhood(node: TopologyNode): TopologyNeighborhood {
     return {
       nodes: [node],
-      edges: []
+      edges: [],
     };
   }
 
   public emptyNeighborhood(): TopologyNeighborhood {
     return {
       nodes: [],
-      edges: []
+      edges: [],
     };
   }
 }

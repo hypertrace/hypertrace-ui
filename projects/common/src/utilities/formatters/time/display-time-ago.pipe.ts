@@ -4,7 +4,7 @@ import { TimeUnit } from '../../../time/time-unit.type';
 import { DateCoercer } from '../../coercers/date-coercer';
 
 @Pipe({
-  name: 'htDisplayTimeAgo'
+  name: 'htDisplayTimeAgo',
 })
 /*
  * WARNING: This pipe is configured as pure, but this could lead to it not updating on change detection.

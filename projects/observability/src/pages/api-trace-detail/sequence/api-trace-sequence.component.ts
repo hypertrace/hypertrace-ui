@@ -14,7 +14,7 @@ import { apiTraceSequenceDashboard } from './api-trace-sequence.dashboard';
       [variables]="traceVariables"
     >
     </ht-navigable-dashboard>
-  `
+  `,
 })
 export class ApiTraceSequenceComponent {
   public readonly traceVariables$: Observable<ApiTraceDetailVariables>;
@@ -23,8 +23,8 @@ export class ApiTraceSequenceComponent {
     this.traceVariables$ = this.apiTraceDetailService.fetchTraceDetails().pipe(
       map(details => ({
         traceId: details.id,
-        startTime: details.startTime
-      }))
+        startTime: details.startTime,
+      })),
     );
   }
 }

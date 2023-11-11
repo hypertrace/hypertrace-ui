@@ -12,7 +12,7 @@ describe('Span data source model', () => {
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     model = new SpanDataSourceModel();
     model.specifications = [attributeSpecBuilder.attributeSpecificationForKey('apiName')];
@@ -28,8 +28,8 @@ describe('Span data source model', () => {
         requestType: SPAN_GQL_REQUEST,
         id: 'test-id',
         timestamp: undefined,
-        properties: [attributeSpecBuilder.attributeSpecificationForKey('apiName')]
-      })
+        properties: [attributeSpecBuilder.attributeSpecificationForKey('apiName')],
+      }),
     ).toBe(true);
   });
 
@@ -42,8 +42,8 @@ describe('Span data source model', () => {
         requestType: SPAN_GQL_REQUEST,
         id: 'test-id',
         timestamp: new Date(1568907645141),
-        properties: [attributeSpecBuilder.attributeSpecificationForKey('apiName')]
-      })
+        properties: [attributeSpecBuilder.attributeSpecificationForKey('apiName')],
+      }),
     ).toBe(true);
   });
 });

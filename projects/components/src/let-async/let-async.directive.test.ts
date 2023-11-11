@@ -8,7 +8,7 @@ describe('Let async directive', () => {
   let spectator: SpectatorDirective<LetAsyncDirective<number>, { data$: Observable<number> }>;
 
   const createDirective = createDirectiveFactory<LetAsyncDirective<number>, { data$: Observable<number> }>({
-    directive: LetAsyncDirective
+    directive: LetAsyncDirective,
   });
 
   beforeEach(() => {

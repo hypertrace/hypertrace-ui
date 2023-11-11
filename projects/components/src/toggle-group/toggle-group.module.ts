@@ -9,6 +9,6 @@ import { TooltipModule } from '../tooltip/tooltip.module';
 @NgModule({
   imports: [CommonModule, LabelModule, IconModule, TooltipModule],
   exports: [ToggleGroupComponent],
-  declarations: [ToggleGroupComponent, ToggleItemComponent]
+  declarations: [ToggleGroupComponent, ToggleItemComponent],
 })
 export class ToggleGroupModule {}

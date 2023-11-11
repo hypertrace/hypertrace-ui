@@ -7,7 +7,7 @@ import {
   OnInit,
   Output,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
@@ -103,7 +103,7 @@ import { TableColumnConfigExtended } from '../table.service';
         </ht-popover>
       </ng-template>
     </div>
-  `
+  `,
 })
 export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   public readonly SORT_ASC: TableSortDirection = TableSortDirection.Ascending;
@@ -154,7 +154,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   public constructor(
     private readonly modalService: ModalService,
-    private readonly filterParserLookupService: FilterParserLookupService
+    private readonly filterParserLookupService: FilterParserLookupService,
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -189,7 +189,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
   private buildClasses(): string[] {
     return [
       ...(this.alignment !== undefined ? [this.alignment.toLowerCase()] : []),
-      ...(this.sort !== undefined ? [this.sort.toLowerCase()] : [])
+      ...(this.sort !== undefined ? [this.sort.toLowerCase()] : []),
     ];
   }
 
@@ -212,7 +212,7 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
 
   public getTooltip(
     titleTooltip: string | undefined,
-    title: string | undefined
+    title: string | undefined,
   ): string | TemplateRef<unknown> | undefined {
     if (titleTooltip === undefined) {
       return title;
@@ -257,8 +257,8 @@ export class TableHeaderCellRendererComponent implements OnInit, OnChanges {
         data: {
           metadata: this.metadata || [],
           attribute: this.columnConfig?.attribute!,
-          values: this.columnConfig?.filterValues ?? []
-        }
+          values: this.columnConfig?.filterValues ?? [],
+        },
       });
   }
 

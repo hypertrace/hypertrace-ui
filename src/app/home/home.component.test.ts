@@ -10,7 +10,7 @@ describe('Home Dashboard', () => {
     component: HomeComponent,
     declareComponent: false,
     imports: [HomeModule, IconLibraryTestingModule],
-    providers: [mockProvider(EntitiesGraphqlQueryBuilderService), ...mockDashboardProviders]
+    providers: [mockProvider(EntitiesGraphqlQueryBuilderService), ...mockDashboardProviders],
   });
 
   test('should default to valid json', () => {

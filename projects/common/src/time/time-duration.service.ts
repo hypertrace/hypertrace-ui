@@ -4,7 +4,7 @@ import { TimeRange } from './time-range';
 import { TimeUnit } from './time-unit.type';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TimeDurationService {
   private readonly durationRegex: RegExp = /(\d+)(\w+)/;

@@ -22,7 +22,7 @@ export class SpansGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
 
   public constructor(
     private readonly metadataService: MetadataService,
-    private readonly globalGraphQlFilterService: GlobalGraphQlFilterService
+    private readonly globalGraphQlFilterService: GlobalGraphQlFilterService,
   ) {}
 
   public matchesRequest(request: unknown): request is GraphQlSpansRequest {
@@ -41,17 +41,17 @@ export class SpansGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
         this.argBuilder.forTimeRange(request.timeRange),
         ...this.argBuilder.forOffset(request.offset),
         ...this.argBuilder.forOrderBy(request.sort),
-        ...this.argBuilder.forFilters(this.globalGraphQlFilterService.mergeGlobalFilters(SPAN_SCOPE, request.filters))
+        ...this.argBuilder.forFilters(this.globalGraphQlFilterService.mergeGlobalFilters(SPAN_SCOPE, request.filters)),
       ],
       children: [
         {
           path: 'results',
-          children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.properties)]
+          children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.properties)],
         },
         {
-          path: 'total'
-        }
-      ]
+          path: 'total',
+        },
+      ],
     };
   }
 
@@ -61,8 +61,8 @@ export class SpansGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
     return forkJoinSafeEmpty(typedResponse.results.map(spanResult => this.normalizeSpan(spanResult, request))).pipe(
       map(results => ({
         total: typedResponse.total,
-        results: results
-      }))
+        results: results,
+      })),
     );
   }
 
@@ -75,20 +75,20 @@ export class SpansGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
         return this.resultUnits(spec).pipe(
           map(units => ({
             alias: alias,
-            data: units !== undefined && !this.hasUnits(data) ? { units: units, value: data } : data
-          }))
+            data: units !== undefined && !this.hasUnits(data) ? { units: units, value: data } : data,
+          })),
         );
-      })
+      }),
     ).pipe(
       map(results => {
         const span: Span = {
-          [spanIdKey]: rawResult.id as string
+          [spanIdKey]: rawResult.id as string,
         };
 
         results.forEach(result => (span[result.alias] = result.data));
 
         return span;
-      })
+      }),
     );
   }
 

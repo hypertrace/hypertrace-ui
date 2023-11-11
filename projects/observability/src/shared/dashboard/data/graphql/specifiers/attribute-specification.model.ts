@@ -6,14 +6,14 @@ import { SpecificationModel } from './specification.model';
 
 @Model({
   type: 'attribute-specification',
-  displayName: 'Attribute'
+  displayName: 'Attribute',
 })
 export class AttributeSpecificationModel extends SpecificationModel<Specification> {
   @ModelProperty({
     key: 'attribute',
     displayName: 'Attribute',
     type: STRING_PROPERTY.type, // TODO make this its own property
-    required: true
+    required: true,
   })
   public attribute!: string;
 

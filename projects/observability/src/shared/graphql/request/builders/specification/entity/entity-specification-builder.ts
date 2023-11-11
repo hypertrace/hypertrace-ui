@@ -6,7 +6,7 @@ import {
   entityIdKey,
   EntityType,
   entityTypeKey,
-  ObservabilityEntityType
+  ObservabilityEntityType,
 } from '../../../../model/schema/entity';
 import { EntitySpecification } from '../../../../model/schema/specifications/entity-specification';
 import { GraphQlArgumentBuilder } from '../../argument/graphql-argument-builder';
@@ -23,7 +23,7 @@ export class EntitySpecificationBuilder {
     entityType?: EntityType,
     additionalAttributes: string[] = [],
     additionalSpecifications: Specification[] = [],
-    aliasSuffix: string = ''
+    aliasSuffix: string = '',
   ): EntitySpecification {
     return {
       resultAlias: () => this.buildResultAlias(idKey, nameKey, entityType, aliasSuffix),
@@ -34,7 +34,7 @@ export class EntitySpecificationBuilder {
           nameKey,
           entityType === undefined,
           additionalAttributes,
-          additionalSpecifications
+          additionalSpecifications,
         ),
       extractFromServerData: serverData =>
         this.extractFromServerData(
@@ -43,11 +43,11 @@ export class EntitySpecificationBuilder {
           nameKey,
           entityType,
           additionalAttributes,
-          additionalSpecifications
+          additionalSpecifications,
         ),
       asGraphQlOrderByFragment: () => ({
-        expression: { key: nameKey }
-      })
+        expression: { key: nameKey },
+      }),
     };
   }
 
@@ -62,25 +62,25 @@ export class EntitySpecificationBuilder {
     nameKey: string,
     withEntityType: boolean,
     additionalAttributes: string[] = [],
-    additionalSpecifications: Specification[] = []
+    additionalSpecifications: Specification[] = [],
   ): GraphQlSelection[] {
     const graphqlSelections: GraphQlSelection[] = [
       {
         path: 'attribute',
         alias: idKey,
-        arguments: [this.argBuilder.forAttributeKey(idKey)]
+        arguments: [this.argBuilder.forAttributeKey(idKey)],
       },
       {
         path: 'attribute',
         alias: nameKey,
-        arguments: [this.argBuilder.forAttributeKey(nameKey)]
+        arguments: [this.argBuilder.forAttributeKey(nameKey)],
       },
       ...additionalAttributes.map(attribute => ({
         path: 'attribute',
         alias: attribute,
-        arguments: [this.argBuilder.forAttributeKey(attribute)]
+        arguments: [this.argBuilder.forAttributeKey(attribute)],
       })),
-      ...additionalSpecifications.map(specification => specification.asGraphQlSelections()).flat()
+      ...additionalSpecifications.map(specification => specification.asGraphQlSelections()).flat(),
     ];
 
     if (withEntityType) {
@@ -96,12 +96,12 @@ export class EntitySpecificationBuilder {
     nameKey: string,
     entityType?: EntityType,
     additionalAttributes: string[] = [],
-    additionalSpecifications: Specification[] = []
+    additionalSpecifications: Specification[] = [],
   ): Entity {
     let entity = {
       [entityIdKey]: serverData[idKey] as string,
       [entityTypeKey]: entityType !== undefined ? entityType : this.extractEntityType(serverData),
-      name: serverData[nameKey] as string
+      name: serverData[nameKey] as string,
     };
     additionalAttributes.forEach(attribute => {
       entity = { ...entity, [attribute]: serverData[attribute] };

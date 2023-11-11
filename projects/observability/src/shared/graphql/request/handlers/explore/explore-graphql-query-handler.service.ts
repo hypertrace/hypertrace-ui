@@ -5,7 +5,7 @@ import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
   GraphQlExploreResponse,
-  GraphQlExploreServerResponse
+  GraphQlExploreServerResponse,
 } from './explore-query';
 
 @Injectable({ providedIn: 'root' })
@@ -32,16 +32,16 @@ export class ExploreGraphQlQueryHandlerService
       children: [
         {
           path: 'results',
-          children: this.exploreGraphQlQueryBuilderService.buildRequestSpecifications(request)
+          children: this.exploreGraphQlQueryBuilderService.buildRequestSpecifications(request),
         },
-        ...totalSelection
-      ]
+        ...totalSelection,
+      ],
     };
   }
 
   public convertResponse(
     response: GraphQlExploreServerResponse,
-    request: GraphQlExploreRequest
+    request: GraphQlExploreRequest,
   ): GraphQlExploreResponse {
     return this.exploreGraphQlQueryBuilderService.buildResponse(response, request);
   }

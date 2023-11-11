@@ -3,7 +3,7 @@ import { EMPTY, Observable } from 'rxjs';
 import { GraphQlFilter, GraphQlFilterable } from '../../../../graphql/model/schema/filter/graphql-filter';
 
 @Model({
-  type: 'graphql-filter-data-source'
+  type: 'graphql-filter-data-source',
 })
 export class GraphQlFilterDataSourceModel implements GraphQlFilterable, DataSource<never> {
   public readonly dataSourceMarker: typeof dataSourceMarker = dataSourceMarker;

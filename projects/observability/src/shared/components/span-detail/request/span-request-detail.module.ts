@@ -6,7 +6,7 @@ import {
   LabelModule,
   ListViewModule,
   LoadAsyncModule,
-  ToggleButtonModule
+  ToggleButtonModule,
 } from '@hypertrace/components';
 import { SpanDetailCallBodyModule } from '../call/body/span-detail-call-body.module';
 import { SpanDetailCallHeadersModule } from '../call/headers/span-detail-call-headers.module';
@@ -21,9 +21,9 @@ import { SpanRequestDetailComponent } from './span-request-detail.component';
     LabelModule,
     LoadAsyncModule,
     SpanDetailCallHeadersModule,
-    SpanDetailCallBodyModule
+    SpanDetailCallBodyModule,
   ],
   declarations: [SpanRequestDetailComponent],
-  exports: [SpanRequestDetailComponent]
+  exports: [SpanRequestDetailComponent],
 })
 export class SpanRequestDetailModule {}

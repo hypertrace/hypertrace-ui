@@ -13,7 +13,7 @@ import {
   ColumnStateChangeProvider,
   FiltersProvider,
   RowStateChangeProvider,
-  TableDataSourceProvider
+  TableDataSourceProvider,
 } from './table-cdk-data-source-api';
 import { TableCdkRowUtil } from './table-cdk-row-util';
 import { TableDataRequest } from './table-data-source';
@@ -24,7 +24,7 @@ type WatchedObservables = [
   TableFilter[],
   Dictionary<unknown>,
   TableColumnConfigExtended | undefined,
-  StatefulTableRow | undefined
+  StatefulTableRow | undefined,
 ];
 
 export class TableCdkDataSource implements DataSource<TableRow> {
@@ -36,7 +36,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   private lastRowChange: StatefulTableRow | undefined;
   private readonly rowsChange$: Subject<StatefulTableRow[]> = new Subject<StatefulTableRow[]>();
   private readonly loadingStateSubject: Subject<TableLoadingState> = new BehaviorSubject<TableLoadingState>({
-    loading$: NEVER
+    loading$: NEVER,
   });
   private changeSubscription?: Subscription;
 
@@ -48,7 +48,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     private readonly columnStateChangeProvider: ColumnStateChangeProvider,
     private readonly rowStateChangeProvider: RowStateChangeProvider,
     private readonly filtersProvider: FiltersProvider,
-    private readonly paginationProvider?: PaginationProvider
+    private readonly paginationProvider?: PaginationProvider,
   ) {}
 
   /****************************
@@ -64,8 +64,8 @@ export class TableCdkDataSource implements DataSource<TableRow> {
          */
         debounceTime(100),
         mergeMap(([columnConfigs, pageEvent, filters, queryProperties, changedColumn, changedRow]) =>
-          this.buildDataObservable(columnConfigs, pageEvent, filters, queryProperties, changedColumn, changedRow)
-        )
+          this.buildDataObservable(columnConfigs, pageEvent, filters, queryProperties, changedColumn, changedRow),
+        ),
       )
       .subscribe(this.rowsChange$);
 
@@ -76,7 +76,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
         this.loadingStateSubject.next({ loading$: throwError(error) });
 
         return of([]);
-      })
+      }),
     );
   }
 
@@ -94,7 +94,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     this.cachedData = {
       request: request,
       rows: rows.map(TableCdkRowUtil.cloneRow),
-      total: total
+      total: total,
     };
   }
 
@@ -173,7 +173,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       this.filtersProvider.filters$,
       this.filtersProvider.queryProperties$,
       this.columnStateChangeProvider.columnState$,
-      this.rowStateChangeProvider.rowState$
+      this.rowStateChangeProvider.rowState$,
     ]).pipe(map(values => this.detectRowStateChanges(...values)));
   }
 
@@ -182,7 +182,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       tap(columnConfigs => {
         this.columnConfigs.clear();
         columnConfigs.forEach(columnConfig => this.columnConfigs.set(columnConfig.id, columnConfig));
-      })
+      }),
     );
   }
 
@@ -191,8 +191,8 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       ? this.paginationProvider.pageEvent$.pipe(
           startWith({
             pageSize: this.paginationProvider.pageSize,
-            pageIndex: this.paginationProvider.pageIndex
-          })
+            pageIndex: this.paginationProvider.pageIndex,
+          }),
         )
       : of({ pageSize: TableCdkDataSource.DEFAULT_PAGE_SIZE, pageIndex: 0 });
   }
@@ -203,7 +203,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     filters: TableFilter[],
     queryProperties: Dictionary<unknown>,
     changedColumn: TableColumnConfigExtended | undefined,
-    changedRow: StatefulTableRow | undefined
+    changedRow: StatefulTableRow | undefined,
   ): WatchedObservables {
     return [columnConfigs, pageEvent, filters, queryProperties, changedColumn, this.buildRowStateChange(changedRow)];
   }
@@ -231,14 +231,14 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     filters: TableFilter[],
     queryProperties: Dictionary<unknown>,
     changedColumn: TableColumnConfigExtended | undefined,
-    changedRow: StatefulTableRow | undefined
+    changedRow: StatefulTableRow | undefined,
   ): Observable<StatefulTableRow[]> {
     if (changedRow !== undefined) {
       return of(this.cachedData.rows).pipe(
         map(cachedRows => TableCdkRowUtil.buildRowStateChanges(cachedRows, changedRow)),
         switchMap(stateChanges => this.fetchAndAppendNewChildren(stateChanges)),
         map(TableCdkRowUtil.removeCollapsedRows),
-        tap(rows => this.cacheNewData(0, rows))
+        tap(rows => this.cacheNewData(0, rows)),
       );
     }
 
@@ -261,14 +261,14 @@ export class TableCdkDataSource implements DataSource<TableRow> {
         }
 
         return of(latest);
-      })
+      }),
     ).pipe(map(TableCdkRowUtil.flattenNestedRows));
   }
 
   private fetchAndAppendChildren(parent: StatefulTreeTableRow): Observable<StatefulTableRow[]> {
     return parent.getChildren().pipe(
       map(childRows => TableCdkRowUtil.buildInitialChildRowStates(childRows, parent)),
-      map(children => [parent, ...children])
+      map(children => [parent, ...children]),
     );
   }
 
@@ -276,7 +276,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     columnConfigs: TableColumnConfigExtended[],
     pageEvent: PageEvent,
     filters: TableFilter[],
-    queryProperties: Dictionary<unknown>
+    queryProperties: Dictionary<unknown>,
   ): Observable<StatefulTableRow[]> {
     if (this.tableDataSourceProvider.data === undefined) {
       return of([]);
@@ -343,10 +343,10 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       map(rows =>
         this.rowStateChangeProvider.initialExpandAll && TableCdkRowUtil.isFullyExpandable(rows)
           ? TableCdkRowUtil.expandAllRows(rows)
-          : rows
+          : rows,
       ),
       tap(rows => this.cacheNewData(total, rows, request)),
-      map(rows => rows.slice(0, request.position.limit)) // Paginate data
+      map(rows => rows.slice(0, request.position.limit)), // Paginate data
     );
   }
 
@@ -364,20 +364,20 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     columnConfigs: TableColumnConfigExtended[],
     pageEvent: PageEvent,
     filters: TableFilter[],
-    queryProperties: Dictionary<unknown>
+    queryProperties: Dictionary<unknown>,
   ): TableDataRequest {
     const request: TableDataRequest = {
       columns: TableCdkColumnUtil.fetchableColumnConfigs(columnConfigs),
       position: {
         startIndex: pageEvent.pageIndex * pageEvent.pageSize,
-        limit: pageEvent.pageSize
+        limit: pageEvent.pageSize,
       },
-      filters: filters
+      filters: filters,
     };
 
     columnConfigs
       .filter(
-        (columnConfig): columnConfig is RequireBy<TableColumnConfigExtended, 'sort'> => columnConfig.sort !== undefined
+        (columnConfig): columnConfig is RequireBy<TableColumnConfigExtended, 'sort'> => columnConfig.sort !== undefined,
       )
       .forEach(columnConfig => {
         /*
@@ -386,7 +386,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
          */
         request.sort = {
           column: columnConfig,
-          direction: columnConfig.sort
+          direction: columnConfig.sort,
         };
       });
 

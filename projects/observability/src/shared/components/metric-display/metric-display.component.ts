@@ -5,7 +5,7 @@ import { MetricHealth } from '../../graphql/model/metrics/metric-health';
   selector: 'ht-metric-display',
   templateUrl: './metric-display.component.html',
   styleUrls: ['./metric-display.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetricDisplayComponent {
   @Input()

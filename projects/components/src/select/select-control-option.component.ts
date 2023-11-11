@@ -4,7 +4,7 @@ import { SelectOptionComponent } from './select-option.component';
 @Component({
   selector: 'ht-select-control-option',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '' // No template, just gathering data
+  template: '', // No template, just gathering data
 })
 export class SelectControlOptionComponent<V> extends SelectOptionComponent<V> {
   @Input()
@@ -13,5 +13,5 @@ export class SelectControlOptionComponent<V> extends SelectOptionComponent<V> {
 
 export enum SelectControlOptionPosition {
   // Can be extended for bottom later.
-  Top = 'top'
+  Top = 'top',
 }

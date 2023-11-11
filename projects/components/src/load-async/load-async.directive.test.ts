@@ -20,7 +20,7 @@ describe('Load Async directive', () => {
     declarations: [LoadAsyncWrapperComponent, MessageDisplayComponent, LoaderComponent],
     entryComponents: [LoadAsyncWrapperComponent],
     imports: [CommonModule, IconModule, HttpClientTestingModule, IconLibraryTestingModule],
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService)],
   });
 
   beforeEach(() => {
@@ -33,7 +33,7 @@ describe('Load Async directive', () => {
 
   test('shows loading state and hides content while loading', fakeAsync(() => {
     spectator.setHostInput({
-      data$: of('content').pipe(delay(0))
+      data$: of('content').pipe(delay(0)),
     });
     expect(spectator.query(LoaderComponent)).toExist();
     expect(spectator.query('.test-data')).not.toExist();
@@ -47,8 +47,8 @@ describe('Load Async directive', () => {
     spectator.setHostInput({
       data$: of('content').pipe(
         delay(0),
-        mergeMap(() => throwError(new Error()))
-      )
+        mergeMap(() => throwError(new Error())),
+      ),
     });
     expect(spectator.query(LoaderComponent)).toExist();
     expect(spectator.query(MessageDisplayComponent)).not.toExist();
@@ -66,8 +66,8 @@ describe('Load Async directive', () => {
     spectator.setHostInput({
       data$: of('content').pipe(
         delay(0),
-        mergeMap(() => throwError(new CustomError('custom error message')))
-      )
+        mergeMap(() => throwError(new CustomError('custom error message'))),
+      ),
     });
     expect(spectator.query(LoaderComponent)).toExist();
     expect(spectator.query(MessageDisplayComponent)).not.toExist();
@@ -83,7 +83,7 @@ describe('Load Async directive', () => {
 
   test('shows empty state and hides content on empty observable', fakeAsync(() => {
     spectator.setHostInput({
-      data$: EMPTY
+      data$: EMPTY,
     });
     expect(spectator.query(LoaderComponent)).not.toExist();
     expect(spectator.query(LoadAsyncWrapperComponent)!.icon).toBe(IconType.NoData);
@@ -92,12 +92,12 @@ describe('Load Async directive', () => {
 
   test('updates if given entirely new observable', fakeAsync(() => {
     spectator.setHostInput({
-      data$: of('content')
+      data$: of('content'),
     });
     expect(spectator.query('.test-data')).toHaveExactText('content');
 
     spectator.setHostInput({
-      data$: of('new content').pipe(delay(0))
+      data$: of('new content').pipe(delay(0)),
     });
     expect(spectator.query(LoaderComponent)).toExist();
     expect(spectator.query('.test-data')).not.toExist();

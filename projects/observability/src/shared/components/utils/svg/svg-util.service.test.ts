@@ -13,14 +13,14 @@ describe('SvgUtilService', () => {
       selector: 'test-svg',
       template: `<svg>
       <text x="0" y="0" dominant-baseline="center" text-anchor="middle"></text>
-    </svg>`
+    </svg>`,
     })(class {}),
     providers: [
       SvgUtilService,
       mockProvider(DomElementMeasurerService, {
-        getComputedTextLength: (element: SVGTextElement) => element.textContent!.length // Not an actual measurement, but it tracks the length
-      })
-    ]
+        getComputedTextLength: (element: SVGTextElement) => element.textContent!.length, // Not an actual measurement, but it tracks the length
+      }),
+    ],
   });
 
   beforeEach(() => {

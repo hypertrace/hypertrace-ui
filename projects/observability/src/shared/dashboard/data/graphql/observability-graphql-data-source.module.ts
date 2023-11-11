@@ -45,7 +45,7 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
       EntityGraphQlQueryHandlerService,
       EntityTopologyGraphQlQueryHandlerService,
       InteractionsGraphQlQueryHandlerService,
-      ExploreGraphQlQueryHandlerService
+      ExploreGraphQlQueryHandlerService,
     ]),
     DashboardCoreModule.with({
       models: [
@@ -77,9 +77,9 @@ import { ApiTraceWaterfallDataSourceModel } from './waterfall/api-trace-waterfal
         ErrorPercentageMetricAggregationSpecificationModel,
         PercentileLatencyAggregationSpecificationModel,
         PercentageCompositeDataSourceModel,
-        MetricAggregationDataSourceModel
-      ]
-    })
-  ]
+        MetricAggregationDataSourceModel,
+      ],
+    }),
+  ],
 })
 export class ObservabilityGraphQlDataSourceModule {}

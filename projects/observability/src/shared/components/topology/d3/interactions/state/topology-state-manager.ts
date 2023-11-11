@@ -7,7 +7,7 @@ import {
   TopologyElementVisibility,
   TopologyNeighborhood,
   TopologyNode,
-  TopologyNodeState
+  TopologyNodeState,
 } from '../../../topology';
 
 export class TopologyStateManager {
@@ -24,7 +24,7 @@ export class TopologyStateManager {
     return {
       ...this.getNodeUniqueState(node),
       selectedDataSpecifier: this.currentSelectedNodeSpecifier && { ...this.currentSelectedNodeSpecifier },
-      dataSpecifiers: this.config.nodeDataSpecifiers
+      dataSpecifiers: this.config.nodeDataSpecifiers,
     };
   }
 
@@ -32,7 +32,7 @@ export class TopologyStateManager {
     return {
       ...this.getEdgeUniqueState(edge),
       selectedDataSpecifier: this.currentSelectedEdgeSpecifier && { ...this.currentSelectedEdgeSpecifier },
-      dataSpecifiers: this.config.edgeDataSpecifiers
+      dataSpecifiers: this.config.edgeDataSpecifiers,
     };
   }
 
@@ -63,13 +63,13 @@ export class TopologyStateManager {
   private buildInitialNodeState(): TopologyUniqueState<TopologyNodeState> {
     return {
       visibility: TopologyElementVisibility.Normal,
-      dragging: false
+      dragging: false,
     };
   }
 
   private buildInitialEdgeState(): TopologyUniqueState<TopologyEdgeState> {
     return {
-      visibility: TopologyElementVisibility.Normal
+      visibility: TopologyElementVisibility.Normal,
     };
   }
 
@@ -113,7 +113,7 @@ export class TopologyStateManager {
   }
 
   private isNeighborhoodUpdate(
-    update: TopologyStateUpdate & Partial<TopologyNeighborhoodUpdate>
+    update: TopologyStateUpdate & Partial<TopologyNeighborhoodUpdate>,
   ): update is TopologyNeighborhoodUpdate {
     return update.neighborhood !== undefined;
   }

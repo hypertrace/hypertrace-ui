@@ -6,7 +6,7 @@ import { catchError, delay, filter, finalize, map, shareReplay } from 'rxjs/oper
 import { NotificationService } from '../notification/notification.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FileUploadService {
   private readonly activeSubscriptionsMap: Map<string, Subscription> = new Map<string, Subscription>();
@@ -17,7 +17,7 @@ export class FileUploadService {
   public uploadFilesAsFormDataAsync<TResponse extends object>(
     url: string,
     formData: FormData,
-    showNotification: boolean = true
+    showNotification: boolean = true,
   ): Observable<FileUploadEvent<TResponse>> {
     if (this.beforeUnloadSubscription === undefined) {
       this.addBeforeUnloadHandler();
@@ -29,7 +29,7 @@ export class FileUploadService {
       finalize(() => {
         this.onUploadComplete(fileUploadId);
       }),
-      shareReplay(1)
+      shareReplay(1),
     );
 
     /**
@@ -44,19 +44,19 @@ export class FileUploadService {
   public uploadFilesAsFormData<TResponse extends object>(
     url: string,
     formData: FormData,
-    showNotification: boolean = true
+    showNotification: boolean = true,
   ): Observable<FileUploadEvent<TResponse>> {
     return this.http
       .post(url, formData, {
         reportProgress: true,
-        observe: 'events'
+        observe: 'events',
       })
       .pipe(
         map(event => {
           if (event.type === HttpEventType.UploadProgress) {
             return {
               type: FileUploadEventType.Progress,
-              progress: Math.round((event.loaded * 100) / event.total!)
+              progress: Math.round((event.loaded * 100) / event.total!),
             };
           }
 
@@ -64,7 +64,7 @@ export class FileUploadService {
             if (event.ok && event.status === 200) {
               return {
                 type: FileUploadEventType.Success,
-                response: event.body as TResponse
+                response: event.body as TResponse,
               };
             }
 
@@ -78,10 +78,10 @@ export class FileUploadService {
         catchError(error =>
           of({
             type: FileUploadEventType.Failure,
-            error: this.getFileUploadErrorMessage(error)
-          })
+            error: this.getFileUploadErrorMessage(error),
+          }),
         ),
-        filter((uploadData): uploadData is FileUploadEvent<TResponse> => uploadData !== undefined)
+        filter((uploadData): uploadData is FileUploadEvent<TResponse> => uploadData !== undefined),
       );
   }
   private addBeforeUnloadHandler(): void {
@@ -115,7 +115,7 @@ export class FileUploadService {
   private mayBeShowFileUploadNotification<T>(
     show: boolean,
     successMsg: string,
-    failureMsg: string
+    failureMsg: string,
   ): (source: Observable<T>) => Observable<T> {
     return show ? this.notificationService.withNotification(successMsg, failureMsg) : (source: Observable<T>) => source;
   }
@@ -141,5 +141,5 @@ export interface FileUploadFailureEvent {
 export const enum FileUploadEventType {
   Success = 'success',
   Failure = 'failure',
-  Progress = 'progress'
+  Progress = 'progress',
 }

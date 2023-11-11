@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { FixedTimeRange, NavigationParamsType, NavigationService, TimeRangeService } from '@hypertrace/common';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CartesainExplorerNavigationService {
   public constructor(
     private readonly timeRangeService: TimeRangeService,
-    private readonly navigationService: NavigationService
+    private readonly navigationService: NavigationService,
   ) {}
 
   public navigateToExplorer(start: Date, end: Date): void {
@@ -19,7 +19,7 @@ export class CartesainExplorerNavigationService {
       path: ['/explorer'],
       queryParams: params,
       queryParamsHandling: 'merge',
-      replaceCurrentHistory: false
+      replaceCurrentHistory: false,
     });
   }
 }

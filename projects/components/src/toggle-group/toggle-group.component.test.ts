@@ -13,20 +13,20 @@ describe('Toggle Group Component', () => {
   const createHost = createHostFactory({
     component: ToggleGroupComponent,
     shallow: true,
-    declarations: [ToggleItemComponent, MockComponent(LabelComponent)]
+    declarations: [ToggleItemComponent, MockComponent(LabelComponent)],
   });
 
   test('should toggle items', fakeAsync(() => {
     const items: ToggleItem[] = [
       {
         label: 'First',
-        value: 'first-value'
+        value: 'first-value',
       },
       {
         label: 'Second',
         icon: IconType.Add,
-        value: 'second-value'
-      }
+        value: 'second-value',
+      },
     ];
     const activeItem: ToggleItem = items[1];
     const activeItemChangeSpy = jest.fn();
@@ -40,9 +40,9 @@ describe('Toggle Group Component', () => {
         hostProps: {
           items: items,
           activeItem: activeItem,
-          activeItemChange: activeItemChangeSpy
-        }
-      }
+          activeItemChange: activeItemChangeSpy,
+        },
+      },
     );
 
     spectator.tick();

@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
  */
 @Directive({
   selector: '[htLetAsync]',
-  providers: [AsyncPipe]
+  providers: [AsyncPipe],
 })
 export class LetAsyncDirective<T> implements DoCheck {
   @Input('htLetAsync')
@@ -20,7 +20,7 @@ export class LetAsyncDirective<T> implements DoCheck {
   public constructor(
     private readonly viewContainer: ViewContainerRef,
     private readonly templateRef: TemplateRef<LetAsyncContext<T>>,
-    private readonly asyncPipe: AsyncPipe
+    private readonly asyncPipe: AsyncPipe,
   ) {
     this.viewContainer.createEmbeddedView(this.templateRef, this.context);
   }

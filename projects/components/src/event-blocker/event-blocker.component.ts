@@ -6,7 +6,7 @@ import {
   IterableDiffer,
   IterableDiffers,
   OnChanges,
-  Renderer2
+  Renderer2,
 } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
@@ -14,7 +14,7 @@ import { isEmpty } from 'lodash-es';
 @Component({
   selector: 'ht-event-blocker',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <ng-content> </ng-content> `
+  template: ` <ng-content> </ng-content> `,
 })
 export class EventBlockerComponent implements OnChanges {
   @Input()
@@ -36,7 +36,7 @@ export class EventBlockerComponent implements OnChanges {
   public constructor(
     private readonly renderer: Renderer2,
     private readonly host: ElementRef,
-    differFactory: IterableDiffers
+    differFactory: IterableDiffers,
   ) {
     this.differ = differFactory.find(this.events).create();
   }

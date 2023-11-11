@@ -17,7 +17,7 @@ export class StringMapFilterBuilder extends AbstractFilterBuilder<string> {
       FilterOperator.NotEquals,
       FilterOperator.In,
       FilterOperator.NotIn,
-      FilterOperator.Like
+      FilterOperator.Like,
     ];
   }
 

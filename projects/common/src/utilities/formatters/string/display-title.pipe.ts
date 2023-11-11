@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'htDisplayTitle'
+  name: 'htDisplayTitle',
 })
 export class DisplayTitlePipe implements PipeTransform {
   public transform(displayName: string = '', units: string = ''): string {

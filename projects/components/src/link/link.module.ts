@@ -8,6 +8,6 @@ import { LinkComponent } from './link.component';
 @NgModule({
   declarations: [LinkComponent],
   exports: [LinkComponent],
-  imports: [CommonModule, RouterModule, LetAsyncModule, UserTelemetryTrackingModule]
+  imports: [CommonModule, RouterModule, LetAsyncModule, UserTelemetryTrackingModule],
 })
 export class LinkModule {}

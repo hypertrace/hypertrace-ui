@@ -12,7 +12,7 @@ import { HighlightedLabelWidgetModel } from './highlighted-label-widget.model';
   template: `
     <ht-highlighted-label *htLoadAsync="this.data$ as data" [data]="data" [templateString]="this.model.labelTemplate">
     </ht-highlighted-label>
-  `
+  `,
 })
 export class HighlightedLabelWidgetRendererComponent extends WidgetRenderer<
   HighlightedLabelWidgetModel,

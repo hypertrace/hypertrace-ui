@@ -6,7 +6,7 @@ import {
   ExternalNavigationWindowHandling,
   NavigationParamsType,
   NavigationService,
-  TypedSimpleChanges
+  TypedSimpleChanges,
 } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 import { Observable } from 'rxjs';
@@ -19,7 +19,7 @@ import {
   NavItemGroup,
   NavItemLinkConfig,
   NavItemType,
-  NavViewStyle
+  NavViewStyle,
 } from './navigation.config';
 
 @Component({
@@ -88,7 +88,7 @@ import {
         </div>
       </div>
     </nav>
-  `
+  `,
 })
 export class NavigationListComponent implements OnChanges {
   @Input()
@@ -120,14 +120,14 @@ export class NavigationListComponent implements OnChanges {
   public constructor(
     private readonly navigationService: NavigationService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly navListComponentService: NavigationListComponentService
+    private readonly navListComponentService: NavigationListComponentService,
   ) {}
 
   public getFooterItemNavigationParams(url: string): ExternalNavigationParams {
     return {
       navType: NavigationParamsType.External,
       url: url,
-      windowHandling: ExternalNavigationWindowHandling.NewWindow
+      windowHandling: ExternalNavigationWindowHandling.NewWindow,
     };
   }
 
@@ -143,7 +143,7 @@ export class NavigationListComponent implements OnChanges {
           this.activeItemChange.emit(activeItem);
 
           return activeItem;
-        })
+        }),
       );
     }
   }
@@ -164,8 +164,8 @@ export class NavigationListComponent implements OnChanges {
       .filter((item): item is NavItemLinkConfig => item.type === NavItemType.Link)
       .find(linkItem =>
         linkItem.matchPaths.some(matchPath =>
-          this.navigationService.isRelativePathActive([matchPath], this.activatedRoute)
-        )
+          this.navigationService.isRelativePathActive([matchPath], this.activatedRoute),
+        ),
       );
   }
 }

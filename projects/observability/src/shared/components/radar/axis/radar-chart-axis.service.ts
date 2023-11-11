@@ -23,7 +23,7 @@ export class RadarChartAxisService {
 
   public getAxisDataMap(chartSelection: RadarSVGSelection): Map<string, RadarAxisData> {
     const axesSelection = chartSelection.selectAll<SVGGElement, Map<string, RadarAxisData>>(
-      `.${RadarLayoutStyleClass.Axis}`
+      `.${RadarLayoutStyleClass.Axis}`,
     );
 
     return axesSelection.datum();
@@ -31,7 +31,7 @@ export class RadarChartAxisService {
 
   protected buildAxis(chartSelection: RadarSVGSelection, options: RadarOptions): void {
     const axesSelection = chartSelection.selectAll<SVGGElement, Map<string, RadarAxisData>>(
-      `.${RadarLayoutStyleClass.Axis}`
+      `.${RadarLayoutStyleClass.Axis}`,
     );
 
     this.setAxisData(axesSelection, options);
@@ -92,7 +92,7 @@ export class RadarChartAxisService {
 
         this.svgUtilService.wrapTextIfNeeded(
           thisElement,
-          this.getAvailableTextWidth(axisData.axisRadian, titlePosition.x + totalWidth / 2, totalWidth)
+          this.getAvailableTextWidth(axisData.axisRadian, titlePosition.x + totalWidth / 2, totalWidth),
         );
       })
       .classed('axis-title', true)
@@ -114,7 +114,7 @@ export class RadarChartAxisService {
       axisDataMap.set(axis.name, {
         scale: scale,
         axisName: axis.name,
-        axisRadian: ((Math.PI * 2) / options.axes.length) * index // 0 is at 12'o clock
+        axisRadian: ((Math.PI * 2) / options.axes.length) * index, // 0 is at 12'o clock
       });
     });
 
@@ -125,7 +125,7 @@ export class RadarChartAxisService {
     rangeMin: number,
     rangeMax: number,
     maxAxisValue: number,
-    levels: number
+    levels: number,
   ): ScaleLinear<number, number> {
     const scale = scaleLinear().range([rangeMin, rangeMax]);
     this.setDomain(scale, maxAxisValue, levels);
@@ -141,7 +141,7 @@ export class RadarChartAxisService {
 
   private getMaxAxisValue(axisName: string, options: RadarOptions): number | undefined {
     return max(
-      options.series.flatMap(series => series.data.filter(datum => datum.axis === axisName).map(datum => datum.value))
+      options.series.flatMap(series => series.data.filter(datum => datum.axis === axisName).map(datum => datum.value)),
     );
   }
 

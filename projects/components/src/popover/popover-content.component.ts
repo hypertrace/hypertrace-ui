@@ -4,6 +4,6 @@ import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../content/content-holde
 @Component({
   selector: 'ht-popover-content',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: CONTENT_HOLDER_TEMPLATE
+  template: CONTENT_HOLDER_TEMPLATE,
 })
 export class PopoverContentComponent extends ContentHolder {}

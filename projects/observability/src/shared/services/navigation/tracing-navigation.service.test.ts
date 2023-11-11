@@ -10,9 +10,9 @@ describe('Tracing Navigation Service', () => {
     providers: [
       mockProvider(NavigationService, {
         navigate: jest.fn(),
-        isRelativePathActive: () => true
-      })
-    ]
+        isRelativePathActive: () => true,
+      }),
+    ],
   });
 
   test('can navigate correctly to trace detail', () => {
@@ -21,19 +21,19 @@ describe('Tracing Navigation Service', () => {
     spectator.service.navigateToTraceDetail('trace-id', 'span-id', '1608150110610');
     expect(navigationService.navigate).toHaveBeenLastCalledWith({
       navType: NavigationParamsType.InApp,
-      path: ['/trace', 'trace-id', { spanId: 'span-id', startTime: '1608150110610' }]
+      path: ['/trace', 'trace-id', { spanId: 'span-id', startTime: '1608150110610' }],
     });
 
     spectator.service.navigateToTraceDetail('trace-id', 'span-id');
     expect(navigationService.navigate).toHaveBeenLastCalledWith({
       navType: NavigationParamsType.InApp,
-      path: ['/trace', 'trace-id', { spanId: 'span-id' }]
+      path: ['/trace', 'trace-id', { spanId: 'span-id' }],
     });
 
     spectator.service.navigateToTraceDetail('trace-id');
     expect(navigationService.navigate).toHaveBeenLastCalledWith({
       navType: NavigationParamsType.InApp,
-      path: ['/trace', 'trace-id', {}]
+      path: ['/trace', 'trace-id', {}],
     });
   });
 
@@ -41,17 +41,17 @@ describe('Tracing Navigation Service', () => {
     spectator = buildService();
     expect(spectator.service.buildTraceDetailNavigationParam('trace-id', 'span-id', '1608150110610')).toEqual({
       navType: NavigationParamsType.InApp,
-      path: ['/trace', 'trace-id', { spanId: 'span-id', startTime: '1608150110610' }]
+      path: ['/trace', 'trace-id', { spanId: 'span-id', startTime: '1608150110610' }],
     });
 
     expect(spectator.service.buildTraceDetailNavigationParam('trace-id', 'span-id')).toEqual({
       navType: NavigationParamsType.InApp,
-      path: ['/trace', 'trace-id', { spanId: 'span-id' }]
+      path: ['/trace', 'trace-id', { spanId: 'span-id' }],
     });
 
     expect(spectator.service.buildTraceDetailNavigationParam('trace-id')).toEqual({
       navType: NavigationParamsType.InApp,
-      path: ['/trace', 'trace-id', {}]
+      path: ['/trace', 'trace-id', {}],
     });
   });
 
@@ -60,12 +60,12 @@ describe('Tracing Navigation Service', () => {
 
     expect(spectator.service.buildApiTraceDetailNavigationParam('trace-id', '1608150110610')).toEqual({
       navType: NavigationParamsType.InApp,
-      path: ['/api-trace', 'trace-id', { startTime: '1608150110610' }]
+      path: ['/api-trace', 'trace-id', { startTime: '1608150110610' }],
     });
 
     expect(spectator.service.buildApiTraceDetailNavigationParam('trace-id')).toEqual({
       navType: NavigationParamsType.InApp,
-      path: ['/api-trace', 'trace-id', {}]
+      path: ['/api-trace', 'trace-id', {}],
     });
   });
 
@@ -75,13 +75,13 @@ describe('Tracing Navigation Service', () => {
     spectator.service.navigateToApiTraceDetail('trace-id', '1608150110610');
     expect(navigationService.navigate).toHaveBeenLastCalledWith({
       navType: NavigationParamsType.InApp,
-      path: ['/api-trace', 'trace-id', { startTime: '1608150110610' }]
+      path: ['/api-trace', 'trace-id', { startTime: '1608150110610' }],
     });
 
     spectator.service.navigateToApiTraceDetail('trace-id');
     expect(navigationService.navigate).toHaveBeenLastCalledWith({
       navType: NavigationParamsType.InApp,
-      path: ['/api-trace', 'trace-id', {}]
+      path: ['/api-trace', 'trace-id', {}],
     });
   });
 });

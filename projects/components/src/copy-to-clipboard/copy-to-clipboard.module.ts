@@ -10,6 +10,6 @@ import { EventBlockerModule } from '../event-blocker/event-blocker.module';
 @NgModule({
   imports: [CommonModule, IconModule, PopoverModule, ButtonModule, TooltipModule, EventBlockerModule],
   declarations: [CopyToClipboardComponent],
-  exports: [CopyToClipboardComponent]
+  exports: [CopyToClipboardComponent],
 })
 export class CopyToClipboardModule {}

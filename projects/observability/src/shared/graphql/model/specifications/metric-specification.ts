@@ -6,5 +6,5 @@ export interface MetricSpecification extends Specification {
 }
 
 export const isMetricSpecification = (
-  spec: Specification & Partial<MetricSpecification>
+  spec: Specification & Partial<MetricSpecification>,
 ): spec is MetricSpecification => typeof spec.aggregation === 'string';

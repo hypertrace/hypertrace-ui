@@ -7,6 +7,6 @@ import { GaugeListComponent } from './gauge-list.component';
 @NgModule({
   declarations: [GaugeListComponent],
   imports: [CommonModule, TooltipModule, FormattingModule],
-  exports: [GaugeListComponent]
+  exports: [GaugeListComponent],
 })
 export class GaugeListModule {}

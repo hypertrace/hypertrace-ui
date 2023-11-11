@@ -18,17 +18,17 @@ describe('ServiceMetricsComponent', () => {
     imports: [ServiceMetricsModule, IconLibraryTestingModule],
     providers: [
       mockProvider(ServiceDetailService, {
-        entityFilter$: of(expectedEntityFilter)
+        entityFilter$: of(expectedEntityFilter),
       }),
       mockProvider(EntitiesGraphqlQueryBuilderService),
-      ...mockDashboardProviders
-    ]
+      ...mockDashboardProviders,
+    ],
   });
 
   test('should create dashboard and apply filters', () => {
     const spectator = createComponent();
     expect(spectator.query(NavigableDashboardComponent)?.filterConfig).toEqual({
-      implicitFilters: [expectedEntityFilter]
+      implicitFilters: [expectedEntityFilter],
     });
   });
 });

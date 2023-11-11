@@ -9,8 +9,8 @@ export const entityMetadata: EntityMetadataMap = new Map([
       detailPath: (id: string, sourceRoute?: string) => [sourceRoute ?? 'endpoints', 'endpoint', id],
       sourceRoutes: ['services'],
       listPath: ['endpoints'],
-      typeDisplayName: 'Endpoint'
-    }
+      typeDisplayName: 'Endpoint',
+    },
   ],
   [
     ObservabilityEntityType.Service,
@@ -20,8 +20,8 @@ export const entityMetadata: EntityMetadataMap = new Map([
       detailPath: (id: string) => ['services', 'service', id],
       listPath: ['services'],
       apisListPath: (id: string) => ['services', 'service', id, 'endpoints'],
-      typeDisplayName: 'Service'
-    }
+      typeDisplayName: 'Service',
+    },
   ],
   [
     ObservabilityEntityType.Backend,
@@ -29,7 +29,7 @@ export const entityMetadata: EntityMetadataMap = new Map([
       entityType: ObservabilityEntityType.Backend,
       icon: ObservabilityIconType.Backend,
       detailPath: (id: string) => ['backends', 'backend', id],
-      listPath: ['backends']
-    }
-  ]
+      listPath: ['backends'],
+    },
+  ],
 ]);

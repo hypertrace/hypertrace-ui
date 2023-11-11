@@ -8,7 +8,7 @@ import { StepperTabControlsComponent } from '../tab-controls/stepper-tab-control
 @Component({
   selector: `ht-stepper-tab`,
   template: CONTENT_HOLDER_TEMPLATE,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepperTabComponent extends ContentHolder {
   @ContentChild(StepperTabControlsComponent)

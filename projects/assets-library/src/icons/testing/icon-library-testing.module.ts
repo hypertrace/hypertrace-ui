@@ -4,6 +4,6 @@ import { MatIconTestingModule } from '@angular/material/icon/testing';
 import { IconLibraryModule } from '../icon-library.module';
 
 @NgModule({
-  imports: [IconLibraryModule, MatIconTestingModule, HttpClientTestingModule]
+  imports: [IconLibraryModule, MatIconTestingModule, HttpClientTestingModule],
 })
 export class IconLibraryTestingModule {}

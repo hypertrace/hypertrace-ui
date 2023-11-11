@@ -13,11 +13,11 @@ import {
   LoaderType,
   NoDataOrErrorAsyncState,
   NoDataOrErrorStateConfig,
-  NoDataOrErrorStateConfigWithCustomTemplate
+  NoDataOrErrorStateConfigWithCustomTemplate,
 } from '../load-async.service';
 
 export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsyncWrapperParameters<unknown>>>(
-  'ASYNC_WRAPPER_PARAMETERS$'
+  'ASYNC_WRAPPER_PARAMETERS$',
 );
 
 @Component({
@@ -57,7 +57,7 @@ export const ASYNC_WRAPPER_PARAMETERS$ = new InjectionToken<Observable<LoadAsync
     </div>
   `,
   styleUrls: ['./load-async-wrapper.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadAsyncWrapperComponent<T = unknown> {
   public readonly state$: Observable<AsyncState<T>>;
@@ -78,7 +78,7 @@ export class LoadAsyncWrapperComponent<T = unknown> {
         this.config = params.config;
       }),
       switchMap(parameter => parameter.state$),
-      tap(state => this.updateMessage(state))
+      tap(state => this.updateMessage(state)),
     );
   }
 
@@ -140,7 +140,7 @@ export class LoadAsyncWrapperComponent<T = unknown> {
   }
 
   private isTemplateBasedConfig(
-    config?: NoDataOrErrorStateConfig
+    config?: NoDataOrErrorStateConfig,
   ): config is NoDataOrErrorStateConfigWithCustomTemplate {
     return !isNil(config) && 'template' in config && !isNil(config.template);
   }

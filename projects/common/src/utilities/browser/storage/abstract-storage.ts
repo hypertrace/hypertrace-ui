@@ -10,7 +10,7 @@ export abstract class AbstractStorage {
 
   public constructor(
     private readonly storage: Storage,
-    private readonly scopeConfig$?: Observable<ScopedStorageConfiguration>
+    private readonly scopeConfig$?: Observable<ScopedStorageConfiguration>,
   ) {
     if (this.scopeConfig$) {
       this.scopeConfig$.subscribe(scopeConfig => {
@@ -47,7 +47,7 @@ export abstract class AbstractStorage {
       filter(changedKey => changedKey === key),
       map(() => this.get<T>(key)),
       startWith(this.get<T>(key)),
-      distinctUntilChanged()
+      distinctUntilChanged(),
     );
   }
 

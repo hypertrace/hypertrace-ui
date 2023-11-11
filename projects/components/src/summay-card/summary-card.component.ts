@@ -26,7 +26,7 @@ import { SummaryCardColor, SummaryValue } from './summary-card';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class SummaryCardComponent {
   @Input()

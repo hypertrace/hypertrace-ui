@@ -19,41 +19,41 @@ describe('Radar Chart component', () => {
           x: 0,
           y: 0,
           width: 0,
-          height: 0
+          height: 0,
         }),
-        getComputedTextLength: () => 50
+        getComputedTextLength: () => 50,
       }),
       mockProvider(SvgUtilService, {
         wrapTextIfNeeded: () => {
           /** Noop */
-        }
+        },
       }),
-      mockProvider(ColorService)
-    ]
+      mockProvider(ColorService),
+    ],
   });
 
   test('should render all axes', () => {
     const axes = [
       {
-        name: 'Latency'
+        name: 'Latency',
       },
       {
-        name: 'Data In'
+        name: 'Data In',
       },
       {
-        name: 'Data Out'
+        name: 'Data Out',
       },
       {
-        name: 'Errors/min'
+        name: 'Errors/min',
       },
       {
-        name: 'Calls/min'
-      }
+        name: 'Calls/min',
+      },
     ];
     const chart = createHost(`<ht-radar-chart [axes]="axes"></ht-radar-chart>`, {
       hostProps: {
-        axes: axes
-      }
+        axes: axes,
+      },
     });
 
     const axesGElement = chart.queryAll('.axis', { root: true });
@@ -67,11 +67,11 @@ describe('Radar Chart component', () => {
   test('should render all series', () => {
     const axes = [
       {
-        name: 'Latency'
+        name: 'Latency',
       },
       {
-        name: 'Data In'
-      }
+        name: 'Data In',
+      },
     ];
 
     const series = [
@@ -81,13 +81,13 @@ describe('Radar Chart component', () => {
         data: [
           {
             axis: 'Latency',
-            value: 80
+            value: 80,
           },
           {
             axis: 'Data In',
-            value: 80
-          }
-        ]
+            value: 80,
+          },
+        ],
       },
       {
         name: 'This Month',
@@ -95,20 +95,20 @@ describe('Radar Chart component', () => {
         data: [
           {
             axis: 'Latency',
-            value: 54
+            value: 54,
           },
           {
             axis: 'Data In',
-            value: 60
-          }
-        ]
-      }
+            value: 60,
+          },
+        ],
+      },
     ];
     const chart = createHost(`<ht-radar-chart [axes]="axes" [series]="series"></ht-radar-chart>`, {
       hostProps: {
         axes: axes,
-        series: series
-      }
+        series: series,
+      },
     });
 
     const seriesGElement = chart.queryAll('.series', { root: true });
@@ -127,11 +127,11 @@ describe('Radar Chart component', () => {
   test('should propogate events correctly', fakeAsync(() => {
     const axes = [
       {
-        name: 'Latency'
+        name: 'Latency',
       },
       {
-        name: 'Data In'
-      }
+        name: 'Data In',
+      },
     ];
 
     const series = [
@@ -141,13 +141,13 @@ describe('Radar Chart component', () => {
         data: [
           {
             axis: 'Latency',
-            value: 80
+            value: 80,
           },
           {
             axis: 'Data In',
-            value: 80
-          }
-        ]
+            value: 80,
+          },
+        ],
       },
       {
         name: 'This Month',
@@ -155,14 +155,14 @@ describe('Radar Chart component', () => {
         data: [
           {
             axis: 'Latency',
-            value: 54
+            value: 54,
           },
           {
             axis: 'Data In',
-            value: 60
-          }
-        ]
-      }
+            value: 60,
+          },
+        ],
+      },
     ];
 
     const onPointClicked = jest.fn();
@@ -175,9 +175,9 @@ describe('Radar Chart component', () => {
           axes: axes,
           series: series,
           onPointClicked: onPointClicked,
-          onSeriesClicked: onSeriesClicked
-        }
-      }
+          onSeriesClicked: onSeriesClicked,
+        },
+      },
     );
 
     spectator.tick();
@@ -209,7 +209,7 @@ describe('Radar Chart component', () => {
 
         expect(onPointClicked).toHaveBeenLastCalledWith({
           point: currentPoint,
-          seriesName: currentSeries.name
+          seriesName: currentSeries.name,
         });
 
         // Event should propogate and emit series clicked as well
@@ -221,8 +221,8 @@ describe('Radar Chart component', () => {
   test('should render correct number of levels', () => {
     const chart = createHost(`<ht-radar-chart [levels]="levels"></ht-radar-chart>`, {
       hostProps: {
-        levels: 10
-      }
+        levels: 10,
+      },
     });
 
     const levels = chart.queryAll('.dotted-grid-circle', { root: true });
@@ -235,11 +235,11 @@ describe('Radar Chart component', () => {
   test('should render legends correctly', () => {
     const axes = [
       {
-        name: 'Latency'
+        name: 'Latency',
       },
       {
-        name: 'Data In'
-      }
+        name: 'Data In',
+      },
     ];
 
     const series = [
@@ -249,13 +249,13 @@ describe('Radar Chart component', () => {
         data: [
           {
             axis: 'Latency',
-            value: 80
+            value: 80,
           },
           {
             axis: 'Data In',
-            value: 80
-          }
-        ]
+            value: 80,
+          },
+        ],
       },
       {
         name: 'This Month',
@@ -263,20 +263,20 @@ describe('Radar Chart component', () => {
         data: [
           {
             axis: 'Latency',
-            value: 54
+            value: 54,
           },
           {
             axis: 'Data In',
-            value: 60
-          }
-        ]
-      }
+            value: 60,
+          },
+        ],
+      },
     ];
     const chart = createHost(`<ht-radar-chart [axes]="axes" [series]="series"></ht-radar-chart>`, {
       hostProps: {
         axes: axes,
-        series: series
-      }
+        series: series,
+      },
     });
 
     const legendItemGElements = chart.queryAll('.legend-item', { root: true });
@@ -291,11 +291,11 @@ describe('Radar Chart component', () => {
   test('should show tooltip correctly', () => {
     const axes = [
       {
-        name: 'Latency'
+        name: 'Latency',
       },
       {
-        name: 'Data In'
-      }
+        name: 'Data In',
+      },
     ];
 
     const series = [
@@ -305,14 +305,14 @@ describe('Radar Chart component', () => {
         data: [
           {
             axis: 'Latency',
-            value: 80
+            value: 80,
           },
           {
             axis: 'Data In',
-            value: 80
-          }
+            value: 80,
+          },
         ],
-        showPoints: false
+        showPoints: false,
       },
       {
         name: 'This Month',
@@ -320,14 +320,14 @@ describe('Radar Chart component', () => {
         data: [
           {
             axis: 'Latency',
-            value: 54
+            value: 54,
           },
           {
             axis: 'Data In',
-            value: 60
-          }
-        ]
-      }
+            value: 60,
+          },
+        ],
+      },
     ];
     const locationData = [
       {
@@ -335,33 +335,33 @@ describe('Radar Chart component', () => {
           color: '#bebfc1',
           data: [
             { axis: 'Latency', value: 80 },
-            { axis: 'Data In', value: 80 }
+            { axis: 'Data In', value: 80 },
           ],
           name: 'Last Month',
-          showPoints: false
+          showPoints: false,
         },
         dataPoint: { axis: 'Latency', value: 80 },
-        location: { x: 0, y: -0 }
+        location: { x: 0, y: -0 },
       },
       {
         context: {
           color: '#084E8A',
           data: [
             { axis: 'Latency', value: 54 },
-            { axis: 'Data In', value: 60 }
+            { axis: 'Data In', value: 60 },
           ],
           name: 'This Month',
-          showPoints: true
+          showPoints: true,
         },
         dataPoint: { axis: 'Latency', value: 54 },
-        location: { x: 0, y: -0 }
-      }
+        location: { x: 0, y: -0 },
+      },
     ];
 
     const mockTooltipRef = {
       showWithData: jest.fn(),
       hide: jest.fn(),
-      destroy: jest.fn()
+      destroy: jest.fn(),
     };
 
     const chart = createHost(
@@ -371,15 +371,15 @@ describe('Radar Chart component', () => {
           axes: axes,
           series: series,
           tooltipOption: {
-            visible: true
-          }
+            visible: true,
+          },
         },
         providers: [
           mockProvider(ChartTooltipBuilderService, {
-            constructTooltip: jest.fn().mockReturnValue(mockTooltipRef)
-          })
-        ]
-      }
+            constructTooltip: jest.fn().mockReturnValue(mockTooltipRef),
+          }),
+        ],
+      },
     );
 
     // Should show tooltip on hover

@@ -6,7 +6,7 @@ import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/h
 import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
-  GraphQlExploreResultValue
+  GraphQlExploreResultValue,
 } from '../../../../graphql/request/handlers/explore/explore-query';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
@@ -16,7 +16,7 @@ export abstract class TraceValueDataSourceModel<TData> extends GraphQlDataSource
   protected fetchSpecificationData(): Observable<GraphQlExploreResultValue> {
     return this.query<ExploreGraphQlQueryHandlerService>(() => this.buildRequest()).pipe(
       map(response => response.results[0]),
-      map(result => result[this.specification.resultAlias()])
+      map(result => result[this.specification.resultAlias()]),
     );
   }
 
@@ -26,7 +26,7 @@ export abstract class TraceValueDataSourceModel<TData> extends GraphQlDataSource
       timeRange: this.getTimeRangeOrThrow(),
       context: ObservabilityTraceType.Api,
       limit: 1,
-      selections: [this.specification]
+      selections: [this.specification],
     };
   }
 }

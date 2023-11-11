@@ -13,7 +13,7 @@ describe('Summary Value Component', () => {
     declareComponent: false,
     component: SummaryValueComponent,
     imports: [SummaryValueModule, HttpClientTestingModule, IconLibraryTestingModule],
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService)],
   });
 
   test('should not display anything if value is not present', () => {
@@ -22,9 +22,9 @@ describe('Summary Value Component', () => {
       </ht-summary-value>`,
       {
         hostProps: {
-          value: undefined
-        }
-      }
+          value: undefined,
+        },
+      },
     );
 
     expect(spectator.query('.icon')).not.toExist();
@@ -39,9 +39,9 @@ describe('Summary Value Component', () => {
       </ht-summary-value>`,
       {
         hostProps: {
-          value: '98.23.456.23'
-        }
-      }
+          value: '98.23.456.23',
+        },
+      },
     );
 
     expect(spectator.query('.dot')).toExist();
@@ -59,9 +59,9 @@ describe('Summary Value Component', () => {
       {
         hostProps: {
           value: '98.23.456.23',
-          label: 'Ip Address'
-        }
-      }
+          label: 'Ip Address',
+        },
+      },
     );
 
     expect(spectator.query('.dot')).toExist();
@@ -77,9 +77,9 @@ describe('Summary Value Component', () => {
         hostProps: {
           value: '98.23.456.23',
           label: 'Ip Address',
-          icon: IconType.IpAddress
-        }
-      }
+          icon: IconType.IpAddress,
+        },
+      },
     );
 
     expect(spectator.query('.dot')).not.toExist();
@@ -96,9 +96,9 @@ describe('Summary Value Component', () => {
         hostProps: {
           value: '98.23.456.23',
           label: 'IP Address',
-          icon: IconType.IpAddress
-        }
-      }
+          icon: IconType.IpAddress,
+        },
+      },
     );
 
     expect(spectator.query(TooltipDirective)!.content).toBe('IP Address 98.23.456.23');
@@ -119,9 +119,9 @@ describe('Summary Value Component', () => {
           value: '98.23.456.23',
           label: 'IP Address',
           tooltip: 'test tooltip',
-          icon: IconType.IpAddress
-        }
-      }
+          icon: IconType.IpAddress,
+        },
+      },
     );
 
     expect(spectator.query(TooltipDirective)!.content).toBe('test tooltip');
@@ -138,9 +138,9 @@ describe('Summary Value Component', () => {
         hostProps: {
           value: '98.23.456.23',
           icon: IconType.IpAddress,
-          valueStyle: SummaryValueDisplayStyle.Link
-        }
-      }
+          valueStyle: SummaryValueDisplayStyle.Link,
+        },
+      },
     );
 
     expect(spectator.query('.value')?.classList.contains('link')).toBe(true);
