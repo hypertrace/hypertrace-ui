@@ -11,15 +11,15 @@ describe('Menu Item Component', () => {
     component: MenuItemComponent,
     declarations: [MockComponent(IconComponent)],
     providers: [mockProvider(NavigationService)],
-    shallow: true
+    shallow: true,
   });
 
   test('should display icon and label as expected', fakeAsync(() => {
     const spectator = createHost(
       '<ht-menu-item [icon]="icon" [label]="label" [labelColor]="labelColor" [iconColor]="iconColor"></ht-menu-item>',
       {
-        hostProps: { icon: IconType.MoreHorizontal, label: 'Item', labelColor: Color.Gray1, iconColor: Color.Gray1 }
-      }
+        hostProps: { icon: IconType.MoreHorizontal, label: 'Item', labelColor: Color.Gray1, iconColor: Color.Gray1 },
+      },
     );
     expect(spectator.query('.menu-item')).toExist();
     expect(spectator.query('.icon')).toExist();
@@ -37,9 +37,9 @@ describe('Menu Item Component', () => {
           icon: IconType.MoreHorizontal,
           label: 'Item',
           iconColor: Color.Gray1,
-          disabled: true
-        }
-      }
+          disabled: true,
+        },
+      },
     );
     expect(spectator.query('.menu-item')).toExist();
     expect(spectator.query('.icon')).toExist();

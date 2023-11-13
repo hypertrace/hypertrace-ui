@@ -4,7 +4,7 @@ import {
   TableDataResponse,
   TableDataSource,
   TableRow,
-  TableSortDirection
+  TableSortDirection,
 } from '@hypertrace/components';
 import { createModelFactory, SpectatorModel } from '@hypertrace/dashboards/testing';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
@@ -36,19 +36,19 @@ describe('Entity table data source model', () => {
             results: [
               {
                 [entityIdKey]: 'test-id',
-                [entityTypeKey]: ObservabilityEntityType.Service
-              }
+                [entityTypeKey]: ObservabilityEntityType.Service,
+              },
             ],
-            total: 1
-          })
-        )
-      })
-    ]
+            total: 1,
+          }),
+        ),
+      }),
+    ],
   });
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     const childEntityDataSource = new EntityTableDataSourceModel();
     childEntityDataSource.api = mockApi as ModelApi;
@@ -58,8 +58,8 @@ describe('Entity table data source model', () => {
       api: mockApi,
       properties: {
         entityType: ObservabilityEntityType.Service,
-        childEntityDataSource: childEntityDataSource
-      }
+        childEntityDataSource: childEntityDataSource,
+      },
     });
     childEntityDataSource.graphQlFilterBuilderService = spectator.get(GraphQlFilterBuilderService);
 
@@ -72,25 +72,25 @@ describe('Entity table data source model', () => {
     tableDataSource.getData({
       position: {
         startIndex: 0,
-        limit: 50
+        limit: 50,
       },
       columns: [
         {
           id: 'Name',
-          specification: specBuilder.attributeSpecificationForKey('name')
+          specification: specBuilder.attributeSpecificationForKey('name'),
         },
         {
           id: 'duration',
-          specification: specBuilder.attributeSpecificationForKey('duration')
-        }
+          specification: specBuilder.attributeSpecificationForKey('duration'),
+        },
       ],
       sort: {
         column: {
           id: 'Name',
-          specification: specBuilder.attributeSpecificationForKey('name')
+          specification: specBuilder.attributeSpecificationForKey('name'),
         },
-        direction: TableSortDirection.Descending
-      }
+        direction: TableSortDirection.Descending,
+      },
     });
 
     // Query is debounced, flush it out
@@ -104,12 +104,12 @@ describe('Entity table data source model', () => {
         offset: 0,
         sort: {
           direction: TableSortDirection.Descending,
-          key: expect.objectContaining({ name: 'name' })
+          key: expect.objectContaining({ name: 'name' }),
         },
         filters: [],
         timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
-        includeTotal: true
-      })
+        includeTotal: true,
+      }),
     );
   }));
 
@@ -118,25 +118,25 @@ describe('Entity table data source model', () => {
       .getData({
         position: {
           startIndex: 0,
-          limit: 50
+          limit: 50,
         },
         columns: [
           {
             id: 'Name',
-            specification: specBuilder.attributeSpecificationForKey('name')
+            specification: specBuilder.attributeSpecificationForKey('name'),
           },
           {
             id: 'duration',
-            specification: specBuilder.attributeSpecificationForKey('duration')
-          }
+            specification: specBuilder.attributeSpecificationForKey('duration'),
+          },
         ],
         sort: {
           column: {
             id: 'Name',
-            specification: specBuilder.attributeSpecificationForKey('name')
+            specification: specBuilder.attributeSpecificationForKey('name'),
           },
-          direction: TableSortDirection.Descending
-        }
+          direction: TableSortDirection.Descending,
+        },
       })
       .subscribe((response: TableDataResponse<TableRow>) => {
         (response.data[0] as StatefulTreeTableRow).getChildren();
@@ -153,12 +153,12 @@ describe('Entity table data source model', () => {
         offset: 0,
         sort: {
           direction: TableSortDirection.Descending,
-          key: expect.objectContaining({ name: 'name' })
+          key: expect.objectContaining({ name: 'name' }),
         },
         filters: [{ id: 'test-id', key: 'id', type: 'SERVICE' }],
         timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
-        includeTotal: true
-      })
+        includeTotal: true,
+      }),
     );
   }));
 });

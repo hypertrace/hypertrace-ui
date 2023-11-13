@@ -399,7 +399,7 @@ export {
   TitledContentComponent,
   TitlePosition,
   TitledContentTitleStyle,
-  TitledContentHeaderJustify
+  TitledContentHeaderJustify,
 } from './titled-content/titled-content.component';
 export { TitledContentModule } from './titled-content/titled-content.module';
 

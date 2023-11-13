@@ -15,7 +15,7 @@ describe('Overlay service', () => {
     template: `
       <div class="test-sheet-content">Test Component Content Data: {{ this.data }}</div>
       <button class="test-close-button" role="button" (click)="this.onClose()">Close</button>
-    `
+    `,
   })
   class TestComponent {
     public constructor(@Inject(SHEET_DATA) public readonly data: string, public readonly sheetRef: SheetRef) {}
@@ -32,13 +32,13 @@ describe('Overlay service', () => {
     imports: [OverlayModule, IconLibraryTestingModule],
     providers: [
       mockProvider(NavigationService, {
-        navigation$: EMPTY
+        navigation$: EMPTY,
       }),
       mockProvider(GlobalHeaderHeightProviderService, {
-        globalHeaderHeight: '56px'
-      })
+        globalHeaderHeight: '56px',
+      }),
     ],
-    template: `<host></host>`
+    template: `<host></host>`,
   });
 
   test('can create a sheet with provided data', fakeAsync(() => {
@@ -48,13 +48,13 @@ describe('Overlay service', () => {
       size: SheetSize.Small,
       title: 'Test title',
       showHeader: true,
-      data: 'custom input'
+      data: 'custom input',
     });
 
     spectator.tick();
 
     expect(spectator.query('.test-sheet-content', { root: true })).toContainText(
-      'Test Component Content Data: custom input'
+      'Test Component Content Data: custom input',
     );
     expect(spectator.query('.opaque-backdrop', { root: true })).not.toExist();
     expect(spectator.query('.cdk-overlay-transparent-backdrop', { root: true })).not.toExist();
@@ -65,7 +65,7 @@ describe('Overlay service', () => {
     const sheet: SheetRef<string> = spectator.inject(OverlayService).createSheet({
       content: TestComponent,
       size: SheetSize.Small,
-      data: 'custom input'
+      data: 'custom input',
     });
     let result: string | undefined;
     spectator.tick();
@@ -92,7 +92,7 @@ describe('Overlay service', () => {
       title: 'Test title',
       showHeader: true,
       data: 'custom input',
-      backdrop: PopoverBackdrop.Opaque
+      backdrop: PopoverBackdrop.Opaque,
     });
 
     spectator.tick();

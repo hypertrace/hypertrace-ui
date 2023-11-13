@@ -6,7 +6,7 @@ import {
   Input,
   OnInit,
   Output,
-  TemplateRef
+  TemplateRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
@@ -21,8 +21,8 @@ import { RadioOption } from './radio-option';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: RadioGroupComponent,
-      multi: true
-    }
+      multi: true,
+    },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -57,7 +57,7 @@ import { RadioOption } from './radio-option';
     <ng-template #defaultLabel let-label>
       <ht-label class="radio-button-label" [label]="label"></ht-label>
     </ng-template>
-  `
+  `,
 })
 export class RadioGroupComponent implements ControlValueAccessor, OnInit {
   @Input()
@@ -91,7 +91,7 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
     if (this.selected === undefined) {
       this.selected = {
         label: '',
-        value: ''
+        value: '',
       };
     }
   }
@@ -133,5 +133,5 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
 
 export const enum OptionsDirection {
   Row = 'row',
-  Column = 'column'
+  Column = 'column',
 }

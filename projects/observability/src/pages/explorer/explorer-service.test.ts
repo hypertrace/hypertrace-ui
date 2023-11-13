@@ -21,7 +21,7 @@ describe('Explorer service', () => {
             onlySupportsAggregation: false,
             onlySupportsGrouping: false,
             allowedAggregations: [],
-            groupable: false
+            groupable: false,
           }
         : {
             name: 'status',
@@ -32,9 +32,9 @@ describe('Explorer service', () => {
             onlySupportsAggregation: false,
             onlySupportsGrouping: false,
             allowedAggregations: [],
-            groupable: false
-          }
-    )
+            groupable: false,
+          },
+    ),
   );
 
   const lookupMock = jest.fn(() => ({
@@ -44,8 +44,8 @@ describe('Explorer service', () => {
       operator: operator,
       value: value,
       userString: '',
-      urlString: `${attribute.name}${toUrlFilterOperator(operator)}${value}`
-    })
+      urlString: `${attribute.name}${toUrlFilterOperator(operator)}${value}`,
+    }),
   }));
 
   const createService = createServiceFactory({
@@ -57,11 +57,11 @@ describe('Explorer service', () => {
         toQueryParams: () => ({
           ['time']: new FixedTimeRange(
             new Date('2019-09-19T16:40:45.141Z'),
-            new Date('2019-09-19T16:55:45.141Z')
-          ).toUrlString()
-        })
-      })
-    ]
+            new Date('2019-09-19T16:55:45.141Z'),
+          ).toUrlString(),
+        }),
+      }),
+    ],
   });
 
   test('creates nav params correctly when timeRange is not provided', () => {
@@ -70,17 +70,17 @@ describe('Explorer service', () => {
       expectObservable(
         spectator.service.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
           { field: 'duration', operator: FilterOperator.GreaterThan, value: 200 },
-          { field: 'status', operator: FilterOperator.Equals, value: 404 }
-        ])
+          { field: 'status', operator: FilterOperator.Equals, value: 404 },
+        ]),
       ).toBe('(x|)', {
         x: {
           navType: NavigationParamsType.InApp,
           path: '/explorer',
           queryParams: {
             filter: ['duration_gt_200', 'status_eq_404'],
-            scope: ScopeQueryParam.EndpointTraces
-          }
-        }
+            scope: ScopeQueryParam.EndpointTraces,
+          },
+        },
       });
     });
   });
@@ -93,10 +93,10 @@ describe('Explorer service', () => {
           ScopeQueryParam.EndpointTraces,
           [
             { field: 'duration', operator: FilterOperator.GreaterThan, value: 200 },
-            { field: 'status', operator: FilterOperator.Equals, value: 404 }
+            { field: 'status', operator: FilterOperator.Equals, value: 404 },
           ],
-          new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-19T16:55:45.141Z'))
-        )
+          new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-19T16:55:45.141Z')),
+        ),
       ).toBe('(x|)', {
         x: {
           navType: NavigationParamsType.InApp,
@@ -106,10 +106,10 @@ describe('Explorer service', () => {
             scope: ScopeQueryParam.EndpointTraces,
             ['time']: new FixedTimeRange(
               new Date('2019-09-19T16:40:45.141Z'),
-              new Date('2019-09-19T16:55:45.141Z')
-            ).toUrlString()
-          }
-        }
+              new Date('2019-09-19T16:55:45.141Z'),
+            ).toUrlString(),
+          },
+        },
       });
     });
   });

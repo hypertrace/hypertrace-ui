@@ -8,7 +8,7 @@ import { EntitiesResponse } from '../../../../graphql/request/handlers/entities/
 import {
   EntitiesGraphQlQueryHandlerService,
   ENTITIES_GQL_REQUEST,
-  GraphQlEntitiesQueryRequest
+  GraphQlEntitiesQueryRequest,
 } from '../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
@@ -18,22 +18,22 @@ export abstract class EntitiesValuesDataSourceModel extends GraphQlDataSourceMod
 
   @ModelProperty({
     key: 'includeInactive',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public includeInactive: boolean = false;
 
   @ModelProperty({
     key: 'limit',
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public limit: number = 100;
 
   protected fetchSpecificationData(): Observable<unknown[]> {
     return this.query<EntitiesGraphQlQueryHandlerService, EntitiesResponse>(filters =>
-      this.buildRequest(this.specification, filters)
+      this.buildRequest(this.specification, filters),
     ).pipe(
       map(response => response.results),
-      map(results => results.map(result => result[this.specification.resultAlias()]))
+      map(results => results.map(result => result[this.specification.resultAlias()])),
     );
   }
 
@@ -45,7 +45,7 @@ export abstract class EntitiesValuesDataSourceModel extends GraphQlDataSourceMod
       properties: [specification],
       timeRange: this.getTimeRangeOrThrow(),
       filters: inheritedFilters,
-      includeInactive: this.includeInactive
+      includeInactive: this.includeInactive,
     };
   }
 }

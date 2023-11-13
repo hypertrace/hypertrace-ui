@@ -12,10 +12,10 @@ describe('Interval Select component', () => {
     declarations: [MockComponent(SelectComponent), MockComponent(SelectOptionComponent)],
     providers: [
       mockProvider(IntervalDurationService, {
-        getAutoDurationFromTimeDurations: () => new TimeDuration(3, TimeUnit.Minute)
-      })
+        getAutoDurationFromTimeDurations: () => new TimeDuration(3, TimeUnit.Minute),
+      }),
     ],
-    shallow: true
+    shallow: true,
   });
 
   const intervalOptions = [
@@ -23,7 +23,7 @@ describe('Interval Select component', () => {
     'AUTO',
     new TimeDuration(1, TimeUnit.Minute),
     new TimeDuration(5, TimeUnit.Hour),
-    new TimeDuration(2, TimeUnit.Day)
+    new TimeDuration(2, TimeUnit.Day),
   ];
   test('show disabled if disabled provided', () => {
     const spectator = buildHost(
@@ -34,9 +34,9 @@ describe('Interval Select component', () => {
         hostProps: {
           intervalOptions: intervalOptions,
           interval: 'NONE',
-          disabled: false
-        }
-      }
+          disabled: false,
+        },
+      },
     );
 
     expect(spectator.query(SelectComponent)!.disabled).toBe(false);
@@ -53,9 +53,9 @@ describe('Interval Select component', () => {
         hostProps: {
           intervalOptions: [] as IntervalValue[],
           interval: 'NONE',
-          disabled: false
-        }
-      }
+          disabled: false,
+        },
+      },
     );
     spectator.tick();
 
@@ -76,9 +76,9 @@ describe('Interval Select component', () => {
         hostProps: {
           intervalOptions: intervalOptions,
           interval: 'AUTO',
-          icon: false
-        }
-      }
+          icon: false,
+        },
+      },
     );
 
     expect(spectator.query(SelectComponent)!.icon).toBe(undefined);
@@ -94,9 +94,9 @@ describe('Interval Select component', () => {
       {
         hostProps: {
           intervalOptions: intervalOptions,
-          interval: intervalOptions[3]
-        }
-      }
+          interval: intervalOptions[3],
+        },
+      },
     );
 
     spectator.tick();
@@ -112,9 +112,9 @@ describe('Interval Select component', () => {
       {
         hostProps: {
           intervalOptions: intervalOptions,
-          interval: 'NONE'
-        }
-      }
+          interval: 'NONE',
+        },
+      },
     );
 
     const options = spectator.queryAll(SelectOptionComponent);
@@ -137,9 +137,9 @@ describe('Interval Select component', () => {
         hostProps: {
           intervalOptions: intervalOptions,
           interval: 'NONE',
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     spectator.triggerEventHandler('ht-select', 'selectedChange', new TimeDuration(1, TimeUnit.Minute));

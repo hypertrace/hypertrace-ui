@@ -17,7 +17,7 @@ export class TopologySpecificationBuilder {
       resultAlias: () => alias,
       asGraphQlSelections: () => this.asGraphQlSelections(config, alias),
       extractFromServerData: serverData => serverData[alias],
-      asGraphQlOrderByFragment: () => ({ expression: { key: '' } }) // Needed by the interface
+      asGraphQlOrderByFragment: () => ({ expression: { key: '' } }), // Needed by the interface
     };
   }
 
@@ -28,7 +28,7 @@ export class TopologySpecificationBuilder {
         alias: alias,
         arguments: [
           this.argBuilder.forNeighborType(config.neighborType),
-          ...this.argBuilder.forFilters(config.filters)
+          ...this.argBuilder.forFilters(config.filters),
         ],
         children: [
           {
@@ -36,12 +36,12 @@ export class TopologySpecificationBuilder {
             children: [
               {
                 path: 'neighbor',
-                children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(config.nodeSpecifications)]
-              }
-            ]
-          }
-        ]
-      }
+                children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(config.nodeSpecifications)],
+              },
+            ],
+          },
+        ],
+      },
     ];
   }
 }
@@ -61,5 +61,5 @@ export interface TopologyNeighborSpecResult<T = unknown> {
 
 export const enum TopologyEdgeDirection {
   Incoming = 'incomingEdges',
-  Outgoing = 'outgoingEdges'
+  Outgoing = 'outgoingEdges',
 }

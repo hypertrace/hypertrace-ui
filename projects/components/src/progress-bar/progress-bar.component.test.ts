@@ -5,14 +5,14 @@ import { ProgressBarComponent } from './progress-bar.component';
 describe('Progress Bar Component', () => {
   const createComponent = createComponentFactory({
     component: ProgressBarComponent,
-    shallow: true
+    shallow: true,
   });
 
   test('should render everything correctly', () => {
     const spectator = createComponent({
       props: {
-        progress: 40
-      }
+        progress: 40,
+      },
     });
     expect(spectator.query('.progress')).toExist();
     expect(spectator.query('.progress-bar')).toHaveStyle({ backgroundColor: Color.Gray3 });

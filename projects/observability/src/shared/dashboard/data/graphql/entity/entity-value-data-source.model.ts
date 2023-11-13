@@ -8,7 +8,7 @@ import { Specification } from '../../../../graphql/model/schema/specifier/specif
 import {
   EntityGraphQlQueryHandlerService,
   ENTITY_GQL_REQUEST,
-  GraphQlEntityRequest
+  GraphQlEntityRequest,
 } from '../../../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
@@ -17,7 +17,7 @@ export abstract class EntityValueDataSourceModel<TData, TResponse = TData> exten
 
   protected fetchSpecificationData<T = TResponse>(specification: Specification = this.specification): Observable<T> {
     return this.query<EntityGraphQlQueryHandlerService, Entity & Dictionary<T>>(filters =>
-      this.buildRequest(specification, filters)
+      this.buildRequest(specification, filters),
     ).pipe(map(response => response[specification.resultAlias()]));
   }
 
@@ -29,7 +29,7 @@ export abstract class EntityValueDataSourceModel<TData, TResponse = TData> exten
       properties: [specification],
       timeRange: this.getTimeRangeOrThrow(),
       entityType: entityFilter.type,
-      id: entityFilter.id
+      id: entityFilter.id,
     };
   }
 }

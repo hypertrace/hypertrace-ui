@@ -3,55 +3,55 @@ import { BOOLEAN_PROPERTY, Model, ModelProperty, NUMBER_PROPERTY, STRING_PROPERT
 import { kebabCase, uniqueId } from 'lodash-es';
 
 @Model({
-  type: 'topology-metric-category'
+  type: 'topology-metric-category',
 })
 export class TopologyMetricCategoryModel implements TopologyMetricCategoryData {
   @ModelProperty({
     key: 'name',
     required: true,
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public name!: string;
 
   @ModelProperty({
     key: 'minValue',
     required: true,
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public minValue!: number;
 
   @ModelProperty({
     key: 'maxValue',
     required: false,
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public maxValue?: number;
 
   @ModelProperty({
     key: 'fillColor',
     required: true,
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public fillColor!: Color;
 
   @ModelProperty({
     key: 'strokeColor',
     required: true,
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public strokeColor!: Color;
 
   @ModelProperty({
     key: 'focusColor',
     required: true,
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public focusColor!: Color;
 
   @ModelProperty({
     key: 'highestPrecedence',
     required: false,
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public highestPrecedence?: boolean = false;
 

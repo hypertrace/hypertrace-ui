@@ -8,6 +8,6 @@ import { ToggleButtonGroupComponent } from './toggle-button-group.component';
 @NgModule({
   declarations: [ToggleButtonGroupComponent, ToggleButtonComponent],
   exports: [ToggleButtonGroupComponent, ToggleButtonComponent],
-  imports: [CommonModule, IconModule, LabelModule]
+  imports: [CommonModule, IconModule, LabelModule],
 })
 export class ToggleButtonModule {}

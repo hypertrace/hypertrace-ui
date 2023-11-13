@@ -21,7 +21,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewEncapsulation
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom,
-  styleUrls: ['./skeleton.component.scss']
+  styleUrls: ['./skeleton.component.scss'],
 })
 export class SkeletonComponent implements OnChanges {
   private static readonly SKELETON_CLASS_NAME: string = 'skeleton';
@@ -73,5 +73,5 @@ export const enum SkeletonType {
   Circle = 'circle',
   TableRow = 'table-row',
   ListItem = 'list-item',
-  Donut = 'donut'
+  Donut = 'donut',
 }

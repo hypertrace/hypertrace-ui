@@ -10,7 +10,7 @@ import { MetricTimeseriesSpecificationModel } from '../../specifiers/metric-time
 import { EntityValueDataSourceModel } from '../entity-value-data-source.model';
 
 @Model({
-  type: 'entity-metric-timeseries-data-source'
+  type: 'entity-metric-timeseries-data-source',
 })
 export class EntityMetricTimeseriesDataSourceModel extends EntityValueDataSourceModel<
   MetricSeriesDataFetcher<MetricTimeseriesInterval>,
@@ -20,15 +20,15 @@ export class EntityMetricTimeseriesDataSourceModel extends EntityValueDataSource
     key: 'metric',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: MetricTimeseriesSpecificationModel
+      defaultModelClass: MetricTimeseriesSpecificationModel,
     } as ModelModelPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public readonly specification!: MetricTimeseriesSpecificationModel;
 
   public getData(): Observable<MetricSeriesDataFetcher<MetricTimeseriesInterval>> {
     return of({
-      getData: interval => this.getAllData(interval)
+      getData: interval => this.getAllData(interval),
     });
   }
 
@@ -37,8 +37,8 @@ export class EntityMetricTimeseriesDataSourceModel extends EntityValueDataSource
       map(([intervals, summary]) => ({
         intervals: intervals,
         summary: summary,
-        units: summary.units !== undefined ? summary.units : ''
-      }))
+        units: summary.units !== undefined ? summary.units : '',
+      })),
     );
   }
 
@@ -49,7 +49,7 @@ export class EntityMetricTimeseriesDataSourceModel extends EntityValueDataSource
   private getSummary(): Observable<MetricAggregation> {
     const spec = new ObservabilitySpecificationBuilder().metricAggregationSpecForKey(
       this.specification.metric,
-      this.specification.aggregation
+      this.specification.aggregation,
     );
 
     return this.fetchSpecificationData<MetricAggregation>(spec);

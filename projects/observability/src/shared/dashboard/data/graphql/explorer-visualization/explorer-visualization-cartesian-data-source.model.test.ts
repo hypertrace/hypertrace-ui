@@ -14,7 +14,7 @@ import { ExploreSpecificationBuilder } from '../../../../graphql/request/builder
 import {
   EXPLORE_GQL_REQUEST,
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
-  GraphQlExploreResponse
+  GraphQlExploreResponse,
 } from '../../../../graphql/request/handlers/explore/explore-query';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
@@ -34,8 +34,8 @@ describe('Explorer Visualization cartesian data source model', () => {
       mockProvider(GraphQlQueryEventService),
       mockProvider(ColorService, {
         getColorPalette: () => ({
-          forNColors: () => ['first color', 'second color']
-        })
+          forNColors: () => ['first color', 'second color'],
+        }),
       }),
       mockProvider(MetadataService, {
         getSpecificationDisplayName: (_: unknown, spec: ExploreSpecification) =>
@@ -50,17 +50,17 @@ describe('Explorer Visualization cartesian data source model', () => {
               scope: context,
               onlySupportsAggregation: false,
               onlySupportsGrouping: false,
-              allowedAggregations: [MetricAggregationType.Average]
-            }
-          ])
-      })
-    ]
+              allowedAggregations: [MetricAggregationType.Average],
+            },
+          ]),
+      }),
+    ],
   });
   let model: ExplorerVisualizationCartesianDataSourceModel;
 
   const getDataForQueryResponse = (
     response: GraphQlExploreResponse,
-    requestInterval?: TimeDuration
+    requestInterval?: TimeDuration,
   ): Observable<CartesianResult<ExplorerData>> => {
     model.query$.pipe(take(1)).subscribe(query => {
       query.responseObserver.next(response);
@@ -78,21 +78,21 @@ describe('Explorer Visualization cartesian data source model', () => {
       offset: 0,
       interval: partialRequest.interval as TimeDuration,
       groupBy: partialRequest.groupBy,
-      selections: partialRequest.series.map(series => series.specification)
+      selections: partialRequest.series.map(series => series.specification),
     } as const),
     resultsQuery$: EMPTY,
     resultLimit: 1000,
     series: partialRequest.series,
     groupBy: partialRequest.groupBy,
     interval: partialRequest.interval,
-    context: ObservabilityTraceType.Api
+    context: ObservabilityTraceType.Api,
   });
 
   beforeEach(() => {
     model = modelFactory(ExplorerVisualizationCartesianDataSourceModel, {
       api: {
-        getTimeRange: () => new FixedTimeRange(startTime, endTime)
-      }
+        getTimeRange: () => new FixedTimeRange(startTime, endTime),
+      },
     }).model;
   });
 
@@ -104,10 +104,10 @@ describe('Explorer Visualization cartesian data source model', () => {
         {
           specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
           visualizationOptions: {
-            type: CartesianSeriesVisualizationType.Line
-          }
-        }
-      ]
+            type: CartesianSeriesVisualizationType.Line,
+          },
+        },
+      ],
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -118,21 +118,21 @@ describe('Explorer Visualization cartesian data source model', () => {
               {
                 'sum(foo)': {
                   value: 10,
-                  type: AttributeMetadataType.Long
+                  type: AttributeMetadataType.Long,
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime,
               },
               {
                 'sum(foo)': {
                   value: 15,
-                  type: AttributeMetadataType.Long
+                  type: AttributeMetadataType.Long,
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime
-              }
-            ]
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime,
+              },
+            ],
           },
-          testInterval
-        )
+          testInterval,
+        ),
       ).toBe('(x|)', {
         x: {
           series: [
@@ -143,22 +143,22 @@ describe('Explorer Visualization cartesian data source model', () => {
               data: [
                 {
                   timestamp: startTime,
-                  value: 10
+                  value: 10,
                 },
                 {
                   timestamp: firstIntervalTime,
-                  value: 0
+                  value: 0,
                 },
                 {
                   timestamp: secondIntervalTime,
-                  value: 15
-                }
+                  value: 15,
+                },
               ],
-              groupName: 'sum(foo)'
-            }
+              groupName: 'sum(foo)',
+            },
           ],
-          bands: []
-        }
+          bands: [],
+        },
       });
     });
   });
@@ -168,16 +168,16 @@ describe('Explorer Visualization cartesian data source model', () => {
       interval: undefined,
       groupBy: {
         keyExpressions: [{ key: 'baz' }],
-        limit: 10
+        limit: 10,
       },
       series: [
         {
           specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
           visualizationOptions: {
-            type: CartesianSeriesVisualizationType.Column
-          }
-        }
-      ]
+            type: CartesianSeriesVisualizationType.Column,
+          },
+        },
+      ],
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -188,27 +188,27 @@ describe('Explorer Visualization cartesian data source model', () => {
               {
                 'sum(foo)': {
                   value: 10,
-                  type: AttributeMetadataType.Long
+                  type: AttributeMetadataType.Long,
                 },
                 baz: {
                   value: 'first',
-                  type: AttributeMetadataType.String
-                }
+                  type: AttributeMetadataType.String,
+                },
               },
               {
                 'sum(foo)': {
                   value: 15,
-                  type: AttributeMetadataType.Long
+                  type: AttributeMetadataType.Long,
                 },
                 baz: {
                   value: 'second',
-                  type: AttributeMetadataType.String
-                }
-              }
-            ]
+                  type: AttributeMetadataType.String,
+                },
+              },
+            ],
           },
-          undefined
-        )
+          undefined,
+        ),
       ).toBe('(x|)', {
         x: {
           series: [
@@ -218,13 +218,13 @@ describe('Explorer Visualization cartesian data source model', () => {
               type: CartesianSeriesVisualizationType.Column,
               data: [
                 ['first', 10],
-                ['second', 15]
+                ['second', 15],
               ],
-              groupName: 'sum(foo)'
-            }
+              groupName: 'sum(foo)',
+            },
           ],
-          bands: []
-        }
+          bands: [],
+        },
       });
     });
   });
@@ -234,16 +234,16 @@ describe('Explorer Visualization cartesian data source model', () => {
       interval: new TimeDuration(5, TimeUnit.Minute),
       groupBy: {
         keyExpressions: [{ key: 'baz' }],
-        limit: 5
+        limit: 5,
       },
       series: [
         {
           specification: new ExploreSpecificationBuilder().exploreSpecificationForKey('foo', MetricAggregationType.Sum),
           visualizationOptions: {
-            type: CartesianSeriesVisualizationType.Area
-          }
-        }
-      ]
+            type: CartesianSeriesVisualizationType.Area,
+          },
+        },
+      ],
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -254,51 +254,51 @@ describe('Explorer Visualization cartesian data source model', () => {
               {
                 'sum(foo)': {
                   value: 10,
-                  type: AttributeMetadataType.Long
+                  type: AttributeMetadataType.Long,
                 },
                 baz: {
                   value: 'first',
-                  type: AttributeMetadataType.String
+                  type: AttributeMetadataType.String,
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime,
               },
               {
                 'sum(foo)': {
                   value: 15,
-                  type: AttributeMetadataType.Long
+                  type: AttributeMetadataType.Long,
                 },
                 baz: {
                   value: 'first',
-                  type: AttributeMetadataType.String
+                  type: AttributeMetadataType.String,
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime,
               },
               {
                 'sum(foo)': {
                   value: 20,
-                  type: AttributeMetadataType.Long
+                  type: AttributeMetadataType.Long,
                 },
                 baz: {
                   value: 'second',
-                  type: AttributeMetadataType.String
+                  type: AttributeMetadataType.String,
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: startTime,
               },
               {
                 'sum(foo)': {
                   value: 25,
-                  type: AttributeMetadataType.Long
+                  type: AttributeMetadataType.Long,
                 },
                 baz: {
                   value: 'second',
-                  type: AttributeMetadataType.String
+                  type: AttributeMetadataType.String,
                 },
-                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime
-              }
-            ]
+                [GQL_EXPLORE_RESULT_INTERVAL_KEY]: secondIntervalTime,
+              },
+            ],
           },
-          testInterval
-        )
+          testInterval,
+        ),
       ).toBe('(x|)', {
         x: {
           series: [
@@ -309,18 +309,18 @@ describe('Explorer Visualization cartesian data source model', () => {
               data: [
                 {
                   timestamp: startTime,
-                  value: 10
+                  value: 10,
                 },
                 {
                   timestamp: firstIntervalTime,
-                  value: 0
+                  value: 0,
                 },
                 {
                   timestamp: secondIntervalTime,
-                  value: 15
-                }
+                  value: 15,
+                },
               ],
-              groupName: 'sum(foo)'
+              groupName: 'sum(foo)',
             },
             {
               color: 'second color',
@@ -329,22 +329,22 @@ describe('Explorer Visualization cartesian data source model', () => {
               data: [
                 {
                   timestamp: startTime,
-                  value: 20
+                  value: 20,
                 },
                 {
                   timestamp: firstIntervalTime,
-                  value: 0
+                  value: 0,
                 },
                 {
                   timestamp: secondIntervalTime,
-                  value: 25
-                }
+                  value: 25,
+                },
               ],
-              groupName: 'sum(foo)'
-            }
+              groupName: 'sum(foo)',
+            },
           ],
-          bands: []
-        }
+          bands: [],
+        },
       });
     });
   });

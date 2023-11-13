@@ -10,8 +10,8 @@ const iconsRootPath = 'assets/icons';
       { key: TracingIconType.EntrySpan, url: `${iconsRootPath}/entry-span.svg` },
       { key: TracingIconType.ExitSpan, url: `${iconsRootPath}/exit-span.svg` },
       { key: TracingIconType.InternalSpan, url: `${iconsRootPath}/internal-span.svg` },
-      { key: TracingIconType.OpenTracing, url: `${iconsRootPath}/open-tracing.svg` }
-    ])
-  ]
+      { key: TracingIconType.OpenTracing, url: `${iconsRootPath}/open-tracing.svg` },
+    ]),
+  ],
 })
 export class TracingIconLibraryModule {}

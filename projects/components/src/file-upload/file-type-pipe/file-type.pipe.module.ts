@@ -3,6 +3,6 @@ import { FileTypePipe } from './file-type.pipe';
 
 @NgModule({
   declarations: [FileTypePipe],
-  exports: [FileTypePipe]
+  exports: [FileTypePipe],
 })
 export class FileTypePipeModule {}

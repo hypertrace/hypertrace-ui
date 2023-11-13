@@ -7,6 +7,6 @@ import { BackendIconTableCellRendererComponent } from './backend-icon-table-cell
 @NgModule({
   imports: [CommonModule, IconModule, ObservabilityIconLibraryModule],
   declarations: [BackendIconTableCellRendererComponent],
-  exports: [BackendIconTableCellRendererComponent]
+  exports: [BackendIconTableCellRendererComponent],
 })
 export class BackendIconTableCellRendererModule {}

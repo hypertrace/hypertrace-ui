@@ -8,7 +8,7 @@ import {
   TopologyCoordinates,
   TopologyElementVisibility,
   TopologyNode,
-  TopologyNodeState
+  TopologyNodeState,
 } from '../../../../../components/topology/topology';
 import { D3UtilService } from '../../../../../components/utils/d3/d3-util.service';
 import { SvgUtilService } from '../../../../../components/utils/svg/svg-util.service';
@@ -42,7 +42,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     private readonly svgUtils: SvgUtilService,
     protected readonly d3Utils: D3UtilService,
     private readonly entityIconLookupService: EntityIconLookupService,
-    private readonly topologyDataSourceModelPropertiesService: TopologyDataSourceModelPropertiesService
+    private readonly topologyDataSourceModelPropertiesService: TopologyDataSourceModelPropertiesService,
   ) {}
 
   public abstract matches(node: TopologyNode & Partial<EntityNode>): node is EntityNode;
@@ -51,7 +51,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     nodeElement: SVGGElement,
     node: EntityNode,
     state: TopologyNodeState<MetricAggregationSpecification>,
-    domElementRenderer: Renderer2
+    domElementRenderer: Renderer2,
   ): void {
     this.defineDropshadowFilterIfNotExists(nodeElement, domElementRenderer);
     const nodeSelection = this.d3Utils
@@ -78,20 +78,20 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     if (this.isAnglePerpendicularlyAbove(angle)) {
       return {
         x: this.boxWidth() / 2,
-        y: 0
+        y: 0,
       };
     }
 
     if (this.isAnglePerpendicularlyBelow(angle)) {
       return {
         x: this.boxWidth() / 2,
-        y: this.boxHeight()
+        y: this.boxHeight(),
       };
     }
 
     return {
       x: this.isAngleInIVQuadrant(angle) || this.isAngleInIQuadrant(angle) ? this.boxWidth() : 0,
-      y: this.getCenterY()
+      y: this.getCenterY(),
     };
   }
 
@@ -99,7 +99,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     element: SVGGElement,
     node: EntityNode,
     state: TopologyNodeState<MetricAggregationSpecification>,
-    domElementRenderer: Renderer2
+    domElementRenderer: Renderer2,
   ): void {
     const elementSelection = this.d3Utils.select(element, domElementRenderer);
     const primaryMetricCategory = this.topologyDataSourceModelPropertiesService
@@ -122,7 +122,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   protected abstract appendNodeFeatures(
     nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
     node: EntityNode,
-    domElementRenderer: Renderer2
+    domElementRenderer: Renderer2,
   ): void;
 
   protected abstract getNodeClasses(node: EntityNode): string[];
@@ -131,7 +131,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     selection: Selection<SVGGElement, unknown, null, undefined>,
     visibility: TopologyElementVisibility,
     primaryMetric?: TopologyMetricCategoryData,
-    secondaryMetric?: TopologyMetricCategoryData
+    secondaryMetric?: TopologyMetricCategoryData,
   ): void {
     selection
       .classed(primaryMetric?.getCategoryClassName() ?? '', true)
@@ -167,7 +167,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   protected addEntityWithIcon(
     nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
     node: EntityNode,
-    domElementRenderer: Renderer2
+    domElementRenderer: Renderer2,
   ): void {
     const entity = node.data;
     this.buildIconForEntity(entity, domElementRenderer)
@@ -202,7 +202,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
     nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
     node: EntityNode,
     startX: number,
-    iconContent?: SVGElement
+    iconContent?: SVGElement,
   ): void {
     const maxWidth = this.nodeLabelWidth(startX, iconContent !== undefined);
     const truncatedText = this.getTruncatedText(this.getLabelForNode(node), maxWidth);
@@ -237,7 +237,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
   private appendEntityIcon(
     nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
     startX: number,
-    iconContent: SVGElement
+    iconContent: SVGElement,
   ): void {
     nodeSelection
       .append('g')
@@ -255,7 +255,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
       .classed('entity-health', true)
       .attr(
         'transform',
-        `translate(${this.metricCategoryStartX()}, ${(this.boxHeight() - this.metricHealthHeight()) / 2})`
+        `translate(${this.metricCategoryStartX()}, ${(this.boxHeight() - this.metricHealthHeight()) / 2})`,
       );
 
     healthSelection
@@ -400,7 +400,7 @@ export abstract class EntityNodeBoxRendererService implements TopologyNodeRender
       element,
       this.dropshadowFilterId,
       domElementRenderer,
-      'lightgray'
+      'lightgray',
     );
   }
 

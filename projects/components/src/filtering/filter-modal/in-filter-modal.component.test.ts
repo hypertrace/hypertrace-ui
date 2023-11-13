@@ -13,14 +13,14 @@ describe('In Filter Modal component', () => {
       name: 'duration',
       displayName: 'Latency',
       units: 'ms',
-      type: FilterAttributeType.Number
+      type: FilterAttributeType.Number,
     },
     {
       name: 'apiName',
       displayName: 'API Name',
       units: '',
-      type: FilterAttributeType.String
-    }
+      type: FilterAttributeType.String,
+    },
   ];
 
   const createHost = createHostFactory({
@@ -31,28 +31,28 @@ describe('In Filter Modal component', () => {
       {
         provide: ModalRef,
         useFactory: () => ({
-          close: jest.fn()
-        })
+          close: jest.fn(),
+        }),
       },
       {
         provide: MODAL_DATA,
         useValue: {
           metadata: attributes,
           attribute: attributes[0],
-          values: [2, 5, 8]
-        }
+          values: [2, 5, 8],
+        },
       },
       mockProvider(FilterUrlService, {
-        getUrlFilters: () => [{ field: attributes[0].name, operator: 'IN', value: [5, 8] }]
+        getUrlFilters: () => [{ field: attributes[0].name, operator: 'IN', value: [5, 8] }],
       }),
       mockProvider(FilterBuilderLookupService, {
-        lookup: () => new NumberFilterBuilder()
-      })
+        lookup: () => new NumberFilterBuilder(),
+      }),
     ],
     declarations: [],
     template: `
       <ht-in-filter-modal></ht-in-filter-modal>
-    `
+    `,
   });
 
   test('should apply selected attributes on popover close', () => {
@@ -64,8 +64,8 @@ describe('In Filter Modal component', () => {
     expect(spectator.inject(FilterUrlService).addUrlFilter).toHaveBeenCalledWith(
       attributes,
       expect.objectContaining({
-        value: [2, 5, 8]
-      })
+        value: [2, 5, 8],
+      }),
     );
   });
 
@@ -82,8 +82,8 @@ describe('In Filter Modal component', () => {
     expect(spectator.inject(FilterUrlService).addUrlFilter).toHaveBeenCalledWith(
       attributes,
       expect.objectContaining({
-        value: [2, 8]
-      })
+        value: [2, 8],
+      }),
     );
   });
 

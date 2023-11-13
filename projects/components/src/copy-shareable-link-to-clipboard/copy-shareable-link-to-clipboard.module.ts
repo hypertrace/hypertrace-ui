@@ -7,6 +7,6 @@ import { CopyShareableLinkToClipboardComponent } from './copy-shareable-link-to-
 @NgModule({
   imports: [CommonModule, CopyToClipboardModule, TooltipModule],
   declarations: [CopyShareableLinkToClipboardComponent],
-  exports: [CopyShareableLinkToClipboardComponent]
+  exports: [CopyShareableLinkToClipboardComponent],
 })
 export class CopyShareableLinkToClipboardModule {}

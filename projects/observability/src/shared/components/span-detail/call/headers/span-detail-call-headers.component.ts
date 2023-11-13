@@ -40,7 +40,7 @@ import { MetadataService } from '../../../../services/metadata/metadata.service'
         </ng-container>
       </div>
     </div>
-  `
+  `,
 })
 export class SpanDetailCallHeadersComponent implements OnChanges {
   @Input()
@@ -80,9 +80,9 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
           metadata.map(attributeMetadata => ({
             name: attributeMetadata.name,
             displayName: attributeMetadata.displayName,
-            type: toFilterAttributeType(attributeMetadata.type)
-          }))
-        )
+            type: toFilterAttributeType(attributeMetadata.type),
+          })),
+        ),
       );
     }
   }
@@ -99,8 +99,8 @@ export class SpanDetailCallHeadersComponent implements OnChanges {
           .sort((key1, key2) => key1.localeCompare(key2))
           .map(key => ({
             key: key,
-            value: this.data![key] as string | number
-          }))
+            value: this.data![key] as string | number,
+          })),
       );
     }
   }

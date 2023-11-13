@@ -20,7 +20,7 @@ import { PercentileLatencyMetricValueCategory } from '../../../graphql/model/sch
 import { ObservabilitySpecificationBuilder } from '../../../graphql/request/builders/selections/observability-specification-builder';
 import {
   EntityEdge,
-  EntityNode
+  EntityNode,
 } from '../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 import { ObservabilityIconLibraryModule } from '../../../icons/observability-icon-library.module';
 import { ObservabilityIconType } from '../../../icons/observability-icon-type';
@@ -42,7 +42,7 @@ describe('Topology Widget renderer', () => {
     fillColor: Color,
     strokeColor: Color,
     focusColor: Color,
-    maxValue?: number
+    maxValue?: number,
   ): TopologyMetricCategoryModel => {
     const categoryModel = new TopologyMetricCategoryModel();
     categoryModel.name = name;
@@ -67,7 +67,7 @@ describe('Topology Widget renderer', () => {
 
   const createMetricWithCategory = (
     spec: MetricAggregationSpecificationModel,
-    categories: TopologyMetricCategoryModel[]
+    categories: TopologyMetricCategoryModel[],
   ) => {
     const model = new TopologyMetricWithCategoryModel();
     model.specification = spec;
@@ -79,18 +79,18 @@ describe('Topology Widget renderer', () => {
   const createTopologyMetricsModel = (prefix: string) => {
     const primary = createMetricWithCategory(
       createSpecificationModel(`${prefix}-metric-1`, MetricAggregationType.Average),
-      [createCategoryModel(`${prefix}-first-1`, 0, Color.Blue2, Color.Blue3, Color.Blue4, 10)]
+      [createCategoryModel(`${prefix}-first-1`, 0, Color.Blue2, Color.Blue3, Color.Blue4, 10)],
     );
 
     const secondary = createMetricWithCategory(
       createSpecificationModel(`${prefix}-metric-2`, MetricAggregationType.Average),
-      [createCategoryModel(`${prefix}-first-2`, 0, Color.Blue2, Color.Blue3, Color.Blue4, 10)]
+      [createCategoryModel(`${prefix}-first-2`, 0, Color.Blue2, Color.Blue3, Color.Blue4, 10)],
     );
 
     const others = [
       createMetricWithCategory(createSpecificationModel(`${prefix}-metric-3`, MetricAggregationType.Average), [
-        createCategoryModel(`${prefix}-others-2`, 0, Color.Blue2, Color.Blue3, Color.Blue4, 10)
-      ])
+        createCategoryModel(`${prefix}-others-2`, 0, Color.Blue2, Color.Blue3, Color.Blue4, 10),
+      ]),
     ];
 
     const metricsModel: TopologyMetricsModel = new TopologyMetricsModel();
@@ -104,7 +104,7 @@ describe('Topology Widget renderer', () => {
   const findNodeWithTypeAndName = (
     spectator: Spectator<unknown>,
     type: ObservabilityEntityType,
-    name: string
+    name: string,
   ): Element => {
     const dataGElement = spectator.element.querySelector('.topology-data')!;
     const node = Array.from(dataGElement.querySelectorAll(selector(type.toLowerCase()))).find(element => {
@@ -132,7 +132,7 @@ describe('Topology Widget renderer', () => {
     [
       metricsModel.primary.specification,
       metricsModel.secondary?.specification ?? [],
-      (metricsModel.others ?? []).map(model => model.specification)
+      (metricsModel.others ?? []).map(model => model.specification),
     ].flat();
 
   const nodeMetrics = createTopologyMetricsModel('topo');
@@ -140,10 +140,10 @@ describe('Topology Widget renderer', () => {
 
   const nodeSpec = {
     titleSpecification: specBuilder.attributeSpecificationForKey('name'),
-    metricSpecifications: getSpecifications(nodeMetrics)
+    metricSpecifications: getSpecifications(nodeMetrics),
   };
   const edgeSpec = {
-    metricSpecifications: getSpecifications(edgeMetrics)
+    metricSpecifications: getSpecifications(edgeMetrics),
   };
 
   const mockModel = {
@@ -154,10 +154,10 @@ describe('Topology Widget renderer', () => {
         edgeSpecification: edgeSpec,
         nodeTypes: uniq(mockResponse.map(node => node.data[entityTypeKey])),
         nodeMetrics: nodeMetrics,
-        edgeMetrics: edgeMetrics
-      })
+        edgeMetrics: edgeMetrics,
+      }),
     ),
-    showLegend: true
+    showLegend: true,
   };
 
   const createComponent = createComponentFactory<TopologyWidgetRendererComponent>({
@@ -169,9 +169,9 @@ describe('Topology Widget renderer', () => {
           x: 0,
           y: 0,
           width: 0,
-          height: 0
+          height: 0,
         }),
-        getComputedTextLength: () => 0
+        getComputedTextLength: () => 0,
       }),
       {
         provide: ENTITY_METADATA,
@@ -181,8 +181,8 @@ describe('Topology Widget renderer', () => {
             {
               entityType: ObservabilityEntityType.Api,
               icon: ObservabilityIconType.Api,
-              detailPath: (id: string) => ['application', 'api', id]
-            }
+              detailPath: (id: string) => ['application', 'api', id],
+            },
           ],
           [
             ObservabilityEntityType.Service,
@@ -190,8 +190,8 @@ describe('Topology Widget renderer', () => {
               entityType: ObservabilityEntityType.Service,
               icon: ObservabilityIconType.Service,
               detailPath: (id: string) => ['services', 'service', id],
-              listPath: ['services']
-            }
+              listPath: ['services'],
+            },
           ],
           [
             ObservabilityEntityType.Backend,
@@ -199,14 +199,14 @@ describe('Topology Widget renderer', () => {
               entityType: ObservabilityEntityType.Backend,
               icon: ObservabilityIconType.Backend,
               detailPath: (id: string) => ['backends', 'backend', id],
-              listPath: ['backends']
-            }
-          ]
-        ])
-      }
+              listPath: ['backends'],
+            },
+          ],
+        ]),
+      },
     ],
     declareComponent: false,
-    imports: [TopologyWidgetModule, ObservabilityIconLibraryModule, HttpClientTestingModule, IconLibraryTestingModule]
+    imports: [TopologyWidgetModule, ObservabilityIconLibraryModule, HttpClientTestingModule, IconLibraryTestingModule],
   });
 
   beforeEach(() => {
@@ -229,10 +229,10 @@ describe('Topology Widget renderer', () => {
           name: 'Service 1',
           'avg(topo-metric-1)': {
             value: 123,
-            health: MetricHealth.Healthy
-          }
+            health: MetricHealth.Healthy,
+          },
         },
-        specification: nodeSpec
+        specification: nodeSpec,
       },
       {
         edges: [],
@@ -242,10 +242,10 @@ describe('Topology Widget renderer', () => {
           name: 'Api 2',
           'avg(topo-metric-1)': {
             value: 456,
-            health: MetricHealth.Warning
-          }
+            health: MetricHealth.Warning,
+          },
         },
-        specification: nodeSpec
+        specification: nodeSpec,
       },
       {
         edges: [],
@@ -255,11 +255,11 @@ describe('Topology Widget renderer', () => {
           name: 'Backend 3',
           'avg(topo-metric-3)': {
             value: 456,
-            health: MetricHealth.Warning
-          }
+            health: MetricHealth.Warning,
+          },
         },
-        specification: nodeSpec
-      }
+        specification: nodeSpec,
+      },
     ];
     const spectator = createComponent();
 
@@ -291,23 +291,23 @@ describe('Topology Widget renderer', () => {
           'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
-            category: PercentileLatencyMetricValueCategory.From100To500
+            category: PercentileLatencyMetricValueCategory.From100To500,
           },
           'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
-            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
           },
           'avg(topo-metric-3)': {
             value: 345,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'max(metric2)': {
             value: 456,
-            health: MetricHealth.NotSpecified
-          }
+            health: MetricHealth.NotSpecified,
+          },
         },
-        specification: nodeSpec
+        specification: nodeSpec,
       },
       {
         edges: [],
@@ -317,24 +317,24 @@ describe('Topology Widget renderer', () => {
           name: 'Service 2',
           'avg(topo-metric-1)': {
             value: 123,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
-            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
           },
           'avg(topo-metric-3)': {
             value: 345,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'max(metric2)': {
             value: 456,
-            health: MetricHealth.NotSpecified
-          }
+            health: MetricHealth.NotSpecified,
+          },
         },
-        specification: nodeSpec
-      }
+        specification: nodeSpec,
+      },
     ];
 
     const edge: EntityEdge = {
@@ -343,23 +343,23 @@ describe('Topology Widget renderer', () => {
       data: {
         'avg(topo-metric-1)': {
           value: 123,
-          health: MetricHealth.NotSpecified
+          health: MetricHealth.NotSpecified,
         },
         'avg(topo-metric-2)': {
           value: 234,
           health: MetricHealth.NotSpecified,
-          category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+          category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
         },
         'avg(topo-metric-3)': {
           value: 345,
-          health: MetricHealth.NotSpecified
+          health: MetricHealth.NotSpecified,
         },
         'min(metric4)': {
           value: 456,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
-      specification: edgeSpec
+      specification: edgeSpec,
     };
     mockResponse[0].edges.push(edge);
     mockResponse[1].edges.push(edge);
@@ -387,23 +387,23 @@ describe('Topology Widget renderer', () => {
           'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
-            category: PercentileLatencyMetricValueCategory.From100To500
+            category: PercentileLatencyMetricValueCategory.From100To500,
           },
           'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
-            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
           },
           'avg(topo-metric-3)': {
             value: 345,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'max(metric2)': {
             value: 456,
-            health: MetricHealth.NotSpecified
-          }
+            health: MetricHealth.NotSpecified,
+          },
         },
-        specification: nodeSpec
+        specification: nodeSpec,
       },
       {
         edges: [],
@@ -414,23 +414,23 @@ describe('Topology Widget renderer', () => {
           'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
-            category: PercentileLatencyMetricValueCategory.From100To500
+            category: PercentileLatencyMetricValueCategory.From100To500,
           },
           'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
-            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
           },
           'avg(topo-metric-3)': {
             value: 345,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'max(metric2)': {
             value: 456,
-            health: MetricHealth.NotSpecified
-          }
+            health: MetricHealth.NotSpecified,
+          },
         },
-        specification: nodeSpec
+        specification: nodeSpec,
       },
       {
         edges: [],
@@ -441,24 +441,24 @@ describe('Topology Widget renderer', () => {
           'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
-            category: PercentileLatencyMetricValueCategory.From100To500
+            category: PercentileLatencyMetricValueCategory.From100To500,
           },
           'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
-            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
           },
           'avg(topo-metric-3)': {
             value: 345,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'avg(metric2)': {
             value: 456,
-            health: MetricHealth.NotSpecified
-          }
+            health: MetricHealth.NotSpecified,
+          },
         },
-        specification: nodeSpec
-      }
+        specification: nodeSpec,
+      },
     ];
 
     const edge0To1: EntityEdge = {
@@ -467,23 +467,23 @@ describe('Topology Widget renderer', () => {
       data: {
         'avg(topo-metric-1)': {
           value: 0,
-          health: MetricHealth.NotSpecified
+          health: MetricHealth.NotSpecified,
         },
         'avg(topo-metric-2)': {
           value: 234,
           health: MetricHealth.NotSpecified,
-          category: ErrorPercentageMetricValueCategory.LessThan5
+          category: ErrorPercentageMetricValueCategory.LessThan5,
         },
         'avg(topo-metric-3)': {
           value: 345,
-          health: MetricHealth.NotSpecified
+          health: MetricHealth.NotSpecified,
         },
         'min(metric4)': {
           value: 456,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
-      specification: edgeSpec
+      specification: edgeSpec,
     };
     mockResponse[0].edges.push(edge0To1);
     mockResponse[1].edges.push(edge0To1);
@@ -494,23 +494,23 @@ describe('Topology Widget renderer', () => {
       data: {
         'avg(topo-metric-1)': {
           value: 1,
-          health: MetricHealth.NotSpecified
+          health: MetricHealth.NotSpecified,
         },
         'avg(topo-metric-2)': {
           value: 234,
           health: MetricHealth.NotSpecified,
-          category: ErrorPercentageMetricValueCategory.LessThan5
+          category: ErrorPercentageMetricValueCategory.LessThan5,
         },
         'avg(topo-metric-3)': {
           value: 345,
-          health: MetricHealth.NotSpecified
+          health: MetricHealth.NotSpecified,
         },
         'min(metric4)': {
           value: 456,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
-      specification: edgeSpec
+      specification: edgeSpec,
     };
 
     mockResponse[1].edges.push(edge1To2);
@@ -567,23 +567,23 @@ describe('Topology Widget renderer', () => {
           'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
-            category: PercentileLatencyMetricValueCategory.From100To500
+            category: PercentileLatencyMetricValueCategory.From100To500,
           },
           'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
-            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
           },
           'avg(topo-metric-3)': {
             value: 345,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'max(metric2)': {
             value: 456,
-            health: MetricHealth.NotSpecified
-          }
+            health: MetricHealth.NotSpecified,
+          },
         },
-        specification: nodeSpec
+        specification: nodeSpec,
       },
       {
         edges: [],
@@ -594,23 +594,23 @@ describe('Topology Widget renderer', () => {
           'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
-            category: PercentileLatencyMetricValueCategory.From100To500
+            category: PercentileLatencyMetricValueCategory.From100To500,
           },
           'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
-            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
           },
           'avg(topo-metric-3)': {
             value: 345,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'max(metric2)': {
             value: 456,
-            health: MetricHealth.NotSpecified
-          }
+            health: MetricHealth.NotSpecified,
+          },
         },
-        specification: nodeSpec
+        specification: nodeSpec,
       },
       {
         edges: [],
@@ -621,24 +621,24 @@ describe('Topology Widget renderer', () => {
           'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
-            category: PercentileLatencyMetricValueCategory.From100To500
+            category: PercentileLatencyMetricValueCategory.From100To500,
           },
           'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
-            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
           },
           'avg(topo-metric-3)': {
             value: 345,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'avg(metric2)': {
             value: 456,
-            health: MetricHealth.NotSpecified
-          }
+            health: MetricHealth.NotSpecified,
+          },
         },
-        specification: nodeSpec
-      }
+        specification: nodeSpec,
+      },
     ];
 
     const edge0To1: EntityEdge = {
@@ -647,23 +647,23 @@ describe('Topology Widget renderer', () => {
       data: {
         'avg(topo-metric-1)': {
           value: 0,
-          health: MetricHealth.NotSpecified
+          health: MetricHealth.NotSpecified,
         },
         'avg(topo-metric-2)': {
           value: 234,
           health: MetricHealth.NotSpecified,
-          category: ErrorPercentageMetricValueCategory.LessThan5
+          category: ErrorPercentageMetricValueCategory.LessThan5,
         },
         'avg(topo-metric-3)': {
           value: 345,
-          health: MetricHealth.NotSpecified
+          health: MetricHealth.NotSpecified,
         },
         'min(metric4)': {
           value: 456,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
-      specification: edgeSpec
+      specification: edgeSpec,
     };
     mockResponse[0].edges.push(edge0To1);
     mockResponse[1].edges.push(edge0To1);
@@ -674,23 +674,23 @@ describe('Topology Widget renderer', () => {
       data: {
         'avg(topo-metric-1)': {
           value: 1,
-          health: MetricHealth.NotSpecified
+          health: MetricHealth.NotSpecified,
         },
         'avg(topo-metric-2)': {
           value: 234,
           health: MetricHealth.NotSpecified,
-          category: ErrorPercentageMetricValueCategory.LessThan5
+          category: ErrorPercentageMetricValueCategory.LessThan5,
         },
         'avg(topo-metric-3)': {
           value: 345,
-          health: MetricHealth.NotSpecified
+          health: MetricHealth.NotSpecified,
         },
         'min(metric4)': {
           value: 456,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
-      specification: edgeSpec
+      specification: edgeSpec,
     };
 
     mockResponse[1].edges.push(edge1To2);
@@ -710,7 +710,7 @@ describe('Topology Widget renderer', () => {
 
     expect(container).toHaveDescendantWithText({
       selector: '.tooltip-title',
-      text: 'Service 1'
+      text: 'Service 1',
     });
     let metricRowElements = container.querySelectorAll('.metric-row');
 
@@ -733,7 +733,7 @@ describe('Topology Widget renderer', () => {
     expect(container).toExist();
     expect(container).toHaveDescendantWithText({
       selector: '.tooltip-title',
-      text: `Service 1Service 2`
+      text: `Service 1Service 2`,
     });
     metricRowElements = container.querySelectorAll('.metric-row');
     expect(metricRowElements[0].querySelector('.metric-label')).toContainText('Topo-metric-1');
@@ -757,23 +757,23 @@ describe('Topology Widget renderer', () => {
           'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
-            category: PercentileLatencyMetricValueCategory.From100To500
+            category: PercentileLatencyMetricValueCategory.From100To500,
           },
           'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
-            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
           },
           'avg(topo-metric-3)': {
             value: 345,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'max(metric2)': {
             value: 456,
-            health: MetricHealth.NotSpecified
-          }
+            health: MetricHealth.NotSpecified,
+          },
         },
-        specification: nodeSpec
+        specification: nodeSpec,
       },
       {
         edges: [],
@@ -783,24 +783,24 @@ describe('Topology Widget renderer', () => {
           name: 'Service 2',
           'avg(topo-metric-1)': {
             value: 123,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
-            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
           },
           'avg(topo-metric-3)': {
             value: 345,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'max(metric2)': {
             value: 456,
-            health: MetricHealth.NotSpecified
-          }
+            health: MetricHealth.NotSpecified,
+          },
         },
-        specification: nodeSpec
-      }
+        specification: nodeSpec,
+      },
     ];
 
     const edge: EntityEdge = {
@@ -809,23 +809,23 @@ describe('Topology Widget renderer', () => {
       data: {
         'avg(topo-metric-1)': {
           value: 123,
-          health: MetricHealth.NotSpecified
+          health: MetricHealth.NotSpecified,
         },
         'avg(topo-metric-2)': {
           value: 234,
           health: MetricHealth.NotSpecified,
-          category: ErrorPercentageMetricValueCategory.LessThan5
+          category: ErrorPercentageMetricValueCategory.LessThan5,
         },
         'avg(topo-metric-3)': {
           value: 345,
-          health: MetricHealth.NotSpecified
+          health: MetricHealth.NotSpecified,
         },
         'min(metric4)': {
           value: 456,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
-      specification: edgeSpec
+      specification: edgeSpec,
     };
     mockResponse[0].edges.push(edge);
     mockResponse[1].edges.push(edge);
@@ -873,23 +873,23 @@ describe('Topology Widget renderer', () => {
           'avg(topo-metric-1)': {
             value: 123,
             health: MetricHealth.NotSpecified,
-            category: PercentileLatencyMetricValueCategory.From100To500
+            category: PercentileLatencyMetricValueCategory.From100To500,
           },
           'avg(topo-metric-2)': {
             value: 234,
             health: MetricHealth.NotSpecified,
-            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
           },
           'avg(topo-metric-3)': {
             value: 345,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'max(metric2)': {
             value: 456,
-            health: MetricHealth.NotSpecified
-          }
+            health: MetricHealth.NotSpecified,
+          },
         },
-        specification: nodeSpec
+        specification: nodeSpec,
       },
       {
         edges: [],
@@ -900,24 +900,24 @@ describe('Topology Widget renderer', () => {
           'avg(topo-metric-1)': {
             value: 234,
             health: MetricHealth.NotSpecified,
-            category: PercentileLatencyMetricValueCategory.From100To500
+            category: PercentileLatencyMetricValueCategory.From100To500,
           },
           'avg(topo-metric-2)': {
             value: 456,
             health: MetricHealth.NotSpecified,
-            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5
+            category: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
           },
           'avg(topo-metric-3)': {
             value: 567,
-            health: MetricHealth.NotSpecified
+            health: MetricHealth.NotSpecified,
           },
           'max(metric2)': {
             value: 789,
-            health: MetricHealth.NotSpecified
-          }
+            health: MetricHealth.NotSpecified,
+          },
         },
-        specification: nodeSpec
-      }
+        specification: nodeSpec,
+      },
     ];
 
     const spectator = createComponent();
@@ -936,10 +936,10 @@ describe('Topology Widget renderer', () => {
           name: 'Service 1',
           'avg(metric1)': {
             value: 123,
-            health: MetricHealth.Healthy
-          }
+            health: MetricHealth.Healthy,
+          },
         },
-        specification: nodeSpec
+        specification: nodeSpec,
       },
       {
         edges: [],
@@ -949,11 +949,11 @@ describe('Topology Widget renderer', () => {
           name: 'Service 2',
           'avg(metric1)': {
             value: 456,
-            health: MetricHealth.Warning
-          }
+            health: MetricHealth.Warning,
+          },
         },
-        specification: nodeSpec
-      }
+        specification: nodeSpec,
+      },
     ];
 
     const edge: EntityEdge = {
@@ -962,10 +962,10 @@ describe('Topology Widget renderer', () => {
       data: {
         'sum(metric3)': {
           value: 789,
-          health: MetricHealth.Critical
-        }
+          health: MetricHealth.Critical,
+        },
       },
-      specification: edgeSpec
+      specification: edgeSpec,
     };
     mockResponse[0].edges.push(edge);
     mockResponse[1].edges.push(edge);
@@ -992,11 +992,11 @@ describe('Topology Widget renderer', () => {
           name: 'Backend 1',
           'avg(metric1)': {
             value: 789,
-            health: MetricHealth.Critical
-          }
+            health: MetricHealth.Critical,
+          },
         },
-        specification: nodeSpec
-      }
+        specification: nodeSpec,
+      },
     ];
     const spectator = createComponent();
     const nodeRendererDestroySpy = jest.spyOn(spectator.inject(TopologyNodeRendererService, true), 'destroyNode');
@@ -1009,8 +1009,8 @@ describe('Topology Widget renderer', () => {
     spectator.fixture.destroy();
     expect(nodeRendererDestroySpy).toHaveBeenCalledWith(
       expect.objectContaining({
-        userNode: mockResponse[0]
-      })
+        userNode: mockResponse[0],
+      }),
     );
     expect(backendRendererDestroySpy).toHaveBeenCalledWith(mockResponse[0]);
   }));
@@ -1026,11 +1026,11 @@ describe('Topology Widget renderer', () => {
           protocol: 'mysql',
           'avg(metric1)': {
             value: 789,
-            health: MetricHealth.Critical
-          }
+            health: MetricHealth.Critical,
+          },
         },
-        specification: nodeSpec
-      }
+        specification: nodeSpec,
+      },
     ];
     const spectator = createComponent({});
     const spy = jest.spyOn(spectator.inject(IconRegistryService), 'getIconRenderInfo');
@@ -1038,13 +1038,13 @@ describe('Topology Widget renderer', () => {
       iconRenderType: 'ligature',
       ligatureText: 'test',
       label: 'test',
-      fontSet: 'material-icons-outlined'
+      fontSet: 'material-icons-outlined',
     });
 
     spectator.tick();
 
     expect(
-      findNodeWithTypeAndName(spectator, ObservabilityEntityType.Backend, 'Backend 1').querySelector('.node-icon')
+      findNodeWithTypeAndName(spectator, ObservabilityEntityType.Backend, 'Backend 1').querySelector('.node-icon'),
     ).toExist();
 
     expect(spy).toHaveBeenCalledWith(ObservabilityIconType.Backend);
@@ -1061,11 +1061,11 @@ describe('Topology Widget renderer', () => {
           protocol: 'mysql',
           'avg(metric1)': {
             value: 789,
-            health: MetricHealth.Critical
-          }
+            health: MetricHealth.Critical,
+          },
         },
-        specification: nodeSpec
-      }
+        specification: nodeSpec,
+      },
     ];
 
     const spectator = createComponent({});

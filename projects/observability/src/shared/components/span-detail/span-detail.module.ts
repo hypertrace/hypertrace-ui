@@ -11,7 +11,7 @@ import {
   TabModule,
   ToggleButtonModule,
   ToggleGroupModule,
-  TooltipModule
+  TooltipModule,
 } from '@hypertrace/components';
 import { LogEventsTableModule } from '../log-events/log-events-table.module';
 import { SpanExitCallsModule } from './exit-calls/span-exit-calls.module';
@@ -40,9 +40,9 @@ import { SpanTagsDetailModule } from './tags/span-tags-detail.module';
     SpanExitCallsModule,
     LogEventsTableModule,
     ToggleGroupModule,
-    MessageDisplayModule
+    MessageDisplayModule,
   ],
   declarations: [SpanDetailComponent],
-  exports: [SpanDetailComponent]
+  exports: [SpanDetailComponent],
 })
 export class SpanDetailModule {}

@@ -2,7 +2,7 @@ import { bisector, Bisector } from 'd3-array';
 import {
   MouseDataLookupStrategy,
   MouseLocationData,
-  RelativeMouseLocation
+  RelativeMouseLocation,
 } from '../../../../utils/mouse-tracking/mouse-tracking';
 import { AxisType } from '../../../chart';
 import { AnyCartesianScale } from '../../scale/cartesian-scale-builder';
@@ -17,14 +17,14 @@ export class SingleAxisDataLookupStrategy<TData, TContext> implements MouseDataL
     private readonly xScale: AnyCartesianScale<TData>,
     private readonly yScale: AnyCartesianScale<TData>,
     private readonly searchRadius: number = Infinity,
-    private readonly axisType: AxisType = AxisType.X
+    private readonly axisType: AxisType = AxisType.X,
   ) {
     this.locationBisector = bisector(dataPoint => this.getRangeValueFromLocation(dataPoint.location));
 
     this.locationData = data.map(dataPoint => ({
       dataPoint: dataPoint,
       context: context,
-      location: this.dataToLocationCoordinates(dataPoint)
+      location: this.dataToLocationCoordinates(dataPoint),
     }));
   }
 
@@ -42,7 +42,7 @@ export class SingleAxisDataLookupStrategy<TData, TContext> implements MouseDataL
   private dataToLocationCoordinates(data: TData): RelativeMouseLocation {
     return {
       x: this.xScale.transformToTooltipAnchor(data),
-      y: this.yScale.transformToTooltipAnchor(data)
+      y: this.yScale.transformToTooltipAnchor(data),
     };
   }
 

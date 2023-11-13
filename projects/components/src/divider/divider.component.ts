@@ -4,6 +4,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'ht-divider',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./divider.component.scss'],
-  template: ` <div class="divider"></div> `
+  template: ` <div class="divider"></div> `,
 })
 export class DividerComponent {}

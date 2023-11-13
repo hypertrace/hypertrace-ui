@@ -14,7 +14,7 @@ import { PredefinedTimeDurationService } from './predefined-time-duration.servic
         {{ time.toRelativeString() }}
       </div>
     </div>
-  `
+  `,
 })
 export class PredefinedTimeRangeSelectionComponent {
   @Output()

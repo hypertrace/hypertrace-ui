@@ -19,7 +19,7 @@ export const enum FilterOperator {
   NotIn = 'NOT_IN',
   ContainsKey = 'CONTAINS_KEY',
   NotContainsKey = 'NOT_CONTAINS_KEY',
-  ContainsKeyLike = 'CONTAINS_KEY_LIKE'
+  ContainsKeyLike = 'CONTAINS_KEY_LIKE',
 }
 
 export const enum UrlFilterOperator {
@@ -35,7 +35,7 @@ export const enum UrlFilterOperator {
   NotIn = '_nin_',
   ContainsKey = '_ck_',
   NotContainsKey = '_nck_',
-  ContainsKeyLike = '_ckl_'
+  ContainsKeyLike = '_ckl_',
 }
 
 export const toUrlFilterOperator = (operator: FilterOperator): UrlFilterOperator => {
@@ -121,7 +121,7 @@ export const incompatibleOperators = (operator: FilterOperator): FilterOperator[
         FilterOperator.Like,
         FilterOperator.Contains,
         FilterOperator.ContainsKey,
-        FilterOperator.NotContainsKey
+        FilterOperator.NotContainsKey,
       ];
     case FilterOperator.Contains:
     case FilterOperator.ContainsKey:
@@ -137,7 +137,7 @@ export const incompatibleOperators = (operator: FilterOperator): FilterOperator[
         FilterOperator.NotIn,
         FilterOperator.Equals,
         FilterOperator.LessThan,
-        FilterOperator.LessThanOrEqualTo
+        FilterOperator.LessThanOrEqualTo,
       ];
     case FilterOperator.GreaterThan:
     case FilterOperator.GreaterThanOrEqualTo:
@@ -146,7 +146,7 @@ export const incompatibleOperators = (operator: FilterOperator): FilterOperator[
         FilterOperator.NotIn,
         FilterOperator.Equals,
         FilterOperator.GreaterThan,
-        FilterOperator.GreaterThanOrEqualTo
+        FilterOperator.GreaterThanOrEqualTo,
       ];
     default:
       assertUnreachable(operator);

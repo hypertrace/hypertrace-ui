@@ -10,8 +10,8 @@ import { ConditionalModel } from './conditional.model';
     CommonModule,
     DashboardCoreModule.with({
       models: [ConditionalModel],
-      renderers: [ConditionalWidgetRendererComponent]
-    })
-  ]
+      renderers: [ConditionalWidgetRendererComponent],
+    }),
+  ],
 })
 export class ConditionalWidgetModule {}

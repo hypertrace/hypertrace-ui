@@ -12,6 +12,6 @@ import { PopoverService } from './popover.service';
   providers: [PopoverService, PopoverPositionBuilder],
   declarations: [PopoverComponent, PopoverContainerComponent, PopoverContentComponent, PopoverTriggerComponent],
   exports: [PopoverComponent, PopoverContentComponent, PopoverTriggerComponent],
-  imports: [OverlayModule, CommonModule]
+  imports: [OverlayModule, CommonModule],
 })
 export class PopoverModule {}

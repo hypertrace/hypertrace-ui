@@ -34,7 +34,7 @@ export class GraphQlRequestBuilder {
         const requestString = `{ ${this.translateRequestFragmentToGql(key, this.mergedRequest[key])} }`;
 
         return [selection, requestString];
-      })
+      }),
     );
   }
 
@@ -62,7 +62,7 @@ export class GraphQlRequestBuilder {
 
   private convertSelectToRequestFragment(
     select: GraphQlSelection,
-    destinationContainer: MergedRequestFragment
+    destinationContainer: MergedRequestFragment,
   ): MergedRequestFragment {
     const fieldName = select.path;
     const providedKey = isEmpty(select.alias) ? fieldName : select.alias!;
@@ -78,7 +78,7 @@ export class GraphQlRequestBuilder {
 
     const mergedChildFragment = (select.children || []).reduce(
       (container, child) => merge(container, this.convertSelectToRequestFragment(child, childDestinationContainer)),
-      childDestinationContainer
+      childDestinationContainer,
     );
 
     if (missingParentSelection) {
@@ -91,8 +91,8 @@ export class GraphQlRequestBuilder {
       [resolvedKey]: {
         argMap: argumentMap,
         fieldName: fieldName,
-        childFragment: mergedChildFragment
-      }
+        childFragment: mergedChildFragment,
+      },
     };
   }
 
@@ -103,9 +103,9 @@ export class GraphQlRequestBuilder {
           argMap,
           { [nextArg.name]: nextArg },
           // Modify merge behavior to combine arrays if both are array. Otherwise, use default behavior
-          (target, source) => (Array.isArray(target) && Array.isArray(source) ? target.concat(source) : undefined)
+          (target, source) => (Array.isArray(target) && Array.isArray(source) ? target.concat(source) : undefined),
         ),
-      {}
+      {},
     );
   }
 
@@ -154,7 +154,7 @@ export class GraphQlRequestBuilder {
   private areFragmentsMergeable(
     newPath: string,
     newArguments: MergedRequestArgumentMap,
-    existingData?: MergedRequestKeyData
+    existingData?: MergedRequestKeyData,
   ): boolean {
     return existingData ? newPath === existingData.fieldName && isEqual(newArguments, existingData.argMap) : true;
   }
@@ -163,14 +163,14 @@ export class GraphQlRequestBuilder {
     providedKey: string,
     providedPath: string,
     providedArgumentMap: MergedRequestArgumentMap,
-    destinationContainer: MergedRequestFragment
+    destinationContainer: MergedRequestFragment,
   ): string {
     let attemptedResolvedKey = this.buildKey(providedKey);
     while (
       !this.areFragmentsMergeable(
         providedPath,
         providedArgumentMap,
-        destinationContainer[attemptedResolvedKey.toString()]
+        destinationContainer[attemptedResolvedKey.toString()],
       )
     ) {
       attemptedResolvedKey = attemptedResolvedKey.next();
@@ -182,7 +182,7 @@ export class GraphQlRequestBuilder {
   private buildKey(providedKey: string, lastSuffix: number = 0): GeneratedRequestKey {
     return {
       next: () => this.buildKey(providedKey, lastSuffix + 1),
-      toString: () => `${providedKey}${lastSuffix === 0 ? '' : lastSuffix}`
+      toString: () => `${providedKey}${lastSuffix === 0 ? '' : lastSuffix}`,
     };
   }
 }

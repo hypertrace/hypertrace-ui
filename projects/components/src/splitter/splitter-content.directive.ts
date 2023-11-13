@@ -1,7 +1,7 @@
 import { Directive, Input, TemplateRef } from '@angular/core';
 
 @Directive({
-  selector: '[htSplitterContent]'
+  selector: '[htSplitterContent]',
 })
 export class SplitterContentDirective {
   @Input('htSplitterContent')

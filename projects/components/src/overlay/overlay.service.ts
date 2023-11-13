@@ -8,7 +8,7 @@ import { SheetOverlayConfig, SheetRef, SHEET_DATA } from './sheet/sheet';
 import { SheetOverlayComponent } from './sheet/sheet-overlay.component';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OverlayService {
   private activeSheetPopover?: PopoverRef;
@@ -19,7 +19,7 @@ export class OverlayService {
 
   public createSheet<TData = unknown, TResponse = unknown>(
     config: SheetOverlayConfig<TData>,
-    injector: Injector = this.defaultInjector
+    injector: Injector = this.defaultInjector,
   ): SheetRef<TResponse> {
     this.activeSheetPopover?.close();
 
@@ -30,10 +30,10 @@ export class OverlayService {
       parentInjector: injector,
       position: {
         type: PopoverPositionType.Fixed,
-        location: config.position ?? PopoverFixedPositionLocation.RightUnderHeader
+        location: config.position ?? PopoverFixedPositionLocation.RightUnderHeader,
       },
       data: metadata,
-      backdrop: config.backdrop ?? PopoverBackdrop.None
+      backdrop: config.backdrop ?? PopoverBackdrop.None,
     });
 
     if (config.closeOnNavigation !== false) {
@@ -50,7 +50,7 @@ export class OverlayService {
   private buildMetadata(
     config: SheetOverlayConfig,
     parentInjector: Injector,
-    sheetRef: SheetRef
+    sheetRef: SheetRef,
   ): SheetConstructionData {
     return {
       config: config,
@@ -58,15 +58,15 @@ export class OverlayService {
         providers: [
           {
             provide: SHEET_DATA,
-            useValue: config.data
+            useValue: config.data,
           },
           {
             provide: SheetRef,
-            useValue: sheetRef
-          }
+            useValue: sheetRef,
+          },
         ],
-        parent: parentInjector
-      })
+        parent: parentInjector,
+      }),
     };
   }
 
@@ -76,7 +76,7 @@ export class OverlayService {
 
     this.activeSheetPopover = popover;
     this.sheetCloseSubscription = this.activeSheetPopover.closed$.subscribe(
-      () => (this.activeSheetPopover = undefined)
+      () => (this.activeSheetPopover = undefined),
     );
   }
 }

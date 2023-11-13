@@ -7,7 +7,7 @@ export const enum GraphQlMetricAggregationPath {
   Count = 'count',
   Percentile = 'percentile',
   DistinctCount = 'distinctcount',
-  DistinctArray = 'distinct_array'
+  DistinctArray = 'distinct_array',
 }
 
 export interface GraphQlMetricAggregation {

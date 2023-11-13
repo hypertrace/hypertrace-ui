@@ -17,7 +17,7 @@ describe('Trace metric timeseries data source model', () => {
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     model = new TraceMetricTimeseriesDataSourceModel();
     model.specification = specBuilder.exploreSpecificationForKey('duration', MetricAggregationType.Average);
@@ -35,7 +35,7 @@ describe('Trace metric timeseries data source model', () => {
       filters: [],
       interval: testInterval,
       limit: 10000,
-      selections: [model.specification]
+      selections: [model.specification],
     });
   });
 });

@@ -45,7 +45,7 @@ import { PredefinedTimeService } from '../time-range/predefined-time.service';
         </ht-popover-content>
       </ht-popover>
     </div>
-  `
+  `,
 })
 export class TimePickerComponent {
   @Input()
@@ -90,16 +90,16 @@ export class TimePickerComponent {
 
 export const enum TimePickerDisplayMode {
   MenuWithBorder = 'with-border',
-  MenuWithBackground = 'with-background'
+  MenuWithBackground = 'with-background',
 }
 
 export const enum TimePickerIconSize {
   Small = 'small',
-  Regular = 'regular'
+  Regular = 'regular',
 }
 
 export const enum TimePickerSize {
   Small = 'small',
   Medium = 'medium',
-  Large = 'large'
+  Large = 'large',
 }

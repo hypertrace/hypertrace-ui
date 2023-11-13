@@ -13,27 +13,27 @@ describe('Histogram Chart Component', () => {
         provide: DEFAULT_COLOR_PALETTE,
         useValue: {
           name: 'default',
-          colors: ['black', 'white']
-        }
-      }
+          colors: ['black', 'white'],
+        },
+      },
     ],
-    shallow: true
+    shallow: true,
   });
 
   test('should show a label and a histogram bar', () => {
     const data: HistogramBarData[] = [
       {
         label: 'POST /api 1',
-        value: 120
+        value: 120,
       },
       {
         label: 'POST /api 2',
-        value: 80
+        value: 80,
       },
       {
         label: 'POST /api 3',
-        value: 40
-      }
+        value: 40,
+      },
     ];
 
     spectator = createHost(
@@ -41,9 +41,9 @@ describe('Histogram Chart Component', () => {
       </ht-histogram-chart>`,
       {
         hostProps: {
-          data: data
-        }
-      }
+          data: data,
+        },
+      },
     );
 
     // Must render 3 items
@@ -70,16 +70,16 @@ describe('Histogram Chart Component', () => {
     const data: HistogramBarData[] = [
       {
         label: 'POST /api 1',
-        value: 120
+        value: 120,
       },
       {
         label: 'POST /api 2',
-        value: 80
+        value: 80,
       },
       {
         label: 'POST /api 3',
-        value: 40
-      }
+        value: 40,
+      },
     ];
 
     spectator = createHost(
@@ -87,9 +87,9 @@ describe('Histogram Chart Component', () => {
       </ht-histogram-chart>`,
       {
         hostProps: {
-          data: data
-        }
-      }
+          data: data,
+        },
+      },
     );
 
     const histogramBars = spectator.queryAll('.histogram-bar');
@@ -112,18 +112,18 @@ describe('Histogram Chart Component', () => {
       {
         label: 'POST /api 1',
         value: 120,
-        colorKey: 'POST /api 1'
+        colorKey: 'POST /api 1',
       },
       {
         label: 'POST /api 2',
         value: 80,
-        colorKey: 'POST /api 2'
+        colorKey: 'POST /api 2',
       },
       {
         label: 'POST /api 3',
         value: 40,
-        colorKey: 'POST /api 3'
-      }
+        colorKey: 'POST /api 3',
+      },
     ];
 
     const determineColor = (colorKey: string): string => {
@@ -145,9 +145,9 @@ describe('Histogram Chart Component', () => {
       {
         hostProps: {
           data: data,
-          determineColor: determineColor
-        }
-      }
+          determineColor: determineColor,
+        },
+      },
     );
 
     const histogramBars = spectator.queryAll('.histogram-bar');
@@ -170,18 +170,18 @@ describe('Histogram Chart Component', () => {
       {
         label: 'POST /api 1',
         value: 120,
-        colorKey: 'keyA'
+        colorKey: 'keyA',
       },
       {
         label: 'POST /api 2',
         value: 80,
-        colorKey: 'keyB'
+        colorKey: 'keyB',
       },
       {
         label: 'POST /api 3',
         value: 40,
-        colorKey: 'keyB'
-      }
+        colorKey: 'keyB',
+      },
     ];
 
     const determineColor = (colorKey: string): string => (colorKey === 'keyA' ? 'red' : 'black');
@@ -192,9 +192,9 @@ describe('Histogram Chart Component', () => {
       {
         hostProps: {
           data: data,
-          determineColor: determineColor
-        }
-      }
+          determineColor: determineColor,
+        },
+      },
     );
 
     const histogramBars = spectator.queryAll('.histogram-bar');
@@ -216,8 +216,8 @@ describe('Histogram Chart Component', () => {
     const data: HistogramBarData[] = [
       {
         label: 'POST /api 1',
-        value: 120
-      }
+        value: 120,
+      },
     ];
 
     const onLabelClick: jest.Mock = jest.fn();
@@ -229,9 +229,9 @@ describe('Histogram Chart Component', () => {
         hostProps: {
           data: data,
           labelClickable: true,
-          onLabelClick: onLabelClick
-        }
-      }
+          onLabelClick: onLabelClick,
+        },
+      },
     );
 
     const histogramBars = spectator.query('.histogram-bar');

@@ -7,7 +7,7 @@ import {
   Input,
   OnChanges,
   Output,
-  QueryList
+  QueryList,
 } from '@angular/core';
 import { queryListAndChanges$, SubscriptionLifecycle, TypedSimpleChanges } from '@hypertrace/common';
 import { merge } from 'rxjs';
@@ -24,7 +24,7 @@ import { ToggleButtonState, ToggleViewMode } from './toggle-button';
     <div class="toggle-button-group" [ngStyle]="{ 'justify-content': this.justifyContent }">
       <ng-content select="ht-toggle-button"></ng-content>
     </div>
-  `
+  `,
 })
 export class ToggleButtonGroupComponent implements OnChanges, AfterViewInit {
   @Input()
@@ -68,9 +68,9 @@ export class ToggleButtonGroupComponent implements OnChanges, AfterViewInit {
         queryListAndChanges$(this.buttons)
           .pipe(
             tap(() => this.setButtonState()),
-            switchMap(() => merge<string>(...this.buttons!.map(button => button.labelClick)))
+            switchMap(() => merge<string>(...this.buttons!.map(button => button.labelClick))),
           )
-          .subscribe(selectedLabel => this.setSelectionChange(selectedLabel))
+          .subscribe(selectedLabel => this.setSelectionChange(selectedLabel)),
       );
     }
   }
@@ -90,8 +90,8 @@ export class ToggleButtonGroupComponent implements OnChanges, AfterViewInit {
         isLast: index === this.buttons!.length - 1,
         isDisabled: this.disabled,
         selectedLabel: this.selectedLabel,
-        viewMode: this.viewMode
-      })
+        viewMode: this.viewMode,
+      }),
     );
   }
 
@@ -124,5 +124,5 @@ export class ToggleButtonGroupComponent implements OnChanges, AfterViewInit {
 
 export enum ToggleButtonsJustifyMode {
   SpaceBetween = 'space-between',
-  Default = 'initial'
+  Default = 'initial',
 }

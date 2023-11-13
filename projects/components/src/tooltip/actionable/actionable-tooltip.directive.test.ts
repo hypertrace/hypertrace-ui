@@ -5,7 +5,7 @@ import { ActionableTooltipDirective } from './actionable-tooltip.directive';
 describe('Actionable Tooltip Directive', () => {
   const createDirective = createDirectiveFactory({
     directive: ActionableTooltipDirective,
-    providers: [mockProvider(PopoverService)]
+    providers: [mockProvider(PopoverService)],
   });
 
   test('should not render tooltip if content is empty', () => {

@@ -4,13 +4,13 @@ import { Specification } from '../../../../../graphql/model/schema/specifier/spe
 import { SpecificationModel } from '../specification.model';
 import {
   ExploreSpecification,
-  ExploreValue
+  ExploreValue,
 } from './../../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from './../../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 
 @Model({
   type: 'explorer-interval-timestamp-selection',
-  displayName: 'Explore Interval Timestamp Seleaction'
+  displayName: 'Explore Interval Timestamp Seleaction',
 })
 export class ExploreIntervalTimestampSelectionSpecificationModel extends SpecificationModel<Specification> {
   protected buildInnerSpec(): ExploreSpecification {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Time } from '@hypertrace/common';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PredefinedTimeService {
   private readonly predefinedTimes: Time[] = [];

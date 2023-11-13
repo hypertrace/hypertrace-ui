@@ -8,23 +8,23 @@ import { SpecificationBackedTableColumnDef } from '@hypertrace/observability';
 
 describe('Traces Table Data Source Model', () => {
   const buildModel = createModelFactory({
-    providers: [...mockDashboardProviders]
+    providers: [...mockDashboardProviders],
   });
 
   test('response parsing should work as expected when ignoreTotal = true, response length < limit', () => {
     const spectator = buildModel(TracesTableDataSourceModel, {
       api: {
-        getTimeRange: jest.fn().mockReturnValue(new FixedTimeRange(new Date(0), new Date(10)))
+        getTimeRange: jest.fn().mockReturnValue(new FixedTimeRange(new Date(0), new Date(10))),
       },
       properties: {
-        ignoreTotal: true
-      }
+        ignoreTotal: true,
+      },
     });
 
     runFakeRxjs(({ expectObservable }) => {
       spectator.model.query$.subscribe(query => {
         query.responseObserver.next({
-          results: []
+          results: [],
         });
         query.responseObserver.complete();
       });
@@ -33,15 +33,15 @@ describe('Traces Table Data Source Model', () => {
         spectator.model.getData().pipe(
           switchMap(data =>
             data.getData({
-              position: { startIndex: 0, limit: 50 }
-            } as TableDataRequest<SpecificationBackedTableColumnDef>)
-          )
-        )
+              position: { startIndex: 0, limit: 50 },
+            } as TableDataRequest<SpecificationBackedTableColumnDef>),
+          ),
+        ),
       ).toBe('(x|)', {
         x: {
           data: [],
-          totalCount: -2
-        }
+          totalCount: -2,
+        },
       });
     });
   });
@@ -49,11 +49,11 @@ describe('Traces Table Data Source Model', () => {
   test('response parsing should work as expected when ignoreTotal = true, response length >= limit', () => {
     const spectator = buildModel(TracesTableDataSourceModel, {
       api: {
-        getTimeRange: jest.fn().mockReturnValue(new FixedTimeRange(new Date(0), new Date(10)))
+        getTimeRange: jest.fn().mockReturnValue(new FixedTimeRange(new Date(0), new Date(10))),
       },
       properties: {
-        ignoreTotal: true
-      }
+        ignoreTotal: true,
+      },
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -62,10 +62,10 @@ describe('Traces Table Data Source Model', () => {
           results: [
             {
               'test-spec-alias': {
-                value: 1
-              }
-            }
-          ]
+                value: 1,
+              },
+            },
+          ],
         });
         query.responseObserver.complete();
       });
@@ -74,21 +74,21 @@ describe('Traces Table Data Source Model', () => {
         spectator.model.getData().pipe(
           switchMap(data =>
             data.getData({
-              position: { startIndex: 0, limit: 1 }
-            } as TableDataRequest<SpecificationBackedTableColumnDef>)
-          )
-        )
+              position: { startIndex: 0, limit: 1 },
+            } as TableDataRequest<SpecificationBackedTableColumnDef>),
+          ),
+        ),
       ).toBe('(x|)', {
         x: {
           data: [
             {
               'test-spec-alias': {
-                value: 1
-              }
-            }
+                value: 1,
+              },
+            },
           ],
-          totalCount: -1
-        }
+          totalCount: -1,
+        },
       });
     });
   });
@@ -96,11 +96,11 @@ describe('Traces Table Data Source Model', () => {
   test('response parsing should work as expected when ignoreTotal = false', () => {
     const spectator = buildModel(TracesTableDataSourceModel, {
       api: {
-        getTimeRange: jest.fn().mockReturnValue(new FixedTimeRange(new Date(0), new Date(10)))
+        getTimeRange: jest.fn().mockReturnValue(new FixedTimeRange(new Date(0), new Date(10))),
       },
       properties: {
-        ignoreTotal: false
-      }
+        ignoreTotal: false,
+      },
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -109,11 +109,11 @@ describe('Traces Table Data Source Model', () => {
           results: [
             {
               'test-spec-alias': {
-                value: 1
-              }
-            }
+                value: 1,
+              },
+            },
           ],
-          total: 10
+          total: 10,
         });
         query.responseObserver.complete();
       });
@@ -122,21 +122,21 @@ describe('Traces Table Data Source Model', () => {
         spectator.model.getData().pipe(
           switchMap(data =>
             data.getData({
-              position: { startIndex: 0, limit: 50 }
-            } as TableDataRequest<SpecificationBackedTableColumnDef>)
-          )
-        )
+              position: { startIndex: 0, limit: 50 },
+            } as TableDataRequest<SpecificationBackedTableColumnDef>),
+          ),
+        ),
       ).toBe('(x|)', {
         x: {
           data: [
             {
               'test-spec-alias': {
-                value: 1
-              }
-            }
+                value: 1,
+              },
+            },
           ],
-          totalCount: 10
-        }
+          totalCount: 10,
+        },
       });
     });
   });

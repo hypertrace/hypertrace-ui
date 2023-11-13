@@ -9,7 +9,7 @@ import { ObservabilitySpecificationBuilder } from '../../../../graphql/request/b
 import { MetricSpecificationModel } from './metric-specification.model';
 
 @Model({
-  type: 'metric-timeseries-band'
+  type: 'metric-timeseries-band',
 })
 export class MetricTimeseriesBandSpecificationModel
   extends MetricSpecificationModel<MetricTimeseriesBandSpecification>
@@ -17,7 +17,7 @@ export class MetricTimeseriesBandSpecificationModel
   @ModelProperty({
     key: 'interval-duration',
     displayName: 'Interval Duration',
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public intervalDuration?: number;
 
@@ -26,8 +26,8 @@ export class MetricTimeseriesBandSpecificationModel
     displayName: 'Interval Unit',
     type: {
       key: ENUM_TYPE.type,
-      values: [TimeUnit.Second, TimeUnit.Minute, TimeUnit.Hour, TimeUnit.Day]
-    } as EnumPropertyTypeInstance
+      values: [TimeUnit.Second, TimeUnit.Minute, TimeUnit.Hour, TimeUnit.Day],
+    } as EnumPropertyTypeInstance,
   })
   public timeUnit?: TimeUnit;
 
@@ -38,7 +38,7 @@ export class MetricTimeseriesBandSpecificationModel
     return new ObservabilitySpecificationBuilder().metricTimeseriesBandSpec(
       this.metric,
       this.aggregation,
-      this.intervalDurationService.getAutoDuration()
+      this.intervalDurationService.getAutoDuration(),
     );
   }
 
@@ -51,7 +51,7 @@ export class MetricTimeseriesBandSpecificationModel
   }
 
   public extractFromServerData(
-    resultContainer: Dictionary<GraphQlMetricTimeseriesBandContainer>
+    resultContainer: Dictionary<GraphQlMetricTimeseriesBandContainer>,
   ): MetricTimeseriesBandInterval[] {
     return this.innerSpec.extractFromServerData(resultContainer);
   }

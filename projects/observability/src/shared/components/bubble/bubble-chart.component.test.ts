@@ -12,7 +12,7 @@ import { BubbleChartComponent } from './bubble-chart.component';
 @Component({
   selector: 'ht-custom-tooltip',
   template: `<div class="custom-tooltip">TooltipText</div>`,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomChartTooltipComponent {}
 
@@ -28,10 +28,10 @@ describe('Bubble chart component', () => {
         provide: DEFAULT_COLOR_PALETTE,
         useValue: {
           name: 'default',
-          colors: ['black', 'white']
-        }
-      }
-    ]
+          colors: ['black', 'white'],
+        },
+      },
+    ],
   });
 
   const bubbleData: BubbleChartData[] = [
@@ -39,14 +39,14 @@ describe('Bubble chart component', () => {
       x: 1,
       y: 1,
       r: 2,
-      colorKey: 'first'
+      colorKey: 'first',
     },
     {
       x: 2,
       y: 2,
       r: 1,
-      colorKey: 'second'
-    }
+      colorKey: 'second',
+    },
   ];
 
   test('should init and destroy ', () => {
@@ -54,7 +54,7 @@ describe('Bubble chart component', () => {
       destroy: jest.fn(),
       reflow: jest.fn(),
       selections$: new Subject<Set<BubbleChartData>>().asObservable(),
-      updateSelections: jest.fn()
+      updateSelections: jest.fn(),
     };
 
     const spectator = hostFactory(
@@ -63,14 +63,14 @@ describe('Bubble chart component', () => {
     </ht-bubble-chart>`,
       {
         hostProps: {
-          data: bubbleData
+          data: bubbleData,
         },
         providers: [
           mockProvider(BubbleChartBuilderService, {
-            build: jest.fn().mockReturnValue(mockChart)
-          })
-        ]
-      }
+            build: jest.fn().mockReturnValue(mockChart),
+          }),
+        ],
+      },
     );
 
     expect(spectator.inject(BubbleChartBuilderService).build).toHaveBeenCalledWith(
@@ -78,8 +78,8 @@ describe('Bubble chart component', () => {
       spectator.inject(Injector, true),
       {
         data: bubbleData,
-        selections: []
-      }
+        selections: [],
+      },
     );
 
     spectator.fixture.destroy();
@@ -94,9 +94,9 @@ describe('Bubble chart component', () => {
       {
         hostProps: {
           data: bubbleData,
-          selections: []
-        }
-      }
+          selections: [],
+        },
+      },
     );
 
     const bubbles = spectator.queryAll('.data-bubble', { root: true });
@@ -127,9 +127,9 @@ describe('Bubble chart component', () => {
           xMax: xMax,
           yMin: yMin,
           yMax: yMax,
-          selections: []
-        }
-      }
+          selections: [],
+        },
+      },
     );
 
     const bubbles = spectator.queryAll('.data-bubble', { root: true });
@@ -152,9 +152,9 @@ describe('Bubble chart component', () => {
       {
         hostProps: {
           data: bubbleData,
-          onSelectionChanged: onSelectionChangedSpy
-        }
-      }
+          onSelectionChanged: onSelectionChangedSpy,
+        },
+      },
     );
 
     const bubbles = spectator.queryAll('.bubble-group', { root: true });
@@ -181,9 +181,9 @@ describe('Bubble chart component', () => {
       {
         hostProps: {
           data: bubbleData,
-          selections: [bubbleData[0]]
-        }
-      }
+          selections: [bubbleData[0]],
+        },
+      },
     );
 
     const bubbles = spectator.queryAll('.bubble-group', { root: true });
@@ -199,9 +199,9 @@ describe('Bubble chart component', () => {
       {
         hostProps: {
           data: bubbleData,
-          selections: [bubbleData[0]]
-        }
-      }
+          selections: [bubbleData[0]],
+        },
+      },
     );
 
     const bubbles = spectator.queryAll('.bubble-group', { root: true });
@@ -219,7 +219,7 @@ describe('Bubble chart component', () => {
     const mockTooltipRef = {
       showWithData: jest.fn(),
       hide: jest.fn(),
-      destroy: jest.fn()
+      destroy: jest.fn(),
     };
 
     const mockConstructTooltip = jest.fn().mockReturnValue(mockTooltipRef);
@@ -233,15 +233,15 @@ describe('Bubble chart component', () => {
           data: bubbleData,
           tooltipOption: {
             title: 'test',
-            component: CustomChartTooltipComponent
-          }
+            component: CustomChartTooltipComponent,
+          },
         },
         providers: [
           mockProvider(ChartTooltipBuilderService, {
-            constructTooltip: mockConstructTooltip
-          })
-        ]
-      }
+            constructTooltip: mockConstructTooltip,
+          }),
+        ],
+      },
     );
 
     // Should show tooltip on hover
@@ -254,9 +254,9 @@ describe('Bubble chart component', () => {
           y: 1,
           r: 2,
           color: 'rgb(0, 0, 0)',
-          original: bubbleData[0]
-        }
-      }
+          original: bubbleData[0],
+        },
+      },
     ];
 
     expect(mockTooltipRef.showWithData).toHaveBeenCalledWith(
@@ -265,9 +265,9 @@ describe('Bubble chart component', () => {
         {
           context: undefined,
           dataPoint: tooltipData[0].dataPoint,
-          location: { x: -1, y: -1 }
-        }
-      ])
+          location: { x: -1, y: -1 },
+        },
+      ]),
     );
 
     expect(mockTooltipRef.hide).not.toHaveBeenCalled();

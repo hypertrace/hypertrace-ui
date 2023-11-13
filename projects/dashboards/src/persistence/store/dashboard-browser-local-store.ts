@@ -6,11 +6,11 @@ import {
   DashboardStore,
   DashboardUpdateData,
   DashboardUpsertData,
-  PersistedDashboard
+  PersistedDashboard,
 } from './dashboard-store';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DashboardBrowserLocalStore implements DashboardStore {
   private static readonly DASHBOARD_STORAGE_KEY: string = 'hypertrace-dashboards';
@@ -38,7 +38,7 @@ export class DashboardBrowserLocalStore implements DashboardStore {
     const fullDashboard = {
       id: this.generateId(),
       ...content,
-      version: 1
+      version: 1,
     };
 
     this.allDashboards[fullDashboard.id] = fullDashboard;
@@ -57,7 +57,7 @@ export class DashboardBrowserLocalStore implements DashboardStore {
 
     const updatedDashboard = {
       ...existingDashboard,
-      ...dashboard
+      ...dashboard,
     };
 
     this.allDashboards[dashboard.id] = updatedDashboard;

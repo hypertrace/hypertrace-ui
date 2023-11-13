@@ -5,7 +5,7 @@ import {
   PopoverModule,
   PopoverPositionType,
   PopoverRelativePositionLocation,
-  PopoverService
+  PopoverService,
 } from '@hypertrace/components';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { BehaviorSubject } from 'rxjs';
@@ -15,21 +15,21 @@ describe('Popover hover trigger service', () => {
   const hoveredSubject = new BehaviorSubject<boolean>(true);
   const mockPopoverRef = {
     hovered$: hoveredSubject.asObservable(),
-    close: jest.fn()
+    close: jest.fn(),
   };
 
   const createHost = createHostFactory({
     component: Component({
       selector: 'test-tooltip',
-      template: `<div><div class="tooltip-content">Content!</div></div>`
+      template: `<div><div class="tooltip-content">Content!</div></div>`,
     })(class {}),
     imports: [PopoverModule],
     providers: [
       PopoverHoverTriggerService,
       mockProvider(PopoverService, {
-        drawPopover: jest.fn().mockReturnValue(mockPopoverRef)
-      })
-    ]
+        drawPopover: jest.fn().mockReturnValue(mockPopoverRef),
+      }),
+    ],
   });
 
   test('builds tooltip popover', fakeAsync(() => {
@@ -39,7 +39,7 @@ describe('Popover hover trigger service', () => {
     const origin = spectator.query('div');
     popoverHoverTriggerService.showPopover({
       origin: origin,
-      componentOrTemplate: componentOrTemplate
+      componentOrTemplate: componentOrTemplate,
     });
 
     spectator.tick(300); // Debounce timer
@@ -58,11 +58,11 @@ describe('Popover hover trigger service', () => {
             PopoverRelativePositionLocation.AboveLeftAligned,
             PopoverRelativePositionLocation.LeftCentered,
             PopoverRelativePositionLocation.OverLeftAligned,
-            PopoverRelativePositionLocation.RightCentered
-          ]
+            PopoverRelativePositionLocation.RightCentered,
+          ],
         },
-        componentOrTemplate: componentOrTemplate
-      })
+        componentOrTemplate: componentOrTemplate,
+      }),
     );
   }));
 
@@ -73,7 +73,7 @@ describe('Popover hover trigger service', () => {
     const origin = spectator.query('div');
     popoverHoverTriggerService.showPopover({
       origin: origin,
-      componentOrTemplate: componentOrTemplate
+      componentOrTemplate: componentOrTemplate,
     });
 
     hoveredSubject.next(false);

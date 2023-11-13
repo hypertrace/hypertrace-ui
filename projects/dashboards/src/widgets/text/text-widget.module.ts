@@ -10,8 +10,8 @@ import { TextWidgetModel } from './text-widget.model';
     CommonModule,
     DashboardCoreModule.with({
       models: [TextWidgetModel],
-      renderers: [TextWidgetRendererComponent]
-    })
-  ]
+      renderers: [TextWidgetRendererComponent],
+    }),
+  ],
 })
 export class TextWidgetModule {}

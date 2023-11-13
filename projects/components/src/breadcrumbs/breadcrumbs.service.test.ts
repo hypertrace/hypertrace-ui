@@ -11,8 +11,8 @@ describe('BreadcrumbsService', () => {
       .map(route => ({
         url: route.urlSegments.map(segment => ({ path: segment })),
         data: {
-          breadcrumb: route.breadcrumb
-        }
+          breadcrumb: route.breadcrumb,
+        },
       }))
       .map((value, index, array) => {
         const routeSnapshotMock = value as ActivatedRouteSnapshotMock;
@@ -23,7 +23,7 @@ describe('BreadcrumbsService', () => {
 
   const createService = createServiceFactory({
     service: BreadcrumbsService,
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService)],
   });
 
   test('should map current navigation route to breadcrumbs when instantiated', () => {
@@ -37,21 +37,21 @@ describe('BreadcrumbsService', () => {
                 urlSegments: ['first'],
                 breadcrumb: {
                   icon: IconType.Application,
-                  label: 'First Breadcrumb'
-                }
+                  label: 'First Breadcrumb',
+                },
               },
               {
                 urlSegments: ['second'],
                 breadcrumb: of({
                   icon: 'secondIcon',
-                  label: 'Second Breadcrumb'
-                })
-              }
-            ])
+                  label: 'Second Breadcrumb',
+                }),
+              },
+            ]),
           }),
-          navigation$: NEVER
-        })
-      ]
+          navigation$: NEVER,
+        }),
+      ],
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -60,14 +60,14 @@ describe('BreadcrumbsService', () => {
           {
             icon: IconType.Application,
             label: 'First Breadcrumb',
-            url: ['first']
+            url: ['first'],
           },
           {
             icon: 'secondIcon',
             label: 'Second Breadcrumb',
-            url: ['first', 'second']
-          }
-        ]
+            url: ['first', 'second'],
+          },
+        ],
       });
     });
   });
@@ -81,10 +81,10 @@ describe('BreadcrumbsService', () => {
               {
                 urlSegments: ['previous'],
                 breadcrumb: {
-                  label: 'Previous Breadcrumb'
-                }
-              }
-            ])
+                  label: 'Previous Breadcrumb',
+                },
+              },
+            ]),
           }),
           navigation$: of({
             snapshot: buildMockRoute([
@@ -93,17 +93,17 @@ describe('BreadcrumbsService', () => {
                 urlSegments: ['first'],
                 breadcrumb: {
                   icon: IconType.Application,
-                  label: 'First Breadcrumb'
-                }
+                  label: 'First Breadcrumb',
+                },
               },
               {
                 urlSegments: ['second'],
-                breadcrumb: throwError('error in second breadcrumb')
-              }
-            ])
-          })
-        })
-      ]
+                breadcrumb: throwError('error in second breadcrumb'),
+              },
+            ]),
+          }),
+        }),
+      ],
     });
 
     spectator.service.breadcrumbs$.subscribe();

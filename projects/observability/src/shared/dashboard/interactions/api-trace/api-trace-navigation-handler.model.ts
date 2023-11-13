@@ -7,7 +7,7 @@ import { TracingNavigationService } from '../../../services/navigation/tracing-n
 import { InteractionHandler } from '../../interaction/interaction-handler';
 
 @Model({
-  type: 'api-trace-navigation-handler'
+  type: 'api-trace-navigation-handler',
 })
 export class ApiTraceNavigationHandlerModel implements InteractionHandler {
   @ModelInject(TracingNavigationService)
@@ -17,7 +17,7 @@ export class ApiTraceNavigationHandlerModel implements InteractionHandler {
     if (trace[traceTypeKey] === ObservabilityTraceType.Api) {
       this.tracingNavigationService.navigateToApiTraceDetail(
         trace[traceIdKey],
-        trace.startTime as string | number | undefined
+        trace.startTime as string | number | undefined,
       );
     }
 

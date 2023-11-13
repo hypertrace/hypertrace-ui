@@ -19,8 +19,8 @@ export const backendListDashboard: DashboardDefaultConfiguration = {
         width: '30%',
         value: {
           type: 'entity-specification',
-          'entity-type': ObservabilityEntityType.Backend
-        }
+          'entity-type': ObservabilityEntityType.Backend,
+        },
       },
       {
         type: 'table-widget-column',
@@ -29,8 +29,8 @@ export const backendListDashboard: DashboardDefaultConfiguration = {
         width: '100px',
         value: {
           type: 'attribute-specification',
-          attribute: 'type'
-        }
+          attribute: 'type',
+        },
       },
       {
         type: 'table-widget-column',
@@ -39,9 +39,9 @@ export const backendListDashboard: DashboardDefaultConfiguration = {
         value: {
           type: 'metric-aggregation',
           metric: 'duration',
-          aggregation: 'p99'
+          aggregation: 'p99',
         },
-        sort: TableSortDirection.Descending
+        sort: TableSortDirection.Descending,
       },
       {
         type: 'table-widget-column',
@@ -50,8 +50,8 @@ export const backendListDashboard: DashboardDefaultConfiguration = {
         value: {
           type: 'metric-aggregation',
           metric: 'duration',
-          aggregation: 'avg'
-        }
+          aggregation: 'avg',
+        },
       },
       {
         type: 'table-widget-column',
@@ -60,8 +60,8 @@ export const backendListDashboard: DashboardDefaultConfiguration = {
         value: {
           type: 'metric-aggregation',
           metric: 'errorCount',
-          aggregation: 'avgrate_sec'
-        }
+          aggregation: 'avgrate_sec',
+        },
       },
       {
         type: 'table-widget-column',
@@ -70,8 +70,8 @@ export const backendListDashboard: DashboardDefaultConfiguration = {
         value: {
           type: 'metric-aggregation',
           metric: 'errorCount',
-          aggregation: 'sum'
-        }
+          aggregation: 'sum',
+        },
       },
       {
         type: 'table-widget-column',
@@ -80,8 +80,8 @@ export const backendListDashboard: DashboardDefaultConfiguration = {
         value: {
           type: 'metric-aggregation',
           metric: 'numCalls',
-          aggregation: 'avgrate_sec'
-        }
+          aggregation: 'avgrate_sec',
+        },
       },
       {
         type: 'table-widget-column',
@@ -90,13 +90,13 @@ export const backendListDashboard: DashboardDefaultConfiguration = {
         value: {
           type: 'metric-aggregation',
           metric: 'numCalls',
-          aggregation: 'sum'
-        }
-      }
+          aggregation: 'sum',
+        },
+      },
     ],
     data: {
       type: 'entity-table-data-source',
-      entity: 'BACKEND'
-    }
-  }
+      entity: 'BACKEND',
+    },
+  },
 };

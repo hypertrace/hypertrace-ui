@@ -1,4 +1,4 @@
 export const enum CodeLanguage {
   Json = 'json',
-  Yaml = 'yaml'
+  Yaml = 'yaml',
 }

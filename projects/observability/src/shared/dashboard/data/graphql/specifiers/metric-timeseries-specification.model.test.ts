@@ -11,21 +11,21 @@ describe('Metric timeseries specification model', () => {
     const spectator = modelFactory(MetricTimeseriesSpecificationModel, {
       providers: [
         mockProvider(IntervalDurationService, {
-          getAutoDuration: () => new TimeDuration(3, TimeUnit.Minute)
-        })
+          getAutoDuration: () => new TimeDuration(3, TimeUnit.Minute),
+        }),
       ],
       properties: {
         aggregation: MetricAggregationType.Average,
         metric: 'test_metric',
         intervalDuration: 3,
-        timeUnit: TimeUnit.Minute
-      }
+        timeUnit: TimeUnit.Minute,
+      },
     });
 
     const expectedSpecObject = new ObservabilitySpecificationBuilder().metricTimeseriesSpec(
       'test_metric',
       MetricAggregationType.Average,
-      new TimeDuration(3, TimeUnit.Minute)
+      new TimeDuration(3, TimeUnit.Minute),
     );
 
     expect(isEqualIgnoreFunctions(spectator.model, expectedSpecObject));
@@ -36,7 +36,7 @@ describe('Metric timeseries specification model', () => {
     expect(spectator.model.resultAlias()).toEqual(expectedSpecObject.resultAlias());
 
     expect(spectator.model.withNewIntervalDuration(new TimeDuration(3, TimeUnit.Minute)).asGraphQlSelections()).toEqual(
-      expectedSpecObject.withNewIntervalDuration(new TimeDuration(3, TimeUnit.Minute)).asGraphQlSelections()
+      expectedSpecObject.withNewIntervalDuration(new TimeDuration(3, TimeUnit.Minute)).asGraphQlSelections(),
     );
   });
 });

@@ -13,13 +13,13 @@ import { TraceDetailWidgetModel } from './trace-detail-widget.model';
   imports: [
     DashboardCoreModule.with({
       models: [TraceDetailWidgetModel, TraceDetailDataSourceModel, ApiTraceDetailDataSourceModel],
-      renderers: [TraceDetailWidgetRendererComponent]
+      renderers: [TraceDetailWidgetRendererComponent],
     }),
     CommonModule,
     SpanDetailModule,
     TitledContentModule,
     LoadAsyncModule,
-    SummaryValueModule
-  ]
+    SummaryValueModule,
+  ],
 })
 export class TraceDetailModule {}

@@ -7,7 +7,7 @@ import {
   TABLE_COLUMN_CONFIG,
   TABLE_COLUMN_INDEX,
   TABLE_DATA_PARSER,
-  TABLE_ROW_DATA
+  TABLE_ROW_DATA,
 } from '../../table-cell-injection';
 import { TableCellParserBase } from '../../table-cell-parser-base';
 import { TableCellRenderer } from '../../table-cell-renderer';
@@ -30,12 +30,12 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
         [style.color]="this.value.color"
       ></ht-icon>
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: CoreTableCellRendererType.Icon,
   alignment: TableCellAlignmentType.Center,
-  parser: CoreTableCellParserType.Icon
+  parser: CoreTableCellParserType.Icon,
 })
 export class IconTableCellRendererComponent extends TableCellRendererBase<CellData, Value> implements OnInit {
   public iconSize: IconSize = IconSize.Small;
@@ -45,7 +45,7 @@ export class IconTableCellRendererComponent extends TableCellRendererBase<CellDa
     @Inject(TABLE_COLUMN_INDEX) index: number,
     @Inject(TABLE_DATA_PARSER) parser: TableCellParserBase<CellData, Value, unknown>,
     @Inject(TABLE_CELL_DATA) cellData: CellData,
-    @Inject(TABLE_ROW_DATA) rowData: TableRow
+    @Inject(TABLE_ROW_DATA) rowData: TableRow,
   ) {
     super(columnConfig, index, parser, cellData, rowData);
   }

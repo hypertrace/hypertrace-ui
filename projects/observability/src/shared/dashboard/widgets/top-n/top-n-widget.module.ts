@@ -16,7 +16,7 @@ import { TopNWidgetModel } from './top-n-widget.model';
   imports: [
     DashboardCoreModule.with({
       models: [TopNWidgetModel, TopNDataSourceModel, TopNExploreSelectionSpecificationModel],
-      renderers: [TopNWidgetRendererComponent]
+      renderers: [TopNWidgetRendererComponent],
     }),
     GraphQlModule.withHandlerProviders([EntitiesGraphQlQueryHandlerService]),
     CommonModule,
@@ -26,7 +26,7 @@ import { TopNWidgetModel } from './top-n-widget.model';
     LabelModule,
     TooltipModule,
     FormattingModule,
-    GaugeListModule
-  ]
+    GaugeListModule,
+  ],
 })
 export class TopNWidgetModule {}

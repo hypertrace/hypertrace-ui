@@ -1,3 +1,3 @@
 export const enum WaterfallTableCellType {
-  SpanName = 'span-name'
+  SpanName = 'span-name',
 }

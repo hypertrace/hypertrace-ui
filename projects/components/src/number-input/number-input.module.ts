@@ -6,6 +6,6 @@ import { NumberInputComponent } from './number-input.component';
 @NgModule({
   imports: [CommonModule, FormsModule],
   declarations: [NumberInputComponent],
-  exports: [NumberInputComponent]
+  exports: [NumberInputComponent],
 })
 export class NumberInputModule {}

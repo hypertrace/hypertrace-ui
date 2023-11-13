@@ -4,7 +4,7 @@ import { Breadcrumb, TimeRangeService } from '@hypertrace/common';
 import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import {
   EntityGraphQlQueryHandlerService,
-  ENTITY_GQL_REQUEST
+  ENTITY_GQL_REQUEST,
 } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
@@ -22,7 +22,7 @@ export class BackendDetailBreadcrumbResolver implements Resolve<Observable<Bread
   public constructor(
     private readonly timeRangeService: TimeRangeService,
     private readonly graphQlQueryService: GraphQlRequestService,
-    private readonly iconLookupService: EntityIconLookupService
+    private readonly iconLookupService: EntityIconLookupService,
   ) {}
 
   public async resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Promise<Observable<Breadcrumb>> {
@@ -34,9 +34,9 @@ export class BackendDetailBreadcrumbResolver implements Resolve<Observable<Bread
         map(backend => ({
           label: backend.name,
           icon: this.iconLookupService.forBackendEntity(backend, this.getBackendTypeAttributeName()),
-          alwaysShowIcon: true
-        }))
-      )
+          alwaysShowIcon: true,
+        })),
+      ),
     );
   }
 
@@ -48,11 +48,11 @@ export class BackendDetailBreadcrumbResolver implements Resolve<Observable<Bread
           entityType: ObservabilityEntityType.Backend,
           id: id,
           properties: this.getAttributeKeys().map(attributeKey =>
-            this.specificationBuilder.attributeSpecificationForKey(attributeKey)
+            this.specificationBuilder.attributeSpecificationForKey(attributeKey),
           ),
-          timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime)
-        })
-      )
+          timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime),
+        }),
+      ),
     );
   }
 

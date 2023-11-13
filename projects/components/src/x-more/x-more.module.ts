@@ -6,6 +6,6 @@ import { XMoreComponent } from './x-more.component';
 @NgModule({
   imports: [CommonModule, TooltipModule],
   declarations: [XMoreComponent],
-  exports: [XMoreComponent]
+  exports: [XMoreComponent],
 })
 export class XMoreModule {}

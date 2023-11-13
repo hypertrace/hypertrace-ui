@@ -27,7 +27,7 @@ import { ModalRef, MODAL_DATA } from '../modal/modal';
         ></ht-button>
       </div>
     </div>
-  `
+  `,
 })
 export class ConfirmationModalComponent {
   private static readonly DEFAULT_CONFIRM_LABEL: string = 'Confirm';

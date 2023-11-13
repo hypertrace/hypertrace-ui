@@ -33,7 +33,7 @@ export type GraphQlArgumentValue =
 export const getValueAsGraphQlArgument = (
   value: unknown,
   considerAllCapsStringAsEnum: boolean = false,
-  isArrayElement: boolean = false
+  isArrayElement: boolean = false,
 ): GraphQlArgumentValue => {
   if (value instanceof Date) {
     return value.toISOString();
@@ -60,7 +60,7 @@ export const getValueAsGraphQlArgument = (
  */
 export const getObjectAsGraphQlArgument = (
   object: Dictionary<unknown>,
-  considerAllCapsStringAsEnum: boolean = false
+  considerAllCapsStringAsEnum: boolean = false,
 ): GraphQlArgumentObject => {
   const argumentObject: GraphQlArgumentObject = {};
 

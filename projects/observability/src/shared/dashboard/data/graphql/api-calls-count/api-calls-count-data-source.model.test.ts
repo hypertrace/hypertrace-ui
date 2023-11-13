@@ -7,7 +7,7 @@ import { ExploreSpecificationBuilder } from '../../../../graphql/request/builder
 import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
   EXPLORE_GQL_REQUEST,
-  GraphQlExploreResponse
+  GraphQlExploreResponse,
 } from '../../../../graphql/request/handlers/explore/explore-query';
 import { ObservedGraphQlRequest } from '../graphql-query-event.service';
 import { ApiCallsCountDataSourceModel } from './api-calls-count-data-source-model';
@@ -19,12 +19,12 @@ describe('API call count data source model', () => {
 
   const numCallsSpec = new ExploreSpecificationBuilder().exploreSpecificationForKey(
     'numCalls',
-    MetricAggregationType.Sum
+    MetricAggregationType.Sum,
   );
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     model = new ApiCallsCountDataSourceModel();
     model.api = mockApi as ModelApi;
@@ -40,14 +40,14 @@ describe('API call count data source model', () => {
               {
                 [numCallsSpec.resultAlias()]: {
                   value: 100,
-                  type: AttributeMetadataType.Long
-                }
-              }
-            ]
+                  type: AttributeMetadataType.Long,
+                },
+              },
+            ],
           });
           responseObserver.complete();
         }
-      }
+      },
     );
   });
 
@@ -61,8 +61,8 @@ describe('API call count data source model', () => {
         context: 'API',
         selections: [expect.objectContaining({ aggregation: 'sum', name: 'numCalls' })],
         timeRange: expect.objectContaining({ from: new Date(1568907645141), to: new Date(1568911245141) }),
-        limit: 1
-      })
+        limit: 1,
+      }),
     );
   });
 
@@ -74,8 +74,8 @@ describe('API call count data source model', () => {
         x: {
           health: 'notspecified',
           value: 100,
-          units: ''
-        }
+          units: '',
+        },
       });
     });
   }));

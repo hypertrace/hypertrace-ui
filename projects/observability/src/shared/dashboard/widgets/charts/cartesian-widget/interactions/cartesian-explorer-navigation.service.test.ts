@@ -9,12 +9,12 @@ describe('Cartesian Explorer Navigation Service', () => {
     service: CartesainExplorerNavigationService,
     providers: [
       mockProvider(TimeRangeService, {
-        toQueryParams: jest.fn()
+        toQueryParams: jest.fn(),
       }),
       mockProvider(NavigationService, {
-        navigate: jest.fn()
-      })
-    ]
+        navigate: jest.fn(),
+      }),
+    ],
   });
 
   beforeEach(() => {

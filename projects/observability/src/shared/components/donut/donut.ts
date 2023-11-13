@@ -39,5 +39,5 @@ export interface DonutResults {
 export const enum DonutAlignmentStyle {
   Left = 'left-alignment',
   Center = 'center-alignment',
-  Right = 'right-alignment'
+  Right = 'right-alignment',
 }

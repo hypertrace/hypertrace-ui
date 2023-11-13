@@ -12,17 +12,17 @@ describe('Metric table cell renderer component', () => {
     providers: [
       ...tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
-        new MetricTableCellParser(undefined!)
-      )
+        new MetricTableCellParser(undefined!),
+      ),
     ],
-    shallow: true
+    shallow: true,
   });
 
   test('should render a number', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(42)]
+      providers: [tableCellDataProvider(42)],
     });
 
     expect(spectator.element).toHaveText('42');
@@ -33,9 +33,9 @@ describe('Metric table cell renderer component', () => {
       providers: [
         tableCellDataProvider({
           value: 42,
-          units: 'ms'
-        })
-      ]
+          units: 'ms',
+        }),
+      ],
     });
 
     expect(spectator.element).toHaveText('42 ms');
@@ -46,9 +46,9 @@ describe('Metric table cell renderer component', () => {
       providers: [
         tableCellDataProvider({
           value: 76,
-          health: MetricHealth.Healthy
-        })
-      ]
+          health: MetricHealth.Healthy,
+        }),
+      ],
     });
 
     expect(spectator.element).toHaveText('76');
@@ -56,7 +56,7 @@ describe('Metric table cell renderer component', () => {
 
   test('should render an empty object', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider({})]
+      providers: [tableCellDataProvider({})],
     });
 
     expect(spectator.element).toHaveText('-');

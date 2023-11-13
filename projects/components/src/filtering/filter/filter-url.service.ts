@@ -11,7 +11,7 @@ import { FilterParserLookupService } from './parser/filter-parser-lookup.service
 import { splitFilterStringByOperator } from './parser/parsed-filter';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FilterUrlService {
   private static readonly FILTER_QUERY_PARAM: string = 'filter';
@@ -20,7 +20,7 @@ export class FilterUrlService {
   public constructor(
     private readonly navigationService: NavigationService,
     private readonly filterBuilderLookupService: FilterBuilderLookupService,
-    private readonly filterParserLookupService: FilterParserLookupService
+    private readonly filterParserLookupService: FilterParserLookupService,
   ) {}
 
   public getUrlFilteringStateChanges$(attributes: FilterAttribute[]): Observable<UrlFilteringState> {
@@ -34,14 +34,14 @@ export class FilterUrlService {
       filters: this.getUrlFilters(attributes),
       groupBy: this.getUrlGroupBy()
         .map(attributeName => attributeMap.get(attributeName))
-        .filter((attribute): attribute is FilterAttribute => attribute !== undefined)
+        .filter((attribute): attribute is FilterAttribute => attribute !== undefined),
     };
   }
 
   public setUrlFiltersAndGroupBy(filters: Filter[], groupBy: FilterAttribute[]): void {
     this.navigationService.addQueryParametersToUrl({
       [FilterUrlService.FILTER_QUERY_PARAM]: filters.length === 0 ? undefined : filters.map(f => f.urlString),
-      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy.map(g => g.name).toString()]
+      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy.map(g => g.name).toString()],
     });
   }
 
@@ -73,13 +73,13 @@ export class FilterUrlService {
 
   public setUrlFilters(filters: Filter[]): void {
     this.navigationService.addQueryParametersToUrl({
-      [FilterUrlService.FILTER_QUERY_PARAM]: filters.length === 0 ? undefined : filters.map(f => f.urlString)
+      [FilterUrlService.FILTER_QUERY_PARAM]: filters.length === 0 ? undefined : filters.map(f => f.urlString),
     });
   }
 
   public setUrlGroupBy(groupBy?: string[]): void {
     this.navigationService.addQueryParametersToUrl({
-      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy!.toString()]
+      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy!.toString()],
     });
   }
 
@@ -112,7 +112,7 @@ export class FilterUrlService {
   public buildUrlFiltersAndGroupByNavQueryParams(filters: Filter[], groupBy: FilterAttribute[]): QueryParamObject {
     return {
       [FilterUrlService.FILTER_QUERY_PARAM]: isEmpty(filters) ? undefined : filters.map(f => f.urlString),
-      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy.map(g => g.name).toString()]
+      [FilterUrlService.GROUP_BY_QUERY_PARAM]: isEmpty(groupBy) ? undefined : [groupBy.map(g => g.name).toString()],
     };
   }
 
@@ -126,7 +126,7 @@ export class FilterUrlService {
         const splitUrlFilter = splitFilterStringByOperator(
           attribute,
           supportedUrlOperators,
-          decodeURIComponent(filterString)
+          decodeURIComponent(filterString),
         );
 
         if (splitUrlFilter === undefined) {
@@ -137,7 +137,7 @@ export class FilterUrlService {
 
         const parsedFilter = this.filterParserLookupService.lookup(convertedOperator).parseSplitFilter({
           ...splitUrlFilter,
-          operator: convertedOperator
+          operator: convertedOperator,
         });
 
         return (

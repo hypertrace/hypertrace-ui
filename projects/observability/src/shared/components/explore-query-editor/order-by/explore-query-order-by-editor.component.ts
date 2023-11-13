@@ -70,7 +70,7 @@ import { ExploreOrderBy } from '../explore-visualization-builder';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class ExploreQueryOrderByEditorComponent implements OnChanges {
   @Input()
@@ -90,40 +90,40 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   public readonly sortByOptions: SelectOption<GraphQlSortDirection>[] = [
     {
       value: SortDirection.Asc,
-      label: 'Asc'
+      label: 'Asc',
     },
     {
       value: SortDirection.Desc,
-      label: 'Desc'
-    }
+      label: 'Desc',
+    },
   ];
   private readonly defaultDirection: GraphQlSortDirection = SortDirection.Asc;
   private readonly incomingOrderByExpressionSubject: Subject<ExploreOrderBy> = new ReplaySubject(1);
   private readonly contextSubject: Subject<TraceType> = new ReplaySubject(1);
   private readonly redundantOrderingAggregations: MetricAggregationType[] = [
     MetricAggregationType.AvgrateSecond,
-    MetricAggregationType.AvgrateMinute
+    MetricAggregationType.AvgrateMinute,
   ];
 
   public constructor(private readonly metadataService: MetadataService) {
     this.selectedAggregation$ = combineLatest([this.contextSubject, this.incomingOrderByExpressionSubject]).pipe(
-      switchMap(() => this.getCurrentSelectedAggregation())
+      switchMap(() => this.getCurrentSelectedAggregation()),
     );
 
     this.selectedAttribute$ = combineLatest([this.contextSubject, this.incomingOrderByExpressionSubject]).pipe(
-      switchMap(() => this.getCurrentSelectedAttribute())
+      switchMap(() => this.getCurrentSelectedAttribute()),
     );
 
     this.selectedOrderBy$ = this.incomingOrderByExpressionSubject.pipe(
-      switchMap(() => this.getCurrentSelectedOrderBy())
+      switchMap(() => this.getCurrentSelectedOrderBy()),
     );
 
     this.attributeOptions$ = this.contextSubject.pipe(
-      switchMap(context => this.getAttributeOptionsForContext(context))
+      switchMap(context => this.getAttributeOptionsForContext(context)),
     );
 
     this.aggregationOptions$ = this.selectedAttribute$.pipe(
-      map(selection => this.getAggregationOptionsForAttribute(selection))
+      map(selection => this.getAggregationOptionsForAttribute(selection)),
     );
   }
 
@@ -142,14 +142,14 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       combineLatest([
         of(newAttribute),
         this.selectedAggregation$,
-        of(this.orderByExpression?.direction ?? this.defaultDirection)
-      ])
+        of(this.orderByExpression?.direction ?? this.defaultDirection),
+      ]),
     );
   }
 
   public onAggregationChange(newAggregation: MetricAggregationType): void {
     this.buildSpecAndEmit(
-      combineLatest([this.selectedAttribute$, of(newAggregation), of(this.orderByExpression!.direction)])
+      combineLatest([this.selectedAttribute$, of(newAggregation), of(this.orderByExpression!.direction)]),
     );
   }
 
@@ -158,12 +158,12 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
   }
 
   private buildSpecAndEmit(
-    orderByData$: Observable<[AttributeMetadata, MetricAggregationType, GraphQlSortDirection]>
+    orderByData$: Observable<[AttributeMetadata, MetricAggregationType, GraphQlSortDirection]>,
   ): void {
     orderByData$
       .pipe(
         take(1),
-        switchMap(orderByData => this.buildOrderExpression(...orderByData))
+        switchMap(orderByData => this.buildOrderExpression(...orderByData)),
       )
       .subscribe(value => this.orderByExpressionChange.emit(value));
   }
@@ -173,8 +173,8 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       map(
         attributeOptions =>
           attributeOptions.find(option => option.value?.name === this.orderByExpression?.attribute.key)?.value ??
-          attributeOptions[0]?.value
-      )
+          attributeOptions[0]?.value,
+      ),
     );
   }
 
@@ -183,15 +183,15 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       map(
         aggregationOptions =>
           aggregationOptions.find(option => option.value === this.orderByExpression?.aggregation)?.value ??
-          aggregationOptions[0]?.value
-      )
+          aggregationOptions[0]?.value,
+      ),
     );
   }
 
   private getCurrentSelectedOrderBy(): Observable<GraphQlSortDirection> {
     return of(
       this.sortByOptions.find(option => this.orderByExpression && option.value === this.orderByExpression.direction)
-        ?.value ?? this.defaultDirection
+        ?.value ?? this.defaultDirection,
     );
   }
 
@@ -202,7 +202,7 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
 
     return selected.allowedAggregations.map(aggType => ({
       value: aggType,
-      label: getAggregationDisplayName(aggType)
+      label: getAggregationDisplayName(aggType),
     }));
   }
 
@@ -217,38 +217,38 @@ export class ExploreQueryOrderByEditorComponent implements OnChanges {
       map(attributes =>
         attributes.map(attribute => ({
           value: attribute,
-          label: this.metadataService.getAttributeDisplayName(attribute)
-        }))
-      )
+          label: this.metadataService.getAttributeDisplayName(attribute),
+        })),
+      ),
     );
   }
 
   private removeRedundantOrderingAggregations(
     attributes: AttributeMetadata[],
-    redundantOrderingAggregations: MetricAggregationType[]
+    redundantOrderingAggregations: MetricAggregationType[],
   ): AttributeMetadata[] {
     return attributes.map(attribute => ({
       ...attribute,
-      allowedAggregations: difference(attribute.allowedAggregations, redundantOrderingAggregations)
+      allowedAggregations: difference(attribute.allowedAggregations, redundantOrderingAggregations),
     }));
   }
 
   private buildOrderExpression(
     attribute: AttributeMetadata,
     aggregation: MetricAggregationType,
-    sortBy: GraphQlSortDirection
+    sortBy: GraphQlSortDirection,
   ): Observable<ExploreOrderBy> {
     return of({
       aggregation: attribute.allowedAggregations.includes(aggregation) ? aggregation : attribute.allowedAggregations[0],
       direction: sortBy,
       attribute: {
-        key: attribute.name
-      }
+        key: attribute.name,
+      },
     });
   }
 }
 
 export const enum SortDirection {
   Asc = 'ASC',
-  Desc = 'DESC'
+  Desc = 'DESC',
 }

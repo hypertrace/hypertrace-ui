@@ -8,7 +8,7 @@ import {
   RelativeTimeRange,
   TimeDuration,
   TimeRangeService,
-  TimeUnit
+  TimeUnit,
 } from '@hypertrace/common';
 import { createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
@@ -26,13 +26,15 @@ describe('Time range component', () => {
     providers: [
       mockProvider(NavigationService, {
         navigation$: of({
-          queryParamMap: of(convertToParamMap({}))
-        } as ActivatedRoute)
+          queryParamMap: of(convertToParamMap({})),
+        } as ActivatedRoute),
       }),
       mockProvider(TimeRangeService, {
-        getTimeRangeAndChanges: jest.fn().mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))))
-      })
-    ]
+        getTimeRangeAndChanges: jest
+          .fn()
+          .mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)))),
+      }),
+    ],
   });
 
   test('should show default time range when instantiated', () => {
@@ -52,9 +54,9 @@ describe('Time range component', () => {
         mockProvider(TimeRangeService, {
           getTimeRangeAndChanges: jest
             .fn()
-            .mockReturnValue(of(new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute))))
-        })
-      ]
+            .mockReturnValue(of(new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute)))),
+        }),
+      ],
     });
     spectator.click('.trigger');
     spectator.click(spectator.queryAll('.popover-item', { root: true })[1]);
@@ -87,9 +89,9 @@ describe('Time range component', () => {
         mockProvider(TimeRangeService, {
           getTimeRangeAndChanges: jest
             .fn()
-            .mockReturnValue(of(new FixedTimeRange(new Date(1573255100253), new Date(1573255111159))))
-        })
-      ]
+            .mockReturnValue(of(new FixedTimeRange(new Date(1573255100253), new Date(1573255111159)))),
+        }),
+      ],
     });
     spectator.click('.trigger');
     spectator.click(spectator.queryAll('.popover-item', { root: true })[0]);
@@ -113,9 +115,9 @@ describe('Time range component', () => {
         mockProvider(TimeRangeService, {
           getTimeRangeAndChanges: jest
             .fn()
-            .mockReturnValue(of(new FixedTimeRange(new Date(1573255100253), new Date(1573255111159))))
-        })
-      ]
+            .mockReturnValue(of(new FixedTimeRange(new Date(1573255100253), new Date(1573255111159)))),
+        }),
+      ],
     });
     spectator.click('.trigger');
     spectator.click(spectator.queryAll('.popover-item', { root: true })[0]);

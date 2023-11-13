@@ -6,6 +6,6 @@ import { MetricCardComponent } from './metric-card.component';
 @NgModule({
   imports: [CommonModule, IconModule],
   declarations: [MetricCardComponent],
-  exports: [MetricCardComponent]
+  exports: [MetricCardComponent],
 })
 export class MetricCardModule {}

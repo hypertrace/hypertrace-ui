@@ -19,7 +19,7 @@ export const recordObservable = <T>(observable: Observable<T>): Observable<T> =>
 export const expectSingleEmissisonFromCallback = <T>(
   observable: Observable<T>,
   callback: () => void,
-  match?: unknown
+  match?: unknown,
 ): void => {
   runFakeRxjs(({ expectObservable }) => {
     const recorded = recordObservable(observable);

@@ -8,7 +8,7 @@ import { ObservabilityTraceType } from '../../../../../graphql/model/schema/obse
 import { ExploreSpecification } from '../../../../../graphql/model/schema/specifications/explore-specification';
 import {
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
-  GraphQlExploreResult
+  GraphQlExploreResult,
 } from '../../../../../graphql/request/handlers/explore/explore-query';
 import { MetadataService } from '../../../../../services/metadata/metadata.service';
 import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/cartesian-widget/series.model';
@@ -16,7 +16,7 @@ import { ExploreSelectionSpecificationModel } from '../../specifiers/explore-sel
 import { TraceSeriesValuesDataSourceModel } from '../trace-series-values-data-source.model';
 
 @Model({
-  type: 'trace-metric-timeseries-data-source'
+  type: 'trace-metric-timeseries-data-source',
 })
 export class TraceMetricTimeseriesDataSourceModel extends TraceSeriesValuesDataSourceModel<
   MetricSeriesDataFetcher<MetricTimeseriesInterval>
@@ -25,9 +25,9 @@ export class TraceMetricTimeseriesDataSourceModel extends TraceSeriesValuesDataS
     key: 'metric',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: ExploreSelectionSpecificationModel
+      defaultModelClass: ExploreSelectionSpecificationModel,
     } as ModelModelPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public specification!: ExploreSpecification;
 
@@ -36,19 +36,19 @@ export class TraceMetricTimeseriesDataSourceModel extends TraceSeriesValuesDataS
 
   public getData(): Observable<MetricSeriesDataFetcher<MetricTimeseriesInterval>> {
     return of({
-      getData: interval => this.getAllData(interval)
+      getData: interval => this.getAllData(interval),
     });
   }
 
   private getAllData(interval: TimeDuration): Observable<MetricSeries<MetricTimeseriesInterval>> {
     return forkJoinSafeEmpty({
       intervals: this.getSeries(interval),
-      units: this.getUnits()
+      units: this.getUnits(),
     }).pipe(
       map(obj => ({
         intervals: obj.intervals,
-        units: obj.units
-      }))
+        units: obj.units,
+      })),
     );
   }
 
@@ -63,9 +63,9 @@ export class TraceMetricTimeseriesDataSourceModel extends TraceSeriesValuesDataS
       map((results: GraphQlExploreResult[]) =>
         results.map(result => ({
           timestamp: result[GQL_EXPLORE_RESULT_INTERVAL_KEY] as Date,
-          value: result[this.specification.resultAlias()].value as number
-        }))
-      )
+          value: result[this.specification.resultAlias()].value as number,
+        })),
+      ),
     );
   }
 }

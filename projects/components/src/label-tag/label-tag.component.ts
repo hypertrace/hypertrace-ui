@@ -20,7 +20,7 @@ import { IconSize } from '../icon/icon-size';
       ></ht-icon>
       {{ this.label }}
     </div>
-  `
+  `,
 })
 export class LabelTagComponent {
   @Input()
@@ -44,5 +44,5 @@ export class LabelTagComponent {
 
 export const enum LabelTagTextStyle {
   Regular = 'regular',
-  Uppercase = 'uppercase'
+  Uppercase = 'uppercase',
 }

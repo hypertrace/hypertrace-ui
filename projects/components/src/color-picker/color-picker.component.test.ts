@@ -20,10 +20,10 @@ describe('Color Picker component', () => {
     providers: [
       mockProvider(NotificationService, { withNotification: (x: Observable<unknown>) => x }),
       mockProvider(NavigationService, {
-        navigation$: NEVER
-      })
+        navigation$: NEVER,
+      }),
     ],
-    declarations: [MockComponent(SketchComponent), MockComponent(IconComponent)]
+    declarations: [MockComponent(SketchComponent), MockComponent(IconComponent)],
   });
 
   test('should render color picker with default colors', fakeAsync(() => {
@@ -33,9 +33,9 @@ describe('Color Picker component', () => {
       </ht-color-picker>`,
       {
         hostProps: {
-          onSelectionChange: onSelectionChangeSpy
-        }
-      }
+          onSelectionChange: onSelectionChangeSpy,
+        },
+      },
     );
 
     const colors = spectator.queryAll('.color-picker .color');

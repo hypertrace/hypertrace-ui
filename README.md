@@ -142,13 +142,13 @@ Continue with the above `ModelJson`. Let's create `hello-widget.model.ts`
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 
 @Model({
-  type: 'hello-widget'
+  type: 'hello-widget',
 })
 export class HelloWidgetModel {
   @ModelProperty({
     type: STRING_PROPERTY.type,
     key: 'name',
-    required: false
+    required: false,
   })
   public name?: string;
 }
@@ -179,7 +179,7 @@ import { HelloWidgetModel } from './hello-widget.model';
 @Component({
   selector: 'ht-hello-widget-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <div *htLoadAsync="this.data$ as data">{{ data }} {{ this.model.name }}</div> `
+  template: ` <div *htLoadAsync="this.data$ as data">{{ data }} {{ this.model.name }}</div> `,
 })
 export class HelloWidgetRendererComponent extends WidgetRenderer<HelloWidgetModel> {
   protected fetchData(): Observable<string> {
@@ -303,12 +303,12 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   selector: 'ht-hello-table-cell-renderer',
   styleUrls: ['./hello-table-cell-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <div>Hello {{ this.value }}</div> `
+  template: ` <div>Hello {{ this.value }}</div> `,
 })
 @TableCellRenderer({
   type: 'hello',
   alignment: TableCellAlignmentType.Left,
-  parser: CoreTableCellParserType.NoOp
+  parser: CoreTableCellParserType.NoOp,
 })
 export class HelloTableCellRendererComponent extends TableCellRendererBase<string> {}
 ```
@@ -375,9 +375,9 @@ export class HelloGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
       path: 'getHello',
       children: [
         {
-          path: 'result'
-        }
-      ]
+          path: 'result',
+        },
+      ],
     };
   }
 

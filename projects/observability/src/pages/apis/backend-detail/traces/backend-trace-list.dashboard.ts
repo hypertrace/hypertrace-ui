@@ -16,8 +16,8 @@ export const backendTraceListDashboard = {
         filterable: true,
         value: {
           type: 'attribute-specification',
-          attribute: 'type'
-        }
+          attribute: 'type',
+        },
       },
       {
         type: 'table-widget-column',
@@ -26,8 +26,8 @@ export const backendTraceListDashboard = {
         filterable: true,
         value: {
           type: 'attribute-specification',
-          attribute: 'name'
-        }
+          attribute: 'name',
+        },
       },
       {
         type: 'table-widget-column',
@@ -36,8 +36,8 @@ export const backendTraceListDashboard = {
         filterable: true,
         value: {
           type: 'attribute-specification',
-          attribute: 'operation'
-        }
+          attribute: 'operation',
+        },
       },
       {
         type: 'table-widget-column',
@@ -46,8 +46,8 @@ export const backendTraceListDashboard = {
         filterable: true,
         value: {
           type: 'attribute-specification',
-          attribute: 'destination'
-        }
+          attribute: 'destination',
+        },
       },
       {
         type: 'table-widget-column',
@@ -58,8 +58,8 @@ export const backendTraceListDashboard = {
         value: {
           type: 'enriched-attribute-specification',
           attribute: 'duration',
-          units: 'ms'
-        }
+          units: 'ms',
+        },
       },
       {
         type: 'table-widget-column',
@@ -68,10 +68,10 @@ export const backendTraceListDashboard = {
         display: CoreTableCellRendererType.Timestamp,
         value: {
           type: 'attribute-specification',
-          attribute: 'startTime'
+          attribute: 'startTime',
         },
-        sort: TableSortDirection.Descending
-      }
+        sort: TableSortDirection.Descending,
+      },
     ],
     mode: TableMode.Detail,
     'child-template': {
@@ -79,12 +79,12 @@ export const backendTraceListDashboard = {
       data: {
         type: 'api-trace-detail-data-source',
 
-        trace: '${row}'
-      }
+        trace: '${row}',
+      },
     },
     data: {
       type: 'traces-table-data-source',
-      trace: ObservabilityTraceType.Backend
-    }
-  }
+      trace: ObservabilityTraceType.Backend,
+    },
+  },
 };

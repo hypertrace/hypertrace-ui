@@ -9,7 +9,7 @@ import { TopologyDataSourceModelPropertiesService } from './topology-data-source
 
 describe('TopologyDataSourceModelPropertiesService', () => {
   const createService = createServiceFactory({
-    service: TopologyDataSourceModelPropertiesService
+    service: TopologyDataSourceModelPropertiesService,
   });
 
   const createCategoryModel = (
@@ -18,7 +18,7 @@ describe('TopologyDataSourceModelPropertiesService', () => {
     fillColor: Color,
     strokeColor: Color,
     focusColor: Color,
-    maxValue?: number
+    maxValue?: number,
   ): TopologyMetricCategoryModel => {
     const categoryModel = new TopologyMetricCategoryModel();
     categoryModel.name = name;
@@ -43,7 +43,7 @@ describe('TopologyDataSourceModelPropertiesService', () => {
 
   const createMetricWithCategory = (
     spec: MetricAggregationSpecificationModel,
-    categories: TopologyMetricCategoryModel[]
+    categories: TopologyMetricCategoryModel[],
   ) => {
     const model = new TopologyMetricWithCategoryModel();
     model.specification = spec;
@@ -60,8 +60,8 @@ describe('TopologyDataSourceModelPropertiesService', () => {
       [
         createCategoryModel('node-first-1', 0, Color.Blue2, Color.Blue3, Color.Blue4, 10),
         createCategoryModel('node-second-1', 10, Color.Red1, Color.Red3, Color.Red4, 50),
-        createCategoryModel('node-third-1', 50, Color.Blue2, Color.Blue3, Color.Blue4)
-      ]
+        createCategoryModel('node-third-1', 50, Color.Blue2, Color.Blue3, Color.Blue4),
+      ],
     );
 
     const nodeSecondary = createMetricWithCategory(
@@ -69,20 +69,20 @@ describe('TopologyDataSourceModelPropertiesService', () => {
       [
         createCategoryModel('node-first-2', 0, Color.Blue2, Color.Blue3, Color.Blue4, 10),
         createCategoryModel('node-second-2', 10, Color.Red1, Color.Red3, Color.Red4, 50),
-        createCategoryModel('node-third-2', 50, Color.Blue2, Color.Blue3, Color.Blue4)
-      ]
+        createCategoryModel('node-third-2', 50, Color.Blue2, Color.Blue3, Color.Blue4),
+      ],
     );
 
     const nodeOthers = [
       createMetricWithCategory(createSpecificationModel('node-metric-5', MetricAggregationType.Average), [
-        createCategoryModel('node-others-2', 0, Color.Blue2, Color.Blue3, Color.Blue4, 10)
-      ])
+        createCategoryModel('node-others-2', 0, Color.Blue2, Color.Blue3, Color.Blue4, 10),
+      ]),
     ];
 
     const nodeMetrics: TopologyMetricsData = {
       primary: nodePrimary,
       secondary: nodeSecondary,
-      others: nodeOthers
+      others: nodeOthers,
     };
 
     const edgePrimary = createMetricWithCategory(
@@ -90,8 +90,8 @@ describe('TopologyDataSourceModelPropertiesService', () => {
       [
         createCategoryModel('edge-first-1', 0, Color.Blue2, Color.Blue3, Color.Blue4, 10),
         createCategoryModel('edge-second-1', 10, Color.Red1, Color.Red3, Color.Red4, 50),
-        createCategoryModel('edge-third-1', 50, Color.Blue2, Color.Blue3, Color.Blue4)
-      ]
+        createCategoryModel('edge-third-1', 50, Color.Blue2, Color.Blue3, Color.Blue4),
+      ],
     );
 
     const edgeSecondary = createMetricWithCategory(
@@ -99,20 +99,20 @@ describe('TopologyDataSourceModelPropertiesService', () => {
       [
         createCategoryModel('edge-first-2', 0, Color.Blue2, Color.Blue3, Color.Blue4, 10),
         createCategoryModel('edge-second-2', 10, Color.Red1, Color.Red3, Color.Red4, 50),
-        createCategoryModel('edge-third-2', 50, Color.Blue2, Color.Blue3, Color.Blue4)
-      ]
+        createCategoryModel('edge-third-2', 50, Color.Blue2, Color.Blue3, Color.Blue4),
+      ],
     );
 
     const edgeOthers = [
       createMetricWithCategory(createSpecificationModel('metric-4', MetricAggregationType.Average), [
-        createCategoryModel('edge-others-2', 0, Color.Blue2, Color.Blue3, Color.Blue4, 10)
-      ])
+        createCategoryModel('edge-others-2', 0, Color.Blue2, Color.Blue3, Color.Blue4, 10),
+      ]),
     ];
 
     const edgeMetrics: TopologyMetricsData = {
       primary: edgePrimary,
       secondary: edgeSecondary,
-      others: edgeOthers
+      others: edgeOthers,
     };
     spectator.service.setModelProperties(nodeMetrics, edgeMetrics);
 

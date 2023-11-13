@@ -4,7 +4,7 @@ import {
   ArrayPropertyTypeInstance,
   EnumPropertyTypeInstance,
   ENUM_TYPE,
-  ModelTemplatePropertyType
+  ModelTemplatePropertyType,
 } from '@hypertrace/dashboards';
 import {
   ARRAY_PROPERTY,
@@ -12,7 +12,7 @@ import {
   Model,
   ModelJson,
   ModelProperty,
-  ModelPropertyType
+  ModelPropertyType,
 } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
@@ -25,7 +25,7 @@ import { SpecificationBackedTableColumnDef, TableWidgetColumnModel } from './tab
 
 @Model({
   type: 'table-widget',
-  displayName: 'Table Widget'
+  displayName: 'Table Widget',
 })
 export class TableWidgetModel extends TableWidgetBaseModel {
   @ModelProperty({
@@ -35,9 +35,9 @@ export class TableWidgetModel extends TableWidgetBaseModel {
       key: ARRAY_PROPERTY.type,
       subtype: {
         key: ModelPropertyType.TYPE,
-        defaultModelClass: TableWidgetColumnModel
-      }
-    } as ArrayPropertyTypeInstance
+        defaultModelClass: TableWidgetColumnModel,
+      },
+    } as ArrayPropertyTypeInstance,
   })
   public columns: TableWidgetColumnModel[] = [];
 
@@ -46,8 +46,8 @@ export class TableWidgetModel extends TableWidgetBaseModel {
     displayName: 'Table Selection Mode',
     type: {
       key: ENUM_TYPE.type,
-      values: [TableSelectionMode.None, TableSelectionMode.Single, TableSelectionMode.Multiple]
-    } as EnumPropertyTypeInstance
+      values: [TableSelectionMode.None, TableSelectionMode.Single, TableSelectionMode.Multiple],
+    } as EnumPropertyTypeInstance,
   })
   public selectionMode: TableSelectionMode = TableSelectionMode.Single;
 
@@ -57,7 +57,7 @@ export class TableWidgetModel extends TableWidgetBaseModel {
   @ModelProperty({
     key: 'selection-handler',
     displayName: 'Row selection Handler',
-    type: ModelPropertyType.TYPE
+    type: ModelPropertyType.TYPE,
   })
   public selectionHandler?: InteractionHandler;
 
@@ -68,9 +68,9 @@ export class TableWidgetModel extends TableWidgetBaseModel {
       key: ARRAY_PROPERTY.type,
       subtype: {
         key: ModelPropertyType.TYPE,
-        defaultModelClass: TableWidgetRowInteractionModel
-      }
-    } as ArrayPropertyTypeInstance
+        defaultModelClass: TableWidgetRowInteractionModel,
+      },
+    } as ArrayPropertyTypeInstance,
   })
   public rowClickHandlers?: TableWidgetRowInteractionModel[];
 
@@ -81,28 +81,28 @@ export class TableWidgetModel extends TableWidgetBaseModel {
       key: ARRAY_PROPERTY.type,
       subtype: {
         key: ModelPropertyType.TYPE,
-        defaultModelClass: TableWidgetRowInteractionModel
-      }
-    } as ArrayPropertyTypeInstance
+        defaultModelClass: TableWidgetRowInteractionModel,
+      },
+    } as ArrayPropertyTypeInstance,
   })
   public rowSelectionHandlers?: TableWidgetRowInteractionModel[];
 
   @ModelProperty({
     key: 'child-template',
-    type: ModelTemplatePropertyType.TYPE
+    type: ModelTemplatePropertyType.TYPE,
   })
   public childTemplate?: ModelJson;
 
   @ModelProperty({
     key: 'custom-control-widget',
-    type: ModelTemplatePropertyType.TYPE
+    type: ModelTemplatePropertyType.TYPE,
   })
   public customControlModelJson?: ModelJson;
 
   @ModelProperty({
     key: 'fetchEditableColumns',
     displayName: 'Query for additional columns not provided',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public fetchEditableColumns: boolean = false;
 
@@ -146,7 +146,7 @@ export class TableWidgetModel extends TableWidgetBaseModel {
 
   public getColumns(scope?: string): Observable<SpecificationBackedTableColumnDef[]> {
     const modelColumns: Observable<SpecificationBackedTableColumnDef[]> = forkJoinSafeEmpty(
-      this.columns.map(column => column.asTableColumnDef(scope))
+      this.columns.map(column => column.asTableColumnDef(scope)),
     );
 
     if (scope === undefined || !this.fetchEditableColumns) {

@@ -10,40 +10,40 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 10,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
-          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
+          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0),
         },
         {
           'sum(foo)': {
             value: 15,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
-          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
+          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1),
         },
         {
           'sum(foo)': {
             value: 20,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
-          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(2)
-        }
-      ]
+          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(2),
+        },
+      ],
     });
 
     expect(result.getTimeSeriesData('foo', MetricAggregationType.Sum)).toEqual([
       {
         timestamp: new Date(0),
-        value: 10
+        value: 10,
       },
       {
         timestamp: new Date(1),
-        value: 15
+        value: 15,
       },
       {
         timestamp: new Date(2),
-        value: 20
-      }
+        value: 20,
+      },
     ]);
   });
 
@@ -53,40 +53,40 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 10,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           group: {
             value: 'first',
-            type: AttributeMetadataType.String
-          }
+            type: AttributeMetadataType.String,
+          },
         },
         {
           'sum(foo)': {
             value: 15,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           group: {
             value: 'second',
-            type: AttributeMetadataType.String
-          }
+            type: AttributeMetadataType.String,
+          },
         },
         {
           'sum(foo)': {
             value: 20,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           group: {
             value: 'third',
-            type: AttributeMetadataType.String
-          }
-        }
-      ]
+            type: AttributeMetadataType.String,
+          },
+        },
+      ],
     });
 
     expect(result.getGroupedSeriesData([{ key: 'group' }], 'foo', MetricAggregationType.Sum)).toEqual([
       { keys: ['first'], value: 10 },
       { keys: ['second'], value: 15 },
-      { keys: ['third'], value: 20 }
+      { keys: ['third'], value: 20 },
     ]);
   });
 
@@ -96,29 +96,29 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 10,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           group: {
             value: 'first',
-            type: AttributeMetadataType.String
-          }
+            type: AttributeMetadataType.String,
+          },
         },
         {
           'sum(foo)': {
             value: 15,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           group: {
             value: '__Other',
-            type: AttributeMetadataType.String
-          }
-        }
-      ]
+            type: AttributeMetadataType.String,
+          },
+        },
+      ],
     });
 
     expect(result.getGroupedSeriesData([{ key: 'group' }], 'foo', MetricAggregationType.Sum)).toEqual([
       { keys: ['first'], value: 10 },
-      { keys: ['Others'], value: 15 }
+      { keys: ['Others'], value: 15 },
     ]);
   });
 
@@ -128,48 +128,48 @@ describe('Explore result', () => {
         {
           'sum(foo)': {
             value: 10,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           group: {
             value: 'first',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
-          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
+          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0),
         },
         {
           'sum(foo)': {
             value: 15,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           group: {
             value: 'first',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
-          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
+          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1),
         },
         {
           'sum(foo)': {
             value: 20,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           group: {
             value: 'second',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
-          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0)
+          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(0),
         },
         {
           'sum(foo)': {
             value: 25,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           group: {
             value: 'second',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
-          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1)
-        }
-      ]
+          [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date(1),
+        },
+      ],
     });
 
     expect(result.getGroupedTimeSeriesData([{ key: 'group' }], 'foo', MetricAggregationType.Sum)).toEqual(
@@ -179,28 +179,28 @@ describe('Explore result', () => {
           [
             {
               timestamp: new Date(0),
-              value: 10
+              value: 10,
             },
             {
               timestamp: new Date(1),
-              value: 15
-            }
-          ]
+              value: 15,
+            },
+          ],
         ],
         [
           ['second'],
           [
             {
               timestamp: new Date(0),
-              value: 20
+              value: 20,
             },
             {
               timestamp: new Date(1),
-              value: 25
-            }
-          ]
-        ]
-      ])
+              value: 25,
+            },
+          ],
+        ],
+      ]),
     );
   });
 });

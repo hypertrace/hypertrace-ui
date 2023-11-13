@@ -6,7 +6,7 @@ import {
   TopologyCoordinates,
   TopologyEdge,
   TopologyLayout,
-  TopologyNode
+  TopologyNode,
 } from '../../topology';
 
 // TODO this whole layout doesn't make sense for a graph. Lots of hacks in here to try to flatten as a tree
@@ -19,7 +19,7 @@ export class TreeLayout implements TopologyLayout {
       .separation(() => 1)(rootHierarchyNode);
 
     treeDataLevel0Node.children!.forEach(node =>
-      this.updatePositions(node, node.y, this.getMinYPosition(treeDataLevel0Node))
+      this.updatePositions(node, node.y, this.getMinYPosition(treeDataLevel0Node)),
     );
   }
 
@@ -29,7 +29,7 @@ export class TreeLayout implements TopologyLayout {
   private updatePositions(
     hierarchyNode: HierarchyPointNode<D3ProxyNode>,
     level0XRootAdjustment: number,
-    yAdjustment: number
+    yAdjustment: number,
   ): void {
     hierarchyNode.data.sourceNode!.x = hierarchyNode.y - level0XRootAdjustment;
     hierarchyNode.data.sourceNode!.y = hierarchyNode.x + Math.abs(yAdjustment);
@@ -44,7 +44,7 @@ export class TreeLayout implements TopologyLayout {
 
   protected buildHierarchyProxyNodes(
     nodes: RenderableTopologyNode[],
-    startingLocation: TopologyCoordinates
+    startingLocation: TopologyCoordinates,
   ): D3ProxyNode {
     const topologyHierarchyNodeMap = this.buildTopologyHierarchyNodeMap(nodes, startingLocation);
 
@@ -54,7 +54,7 @@ export class TreeLayout implements TopologyLayout {
       hasIncomingEdges: false,
       children: [],
       x: 0,
-      y: 0
+      y: 0,
     };
 
     topologyHierarchyNodeMap.forEach(d3Node => {
@@ -101,7 +101,7 @@ export class TreeLayout implements TopologyLayout {
 
   protected buildTopologyHierarchyNodeMap(
     nodes: RenderableTopologyNode[],
-    startingLocation: TopologyCoordinates
+    startingLocation: TopologyCoordinates,
   ): Map<RenderableTopologyNode, D3ProxyNode> {
     const topologyHierarchyNodeMap = new Map(
       nodes.map(topologyNode => {
@@ -112,11 +112,11 @@ export class TreeLayout implements TopologyLayout {
           sourceNode: topologyNode,
           ...startingLocation,
           children: [],
-          hasIncomingEdges: false
+          hasIncomingEdges: false,
         };
 
         return [topologyNode, d3Node];
-      })
+      }),
     );
 
     topologyHierarchyNodeMap.forEach((d3Node, topologyNode) => {

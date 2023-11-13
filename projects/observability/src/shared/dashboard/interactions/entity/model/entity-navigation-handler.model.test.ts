@@ -7,15 +7,15 @@ import { EntityNavigationHandlerModel } from './entity-navigation-handler.model'
 describe('Entity Navigation Handler Model', () => {
   const entity: Entity = {
     [entityIdKey]: 'test-id',
-    [entityTypeKey]: ObservabilityEntityType.Api
+    [entityTypeKey]: ObservabilityEntityType.Api,
   };
 
   const buildModel = createModelFactory({
     providers: [
       mockProvider(EntityNavigationService, {
-        navigateToEntity: jest.fn()
-      })
-    ]
+        navigateToEntity: jest.fn(),
+      }),
+    ],
   });
 
   test('calls navigateToEntity with correct parameters', () => {

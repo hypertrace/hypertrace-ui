@@ -24,7 +24,7 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
 
   public constructor(
     private readonly timeRangeService: TimeRangeService,
-    private readonly globalGraphQlFilterService: GlobalGraphQlFilterService
+    private readonly globalGraphQlFilterService: GlobalGraphQlFilterService,
   ) {}
 
   public matchesRequest(request: unknown): request is GraphQlTraceRequest {
@@ -46,16 +46,16 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
         this.argBuilder.forTimeRange(timeRange),
         ...this.argBuilder.forFilters(
           this.globalGraphQlFilterService.mergeGlobalFilters(resolveTraceType(request.traceType), [
-            this.buildTraceIdFilter(request)
-          ])
-        )
+            this.buildTraceIdFilter(request),
+          ]),
+        ),
       ],
       children: [
         {
           path: 'results',
-          children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.traceProperties)]
-        }
-      ]
+          children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.traceProperties)],
+        },
+      ],
     };
 
     requestMap.set(this.tracesKey, traces);
@@ -67,8 +67,8 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
           this.argBuilder.forLimit(request.spanLimit),
           this.argBuilder.forTimeRange(timeRange),
           ...this.argBuilder.forFilters(
-            this.globalGraphQlFilterService.mergeGlobalFilters(SPAN_SCOPE, this.buildSpansFilter(request))
-          )
+            this.globalGraphQlFilterService.mergeGlobalFilters(SPAN_SCOPE, this.buildSpansFilter(request)),
+          ),
         ],
         children: [
           {
@@ -82,16 +82,16 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
                       children: [
                         {
                           path: 'results',
-                          children: this.selectionBuilder.fromSpecifications(request.logEventProperties!)
-                        }
-                      ]
-                    }
+                          children: this.selectionBuilder.fromSpecifications(request.logEventProperties!),
+                        },
+                      ],
+                    },
                   ]
                 : []),
-              ...this.selectionBuilder.fromSpecifications(request.spanProperties!)
-            ]
-          }
-        ]
+              ...this.selectionBuilder.fromSpecifications(request.spanProperties!),
+            ],
+          },
+        ],
       };
 
       requestMap.set(this.spansKey, spans);
@@ -102,7 +102,7 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
 
   public convertResponse(
     response: Map<string, TraceServerResponse | SpansServerResponse>,
-    request: GraphQlTraceRequest
+    request: GraphQlTraceRequest,
   ): Trace | undefined {
     const traceResponse = response.get(this.tracesKey) as TraceServerResponse;
     const spansResponse = response.get(this.spansKey) as SpansServerResponse | undefined;
@@ -122,11 +122,11 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
   private normalizeTrace(rawResult: TraceServerResult, request: GraphQlTraceRequest): Trace {
     const trace: Trace = {
       [traceIdKey]: rawResult.id as string,
-      [traceTypeKey]: resolveTraceType(request.traceType)
+      [traceTypeKey]: resolveTraceType(request.traceType),
     };
 
     request.traceProperties.forEach(
-      property => (trace[property.resultAlias()] = property.extractFromServerData(rawResult))
+      property => (trace[property.resultAlias()] = property.extractFromServerData(rawResult)),
     );
 
     return trace;
@@ -138,7 +138,7 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
     rawResult.results.forEach(spanRawResult => {
       const span: Span = {
         [spanIdKey]: spanRawResult.id as string,
-        ...(!isEmpty(spanRawResult.logEvents) && { logEvents: spanRawResult.logEvents })
+        ...(!isEmpty(spanRawResult.logEvents) && { logEvents: spanRawResult.logEvents }),
       };
 
       (request.spanProperties || []).forEach(property => {
@@ -171,7 +171,7 @@ export class TraceGraphQlQueryHandlerService implements GraphQlQueryHandler<Grap
       const duration = new TimeDuration(30, TimeUnit.Minute);
       timeRange = {
         startTime: timestamp.getTime() - duration.toMillis(),
-        endTime: timestamp.getTime() + duration.toMillis()
+        endTime: timestamp.getTime() + duration.toMillis(),
       };
     } else {
       timeRange = this.timeRangeService.getCurrentTimeRange();

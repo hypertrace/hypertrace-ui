@@ -3,12 +3,12 @@ import {
   Model,
   ModelModelPropertyTypeInstance,
   ModelProperty,
-  ModelPropertyType
+  ModelPropertyType,
 } from '@hypertrace/hyperdash';
 import { TopologyMetricWithCategoryData, TopologyMetricWithCategoryModel } from './topology-metric-with-category.model';
 
 @Model({
-  type: 'topology-metrics'
+  type: 'topology-metrics',
 })
 export class TopologyMetricsModel implements TopologyMetricsData {
   @ModelProperty({
@@ -16,8 +16,8 @@ export class TopologyMetricsModel implements TopologyMetricsData {
     required: true,
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: TopologyMetricWithCategoryModel
-    } as ModelModelPropertyTypeInstance
+      defaultModelClass: TopologyMetricWithCategoryModel,
+    } as ModelModelPropertyTypeInstance,
   })
   public primary!: TopologyMetricWithCategoryModel;
 
@@ -26,15 +26,15 @@ export class TopologyMetricsModel implements TopologyMetricsData {
     required: false,
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: TopologyMetricWithCategoryModel
-    } as ModelModelPropertyTypeInstance
+      defaultModelClass: TopologyMetricWithCategoryModel,
+    } as ModelModelPropertyTypeInstance,
   })
   public secondary?: TopologyMetricWithCategoryModel;
 
   @ModelProperty({
     key: 'others',
     required: false,
-    type: ARRAY_PROPERTY.type
+    type: ARRAY_PROPERTY.type,
   })
   public others?: TopologyMetricWithCategoryModel[];
 }

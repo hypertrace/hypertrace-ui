@@ -16,22 +16,22 @@ describe('Popover service', () => {
   let service: PopoverService;
   const testContent = Component({
     selector: 'popover-test-content',
-    template: 'Test content'
+    template: 'Test content',
   })(class {});
 
   const popoverHostFactory = createHostFactory({
     component: Component({
       selector: 'popover-parent',
-      template: '<div></div>'
+      template: '<div></div>',
     })(class {}),
     imports: [PopoverModule],
     entryComponents: [testContent],
     declarations: [testContent],
     providers: [
       mockProvider(NavigationService, {
-        navigation$: navigation$
-      })
-    ]
+        navigation$: navigation$,
+      }),
+    ],
   });
 
   const popoverContent = () => spectator.query('popover-test-content', { root: true })!;
@@ -56,9 +56,9 @@ describe('Popover service', () => {
       position: {
         type: PopoverPositionType.Relative,
         origin: spectator.debugElement,
-        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft]
+        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft],
       },
-      componentOrTemplate: testContent
+      componentOrTemplate: testContent,
     });
     tick(); // CDK overlay is async
     spectator.detectChanges();
@@ -72,9 +72,9 @@ describe('Popover service', () => {
       position: {
         type: PopoverPositionType.Relative,
         origin: spectator.debugElement,
-        locationPreferences: [PopoverRelativePositionLocation.OverLeftAligned]
+        locationPreferences: [PopoverRelativePositionLocation.OverLeftAligned],
       },
-      componentOrTemplate: testContent
+      componentOrTemplate: testContent,
     });
     tick(); // CDK overlay is async
     spectator.detectChanges();
@@ -88,10 +88,10 @@ describe('Popover service', () => {
       position: {
         type: PopoverPositionType.Relative,
         origin: spectator.debugElement,
-        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft]
+        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft],
       },
       componentOrTemplate: testContent,
-      backdrop: PopoverBackdrop.Transparent
+      backdrop: PopoverBackdrop.Transparent,
     });
     tick(); // CDK overlay is async
     spectator.detectChanges();
@@ -105,10 +105,10 @@ describe('Popover service', () => {
       position: {
         type: PopoverPositionType.Relative,
         origin: spectator.debugElement,
-        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft]
+        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft],
       },
       componentOrTemplate: testContent,
-      backdrop: PopoverBackdrop.Opaque
+      backdrop: PopoverBackdrop.Opaque,
     });
     tick(); // CDK overlay is async
     spectator.detectChanges();
@@ -122,10 +122,10 @@ describe('Popover service', () => {
       position: {
         type: PopoverPositionType.Relative,
         origin: spectator.debugElement,
-        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft]
+        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft],
       },
       backdrop: PopoverBackdrop.Transparent,
-      componentOrTemplate: testContent
+      componentOrTemplate: testContent,
     });
     popover.show();
     popover.closeOnNavigation();
@@ -152,10 +152,10 @@ describe('Popover service', () => {
       position: {
         type: PopoverPositionType.Relative,
         origin: spectator.debugElement,
-        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft]
+        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft],
       },
       backdrop: PopoverBackdrop.Transparent,
-      componentOrTemplate: testContent
+      componentOrTemplate: testContent,
     });
     tick(); // CDK overlay is async
     spectator.detectChanges();
@@ -178,10 +178,10 @@ describe('Popover service', () => {
       position: {
         type: PopoverPositionType.Relative,
         origin: spectator.debugElement,
-        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft]
+        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft],
       },
       backdrop: PopoverBackdrop.Transparent,
-      componentOrTemplate: testContent
+      componentOrTemplate: testContent,
     });
     tick(); // CDK overlay is async
     spectator.detectChanges();
@@ -228,9 +228,9 @@ describe('Popover service', () => {
       position: {
         type: PopoverPositionType.Relative,
         origin: spectator.debugElement,
-        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft]
+        locationPreferences: [PopoverRelativePositionLocation.InsideTopLeft],
       },
-      componentOrTemplate: testContent
+      componentOrTemplate: testContent,
     });
     tick(); // CDK overlay is async
     spectator.detectChanges();

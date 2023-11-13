@@ -3,7 +3,7 @@ import { TableCellParserBase } from '../table-cell-parser-base';
 import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';
 
 @TableCellParser({
-  type: CoreTableCellParserType.NoOp
+  type: CoreTableCellParserType.NoOp,
 })
 export class TableCellNoOpParser<T = unknown> extends TableCellParserBase<T, T, string | undefined> {
   public parseValue(cellData: T): T {

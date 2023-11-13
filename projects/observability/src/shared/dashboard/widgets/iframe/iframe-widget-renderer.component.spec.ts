@@ -9,7 +9,7 @@ describe('IFrame Widget Renderer Component', () => {
   const createComponent = createComponentFactory<IframeWidgetRendererComponent>({
     component: IframeWidgetRendererComponent,
     providers: [...mockDashboardWidgetProviders({})],
-    shallow: true
+    shallow: true,
   });
 
   test('should use iframe', () => {

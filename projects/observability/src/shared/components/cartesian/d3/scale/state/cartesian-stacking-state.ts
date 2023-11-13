@@ -12,7 +12,7 @@ export class CartesianStackingState<TData> implements SeriesState<TData> {
   public constructor(
     protected readonly stackingSeriesList: Series<TData>[],
     protected readonly xDataAccessor: (data: TData) => XValue,
-    protected readonly yDataAccessor: (data: TData) => YValue
+    protected readonly yDataAccessor: (data: TData) => YValue,
   ) {
     this.transformToStackData();
   }
@@ -71,7 +71,7 @@ export class CartesianStackingState<TData> implements SeriesState<TData> {
         }
 
         dataPoint[`${series.name}`] = this.yDataAccessor(datum);
-      })
+      }),
     );
 
     return dataMap;

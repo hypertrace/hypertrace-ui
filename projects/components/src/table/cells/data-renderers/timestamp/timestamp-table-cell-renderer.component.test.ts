@@ -11,17 +11,17 @@ describe('Timestamp table cell renderer component', () => {
     providers: [
       tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
-        new TableCellTimestampParser(undefined!)
-      )
+        new TableCellTimestampParser(undefined!),
+      ),
     ],
-    shallow: true
+    shallow: true,
   });
 
   test('renders a timestamp with format y-M-d hh:mm:ss a', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(new Date('2019-10-25T18:35:25.428Z').getTime())]
+      providers: [tableCellDataProvider(new Date('2019-10-25T18:35:25.428Z').getTime())],
     });
 
     expect(spectator.element).toHaveText('2019-10-25 06:35:25 PM');
@@ -29,7 +29,7 @@ describe('Timestamp table cell renderer component', () => {
 
   test('renders a date with format y-M-d hh:mm:ss a', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(new Date('2019-10-25T18:35:25.428Z'))]
+      providers: [tableCellDataProvider(new Date('2019-10-25T18:35:25.428Z'))],
     });
 
     expect(spectator.element).toHaveText('2019-10-25 06:35:25 PM');

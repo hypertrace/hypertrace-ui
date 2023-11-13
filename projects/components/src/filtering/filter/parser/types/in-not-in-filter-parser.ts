@@ -11,7 +11,7 @@ export class InNotInFilterParser extends AbstractFilterParser<PossibleValuesType
       FilterAttributeType.String,
       FilterAttributeType.Number,
       FilterAttributeType.StringMap,
-      FilterAttributeType.StringArray
+      FilterAttributeType.StringArray,
     ];
   }
 

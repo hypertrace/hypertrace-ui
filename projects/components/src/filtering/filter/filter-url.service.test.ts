@@ -20,29 +20,29 @@ describe('Filter URL service', () => {
     new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.NotEquals,
-      217
+      217,
     ),
     new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.NotEquals,
-      415
+      415,
     ),
     new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.LessThanOrEqualTo,
-      707
+      707,
     ),
     new StringFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.String),
       FilterOperator.Equals,
-      'test'
+      'test',
     ),
     new StringMapFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.StringMap),
       FilterOperator.Equals,
       'myValue',
-      'myKey'
-    )
+      'myKey',
+    ),
   ];
 
   const expectedQueryParamObject = {
@@ -51,8 +51,8 @@ describe('Filter URL service', () => {
       'numberAttribute_neq_415',
       'numberAttribute_lte_707',
       'stringAttribute_eq_test',
-      'stringMapAttribute.myKey_eq_myValue'
-    ]
+      'stringMapAttribute.myKey_eq_myValue',
+    ],
   };
 
   let testQueryParamObject: QueryParamObject = {};
@@ -64,9 +64,9 @@ describe('Filter URL service', () => {
         navigation$: EMPTY,
         addQueryParametersToUrl: (paramObject: QueryParamObject) =>
           (testQueryParamObject = { ...testQueryParamObject, ...paramObject }),
-        getAllValuesForQueryParameter: (param: string) => testQueryParamObject[param] ?? []
-      })
-    ]
+        getAllValuesForQueryParameter: (param: string) => testQueryParamObject[param] ?? [],
+      }),
+    ],
   });
 
   beforeEach(() => {
@@ -100,8 +100,8 @@ describe('Filter URL service', () => {
       new StringFilterBuilder().buildFilter(
         getTestFilterAttribute(FilterAttributeType.String),
         FilterOperator.NotEquals,
-        'test'
-      )
+        'test',
+      ),
     );
 
     /*
@@ -112,12 +112,12 @@ describe('Filter URL service', () => {
       new NumberFilterBuilder().buildFilter(
         getTestFilterAttribute(FilterAttributeType.Number),
         FilterOperator.GreaterThanOrEqualTo,
-        217
-      )
+        217,
+      ),
     );
 
     expect(testQueryParamObject).toEqual({
-      filter: ['stringAttribute_neq_test', 'numberAttribute_gte_217']
+      filter: ['stringAttribute_neq_test', 'numberAttribute_gte_217'],
     });
 
     /*
@@ -128,12 +128,12 @@ describe('Filter URL service', () => {
       new NumberFilterBuilder().buildFilter(
         getTestFilterAttribute(FilterAttributeType.Number),
         FilterOperator.GreaterThanOrEqualTo,
-        415
-      )
+        415,
+      ),
     );
 
     expect(testQueryParamObject).toEqual({
-      filter: ['stringAttribute_neq_test', 'numberAttribute_gte_415']
+      filter: ['stringAttribute_neq_test', 'numberAttribute_gte_415'],
     });
 
     /*
@@ -144,12 +144,12 @@ describe('Filter URL service', () => {
       new NumberFilterBuilder().buildFilter(
         getTestFilterAttribute(FilterAttributeType.Number),
         FilterOperator.LessThanOrEqualTo,
-        707
-      )
+        707,
+      ),
     );
 
     expect(testQueryParamObject).toEqual({
-      filter: ['stringAttribute_neq_test', 'numberAttribute_gte_415', 'numberAttribute_lte_707']
+      filter: ['stringAttribute_neq_test', 'numberAttribute_gte_415', 'numberAttribute_lte_707'],
     });
 
     /*
@@ -160,12 +160,12 @@ describe('Filter URL service', () => {
       new NumberFilterBuilder().buildFilter(
         getTestFilterAttribute(FilterAttributeType.Number),
         FilterOperator.LessThanOrEqualTo,
-        949
-      )
+        949,
+      ),
     );
 
     expect(testQueryParamObject).toEqual({
-      filter: ['stringAttribute_neq_test', 'numberAttribute_gte_415', 'numberAttribute_lte_949']
+      filter: ['stringAttribute_neq_test', 'numberAttribute_gte_415', 'numberAttribute_lte_949'],
     });
 
     /*
@@ -176,8 +176,8 @@ describe('Filter URL service', () => {
       new NumberFilterBuilder().buildFilter(
         getTestFilterAttribute(FilterAttributeType.Number),
         FilterOperator.NotEquals,
-        2020
-      )
+        2020,
+      ),
     );
 
     expect(testQueryParamObject).toEqual({
@@ -185,8 +185,8 @@ describe('Filter URL service', () => {
         'stringAttribute_neq_test',
         'numberAttribute_gte_415',
         'numberAttribute_lte_949',
-        'numberAttribute_neq_2020'
-      ]
+        'numberAttribute_neq_2020',
+      ],
     });
 
     /*
@@ -197,12 +197,12 @@ describe('Filter URL service', () => {
       new NumberFilterBuilder().buildFilter(
         getTestFilterAttribute(FilterAttributeType.Number),
         FilterOperator.Equals,
-        2020
-      )
+        2020,
+      ),
     );
 
     expect(testQueryParamObject).toEqual({
-      filter: ['stringAttribute_neq_test', 'numberAttribute_eq_2020']
+      filter: ['stringAttribute_neq_test', 'numberAttribute_eq_2020'],
     });
 
     /*
@@ -213,12 +213,12 @@ describe('Filter URL service', () => {
       new NumberFilterBuilder().buildFilter(
         getTestFilterAttribute(FilterAttributeType.Number),
         FilterOperator.NotEquals,
-        2020
-      )
+        2020,
+      ),
     );
 
     expect(testQueryParamObject).toEqual({
-      filter: ['stringAttribute_neq_test', 'numberAttribute_neq_2020']
+      filter: ['stringAttribute_neq_test', 'numberAttribute_neq_2020'],
     });
 
     /*
@@ -226,11 +226,15 @@ describe('Filter URL service', () => {
      */
     spectator.service.addUrlFilter(
       attributes,
-      new NumberFilterBuilder().buildFilter(getTestFilterAttribute(FilterAttributeType.Number), FilterOperator.In, 1984)
+      new NumberFilterBuilder().buildFilter(
+        getTestFilterAttribute(FilterAttributeType.Number),
+        FilterOperator.In,
+        1984,
+      ),
     );
 
     expect(testQueryParamObject).toEqual({
-      filter: ['stringAttribute_neq_test', 'numberAttribute_in_1984']
+      filter: ['stringAttribute_neq_test', 'numberAttribute_in_1984'],
     });
 
     /*
@@ -242,12 +246,12 @@ describe('Filter URL service', () => {
         getTestFilterAttribute(FilterAttributeType.StringMap),
         FilterOperator.Equals,
         'myValue',
-        'myKey'
-      )
+        'myKey',
+      ),
     );
 
     expect(testQueryParamObject).toEqual({
-      filter: ['stringAttribute_neq_test', 'numberAttribute_in_1984', 'stringMapAttribute.myKey_eq_myValue']
+      filter: ['stringAttribute_neq_test', 'numberAttribute_in_1984', 'stringMapAttribute.myKey_eq_myValue'],
     });
 
     /*
@@ -259,16 +263,16 @@ describe('Filter URL service', () => {
         getTestFilterAttribute(FilterAttributeType.StringMap),
         FilterOperator.Equals,
         'myValue',
-        'mySecondKey'
-      )
+        'mySecondKey',
+      ),
     );
     expect(testQueryParamObject).toEqual({
       filter: [
         'stringAttribute_neq_test',
         'numberAttribute_in_1984',
         'stringMapAttribute.myKey_eq_myValue',
-        'stringMapAttribute.mySecondKey_eq_myValue'
-      ]
+        'stringMapAttribute.mySecondKey_eq_myValue',
+      ],
     });
 
     /*
@@ -279,8 +283,8 @@ describe('Filter URL service', () => {
       new StringMapFilterBuilder().buildFilter(
         getTestFilterAttribute(FilterAttributeType.StringMap),
         FilterOperator.ContainsKey,
-        'myTestKey'
-      )
+        'myTestKey',
+      ),
     );
 
     expect(testQueryParamObject).toEqual({
@@ -289,8 +293,8 @@ describe('Filter URL service', () => {
         'numberAttribute_in_1984',
         'stringMapAttribute.myKey_eq_myValue',
         'stringMapAttribute.mySecondKey_eq_myValue',
-        'stringMapAttribute_ck_myTestKey'
-      ]
+        'stringMapAttribute_ck_myTestKey',
+      ],
     });
   });
 
@@ -300,7 +304,7 @@ describe('Filter URL service', () => {
     const testFilter: IncompleteFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.NotEquals,
-      0
+      0,
     );
     testFilter.operator = undefined;
     testFilter.value = undefined;
@@ -308,7 +312,7 @@ describe('Filter URL service', () => {
     spectator.service.removeUrlFilter(attributes, testFilter);
 
     expect(testQueryParamObject).toEqual({
-      filter: ['stringAttribute_eq_test', 'stringMapAttribute.myKey_eq_myValue']
+      filter: ['stringAttribute_eq_test', 'stringMapAttribute.myKey_eq_myValue'],
     });
   });
 
@@ -318,14 +322,14 @@ describe('Filter URL service', () => {
     const testFilter: IncompleteFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.NotEquals,
-      0
+      0,
     );
     testFilter.value = undefined;
 
     spectator.service.removeUrlFilter(attributes, testFilter);
 
     expect(testQueryParamObject).toEqual({
-      filter: ['numberAttribute_lte_707', 'stringAttribute_eq_test', 'stringMapAttribute.myKey_eq_myValue']
+      filter: ['numberAttribute_lte_707', 'stringAttribute_eq_test', 'stringMapAttribute.myKey_eq_myValue'],
     });
   });
 
@@ -335,13 +339,13 @@ describe('Filter URL service', () => {
     const test1Filter: IncompleteFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.NotEquals,
-      415
+      415,
     );
 
     const test2Filter: IncompleteFilter = new NumberFilterBuilder().buildFilter(
       getTestFilterAttribute(FilterAttributeType.Number),
       FilterOperator.LessThanOrEqualTo,
-      707
+      707,
     );
 
     spectator.service.removeUrlFilter(attributes, test1Filter);
@@ -352,21 +356,21 @@ describe('Filter URL service', () => {
         'numberAttribute_lte_707',
         'stringAttribute_eq_test',
 
-        'stringMapAttribute.myKey_eq_myValue'
-      ]
+        'stringMapAttribute.myKey_eq_myValue',
+      ],
     });
 
     spectator.service.removeUrlFilter(attributes, test2Filter);
 
     expect(testQueryParamObject).toEqual({
-      filter: ['numberAttribute_neq_217', 'stringAttribute_eq_test', 'stringMapAttribute.myKey_eq_myValue']
+      filter: ['numberAttribute_neq_217', 'stringAttribute_eq_test', 'stringMapAttribute.myKey_eq_myValue'],
     });
   });
 
   test('correctly gets filters and group by from url', () => {
     testQueryParamObject = {
       ...expectedQueryParamObject,
-      ['group-by']: ['field1,field2']
+      ['group-by']: ['field1,field2'],
     };
     expect(spectator.service.getUrlFilters(attributes)).toEqual(filters);
     expect(spectator.service.getUrlGroupBy()).toEqual(['field1', 'field2']);
@@ -378,13 +382,13 @@ describe('Filter URL service', () => {
 
     expect(testQueryParamObject).toEqual({
       ...expectedQueryParamObject,
-      ['group-by']: ['field1,field2']
+      ['group-by']: ['field1,field2'],
     });
   });
 
   test('correctly build url filters and group by nav query params', () => {
     expect(
-      spectator.service.buildUrlFiltersAndGroupByNavQueryParams(filters.slice(0, 1), attributes.slice(0, 1))
+      spectator.service.buildUrlFiltersAndGroupByNavQueryParams(filters.slice(0, 1), attributes.slice(0, 1)),
     ).toMatchObject({ filter: ['numberAttribute_neq_217'], 'group-by': ['booleanAttribute'] });
   });
 });

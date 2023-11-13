@@ -6,7 +6,7 @@ describe('Feature resolver service', () => {
     runFakeRxjs(({ expectObservable }) => {
       expect(new FeatureResolverService().getFeatureFlagValue('random'));
       expectObservable(new FeatureResolverService().getFeatureFlagValue('random')).toBe('(x|)', {
-        x: true
+        x: true,
       });
     });
   });

@@ -11,15 +11,15 @@ describe('Duration table cell renderer component', () => {
     providers: [
       tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
         new TableCellNoOpParser(undefined!),
         0,
-        14400000
-      )
+        14400000,
+      ),
     ],
     declarations: [MockPipe(DisplayDurationPipe)],
-    shallow: true
+    shallow: true,
   });
 
   test('Should render duration text', () => {

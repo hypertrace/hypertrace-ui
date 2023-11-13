@@ -2,14 +2,14 @@ import { DataSource, dataSourceMarker, Model, ModelProperty, UNKNOWN_PROPERTY } 
 import { Observable, of } from 'rxjs';
 
 @Model({
-  type: 'static-data-source'
+  type: 'static-data-source',
 })
 export class StaticDataSource<T> implements DataSource<T> {
   public readonly dataSourceMarker: typeof dataSourceMarker = dataSourceMarker;
 
   @ModelProperty({
     key: 'value',
-    type: UNKNOWN_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type,
   })
   public value!: T;
 

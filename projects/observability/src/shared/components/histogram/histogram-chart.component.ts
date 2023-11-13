@@ -23,7 +23,7 @@ import { maxBy } from 'lodash-es';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class HistogramChartComponent implements OnChanges {
   @Input()
@@ -70,10 +70,10 @@ export class HistogramChartComponent implements OnChanges {
         label: option.label,
         style: {
           backgroundColor: colorLookupMap.get(option.colorKey ?? option.label)!,
-          width: `${Math.max((option.value / maxHistogramBarValue) * 100, 0.5)}%`
+          width: `${Math.max((option.value / maxHistogramBarValue) * 100, 0.5)}%`,
         },
-        value: option.value
-      })
+        value: option.value,
+      }),
     );
   }
 

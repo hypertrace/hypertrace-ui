@@ -43,7 +43,7 @@ import { IconSize } from '../icon/icon-size';
         <ht-label class="error-label" [label]="this.errorLabel"></ht-label>
       </div>
     </section>
-  `
+  `,
 })
 export class FormFieldComponent {
   @Input()
