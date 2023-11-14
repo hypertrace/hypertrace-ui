@@ -12,28 +12,28 @@ describe('Table column util', () => {
         id: 'test-default',
         visible: true,
         sort: TableSortDirection.Ascending,
-        sortable: true
+        sortable: true,
       },
       {
         id: 'test-text',
         display: CoreTableCellRendererType.Text,
         sort: TableSortDirection.Descending,
-        visible: true
+        visible: true,
       },
       {
         id: 'test-numeric',
         display: CoreTableCellRendererType.Number,
         visible: true,
-        sortable: false
-      }
+        sortable: false,
+      },
     ];
 
     columnConfigs = [
       ...dataColumnConfigs,
       {
         id: 'test-expander',
-        display: CoreTableCellRendererType.RowExpander
-      }
+        display: CoreTableCellRendererType.RowExpander,
+      },
     ];
   });
 
@@ -53,19 +53,19 @@ describe('Table column util', () => {
         id: 'test-default',
         visible: true,
         sort: TableSortDirection.Ascending,
-        sortable: true
+        sortable: true,
       },
       {
         id: 'test-text',
         display: CoreTableCellRendererType.Text,
-        visible: true
+        visible: true,
       },
       {
         id: 'test-numeric',
         display: CoreTableCellRendererType.Number,
         visible: true,
-        sortable: false
-      }
+        sortable: false,
+      },
     ]);
   });
 

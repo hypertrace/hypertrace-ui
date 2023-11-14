@@ -9,7 +9,7 @@ import { TypedSimpleChanges } from '@hypertrace/common';
       this.summaryText
     }}</span>
   </div>`,
-  styleUrls: ['./x-more.component.scss']
+  styleUrls: ['./x-more.component.scss'],
 })
 export class XMoreComponent implements OnChanges {
   @Input()
@@ -36,5 +36,5 @@ export class XMoreComponent implements OnChanges {
 
 export const enum XMoreDisplay {
   Plain = 'plain',
-  Gray = 'gray'
+  Gray = 'gray',
 }

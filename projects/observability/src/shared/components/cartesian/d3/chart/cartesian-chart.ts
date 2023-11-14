@@ -19,7 +19,7 @@ import {
   CartesianSeriesVisualizationType,
   RenderingStrategy,
   Series,
-  Summary
+  Summary,
 } from '../../chart';
 import { ChartEvent, ChartEventListener, ChartTooltipTrackingOptions } from '../../chart-interactivty';
 import { AxisDimension, CartesianAxis } from '../axis/cartesian-axis';
@@ -45,7 +45,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   protected readonly axisDimension: AxisDimension = {
     xAxisHeight: 16,
     yAxisWidth: 48,
-    margin: 16
+    margin: 16,
   };
 
   // Updated on draw
@@ -83,7 +83,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     protected readonly svgUtilService: SvgUtilService,
     protected readonly d3Utils: D3UtilService,
     protected readonly domRenderer: Renderer2,
-    protected readonly groupId?: string
+    protected readonly groupId?: string,
   ) {}
 
   public showCrosshair(locationData: MouseLocationData<TData, Series<TData> | Band<TData>>[]): void {
@@ -122,8 +122,8 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
           selectedData: [startData[0], endData[0]],
           location: {
             x: event.sourceEvent.clientX,
-            y: event.sourceEvent.clientY
-          }
+            y: event.sourceEvent.clientY,
+          },
         };
         listener.onEvent(selectedData);
       }
@@ -168,7 +168,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
     this.seriesSummaries.length = 0;
     this.seriesSummaries.push(
-      ...series.map(s => s.summary).filter((summary): summary is Summary => summary !== undefined)
+      ...series.map(s => s.summary).filter((summary): summary is Summary => summary !== undefined),
     );
 
     this.scaleBuilder = this.scaleBuilder.withSeries(series);
@@ -188,7 +188,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   public withEventListener(eventType: ChartEvent, listener: ChartEventListener<TData>): this {
     this.eventListeners.push({
       event: eventType,
-      onEvent: listener
+      onEvent: listener,
     });
 
     return this;
@@ -211,7 +211,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
     this.timeRange = timeRange;
     this.scaleBuilder = this.scaleBuilder.withDefaultXRange({
       min: this.timeRange.startTime.getTime(),
-      max: this.timeRange.endTime.getTime()
+      max: this.timeRange.endTime.getTime(),
     });
 
     return this;
@@ -273,7 +273,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
           top: 0,
           left: 0,
           width: overallBox.width - legendBox.width,
-          height: overallBox.height
+          height: overallBox.height,
         };
       case LegendPosition.Top:
       case LegendPosition.TopLeft:
@@ -283,7 +283,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
           top: legendBox.height,
           left: 0,
           width: overallBox.width,
-          height: overallBox.height - legendBox.height
+          height: overallBox.height - legendBox.height,
         };
       case LegendPosition.Bottom:
       default:
@@ -291,7 +291,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
           top: 0,
           left: 0,
           width: overallBox.width,
-          height: overallBox.height - legendBox.height
+          height: overallBox.height - legendBox.height,
         };
     }
   }
@@ -305,7 +305,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
           this.hasXAxis()
             ? height - (this.axisDimension.margin + this.axisDimension.xAxisHeight)
             : height - this.axisDimension.margin,
-          this.axisDimension.margin
+          this.axisDimension.margin,
         ];
       default:
       case AxisType.X:
@@ -327,7 +327,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         this.attachBrush();
       } else {
         eventContainer.on(this.getNativeEventName(listener.event), () =>
-          listener.onEvent(this.getMouseDataForCurrentEvent())
+          listener.onEvent(this.getMouseDataForCurrentEvent()),
         );
       }
     });
@@ -359,13 +359,13 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
   private attachBrush(): void {
     const brushBehaviour: BrushBehavior<unknown> = brushX<unknown>().on('end', () =>
-      this.onBrushSelection(d3CurrentEvent)
+      this.onBrushSelection(d3CurrentEvent),
     );
 
     const { width, height } = this.hostElement.getBoundingClientRect();
     brushBehaviour.extent([
       [0, 0],
-      [width, height]
+      [width, height],
     ]);
 
     select(this.mouseEventContainer!).append('g').attr('class', 'brush').call(brushBehaviour);
@@ -373,7 +373,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
   private redrawVisualization(): void {
     const chartViz = select(this.chartContainerElement!).selectAll(
-      `.${DefaultCartesianChart.CHART_VISUALIZATION_CLASS}`
+      `.${DefaultCartesianChart.CHART_VISUALIZATION_CLASS}`,
     );
     if (chartViz.nodes().length > 0) {
       chartViz.remove();
@@ -421,7 +421,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
     this.renderedAxes = this.requestedAxes.map(
       requestedAxis =>
-        new CartesianAxis<TData>(requestedAxis, this.axisDimension, this.scaleBuilder, this.svgUtilService)
+        new CartesianAxis<TData>(requestedAxis, this.axisDimension, this.scaleBuilder, this.svgUtilService),
     );
 
     const axisElements = select(this.chartBackgroundSvgElement)
@@ -447,7 +447,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
           this.activeSeries,
           this.injector,
           this.intervalData,
-          this.seriesSummaries
+          this.seriesSummaries,
         ).draw(this.chartContainerElement, this.legendPosition);
         this.activeSeriesSubscription?.unsubscribe();
         this.activeSeriesSubscription = this.legend.activeSeries$.subscribe(activeSeries => {
@@ -458,7 +458,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         // The legend also contains the interval selector, so even without a legend we need to create an element for that
         this.legend = new CartesianLegend<TData>([], this.injector, this.intervalData, this.seriesSummaries).draw(
           this.chartContainerElement,
-          LegendPosition.None
+          LegendPosition.None,
         );
       }
     }
@@ -544,16 +544,16 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       ...this.bands.flatMap(band => [
         // Need to add bands as series to get tooltips
         this.getChartSeriesVisualization(band.upper),
-        this.getChartSeriesVisualization(band.lower)
-      ])
+        this.getChartSeriesVisualization(band.lower),
+      ]),
     ];
 
     this.allCartesianData = [
       ...this.bands.map(
         band =>
-          new CartesianBand(this.d3Utils, this.domRenderer, band, this.scaleBuilder, this.getTooltipTrackingStrategy())
+          new CartesianBand(this.d3Utils, this.domRenderer, band, this.scaleBuilder, this.getTooltipTrackingStrategy()),
       ),
-      ...this.allSeriesData
+      ...this.allSeriesData,
     ];
   }
 
@@ -581,13 +581,13 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
       startX: startX,
       endX: endX,
       startY: startY,
-      endY: endY
+      endY: endY,
     };
   }
 
   private getTooltipTrackingStrategy(): ChartTooltipTrackingOptions {
     return {
-      followSingleAxis: AxisType.X
+      followSingleAxis: AxisType.X,
     };
   }
 

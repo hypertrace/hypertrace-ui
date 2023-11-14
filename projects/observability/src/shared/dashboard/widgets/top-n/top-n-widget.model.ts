@@ -4,7 +4,7 @@ import {
   ModelApi,
   ModelModelPropertyTypeInstance,
   ModelProperty,
-  ModelPropertyType
+  ModelPropertyType,
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
@@ -12,16 +12,16 @@ import { TopNDataSourceModel, TopNWidgetDataFetcher } from './data/top-n-data-so
 
 @Model({
   type: 'top-n-widget',
-  supportedDataSourceTypes: [TopNDataSourceModel]
+  supportedDataSourceTypes: [TopNDataSourceModel],
 })
 export class TopNWidgetModel {
   @ModelProperty({
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: WidgetHeaderModel
+      defaultModelClass: WidgetHeaderModel,
     } as ModelModelPropertyTypeInstance,
     key: 'header',
-    required: false
+    required: false,
   })
   public header?: WidgetHeaderModel;
 

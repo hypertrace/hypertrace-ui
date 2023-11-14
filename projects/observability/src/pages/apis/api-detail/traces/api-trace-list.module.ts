@@ -11,9 +11,9 @@ import { apiTraceListDashboard } from './api-trace-list.dashboard';
     ObservabilityDashboardModule,
     CommonModule,
     LoadAsyncModule,
-    NavigableDashboardModule.withDefaultDashboards(apiTraceListDashboard)
+    NavigableDashboardModule.withDefaultDashboards(apiTraceListDashboard),
   ],
   declarations: [ApiTraceListComponent],
-  exports: [ApiTraceListComponent]
+  exports: [ApiTraceListComponent],
 })
 export class ApiTraceListModule {}

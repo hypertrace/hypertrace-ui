@@ -3,7 +3,7 @@ import { EditorApi, ModelPropertyEditor, STRING_PROPERTY } from '@hypertrace/hyp
 import { EDITOR_API } from '@hypertrace/hyperdash-angular';
 
 @ModelPropertyEditor({
-  propertyType: STRING_PROPERTY.type
+  propertyType: STRING_PROPERTY.type,
 })
 @Component({
   selector: 'ht-string-property-editor',
@@ -12,7 +12,7 @@ import { EDITOR_API } from '@hypertrace/hyperdash-angular';
     <ht-label [label]="label"> </ht-label>
     <ht-input [(value)]="currentValue" placeholder="" (keyup.enter)="propagateChange()" (focusout)="propagateChange()">
     </ht-input>
-  `
+  `,
 })
 export class StringPropertyEditorComponent {
   public currentValue: string;

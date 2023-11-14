@@ -3,7 +3,7 @@ import { FeatureState } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 
 @Directive({
-  selector: '[htIfFeature]'
+  selector: '[htIfFeature]',
 })
 export class IfFeatureDirective implements OnChanges {
   @Input('htIfFeature')
@@ -16,12 +16,12 @@ export class IfFeatureDirective implements OnChanges {
   private embeddedViewRef?: EmbeddedViewRef<FeatureFlagsContext | unknown>;
   private readonly context: FeatureFlagsContext = {
     htIfFeature: FeatureState.Disabled,
-    $implicit: FeatureState.Disabled
+    $implicit: FeatureState.Disabled,
   };
 
   public constructor(
     private readonly viewContainer: ViewContainerRef,
-    private readonly templateRef: TemplateRef<FeatureFlagsContext>
+    private readonly templateRef: TemplateRef<FeatureFlagsContext>,
   ) {}
 
   public ngOnChanges(): void {

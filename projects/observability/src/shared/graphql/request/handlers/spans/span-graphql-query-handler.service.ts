@@ -11,7 +11,7 @@ import { GraphQlTimeRange } from '../../../model/schema/timerange/graphql-time-r
 import {
   GraphQlSpansRequest,
   SpansGraphQlQueryHandlerService,
-  SPANS_GQL_REQUEST
+  SPANS_GQL_REQUEST,
 } from './spans-graphql-query-handler.service';
 
 @Injectable({ providedIn: 'root' })
@@ -20,7 +20,7 @@ export class SpanGraphQlQueryHandlerService implements GraphQlQueryHandler<Graph
 
   public constructor(
     private readonly spansGraphQlQueryHandlerService: SpansGraphQlQueryHandlerService,
-    private readonly timeRangeService: TimeRangeService
+    private readonly timeRangeService: TimeRangeService,
   ) {}
 
   public matchesRequest(request: unknown): request is GraphQlSpanRequest {
@@ -47,7 +47,7 @@ export class SpanGraphQlQueryHandlerService implements GraphQlQueryHandler<Graph
       limit: 1,
       timeRange: this.buildTimeRange(request.timestamp),
       properties: request.properties,
-      filters: [this.buildIdFilter(request)]
+      filters: [this.buildIdFilter(request)],
     };
   }
 
@@ -61,7 +61,7 @@ export class SpanGraphQlQueryHandlerService implements GraphQlQueryHandler<Graph
       const duration = new TimeDuration(30, TimeUnit.Second);
       timeRange = {
         startTime: timestamp.getTime() - duration.toMillis(),
-        endTime: timestamp.getTime() + duration.toMillis()
+        endTime: timestamp.getTime() + duration.toMillis(),
       };
     } else {
       timeRange = this.timeRangeService.getCurrentTimeRange();

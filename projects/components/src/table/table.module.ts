@@ -46,7 +46,7 @@ import { TableCellStringEnumCsvGenerator } from './cells/csv-generators/table-ce
     ExpanderToggleModule,
     MemoizeModule,
     TraceSearchBoxModule,
-    LayoutChangeModule
+    LayoutChangeModule,
   ],
   declarations: [TableComponent, TableEditColumnsModalComponent],
   exports: [TableComponent],
@@ -59,17 +59,17 @@ import { TableCellStringEnumCsvGenerator } from './cells/csv-generators/table-ce
         TableCellNumberCsvGenerator,
         TableCellStringCsvGenerator,
         TableCellTimestampCsvGenerator,
-        TableCellStringEnumCsvGenerator
+        TableCellStringEnumCsvGenerator,
       ],
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class TableModule {
   public constructor(
     csvGeneratorLookupService: TableCellCsvGeneratorManagementService,
     injector: Injector,
-    @Inject(TABLE_CELL_CSV_GENERATORS) csvGeneratorTokens: InjectionToken<TableCellCsvGenerator<unknown>>[][]
+    @Inject(TABLE_CELL_CSV_GENERATORS) csvGeneratorTokens: InjectionToken<TableCellCsvGenerator<unknown>>[][],
   ) {
     csvGeneratorTokens
       .flat()
@@ -84,13 +84,13 @@ export class TableModule {
         {
           provide: TABLE_CELL_CSV_GENERATORS,
           useValue: csvGenerators,
-          multi: true
-        }
-      ]
+          multi: true,
+        },
+      ],
     };
   }
   public static withCellParsers(
-    cellParsers: TableCellParserConstructor<unknown, unknown, unknown>[]
+    cellParsers: TableCellParserConstructor<unknown, unknown, unknown>[],
   ): ModuleWithProviders<TableModule> {
     return {
       ngModule: TableModule,
@@ -98,9 +98,9 @@ export class TableModule {
         {
           provide: TABLE_CELL_PARSERS,
           useValue: cellParsers,
-          multi: true
-        }
-      ]
+          multi: true,
+        },
+      ],
     };
   }
   public static withCellRenderers(cellRenderers: TableCellRendererConstructor[]): ModuleWithProviders<TableModule> {
@@ -110,9 +110,9 @@ export class TableModule {
         {
           provide: TABLE_CELL_RENDERERS,
           useValue: cellRenderers,
-          multi: true
-        }
-      ]
+          multi: true,
+        },
+      ],
     };
   }
 }

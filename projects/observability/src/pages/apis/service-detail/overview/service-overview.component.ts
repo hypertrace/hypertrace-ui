@@ -14,15 +14,15 @@ import { serviceOverviewDashboard } from './service-overview.dashboard';
       [filterConfig]="filterConfig"
     >
     </ht-navigable-dashboard>
-  `
+  `,
 })
 export class ServiceOverviewComponent {
   public readonly filterConfig$: ReplayObservable<NavigableDashboardFilterConfig>;
   public constructor(serviceDetailService: ServiceDetailService) {
     this.filterConfig$ = serviceDetailService.entityFilter$.pipe(
       map(filter => ({
-        implicitFilters: [filter]
-      }))
+        implicitFilters: [filter],
+      })),
     );
   }
 }

@@ -3,13 +3,13 @@ import {
   GraphQlHandlerType,
   GraphQlQueryHandler,
   GraphQlRequestOptions,
-  GraphQlSelection
+  GraphQlSelection,
 } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import {
   EntitiesGraphqlQueryBuilderService,
   EntitiesResponse,
-  GraphQlEntitiesRequest
+  GraphQlEntitiesRequest,
 } from './entities-graphql-query-builder.service';
 
 @Injectable({ providedIn: 'root' })
@@ -38,11 +38,11 @@ export class EntitiesGraphQlQueryHandlerService
           path: 'results',
           children: [
             { path: 'id', alias: 'entityId' },
-            ...this.entitiesGraphQlQueryBuilderService.buildRequestSpecifications(request)
-          ]
+            ...this.entitiesGraphQlQueryBuilderService.buildRequestSpecifications(request),
+          ],
         },
-        ...totalSelection
-      ]
+        ...totalSelection,
+      ],
     };
   }
 

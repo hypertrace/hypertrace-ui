@@ -23,7 +23,7 @@ describe('Top N Data Source Model', () => {
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
 
     model = new TopNDataSourceModel();
@@ -50,20 +50,20 @@ describe('Top N Data Source Model', () => {
         selections: [
           expect.objectContaining({ name: 'nameKey' }),
           expect.objectContaining({ name: 'idKey' }),
-          expect.objectContaining(topNOptionSpec.metric)
+          expect.objectContaining(topNOptionSpec.metric),
         ],
         limit: 3,
         orderBy: expect.arrayContaining([
           {
             direction: 'DESC',
-            key: topNOptionSpec.metric
-          }
+            key: topNOptionSpec.metric,
+          },
         ]),
         filters: [],
         groupBy: expect.objectContaining({
-          keyExpressions: [{ key: 'nameKey' }, { key: 'idKey' }]
-        })
-      })
+          keyExpressions: [{ key: 'nameKey' }, { key: 'idKey' }],
+        }),
+      }),
     );
   }));
 });

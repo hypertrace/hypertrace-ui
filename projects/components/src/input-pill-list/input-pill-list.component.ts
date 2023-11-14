@@ -7,7 +7,7 @@ import {
   OnChanges,
   Output,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -16,7 +16,7 @@ import {
   UntypedFormControl,
   UntypedFormGroup,
   NG_VALUE_ACCESSOR,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
 import {
@@ -25,7 +25,7 @@ import {
   getStringsFromCommaSeparatedList,
   isEnterKeyEvent,
   isEnterOrCommaKeyEvent,
-  TypedSimpleChanges
+  TypedSimpleChanges,
 } from '@hypertrace/common';
 import { debounce, isEmpty, uniq } from 'lodash-es';
 import { IconSize } from '../icon/icon-size';
@@ -100,9 +100,9 @@ import { PopoverRef } from '../popover/popover-ref';
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: InputPillListComponent
-    }
-  ]
+      useExisting: InputPillListComponent,
+    },
+  ],
 })
 export class InputPillListComponent implements ControlValueAccessor, OnChanges {
   @Input()
@@ -140,7 +140,7 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
 
   public readonly form: UntypedFormGroup = new UntypedFormGroup({
     inputBuffer: new UntypedFormControl(''),
-    pillControls: new UntypedFormArray([])
+    pillControls: new UntypedFormArray([]),
   });
 
   public currentValues: string[] = [];
@@ -152,7 +152,7 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
 
   public constructor(
     private readonly formBuilder: UntypedFormBuilder,
-    private readonly popoverService: PopoverService
+    private readonly popoverService: PopoverService,
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -163,7 +163,7 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
     if (changes.dropdownValues) {
       this.dropdownValues$ = this.form.controls.inputBuffer.valueChanges.pipe(
         startWith(''),
-        map(bufferValue => this.dropdownValues.filter(value => value.includes(bufferValue ?? '')))
+        map(bufferValue => this.dropdownValues.filter(value => value.includes(bufferValue ?? ''))),
       );
     }
   }
@@ -291,11 +291,11 @@ export class InputPillListComponent implements ControlValueAccessor, OnChanges {
           PopoverRelativePositionLocation.BelowLeftAligned,
           PopoverRelativePositionLocation.BelowRightAligned,
           PopoverRelativePositionLocation.AboveLeftAligned,
-          PopoverRelativePositionLocation.AboveRightAligned
-        ]
+          PopoverRelativePositionLocation.AboveRightAligned,
+        ],
       },
       componentOrTemplate: this.dropdownValuesTemplate,
-      backdrop: PopoverBackdrop.Transparent
+      backdrop: PopoverBackdrop.Transparent,
     });
     this.popover.closeOnBackdropClick();
   }

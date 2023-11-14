@@ -11,10 +11,10 @@ import { HighlightedLabelWidgetModel } from './highlighted-label-widget.model';
     CommonModule,
     DashboardCoreModule.with({
       models: [HighlightedLabelWidgetModel],
-      renderers: [HighlightedLabelWidgetRendererComponent]
+      renderers: [HighlightedLabelWidgetRendererComponent],
     }),
     HighlightedLabelModule,
-    LoadAsyncModule
-  ]
+    LoadAsyncModule,
+  ],
 })
 export class HighlightedLabelWidgetModule {}

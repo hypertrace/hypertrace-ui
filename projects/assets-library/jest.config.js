@@ -5,7 +5,7 @@ module.exports = {
     'projects/assets-library/src/**/*.ts',
     '!**/*.module.ts',
     '!**/public-api.ts',
-    '!projects/assets-library/src/test/**'
+    '!projects/assets-library/src/test/**',
   ],
   coverageDirectory: 'coverage/assets-library',
   reporters: [
@@ -13,17 +13,17 @@ module.exports = {
     [
       'jest-junit',
       {
-        outputDirectory: 'test-results/assets-library'
-      }
+        outputDirectory: 'test-results/assets-library',
+      },
     ],
     [
       'jest-html-reporter',
       {
-        outputPath: 'test-results/assets-library/test-report.html'
-      }
-    ]
+        outputPath: 'test-results/assets-library/test-report.html',
+      },
+    ],
   ],
   modulePathIgnorePatterns: ['BOGUS', '<rootDir>/dist/'], // Need to reset from app project, but empty is merged
   watchPathIgnorePatterns: ['test-results'],
-  testMatch: ['<rootDir>/projects/assets-library/**/+(*.)+(spec|test).ts']
+  testMatch: ['<rootDir>/projects/assets-library/**/+(*.)+(spec|test).ts'],
 };

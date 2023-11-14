@@ -9,7 +9,7 @@ describe('Topology Specification Builder', () => {
     const specification = specBuilder.buildNeighborSpecification({
       edgeDirection: TopologyEdgeDirection.Incoming,
       nodeSpecifications: [],
-      neighborType: ObservabilityEntityType.Api
+      neighborType: ObservabilityEntityType.Api,
     });
 
     // Name
@@ -26,8 +26,8 @@ describe('Topology Specification Builder', () => {
         arguments: [
           {
             name: 'neighborType',
-            value: new GraphQlEnumArgument(ObservabilityEntityType.Api)
-          }
+            value: new GraphQlEnumArgument(ObservabilityEntityType.Api),
+          },
         ],
         children: [
           {
@@ -35,12 +35,12 @@ describe('Topology Specification Builder', () => {
             children: [
               {
                 path: 'neighbor',
-                children: [{ path: 'id' }]
-              }
-            ]
-          }
-        ]
-      }
+                children: [{ path: 'id' }],
+              },
+            ],
+          },
+        ],
+      },
     ]);
 
     // Extract from server data

@@ -15,10 +15,10 @@ describe('Donut component', () => {
         provide: DEFAULT_COLOR_PALETTE,
         useValue: {
           name: 'default',
-          colors: ['black', 'white']
-        }
-      }
-    ]
+          colors: ['black', 'white'],
+        },
+      },
+    ],
   });
 
   test('should render each segment', () => {
@@ -31,15 +31,15 @@ describe('Donut component', () => {
           series: [
             {
               name: 'first',
-              value: 5
+              value: 5,
             },
             {
               name: 'second',
-              value: 3
-            }
-          ]
-        }
-      }
+              value: 3,
+            },
+          ],
+        },
+      },
     );
     const segments = spectator.queryAll('.donut-arc', { root: true });
     expect(segments.length).toBe(2);
@@ -57,15 +57,15 @@ describe('Donut component', () => {
           series: [
             {
               name: 'first entry',
-              value: 5
+              value: 5,
             },
             {
               name: 'second entry',
-              value: 3
-            }
-          ]
-        }
-      }
+              value: 3,
+            },
+          ],
+        },
+      },
     );
     const legend = spectator.query('ht-legend');
     expect(legend).toExist();
@@ -90,15 +90,15 @@ describe('Donut component', () => {
           series: [
             {
               name: 'first entry',
-              value: 5
+              value: 5,
             },
             {
               name: 'second entry',
-              value: 3
-            }
-          ]
-        }
-      }
+              value: 3,
+            },
+          ],
+        },
+      },
     );
     const legend = spectator.query('ht-legend');
     expect(legend).toExist();
@@ -118,19 +118,19 @@ describe('Donut component', () => {
       {
         name: 'first entry',
         value: 5,
-        color: 'red'
+        color: 'red',
       },
       {
         name: 'second entry',
         value: 3,
-        color: 'blue'
-      }
+        color: 'blue',
+      },
     ];
 
     const mockTooltipRef = {
       showWithData: jest.fn(),
       hide: jest.fn(),
-      destroy: jest.fn()
+      destroy: jest.fn(),
     };
 
     const spectator = hostFactory(
@@ -139,14 +139,14 @@ describe('Donut component', () => {
     </ht-donut>`,
       {
         hostProps: {
-          series: data
+          series: data,
         },
         providers: [
           mockProvider(ChartTooltipBuilderService, {
-            constructTooltip: jest.fn().mockReturnValue(mockTooltipRef)
-          })
-        ]
-      }
+            constructTooltip: jest.fn().mockReturnValue(mockTooltipRef),
+          }),
+        ],
+      },
     );
 
     // Should show tooltip on hover
@@ -159,9 +159,9 @@ describe('Donut component', () => {
         {
           context: undefined,
           dataPoint: data[0],
-          location: { x: 0, y: 0 }
-        }
-      ])
+          location: { x: 0, y: 0 },
+        },
+      ]),
     );
 
     expect(mockTooltipRef.hide).not.toHaveBeenCalled();

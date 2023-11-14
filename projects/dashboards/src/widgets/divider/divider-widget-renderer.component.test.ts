@@ -8,7 +8,7 @@ describe('Divider Widget Renderer Component', () => {
   const createComponent = createComponentFactory<DividerWidgetRendererComponent>({
     component: DividerWidgetRendererComponent,
     providers: [...mockDashboardWidgetProviders({})],
-    shallow: true
+    shallow: true,
   });
 
   test('should use divider component', () => {

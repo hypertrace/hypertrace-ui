@@ -5,6 +5,6 @@ import { BackButtonComponent } from './back-button.component';
 @NgModule({
   imports: [ButtonModule],
   declarations: [BackButtonComponent],
-  exports: [BackButtonComponent]
+  exports: [BackButtonComponent],
 })
 export class BackButtonModule {}

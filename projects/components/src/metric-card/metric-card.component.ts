@@ -42,7 +42,7 @@ import { MetricCardIconPosition, MetricCardIndicatorType, MetricCardSize } from 
     <ng-template #iconTemplate>
       <ht-icon class="icon" [icon]="this.icon" [size]="this.iconSize" [color]="this.indicatorColor"></ht-icon>
     </ng-template>
-  `
+  `,
 })
 export class MetricCardComponent {
   @Input()

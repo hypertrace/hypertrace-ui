@@ -9,7 +9,7 @@ import {
   Output,
   QueryList,
   TemplateRef,
-  ViewChildren
+  ViewChildren,
 } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { ToggleItem } from './toggle-item';
@@ -40,7 +40,7 @@ import { ToggleItemComponent } from './toggle-item.component';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class ToggleGroupComponent implements AfterViewInit, OnChanges {
   private static readonly DEFAULT_POSITION: ElementPosition = { left: 0, width: 0 };
@@ -112,7 +112,7 @@ export class ToggleGroupComponent implements AfterViewInit, OnChanges {
 
     return {
       left: +element.offsetLeft + 2, // Add 2 for the margin on the parent
-      width: element.offsetWidth - (index + 1) // Subtract approximate cumulative margin (not exact due to flexbox)
+      width: element.offsetWidth - (index + 1), // Subtract approximate cumulative margin (not exact due to flexbox)
     };
   }
 

@@ -23,7 +23,7 @@ import { PageHeaderComponent } from './page-header.component';
     BetaTagModule,
     FeatureConfigCheckModule,
     TimeRangeModule,
-    RefreshButtonModule
-  ]
+    RefreshButtonModule,
+  ],
 })
 export class PageHeaderModule {}

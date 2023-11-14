@@ -16,10 +16,10 @@ describe('Navigation List Service', () => {
         getRouteConfig: jest.fn().mockReturnValue({
           path: 'root',
           data: { features: ['test-feature'] },
-          children: []
-        })
-      })
-    ]
+          children: [],
+        }),
+      }),
+    ],
   });
 
   beforeEach(() => {
@@ -31,10 +31,10 @@ describe('Navigation List Service', () => {
       spectator.service.decorateNavItem(
         {
           type: NavItemType.Header,
-          label: 'Label'
+          label: 'Label',
         },
-        spectator.inject(ActivatedRoute)
-      )
+        spectator.inject(ActivatedRoute),
+      ),
     ).toEqual({ type: NavItemType.Header, label: 'Label' });
 
     expect(
@@ -43,16 +43,16 @@ describe('Navigation List Service', () => {
           type: NavItemType.Link,
           label: 'Label',
           icon: IconType.None,
-          matchPaths: ['root']
+          matchPaths: ['root'],
         },
-        spectator.inject(ActivatedRoute)
-      )
+        spectator.inject(ActivatedRoute),
+      ),
     ).toEqual({
       type: NavItemType.Link,
       label: 'Label',
       icon: IconType.None,
       matchPaths: ['root'],
-      features: ['test-feature']
+      features: ['test-feature'],
     });
   });
 });

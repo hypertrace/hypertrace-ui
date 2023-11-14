@@ -8,11 +8,11 @@ import {
   DashboardStore,
   DashboardUpdateData,
   DashboardUpsertData,
-  PersistedDashboard
+  PersistedDashboard,
 } from './store/dashboard-store';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DashboardPersistenceService {
   private static readonly HYPERTRACE_LOCATION_NAMESPACE: string = '7f12784d-0bd1-4b0f-94da-cb8aa3b7fc9e';
@@ -21,7 +21,7 @@ export class DashboardPersistenceService {
 
   public constructor(
     @Inject(DashboardBrowserLocalStore)
-    private readonly dashboardStore: DashboardStore
+    private readonly dashboardStore: DashboardStore,
   ) {}
 
   public getById(id: string): Observable<PersistedDashboard> {
@@ -47,7 +47,7 @@ export class DashboardPersistenceService {
 
   public getForLocation(locationKey: string): Observable<PersistedDashboard> {
     return this.getById(this.getLocationId(locationKey)).pipe(
-      catchError(() => this.getDefaultForLocation(locationKey))
+      catchError(() => this.getDefaultForLocation(locationKey)),
     );
   }
 
@@ -55,7 +55,7 @@ export class DashboardPersistenceService {
     this.defaultLocations.set(locationKey, {
       ...dashboard,
       id: this.getLocationId(locationKey),
-      version: 1
+      version: 1,
     });
   }
 
@@ -64,7 +64,7 @@ export class DashboardPersistenceService {
      it has been persisted or not */
     return this.dashboardStore.upsert({
       ...dashboard,
-      id: this.getLocationId(locationKey)
+      id: this.getLocationId(locationKey),
     });
   }
 

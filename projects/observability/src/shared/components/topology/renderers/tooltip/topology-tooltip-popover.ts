@@ -18,7 +18,7 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     private readonly tooltipDefinition: TooltipDefinition,
     private readonly container: ElementRef,
     private readonly injector: Injector,
-    private readonly popoverService: PopoverService
+    private readonly popoverService: PopoverService,
   ) {
     this.popoverSubject = new BehaviorSubject(this.buildPopover(false, this.container));
     this.hidden$ = this.popoverSubject.pipe(switchMap(popover => merge(popover.hidden$, popover.closed$)));
@@ -29,7 +29,7 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     this.dataSubject.next({
       type: 'node',
       node: node,
-      options: options
+      options: options,
     });
     this.popover.show();
   }
@@ -39,7 +39,7 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     this.dataSubject.next({
       type: 'edge',
       edge: edge,
-      options: options
+      options: options,
     });
     this.popover.show();
   }
@@ -68,11 +68,11 @@ export class TopologyTooltipPopover implements TopologyTooltip {
     const popover = this.popoverService.drawPopover({
       componentOrTemplate: this.tooltipDefinition.class,
       position: {
-        type: PopoverPositionType.Hidden
+        type: PopoverPositionType.Hidden,
       },
       parentInjector: this.injector,
       backdrop: modal ? PopoverBackdrop.Transparent : PopoverBackdrop.None,
-      data: this.dataSubject
+      data: this.dataSubject,
     });
 
     if (modal) {
@@ -83,7 +83,7 @@ export class TopologyTooltipPopover implements TopologyTooltip {
       type: PopoverPositionType.FollowMouse,
       boundingElement: modal ? origin.nativeElement : this.container.nativeElement,
       offsetX: 50,
-      offsetY: 30
+      offsetY: 30,
     });
 
     return popover;

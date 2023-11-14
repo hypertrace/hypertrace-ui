@@ -31,7 +31,7 @@ import { Observable } from 'rxjs';
         <div (click)="this.viewAll.emit()" class="view-all-text">View all ></div>
       </div>
     </div>
-  `
+  `,
 })
 export class MarkerTooltipComponent {
   @Input()

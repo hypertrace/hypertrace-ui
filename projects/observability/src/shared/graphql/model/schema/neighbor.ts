@@ -3,7 +3,7 @@ import { Specification } from './specifier/specification';
 
 export const enum NeighborDirection {
   Upstream = 'upstream',
-  Downstream = 'downstream'
+  Downstream = 'downstream',
 }
 
 export interface DefinesNeighbor {
@@ -12,6 +12,6 @@ export interface DefinesNeighbor {
 }
 
 export const specificationDefinesNeighbor = (
-  spec: Specification & Partial<DefinesNeighbor>
+  spec: Specification & Partial<DefinesNeighbor>,
 ): spec is Specification & DefinesNeighbor =>
   typeof spec.neighborDirection === 'string' && typeof spec.neighborType === 'string';

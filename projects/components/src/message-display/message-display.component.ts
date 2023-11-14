@@ -11,7 +11,7 @@ import { IconSize } from '../icon/icon-size';
       <div class="description">{{ this.description }}</div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageDisplayComponent {
   @Input()

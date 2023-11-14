@@ -13,7 +13,7 @@ import { IconSize } from '../icon/icon-size';
         <ht-label class="label" [label]="this.label"></ht-label>
       </ng-template>
     </div>
-  `
+  `,
 })
 export class ToggleItemComponent {
   @Input()

@@ -4,7 +4,7 @@ import {
   ExternalNavigationWindowHandling,
   NavigationParamsType,
   NavigationService,
-  TrackDirective
+  TrackDirective,
 } from '@hypertrace/common';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
 import { MockDirective } from 'ng-mocks';
@@ -19,14 +19,14 @@ describe('Link component', () => {
     component: LinkComponent,
     imports: [LetAsyncModule, RouterTestingModule],
     providers: [mockProvider(NavigationService)],
-    declarations: [MockDirective(RouterLinkWithHref), MockDirective(TrackDirective)]
+    declarations: [MockDirective(RouterLinkWithHref), MockDirective(TrackDirective)],
   });
 
   test('Link contents should be displayed if params/url is undefined', () => {
     spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
       props: {
-        paramsOrUrl: undefined
-      }
+        paramsOrUrl: undefined,
+      },
     });
 
     const anchorElement = spectator.query('.ht-link');
@@ -39,7 +39,7 @@ describe('Link component', () => {
 
     spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
       hostProps: {
-        paramsOrUrl: 'http://test.hypertrace.ai'
+        paramsOrUrl: 'http://test.hypertrace.ai',
       },
       providers: [
         mockProvider(NavigationService, {
@@ -49,15 +49,15 @@ describe('Link component', () => {
                 '/external',
                 {
                   url: 'http://test.hypertrace.ai',
-                  navType: 'same_window'
-                }
+                  navType: 'same_window',
+                },
               ],
-              extras: { skipLocationChange: true }
-            })
+              extras: { skipLocationChange: true },
+            }),
           ),
-          isExternalUrl: jest.fn().mockReturnValue(true)
-        })
-      ]
+          isExternalUrl: jest.fn().mockReturnValue(true),
+        }),
+      ],
     });
 
     let anchorElement = spectator.query('.ht-link.external') as HTMLAnchorElement;
@@ -72,8 +72,8 @@ describe('Link component', () => {
       paramsOrUrl: {
         navType: NavigationParamsType.External,
         url: '/test',
-        windowHandling: ExternalNavigationWindowHandling.NewWindow
-      }
+        windowHandling: ExternalNavigationWindowHandling.NewWindow,
+      },
     });
     expect(anchorElement.href).toBe('http://localhost/test');
     spectator.click(anchorElement);
@@ -83,13 +83,13 @@ describe('Link component', () => {
   test('Link should navigate correctly to internal relative URLs', () => {
     spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
       hostProps: {
-        paramsOrUrl: 'test'
+        paramsOrUrl: 'test',
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams$: jest.fn().mockReturnValue(of({ path: ['test'], extras: {} }))
-        })
-      ]
+          buildNavigationParams$: jest.fn().mockReturnValue(of({ path: ['test'], extras: {} })),
+        }),
+      ],
     });
 
     const anchorElement = spectator.query('.ht-link.internal');
@@ -108,13 +108,13 @@ describe('Link component', () => {
   test('Link should navigate correctly to internal relative URLs', () => {
     spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl"></ht-link>`, {
       hostProps: {
-        paramsOrUrl: '/test'
+        paramsOrUrl: '/test',
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams$: jest.fn().mockReturnValue(of({ path: ['/test'], extras: {} }))
-        })
-      ]
+          buildNavigationParams$: jest.fn().mockReturnValue(of({ path: ['/test'], extras: {} })),
+        }),
+      ],
     });
 
     const anchorElement = spectator.query('.ht-link.internal');
@@ -133,13 +133,13 @@ describe('Link component', () => {
   test('should apply disabled style when disabled', () => {
     spectator = createHost(`<ht-link [paramsOrUrl]="paramsOrUrl" [disabled]="true"></ht-link>`, {
       hostProps: {
-        paramsOrUrl: '/test'
+        paramsOrUrl: '/test',
       },
       providers: [
         mockProvider(NavigationService, {
-          buildNavigationParams$: jest.fn().mockReturnValue(of({ path: ['/test'], extras: {} }))
-        })
-      ]
+          buildNavigationParams$: jest.fn().mockReturnValue(of({ path: ['/test'], extras: {} })),
+        }),
+      ],
     });
 
     const anchorElement = spectator.query('.ht-link.internal');

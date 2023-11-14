@@ -25,7 +25,7 @@ export const normalizeAngleRadians = (angleRadians: number): number => {
  */
 export const getCoordinateAtAngle = (distance: number, angle: number): Point => ({
   x: getXCoordinateAtAngle(distance, angle),
-  y: getYCoordinateAtAngle(distance, angle)
+  y: getYCoordinateAtAngle(distance, angle),
 });
 
 /**
@@ -93,13 +93,13 @@ export const intersectionBetweenLines = (line1: Line, line2: Line): Point | unde
     ? undefined
     : {
         x: (b2 * c1 - b1 * c2) / determinant,
-        y: (a1 * c2 - a2 * c1) / determinant
+        y: (a1 * c2 - a2 * c1) / determinant,
       };
 };
 
 export const lineFromPoints = (point1: Point, point2: Point): Line => ({
   a: point1,
-  b: point2
+  b: point2,
 });
 
 export const getPercentage = (numerator: number | undefined, denominator: number | undefined): number => {

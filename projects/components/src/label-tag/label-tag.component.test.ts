@@ -9,12 +9,12 @@ describe('Label Tag Component', () => {
   const createHost = createHostFactory({
     component: LabelTagComponent,
     shallow: true,
-    declarations: [MockComponent(IconComponent)]
+    declarations: [MockComponent(IconComponent)],
   });
 
   test('renders the beta tag with given parameters', () => {
     spectator = createHost(
-      '<ht-label-tag label="Beta" backgroundColor="#f2d0f5" labelColor="#94209f" prefixIcon="test-icon"></ht-label-tag>'
+      '<ht-label-tag label="Beta" backgroundColor="#f2d0f5" labelColor="#94209f" prefixIcon="test-icon"></ht-label-tag>',
     );
     const labelElement = spectator.query('.label-tag') as HTMLElement;
     expect(labelElement).toHaveText('Beta');

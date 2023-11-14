@@ -10,18 +10,18 @@ import {
   FilterAttributeExpression,
   SplitFilter,
   splitFilterStringByOperator,
-  tryParseStringForAttribute
+  tryParseStringForAttribute,
 } from '../../filter/parser/parsed-filter';
 import { AbstractFilterParser } from '../../filter/parser/types/abstract-filter-parser';
 import { FilterValue } from './../../filter/filter';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FilterChipService {
   public constructor(
     private readonly filterBuilderLookupService: FilterBuilderLookupService,
-    private readonly filterParserLookupService: FilterParserLookupService
+    private readonly filterParserLookupService: FilterParserLookupService,
   ) {}
 
   public autocompleteFilters(attributes: FilterAttribute[], text: string = ''): IncompleteFilter[] {
@@ -40,8 +40,8 @@ export class FilterChipService {
           filterBuilder,
           this.filterParserLookupService.lookup(splitFilter.operator),
           splitFilter,
-          text
-        )
+          text,
+        ),
       ];
     }
 
@@ -63,7 +63,7 @@ export class FilterChipService {
   private buildIncompleteFiltersForAttribute(
     text: string,
     filterBuilder: AbstractFilterBuilder<FilterValue>,
-    attributeExpression: FilterAttributeExpression
+    attributeExpression: FilterAttributeExpression,
   ): IncompleteFilter[] {
     const topLevelOperatorFilters = filterBuilder.supportedTopLevelOperators().map(operator => ({
       metadata: attributeExpression.attribute,
@@ -72,8 +72,8 @@ export class FilterChipService {
       userString: filterBuilder.buildUserStringWithMatchingWhitespace(
         text,
         { attribute: attributeExpression.attribute },
-        operator
-      )
+        operator,
+      ),
     }));
 
     // Subpath operators should add a subpath placeholder to the user string
@@ -86,10 +86,10 @@ export class FilterChipService {
         text,
         {
           attribute: attributeExpression.attribute,
-          subpath: isEmpty(attributeExpression.subpath) ? 'example' : attributeExpression.subpath
+          subpath: isEmpty(attributeExpression.subpath) ? 'example' : attributeExpression.subpath,
         },
-        operator
-      )
+        operator,
+      ),
     }));
 
     return [...topLevelOperatorFilters, ...subpathOperatorFilters];
@@ -99,7 +99,7 @@ export class FilterChipService {
     filterBuilder: AbstractFilterBuilder<FilterValue>,
     filterParser: AbstractFilterParser<FilterValue>,
     splitFilter: SplitFilter<FilterOperator>,
-    text: string
+    text: string,
   ): IncompleteFilter {
     // Check for complete filter
 
@@ -113,9 +113,9 @@ export class FilterChipService {
           splitFilter.attribute,
           parsedFilter.operator,
           parsedFilter.value,
-          parsedFilter.subpath
+          parsedFilter.subpath,
         ),
-        userString: text // Use the actual text provided by user, so it matches their input
+        userString: text, // Use the actual text provided by user, so it matches their input
       };
     }
 
@@ -124,7 +124,7 @@ export class FilterChipService {
       metadata: splitFilter.attribute,
       field: splitFilter.attribute.name,
       operator: splitFilter.operator,
-      userString: text // Use the actual text provided by user, so it matches their input
+      userString: text, // Use the actual text provided by user, so it matches their input
     };
   }
 
@@ -134,12 +134,12 @@ export class FilterChipService {
 
   private buildIncompleteFilterForPartialAttributeMatch(
     filterBuilder: AbstractFilterBuilder<FilterValue>,
-    attribute: FilterAttribute
+    attribute: FilterAttribute,
   ): IncompleteFilter {
     return {
       metadata: attribute,
       field: attribute.name,
-      userString: filterBuilder.buildUserFilterString(attribute)
+      userString: filterBuilder.buildUserFilterString(attribute),
     };
   }
 }

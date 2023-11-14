@@ -8,16 +8,16 @@ import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 import { MetricAggregationDataSourceModel } from '../metric-aggregation/metric-aggregation-data-source.model';
 
 @Model({
-  type: 'percentage-composite-data-source'
+  type: 'percentage-composite-data-source',
 })
 export class PercentageCompositeDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
   @ModelProperty({
     key: 'numerator',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: MetricAggregationDataSourceModel
+      defaultModelClass: MetricAggregationDataSourceModel,
     } as ModelPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public numerator!: MetricAggregationDataSourceModel;
 
@@ -25,9 +25,9 @@ export class PercentageCompositeDataSourceModel extends GraphQlDataSourceModel<M
     key: 'denominator',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: MetricAggregationDataSourceModel
+      defaultModelClass: MetricAggregationDataSourceModel,
     } as ModelPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public denominator!: MetricAggregationDataSourceModel;
 
@@ -36,8 +36,8 @@ export class PercentageCompositeDataSourceModel extends GraphQlDataSourceModel<M
       map(results => ({
         value: getPercentage(results[0], results[1]),
         health: MetricHealth.NotSpecified,
-        units: '%'
-      }))
+        units: '%',
+      })),
     );
   }
 

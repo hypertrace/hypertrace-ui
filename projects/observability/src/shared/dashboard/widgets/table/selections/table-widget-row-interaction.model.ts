@@ -3,27 +3,27 @@ import { InteractionHandler } from '../../../interaction/interaction-handler';
 
 @Model({
   type: 'table-widget-row-interaction',
-  displayName: 'Row Selection'
+  displayName: 'Row Selection',
 })
 export class TableWidgetRowInteractionModel {
   @ModelProperty({
     key: 'handler',
     displayName: 'Selection Handler',
-    type: ModelPropertyType.TYPE
+    type: ModelPropertyType.TYPE,
   })
   public handler?: InteractionHandler;
 
   @ModelProperty({
     key: 'row-depth',
     displayName: 'Row Depth',
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public rowDepth: number = 0;
 
   @ModelProperty({
     key: 'apply-to-child-rows',
     displayName: 'Apply to child rows',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public applyToChildRows: boolean = true;
 

@@ -10,7 +10,7 @@ describe('File Display Component', () => {
     component: FileDisplayComponent,
     shallow: true,
     imports: [FormattingModule],
-    declarations: [MockComponent(IconComponent)]
+    declarations: [MockComponent(IconComponent)],
   });
 
   test('should render everything correctly', () => {
@@ -30,8 +30,8 @@ describe('File Display Component', () => {
       file: file,
       latestUploadEvent: {
         type: FileUploadEventType.Success,
-        response: {}
-      }
+        response: {},
+      },
     });
     expect(spectator.query('.success-icon')).toExist();
     expect(spectator.query('.delete-icon')).toExist();
@@ -46,8 +46,8 @@ describe('File Display Component', () => {
       file: file,
       latestUploadEvent: {
         type: FileUploadEventType.Failure,
-        error: 'Failed'
-      }
+        error: 'Failed',
+      },
     });
     expect(spectator.query('.file-display.error')).toExist();
     expect(spectator.query('.failure-icon')).toExist();

@@ -5,7 +5,7 @@ import {
   entityIdKey,
   EntityType,
   entityTypeKey,
-  ObservabilityEntityType
+  ObservabilityEntityType,
 } from '../../graphql/model/schema/entity';
 import { ObservabilityIconType } from '../../icons/observability-icon-type';
 import { EntityIconLookupService } from './entity-icon-lookup.service';
@@ -20,24 +20,24 @@ describe('Entity Icon Lookup Service', () => {
           [
             ObservabilityEntityType.Service,
             {
-              icon: ObservabilityIconType.Service
-            }
+              icon: ObservabilityIconType.Service,
+            },
           ],
           [
             ObservabilityEntityType.Api,
             {
-              icon: ObservabilityIconType.Api
-            }
+              icon: ObservabilityIconType.Api,
+            },
           ],
           [
             ObservabilityEntityType.Backend,
             {
-              icon: ObservabilityIconType.Backend
-            }
-          ]
-        ])
-      }
-    ]
+              icon: ObservabilityIconType.Backend,
+            },
+          ],
+        ]),
+      },
+    ],
   });
   test('determines correct icon type for entity types', () => {
     const service = serviceFactory().service;
@@ -51,7 +51,7 @@ describe('Entity Icon Lookup Service', () => {
     const service = serviceFactory().service;
     const entityOfType = (entityType: EntityType) => ({
       [entityTypeKey]: entityType,
-      [entityIdKey]: 'test-id'
+      [entityIdKey]: 'test-id',
     });
     expect(service.forEntity(entityOfType(ObservabilityEntityType.Service))).toBe(ObservabilityIconType.Service);
     expect(service.forEntity(entityOfType(ObservabilityEntityType.Api))).toBe(ObservabilityIconType.Api);
@@ -64,16 +64,16 @@ describe('Entity Icon Lookup Service', () => {
     expect(
       service.forBackendEntity({
         [entityTypeKey]: ObservabilityEntityType.Backend,
-        [entityIdKey]: 'test-id'
-      })
+        [entityIdKey]: 'test-id',
+      }),
     ).toBe(ObservabilityIconType.Backend);
 
     expect(
       service.forBackendEntity({
         [entityTypeKey]: ObservabilityEntityType.Backend,
         [entityIdKey]: 'test-id',
-        protocol: 'random'
-      })
+        protocol: 'random',
+      }),
     ).toBe(ObservabilityIconType.Backend);
 
     expect(
@@ -81,10 +81,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: 'random'
+          backendType: 'random',
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.Backend);
 
     expect(
@@ -92,10 +92,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.AWSRDS
+          backendType: BackendType.AWSRDS,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.AWSRDS);
 
     expect(
@@ -103,10 +103,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.Apigee
+          backendType: BackendType.Apigee,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.Apigee);
 
     expect(
@@ -114,10 +114,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.Cassandra
+          backendType: BackendType.Cassandra,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.Cassandra);
 
     expect(
@@ -125,10 +125,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.Elastic
+          backendType: BackendType.Elastic,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.Elastic);
 
     expect(
@@ -136,10 +136,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.Helm
+          backendType: BackendType.Helm,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.Helm);
 
     expect(
@@ -147,10 +147,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.HTTP
+          backendType: BackendType.HTTP,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.HTTP);
 
     expect(
@@ -158,10 +158,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.JDBC
+          backendType: BackendType.JDBC,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.JDBC);
 
     expect(
@@ -169,10 +169,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.Kong
+          backendType: BackendType.Kong,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.Kong);
 
     expect(
@@ -180,10 +180,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.Kubernetes
+          backendType: BackendType.Kubernetes,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.Kubernetes);
 
     expect(
@@ -191,10 +191,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.MicrosoftAzure
+          backendType: BackendType.MicrosoftAzure,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.MicrosoftAzure);
 
     expect(
@@ -202,10 +202,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.MicrosoftSqlServer
+          backendType: BackendType.MicrosoftSqlServer,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.MicrosoftSqlServer);
 
     expect(
@@ -213,10 +213,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.Mongo
+          backendType: BackendType.Mongo,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.Mongo);
 
     expect(
@@ -224,10 +224,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.Mysql
+          backendType: BackendType.Mysql,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.Mysql);
 
     expect(
@@ -235,10 +235,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.Oracle
+          backendType: BackendType.Oracle,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.Oracle);
 
     expect(
@@ -246,10 +246,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.PostgreSQL
+          backendType: BackendType.PostgreSQL,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.PostgreSQL);
 
     expect(
@@ -257,10 +257,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.RabbitMQ
+          backendType: BackendType.RabbitMQ,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.RabbitMQ);
 
     expect(
@@ -268,10 +268,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.Redis
+          backendType: BackendType.Redis,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.Redis);
 
     expect(
@@ -279,10 +279,10 @@ describe('Entity Icon Lookup Service', () => {
         {
           [entityTypeKey]: ObservabilityEntityType.Backend,
           [entityIdKey]: 'test-id',
-          backendType: BackendType.Tyk
+          backendType: BackendType.Tyk,
         },
-        'backendType'
-      )
+        'backendType',
+      ),
     ).toBe(ObservabilityIconType.Tyk);
   });
 });

@@ -7,6 +7,6 @@ import { HistogramChartComponent } from './histogram-chart.component';
 @NgModule({
   imports: [CommonModule, TooltipModule, FormattingModule],
   declarations: [HistogramChartComponent],
-  exports: [HistogramChartComponent]
+  exports: [HistogramChartComponent],
 })
 export class HistogramChartModule {}

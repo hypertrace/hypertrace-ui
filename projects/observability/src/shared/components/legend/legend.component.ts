@@ -19,7 +19,7 @@ export const LEGEND_DATA = new InjectionToken<LegendData<unknown>>('LEGEND DATA'
         <span *ngIf="entry.data.value !== undefined" class="legend-value">{{ entry.data.value }}</span>
       </div>
     </div>
-  `
+  `,
 })
 export class LegendComponent {
   public static buildProviders(legendData: LegendData<unknown>): StaticProvider[] {
@@ -27,8 +27,8 @@ export class LegendComponent {
     return [
       {
         provide: LEGEND_DATA,
-        useValue: legendData
-      }
+        useValue: legendData,
+      },
     ];
   }
 
@@ -68,12 +68,12 @@ export interface LegendData<T> {
 
 export const enum LegendLayout {
   Row = 'row',
-  Column = 'column'
+  Column = 'column',
 }
 
 export const enum LegendFontSize {
   ExtraSmall = 'extra-small',
-  Small = 'small'
+  Small = 'small',
 }
 
 export const enum LegendPosition {
@@ -84,5 +84,5 @@ export const enum LegendPosition {
   TopLeft = 'top-left',
   Top = 'top',
   Left = 'left',
-  None = 'none'
+  None = 'none',
 }

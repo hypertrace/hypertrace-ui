@@ -6,8 +6,8 @@ import { EntityNavigationHandlerModel } from './entity/model/entity-navigation-h
 @NgModule({
   imports: [
     DashboardCoreModule.with({
-      models: [EntityNavigationHandlerModel, ApiTraceNavigationHandlerModel]
-    })
-  ]
+      models: [EntityNavigationHandlerModel, ApiTraceNavigationHandlerModel],
+    }),
+  ],
 })
 export class ObservabilityDashboardInteractionsModule {}

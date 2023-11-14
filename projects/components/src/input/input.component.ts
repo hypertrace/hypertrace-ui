@@ -5,7 +5,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  Output
+  Output,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NumberCoercer, TypedSimpleChanges } from '@hypertrace/common';
@@ -19,8 +19,8 @@ import { InputAppearance } from './input-appearance';
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: InputComponent
-    }
+      useExisting: InputComponent,
+    },
   ],
   template: `
     <mat-form-field [ngClass]="this.getStyleClasses()" floatLabel="never">
@@ -37,7 +37,7 @@ import { InputAppearance } from './input-appearance';
         (ngModelChange)="this.onValueChange($event)"
       />
     </mat-form-field>
-  `
+  `,
 })
 export class InputComponent<T extends string | number> implements ControlValueAccessor, OnChanges {
   @Input()

@@ -6,7 +6,7 @@ import { ObservabilityEntityType } from '../../../../graphql/model/schema/entity
 import { GraphQlTimeRange } from '../../../../graphql/model/schema/timerange/graphql-time-range';
 import {
   ENTITY_TOPOLOGY_GQL_REQUEST,
-  TopologyNodeSpecification
+  TopologyNodeSpecification,
 } from '../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 import { MetricAggregationSpecificationModel } from '../specifiers/metric-aggregation-specification.model';
 import { TopologyMetricCategoryModel } from './metrics/topology-metric-category.model';
@@ -25,7 +25,7 @@ describe('topology data source model', () => {
 
   const filters = [
     new GraphQlFieldFilter('service_id', GraphQlOperatorType.Equals, 'test-id'),
-    new GraphQlFieldFilter('backend_id', GraphQlOperatorType.Equals, 'test-backend-id')
+    new GraphQlFieldFilter('backend_id', GraphQlOperatorType.Equals, 'test-backend-id'),
   ];
 
   const createCategoryModel = (
@@ -34,7 +34,7 @@ describe('topology data source model', () => {
     fillColor: Color,
     strokeColor: Color,
     focusColor: Color,
-    maxValue?: number
+    maxValue?: number,
   ): TopologyMetricCategoryModel => {
     const categoryModel = new TopologyMetricCategoryModel();
     categoryModel.name = name;
@@ -59,7 +59,7 @@ describe('topology data source model', () => {
 
   const createMetricWithCategory = (
     spec: MetricAggregationSpecificationModel,
-    categories: TopologyMetricCategoryModel[]
+    categories: TopologyMetricCategoryModel[],
   ) => {
     const withCategoryModel = new TopologyMetricWithCategoryModel();
     withCategoryModel.specification = spec;
@@ -70,7 +70,7 @@ describe('topology data source model', () => {
 
   const createTopologyMetricsModel = (metric: string, aggregation: MetricAggregationType) => {
     const primary = createMetricWithCategory(createSpecificationModel(metric, aggregation), [
-      createCategoryModel(metric, 0, Color.Blue2, Color.Blue3, Color.Blue4, 10)
+      createCategoryModel(metric, 0, Color.Blue2, Color.Blue3, Color.Blue4, 10),
     ]);
 
     const metricsModel: TopologyMetricsModel = new TopologyMetricsModel();
@@ -81,7 +81,7 @@ describe('topology data source model', () => {
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     model = new TopologyDataSourceModel();
     model.downstreamEntityTypes = [ObservabilityEntityType.Api, ObservabilityEntityType.Backend];
@@ -113,8 +113,8 @@ describe('topology data source model', () => {
       rootNodeSpecification: {
         titleSpecification: expect.objectContaining({ name: 'name' }),
         metricSpecifications: [
-          expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average })
-        ]
+          expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
+        ],
       },
       rootNodeFilters: [],
       edgeFilters: [],
@@ -126,19 +126,19 @@ describe('topology data source model', () => {
           {
             titleSpecification: expect.objectContaining({ name: 'name' }),
             metricSpecifications: [
-              expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average })
-            ]
-          }
+              expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
+            ],
+          },
         ],
         [
           ObservabilityEntityType.Backend,
           {
             titleSpecification: expect.objectContaining({ name: 'name' }),
             metricSpecifications: [
-              expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average })
-            ]
-          }
-        ]
+              expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
+            ],
+          },
+        ],
       ]),
       upstreamNodeSpecifications: new Map<ObservabilityEntityType, TopologyNodeSpecification>([
         [
@@ -146,21 +146,21 @@ describe('topology data source model', () => {
           {
             titleSpecification: expect.objectContaining({ name: 'name' }),
             metricSpecifications: [
-              expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average })
-            ]
-          }
-        ]
+              expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
+            ],
+          },
+        ],
       ]),
       edgeSpecification: {
         metricSpecifications: [
-          expect.objectContaining({ metric: 'duration', aggregation: MetricAggregationType.Average })
-        ]
-      }
+          expect.objectContaining({ metric: 'duration', aggregation: MetricAggregationType.Average }),
+        ],
+      },
     });
 
     expect(lastEmittedQueryRequestOption).toEqual({
       cacheability: GraphQlRequestCacheability.Cacheable,
-      isolated: true
+      isolated: true,
     });
   });
 
@@ -171,8 +171,8 @@ describe('topology data source model', () => {
       rootNodeSpecification: {
         titleSpecification: expect.objectContaining({ name: 'name' }),
         metricSpecifications: [
-          expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average })
-        ]
+          expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
+        ],
       },
       rootNodeFilters: [filters[0]],
       edgeFilters: [filters[1]],
@@ -184,17 +184,17 @@ describe('topology data source model', () => {
           {
             titleSpecification: expect.objectContaining({ name: 'name' }),
             metricSpecifications: [
-              expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average })
-            ]
-          }
-        ]
+              expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
+            ],
+          },
+        ],
       ]),
       upstreamNodeSpecifications: new Map(),
       edgeSpecification: {
         metricSpecifications: [
-          expect.objectContaining({ metric: 'duration', aggregation: MetricAggregationType.Average })
-        ]
-      }
+          expect.objectContaining({ metric: 'duration', aggregation: MetricAggregationType.Average }),
+        ],
+      },
     });
   });
 });

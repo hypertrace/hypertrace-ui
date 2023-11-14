@@ -11,17 +11,17 @@ describe('Text table cell renderer component', () => {
     providers: [
       tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
-        new TableCellStringParser(undefined!)
-      )
+        new TableCellStringParser(undefined!),
+      ),
     ],
-    shallow: true
+    shallow: true,
   });
 
   test('should render a plain string', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider('test-text')]
+      providers: [tableCellDataProvider('test-text')],
     });
 
     expect(spectator.element).toHaveText('test-text');
@@ -41,9 +41,9 @@ describe('Text table cell renderer component', () => {
           id: 'test',
           onClick: () => {
             /* NOOP */
-          }
-        })
-      ]
+          },
+        }),
+      ],
     });
 
     expect(spectator.query(byText('test-text'))).toHaveClass('clickable');
@@ -51,7 +51,7 @@ describe('Text table cell renderer component', () => {
 
   test('should not add clickable class for columns without a click handler', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider('test-text')]
+      providers: [tableCellDataProvider('test-text')],
     });
 
     expect(spectator.query(byText('test-text'))).not.toHaveClass('clickable');

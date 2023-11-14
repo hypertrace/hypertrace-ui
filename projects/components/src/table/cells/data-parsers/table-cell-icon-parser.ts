@@ -4,7 +4,7 @@ import { TableCellParserBase } from '../table-cell-parser-base';
 import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';
 
 @TableCellParser({
-  type: CoreTableCellParserType.Icon
+  type: CoreTableCellParserType.Icon,
 })
 export class TableCellIconParser extends TableCellParserBase<CellData, Value, FilterValue> {
   public parseValue(cellData: CellData): Value {
@@ -12,7 +12,7 @@ export class TableCellIconParser extends TableCellParserBase<CellData, Value, Fi
       case 'string':
         return {
           icon: cellData,
-          filterValue: cellData
+          filterValue: cellData,
         };
       default:
         return cellData;

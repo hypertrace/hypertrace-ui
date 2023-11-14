@@ -7,7 +7,7 @@ import {
   StatefulTreeTableRow,
   TableRow,
   TableRowState,
-  TreeTableRow
+  TreeTableRow,
 } from '../table-api';
 import { TableCdkRowUtil } from './table-cdk-row-util';
 
@@ -30,26 +30,26 @@ describe('Table row util', () => {
     parentTableRow = {
       one: 'one-parent',
       two: 'two-parent',
-      three: 'three-parent'
+      three: 'three-parent',
     };
 
     childTableRow = {
       one: 'one-child',
       two: 'two-child',
-      three: 'three-child'
+      three: 'three-child',
     };
 
     grandchildTableRow = {
       one: 'one-grandchild',
       two: 'two-grandchild',
-      three: 'three-grandchild'
+      three: 'three-grandchild',
     };
 
     treeTableRow = {
       one: 'one-parent',
       two: 'two-parent',
       three: 'three-parent',
-      getChildren: () => of([])
+      getChildren: () => of([]),
     };
 
     /**
@@ -63,11 +63,11 @@ describe('Table row util', () => {
         selected: false,
         root: true,
         leaf: false,
-        depth: 0
+        depth: 0,
       },
       one: 'one-parent',
       two: 'two-parent',
-      three: 'three-parent'
+      three: 'three-parent',
     };
 
     childStatefulTableRow = {
@@ -77,11 +77,11 @@ describe('Table row util', () => {
         selected: false,
         root: false,
         leaf: true,
-        depth: 1
+        depth: 1,
       },
       one: 'one-child',
       two: 'two-child',
-      three: 'three-child'
+      three: 'three-child',
     };
 
     /**
@@ -95,12 +95,12 @@ describe('Table row util', () => {
         selected: false,
         root: true,
         leaf: false,
-        depth: 0
+        depth: 0,
       },
       one: 'one-parent',
       two: 'two-parent',
       three: 'three-parent',
-      getChildren: () => of([childStatefulTreeTableRow])
+      getChildren: () => of([childStatefulTreeTableRow]),
     };
 
     childStatefulTreeTableRow = {
@@ -110,12 +110,12 @@ describe('Table row util', () => {
         selected: false,
         root: false,
         leaf: false,
-        depth: 1
+        depth: 1,
       },
       one: 'one-child',
       two: 'two-child',
       three: 'three-child',
-      getChildren: () => of([grandchildStatefulTreeTableRow])
+      getChildren: () => of([grandchildStatefulTreeTableRow]),
     };
 
     grandchildStatefulTreeTableRow = {
@@ -125,12 +125,12 @@ describe('Table row util', () => {
         selected: false,
         root: false,
         leaf: true,
-        depth: 2
+        depth: 2,
       },
       one: 'one-grandchild',
       two: 'two-grandchild',
       three: 'three-grandchild',
-      getChildren: () => of([])
+      getChildren: () => of([]),
     };
 
     /**
@@ -144,12 +144,12 @@ describe('Table row util', () => {
         selected: false,
         root: true,
         leaf: false,
-        depth: 0
+        depth: 0,
       },
       one: 'one-parent',
       two: 'two-parent',
       three: 'three-parent',
-      getChildren: () => of([childStatefulPrefetchedTreeTableRow])
+      getChildren: () => of([childStatefulPrefetchedTreeTableRow]),
     };
 
     childStatefulPrefetchedTreeTableRow = {
@@ -160,12 +160,12 @@ describe('Table row util', () => {
         selected: false,
         root: false,
         leaf: false,
-        depth: 1
+        depth: 1,
       },
       one: 'one-child',
       two: 'two-child',
       three: 'three-child',
-      getChildren: () => of([grandchildStatefulPrefetchedTreeTableRow1, grandchildStatefulPrefetchedTreeTableRow2])
+      getChildren: () => of([grandchildStatefulPrefetchedTreeTableRow1, grandchildStatefulPrefetchedTreeTableRow2]),
     };
 
     parentStatefulPrefetchedTreeTableRow.$$state.children.push(childStatefulPrefetchedTreeTableRow);
@@ -178,12 +178,12 @@ describe('Table row util', () => {
         selected: false,
         root: false,
         leaf: true,
-        depth: 2
+        depth: 2,
       },
       one: 'one-grandchild1',
       two: 'two-grandchild1',
       three: 'three-grandchild1',
-      getChildren: () => of([])
+      getChildren: () => of([]),
     };
 
     grandchildStatefulPrefetchedTreeTableRow2 = {
@@ -194,12 +194,12 @@ describe('Table row util', () => {
         selected: false,
         root: false,
         leaf: true,
-        depth: 2
+        depth: 2,
       },
       one: 'one-grandchild2',
       two: 'two-grandchild2',
       three: 'three-grandchild2',
-      getChildren: () => of([])
+      getChildren: () => of([]),
     };
 
     childStatefulPrefetchedTreeTableRow.$$state.children.push(grandchildStatefulPrefetchedTreeTableRow1);
@@ -219,19 +219,19 @@ describe('Table row util', () => {
 
   test('should build initial row states for prefetched tree rows', () => {
     const parent: StatefulPrefetchedTreeTableRow = TableCdkRowUtil.buildInitialRowStates([
-      parentStatefulPrefetchedTreeTableRow
+      parentStatefulPrefetchedTreeTableRow,
     ])[0] as StatefulPrefetchedTreeTableRow;
     const child: StatefulPrefetchedTreeTableRow = TableCdkRowUtil.buildInitialChildRowStates(
       [childStatefulPrefetchedTreeTableRow],
-      parentStatefulPrefetchedTreeTableRow
+      parentStatefulPrefetchedTreeTableRow,
     )[0] as StatefulPrefetchedTreeTableRow;
     const grandchild1: StatefulPrefetchedTreeTableRow = TableCdkRowUtil.buildInitialChildRowStates(
       [grandchildStatefulPrefetchedTreeTableRow1],
-      childStatefulPrefetchedTreeTableRow
+      childStatefulPrefetchedTreeTableRow,
     )[0] as StatefulPrefetchedTreeTableRow;
     const grandchild2: StatefulPrefetchedTreeTableRow = TableCdkRowUtil.buildInitialChildRowStates(
       [grandchildStatefulPrefetchedTreeTableRow2],
-      childStatefulPrefetchedTreeTableRow
+      childStatefulPrefetchedTreeTableRow,
     )[0] as StatefulPrefetchedTreeTableRow;
 
     expect(parent.$$state.parent).toBeUndefined();
@@ -243,8 +243,8 @@ describe('Table row util', () => {
         selected: false,
         root: true,
         leaf: false,
-        depth: 0
-      })
+        depth: 0,
+      }),
     );
 
     expect(child.$$state.parent).not.toBeUndefined();
@@ -256,8 +256,8 @@ describe('Table row util', () => {
         selected: false,
         root: false,
         leaf: false,
-        depth: 1
-      })
+        depth: 1,
+      }),
     );
 
     expect(grandchild1.$$state.parent).not.toBeUndefined();
@@ -269,8 +269,8 @@ describe('Table row util', () => {
         selected: false,
         root: false,
         leaf: true,
-        depth: 2
-      })
+        depth: 2,
+      }),
     );
 
     expect(grandchild2.$$state.parent).not.toBeUndefined();
@@ -282,8 +282,8 @@ describe('Table row util', () => {
         selected: false,
         root: false,
         leaf: true,
-        depth: 2
-      })
+        depth: 2,
+      }),
     );
   });
 
@@ -335,7 +335,7 @@ describe('Table row util', () => {
       parentStatefulPrefetchedTreeTableRow,
       childStatefulPrefetchedTreeTableRow,
       grandchildStatefulPrefetchedTreeTableRow1,
-      grandchildStatefulPrefetchedTreeTableRow2
+      grandchildStatefulPrefetchedTreeTableRow2,
     ]);
 
     TableCdkRowUtil.expandAllRows(collapsed).forEach((row, index) => {
@@ -351,9 +351,9 @@ describe('Table row util', () => {
         selected: true,
         root: true,
         leaf: false,
-        depth: 0
+        depth: 0,
       },
-      one: '1'
+      one: '1',
     };
 
     const row2: StatefulTableRow = {
@@ -363,11 +363,11 @@ describe('Table row util', () => {
         selected: true,
         root: true,
         leaf: false,
-        depth: 0
+        depth: 0,
       },
       one: '1',
       two: '2',
-      three: '3'
+      three: '3',
     };
 
     const rows = TableCdkRowUtil.unselectAllRows([row1, row2]);
@@ -382,9 +382,9 @@ describe('Table row util', () => {
         selected: false,
         root: true,
         leaf: false,
-        depth: 0
+        depth: 0,
       },
-      one: '1'
+      one: '1',
     };
 
     const row2: StatefulTableRow = {
@@ -394,11 +394,11 @@ describe('Table row util', () => {
         selected: false,
         root: true,
         leaf: false,
-        depth: 0
+        depth: 0,
       },
       one: '1',
       two: '2',
-      three: '3'
+      three: '3',
     };
 
     const rows = TableCdkRowUtil.selectAllRows([row1, row2]);
@@ -413,9 +413,9 @@ describe('Table row util', () => {
         selected: true,
         root: true,
         leaf: false,
-        depth: 0
+        depth: 0,
       },
-      one: '1'
+      one: '1',
     };
 
     const row2: StatefulTableRow = {
@@ -425,22 +425,22 @@ describe('Table row util', () => {
         selected: true,
         root: true,
         leaf: false,
-        depth: 1
+        depth: 1,
       },
       one: '1',
       two: '2',
-      three: '3'
+      three: '3',
     };
 
     const row3: StatefulTableRow = {
       $$state: {
         parent: undefined,
         expanded: false,
-        depth: 2
+        depth: 2,
       } as TableRowState,
       one: '1',
       two: '2',
-      three: '3'
+      three: '3',
     };
 
     const rows = TableCdkRowUtil.mergeRowStates([row1, row2], [row3]);
@@ -458,12 +458,12 @@ describe('Table row util', () => {
     const arrays = [
       [parentStatefulPrefetchedTreeTableRow],
       [childStatefulPrefetchedTreeTableRow],
-      grandchildStatefulPrefetchedTreeTableRow1
+      grandchildStatefulPrefetchedTreeTableRow1,
     ];
     expect(TableCdkRowUtil.flattenNestedRows(arrays)).toEqual([
       parentStatefulPrefetchedTreeTableRow,
       childStatefulPrefetchedTreeTableRow,
-      grandchildStatefulPrefetchedTreeTableRow1
+      grandchildStatefulPrefetchedTreeTableRow1,
     ]);
   });
 
@@ -558,7 +558,7 @@ describe('Table row util', () => {
       parentStatefulPrefetchedTreeTableRow,
       childStatefulPrefetchedTreeTableRow,
       grandchildStatefulPrefetchedTreeTableRow1,
-      grandchildStatefulPrefetchedTreeTableRow2
+      grandchildStatefulPrefetchedTreeTableRow2,
     ];
     expect(TableCdkRowUtil.isFullyExpandable(rows)).toEqual(false);
     expect(TableCdkRowUtil.isFullyExpandable([...rows, ...prefetchedRows])).toEqual(false);

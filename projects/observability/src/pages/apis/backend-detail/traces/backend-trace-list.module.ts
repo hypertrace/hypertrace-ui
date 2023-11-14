@@ -11,9 +11,9 @@ import { backendTraceListDashboard } from './backend-trace-list.dashboard';
     ObservabilityDashboardModule,
     CommonModule,
     LoadAsyncModule,
-    NavigableDashboardModule.withDefaultDashboards(backendTraceListDashboard)
+    NavigableDashboardModule.withDefaultDashboards(backendTraceListDashboard),
   ],
   declarations: [BackendTraceListComponent],
-  exports: [BackendTraceListComponent]
+  exports: [BackendTraceListComponent],
 })
 export class BackendTraceListModule {}

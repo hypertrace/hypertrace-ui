@@ -14,8 +14,8 @@ import { StringPropertyEditorComponent } from './primitives/string-property-edit
     SelectModule,
     DashboardCoreModule.with({
       propertyTypes: [ENUM_TYPE],
-      editors: [StringPropertyEditorComponent, EnumPropertyTypeEditorComponent]
-    })
-  ]
+      editors: [StringPropertyEditorComponent, EnumPropertyTypeEditorComponent],
+    }),
+  ],
 })
 export class DashboardPropertyEditorsModule {}

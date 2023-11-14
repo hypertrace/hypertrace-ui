@@ -4,6 +4,6 @@ import { InputModule, LabelModule, SelectModule } from '@hypertrace/components';
 import { DashboardPropertyEditorsModule } from '@hypertrace/dashboards';
 
 @NgModule({
-  imports: [CommonModule, InputModule, LabelModule, SelectModule, DashboardPropertyEditorsModule]
+  imports: [CommonModule, InputModule, LabelModule, SelectModule, DashboardPropertyEditorsModule],
 })
 export class TracingDashboardPropertyEditorsModule {}

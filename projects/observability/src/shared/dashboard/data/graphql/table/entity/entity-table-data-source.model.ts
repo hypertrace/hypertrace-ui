@@ -6,7 +6,7 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
-  STRING_PROPERTY
+  STRING_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,26 +17,26 @@ import { Specification } from '../../../../../graphql/model/schema/specifier/spe
 import { EntitiesResponse } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-builder.service';
 import {
   ENTITIES_GQL_REQUEST,
-  GraphQlEntitiesQueryRequest
+  GraphQlEntitiesQueryRequest,
 } from '../../../../../graphql/request/handlers/entities/query/entities-graphql-query-handler.service';
 import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model';
 import { TableDataSourceModel } from '../table-data-source.model';
 
 @Model({
-  type: 'entity-table-data-source'
+  type: 'entity-table-data-source',
 })
 export class EntityTableDataSourceModel extends TableDataSourceModel {
   @ModelProperty({
     key: 'entity',
     required: true,
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public entityType!: EntityType;
 
   @ModelProperty({
     key: 'ignore-sources-filter',
     required: false,
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public ignoreSourcesFilter: boolean = false;
 
@@ -44,9 +44,9 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     key: 'child-data-source',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: EntityTableDataSourceModel
+      defaultModelClass: EntityTableDataSourceModel,
     } as ModelModelPropertyTypeInstance,
-    required: false
+    required: false,
   })
   public childEntityDataSource?: EntityTableDataSourceModel;
 
@@ -54,7 +54,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     key: 'additional-specifications',
     displayName: 'Additional Specifications',
     required: false,
-    type: ARRAY_PROPERTY.type
+    type: ARRAY_PROPERTY.type,
   })
   public additionalSpecifications: Specification[] = [];
 
@@ -64,7 +64,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
 
   protected buildGraphQlRequest(
     filters: GraphQlFilter[],
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
   ): GraphQlEntitiesQueryRequest {
     return {
       requestType: ENTITIES_GQL_REQUEST,
@@ -75,68 +75,68 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
       sort: request.sort
         ? {
             direction: request.sort.direction,
-            key: request.sort.column.specification
+            key: request.sort.column.specification,
           }
         : this.buildDefaultSortArg(request.columns),
       filters: [...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow(),
       includeTotal: true,
       includeInactive: request.includeInactive,
-      ignoreSourcesFilter: this.ignoreSourcesFilter
+      ignoreSourcesFilter: this.ignoreSourcesFilter,
     };
   }
 
   protected buildTableResponse(
     response: EntitiesResponse,
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
   ): TableDataResponse<TableRow> {
     return {
       data: this.resultsAsTreeRows(response.results, request, this.childEntityDataSource !== undefined),
-      totalCount: response.total!
+      totalCount: response.total!,
     };
   }
 
   private resultsAsTreeRows(
     results: Entity[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>,
-    expandable: boolean
+    expandable: boolean,
   ): TableRow[] {
     return results.map(entity => ({
       ...entity,
       getChildren: () => (expandable ? this.queryEntityChildren(entity, request) : EMPTY),
-      isExpandable: () => expandable
+      isExpandable: () => expandable,
     }));
   }
 
   private queryEntityChildren(
     entity: Entity,
-    parentRequest: TableDataRequest<SpecificationBackedTableColumnDef>
+    parentRequest: TableDataRequest<SpecificationBackedTableColumnDef>,
   ): Observable<TableRow[]> {
     return this.childEntityDataSource!.getDataForParentEntity(entity, this.buildChildTableRequest(parentRequest));
   }
 
   private getDataForParentEntity(
     entity: Entity,
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
   ): Observable<TableRow[]> {
     return this.query(filters =>
-      this.buildGraphQlRequest([...filters, GraphQlEntityFilter.forEntity(entity)], request)
+      this.buildGraphQlRequest([...filters, GraphQlEntityFilter.forEntity(entity)], request),
     ).pipe(
       map(response => this.buildTableResponse(response as EntitiesResponse, request)),
-      map(response => this.resultsAsTreeRows(response.data as Entity[], request, false))
+      map(response => this.resultsAsTreeRows(response.data as Entity[], request, false)),
     );
   }
 
   private buildChildTableRequest(
-    parentRequest: TableDataRequest<SpecificationBackedTableColumnDef>
+    parentRequest: TableDataRequest<SpecificationBackedTableColumnDef>,
   ): TableDataRequest<SpecificationBackedTableColumnDef> {
     return {
       columns: parentRequest.columns,
       position: {
         startIndex: 0,
-        limit: 20
+        limit: 20,
       },
-      sort: parentRequest.sort
+      sort: parentRequest.sort,
     };
   }
 
@@ -146,7 +146,7 @@ export class EntityTableDataSourceModel extends TableDataSourceModel {
     return defaultSortColumn
       ? {
           key: defaultSortColumn.specification,
-          direction: defaultSortColumn.sort ?? TableSortDirection.Ascending
+          direction: defaultSortColumn.sort ?? TableSortDirection.Ascending,
         }
       : undefined;
   }

@@ -6,6 +6,6 @@ import { DescriptionComponent } from './description.component';
 @NgModule({
   imports: [CommonModule, LayoutChangeModule],
   declarations: [DescriptionComponent],
-  exports: [DescriptionComponent]
+  exports: [DescriptionComponent],
 })
 export class DescriptionModule {}

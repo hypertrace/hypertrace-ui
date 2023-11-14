@@ -9,6 +9,6 @@ import { EventBlockerModule } from '../event-blocker/event-blocker.module';
 @NgModule({
   declarations: [OpenInNewTabComponent],
   exports: [OpenInNewTabComponent],
-  imports: [CommonModule, TooltipModule, LinkModule, IconModule, EventBlockerModule]
+  imports: [CommonModule, TooltipModule, LinkModule, IconModule, EventBlockerModule],
 })
 export class OpenInNewTabModule {}

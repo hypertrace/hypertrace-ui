@@ -12,9 +12,9 @@ import { serviceMetricsDashboard } from './service-metrics.dashboard';
     CommonModule,
     FilterBarModule,
     NavigableDashboardModule.withDefaultDashboards(serviceMetricsDashboard),
-    LoadAsyncModule
+    LoadAsyncModule,
   ],
   declarations: [ServiceMetricsComponent],
-  exports: [ServiceMetricsComponent]
+  exports: [ServiceMetricsComponent],
 })
 export class ServiceMetricsModule {}

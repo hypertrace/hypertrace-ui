@@ -9,5 +9,5 @@ export interface ToggleButtonState {
 export const enum ToggleViewMode {
   ButtonGroup = 'button-group',
   Button = 'button',
-  Text = 'text'
+  Text = 'text',
 }

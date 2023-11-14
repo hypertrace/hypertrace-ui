@@ -5,6 +5,6 @@ import { NgModule } from '@angular/core';
   imports: [CommonModule],
   exports: [],
   declarations: [],
-  providers: []
+  providers: [],
 })
 export class FilterModule {}

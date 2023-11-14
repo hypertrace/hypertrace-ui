@@ -17,7 +17,7 @@ import { ObservabilitySpecificationBuilder } from '../../../../builders/selectio
 import {
   GraphQlInteractionsRequest,
   InteractionsGraphQlQueryHandlerService,
-  INTERACTIONS_GQL_REQUEST
+  INTERACTIONS_GQL_REQUEST,
 } from './interactions-graphql-query-handler.service';
 
 describe('Interactions graphql query handler', () => {
@@ -34,20 +34,20 @@ describe('Interactions graphql query handler', () => {
             scope: scope,
             onlySupportsAggregation: false,
             onlySupportsGrouping: false,
-            allowedAggregations: [MetricAggregationType.Average]
+            allowedAggregations: [MetricAggregationType.Average],
           }),
         buildSpecificationResultWithUnits: (rawResult: Dictionary<unknown>, specifications: Specification[]) =>
-          of(new Map(specifications.map(spec => [spec, spec.extractFromServerData(rawResult)])))
+          of(new Map(specifications.map(spec => [spec, spec.extractFromServerData(rawResult)]))),
       }),
       {
         provide: ENTITY_METADATA,
-        useValue: new Map()
-      }
-    ]
+        useValue: new Map(),
+      },
+    ],
   });
 
   const testTimeRange = GraphQlTimeRange.fromTimeRange(
-    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
+    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)),
   );
   const specBuilder = new ObservabilitySpecificationBuilder();
   const buildRequest = (): GraphQlInteractionsRequest => ({
@@ -57,7 +57,7 @@ describe('Interactions graphql query handler', () => {
     neighborType: ObservabilityEntityType.Service,
     neighborSpecifications: [specBuilder.attributeSpecificationForKey('name')],
     interactionSpecifications: [specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)],
-    timeRange: testTimeRange
+    timeRange: testTimeRange,
   });
   test('matches interactions request', () => {
     const spectator = createService();
@@ -76,8 +76,8 @@ describe('Interactions graphql query handler', () => {
           name: 'between',
           value: {
             startTime: new Date(testTimeRange.from),
-            endTime: new Date(testTimeRange.to)
-          }
+            endTime: new Date(testTimeRange.to),
+          },
         },
         {
           name: 'filterBy',
@@ -86,14 +86,14 @@ describe('Interactions graphql query handler', () => {
               operator: new GraphQlEnumArgument(GraphQlOperatorType.Equals),
               value: 'test',
               type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-              idType: new GraphQlEnumArgument(ObservabilityEntityType.Backend)
-            }
-          ]
+              idType: new GraphQlEnumArgument(ObservabilityEntityType.Backend),
+            },
+          ],
         },
         {
           name: 'includeInactive',
-          value: false
-        }
+          value: false,
+        },
       ],
       children: [
         {
@@ -116,9 +116,9 @@ describe('Interactions graphql query handler', () => {
                           path: 'avg',
                           alias: 'avg',
                           arguments: [],
-                          children: [{ path: 'value' }]
-                        }
-                      ]
+                          children: [{ path: 'value' }],
+                        },
+                      ],
                     },
                     {
                       path: 'neighbor',
@@ -127,18 +127,18 @@ describe('Interactions graphql query handler', () => {
                         {
                           path: 'attribute',
                           alias: 'name',
-                          arguments: [{ name: 'expression', value: { key: 'name' } }]
-                        }
-                      ]
-                    }
-                  ]
+                          arguments: [{ name: 'expression', value: { key: 'name' } }],
+                        },
+                      ],
+                    },
+                  ],
                 },
-                { path: 'total' }
-              ]
-            }
-          ]
-        }
-      ]
+                { path: 'total' },
+              ],
+            },
+          ],
+        },
+      ],
     });
   });
 
@@ -153,30 +153,30 @@ describe('Interactions graphql query handler', () => {
               {
                 duration: {
                   avg: {
-                    value: 1
-                  }
+                    value: 1,
+                  },
                 },
                 neighbor: {
                   entityId: '1',
-                  name: 'first-neighbor'
-                }
+                  name: 'first-neighbor',
+                },
               },
               {
                 duration: {
                   avg: {
-                    value: 2
-                  }
+                    value: 2,
+                  },
                 },
                 neighbor: {
                   entityId: '2',
-                  name: 'second-neighbor'
-                }
-              }
+                  name: 'second-neighbor',
+                },
+              },
             ],
-            total: 2
-          }
-        }
-      ]
+            total: 2,
+          },
+        },
+      ],
     };
 
     runFakeRxjs(({ expectObservable }) => {
@@ -186,28 +186,28 @@ describe('Interactions graphql query handler', () => {
             {
               'avg(duration)': {
                 value: 1,
-                health: MetricHealth.NotSpecified
+                health: MetricHealth.NotSpecified,
               },
               neighbor: {
                 [entityIdKey]: '1',
                 [entityTypeKey]: ObservabilityEntityType.Service,
-                name: 'first-neighbor'
-              }
+                name: 'first-neighbor',
+              },
             },
             {
               'avg(duration)': {
                 value: 2,
-                health: MetricHealth.NotSpecified
+                health: MetricHealth.NotSpecified,
               },
               neighbor: {
                 [entityIdKey]: '2',
                 [entityTypeKey]: ObservabilityEntityType.Service,
-                name: 'second-neighbor'
-              }
-            }
+                name: 'second-neighbor',
+              },
+            },
           ],
-          total: 2
-        }
+          total: 2,
+        },
       });
     });
   }));

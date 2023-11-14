@@ -5,7 +5,7 @@ describe('Select Option Renderer directive', () => {
   let spectator: SpectatorDirective<SelectOptionRendererDirective>;
 
   const createDirective = createDirectiveFactory<SelectOptionRendererDirective>({
-    directive: SelectOptionRendererDirective
+    directive: SelectOptionRendererDirective,
   });
 
   beforeEach(() => {

@@ -4,14 +4,14 @@ import { AttributeSpecificationModel } from './attribute-specification.model';
 
 @Model({
   type: 'mapped-attribute-specification',
-  displayName: 'Mapped Attribute'
+  displayName: 'Mapped Attribute',
 })
 export class MappedAttributeSpecificationModel extends AttributeSpecificationModel {
   @ModelProperty({
     key: 'map',
     displayName: 'Map',
     type: PLAIN_OBJECT_PROPERTY.type,
-    required: true
+    required: true,
   })
   public map: Dictionary<unknown> = {};
 

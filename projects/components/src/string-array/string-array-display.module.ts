@@ -8,6 +8,6 @@ import { StringArrayDisplayComponent } from './string-array-display.component';
 @NgModule({
   declarations: [StringArrayDisplayComponent],
   exports: [StringArrayDisplayComponent],
-  imports: [CommonModule, XMoreModule, FormattingModule, TooltipModule]
+  imports: [CommonModule, XMoreModule, FormattingModule, TooltipModule],
 })
 export class StringArrayDisplayModule {}

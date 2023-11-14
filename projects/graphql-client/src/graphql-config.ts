@@ -40,12 +40,12 @@ export interface GraphQlRequestOptions {
 export const enum GraphQlRequestCacheability {
   NotCacheable = 'no-cache', // Values used by apollo
   Cacheable = 'cache-first',
-  RefreshCache = 'network-only'
+  RefreshCache = 'network-only',
 }
 
 export const enum GraphQlHandlerType {
   Mutation = 'mutation',
-  Query = 'query'
+  Query = 'query',
 }
 
 export interface GraphQlOptions {

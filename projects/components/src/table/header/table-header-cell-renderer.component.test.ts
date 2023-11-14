@@ -17,7 +17,7 @@ describe('Table Header Cell Renderer', () => {
     template: `
       <ht-table-header-cell-renderer [columnConfig]="columnConfig" index="0" (sortChange)="sortChange($event)"
       ></ht-table-header-cell-renderer>
-    `
+    `,
   });
 
   test('should have sortable icons, if column can be sorted', () => {
@@ -28,14 +28,14 @@ describe('Table Header Cell Renderer', () => {
       renderer: TextTableCellRendererComponent,
       parser: new TableCellStringParser(undefined!),
       filterValues: [],
-      sortable: true
+      sortable: true,
     };
 
     const spectator = createHost(undefined, {
       hostProps: {
         columnConfig: columnConfig,
-        sortChange: sortChange
-      }
+        sortChange: sortChange,
+      },
     });
 
     const sortIcons = spectator.queryAll('.sort-icon');
@@ -64,13 +64,13 @@ describe('Table Header Cell Renderer', () => {
       renderer: TextTableCellRendererComponent,
       parser: new TableCellStringParser(undefined!),
       filterValues: [],
-      sortable: false
+      sortable: false,
     };
 
     const spectator = createHost(undefined, {
       hostProps: {
-        columnConfig: columnConfig
-      }
+        columnConfig: columnConfig,
+      },
     });
 
     const sortIcons = spectator.queryAll('.sort-icon');
@@ -85,14 +85,14 @@ describe('Table Header Cell Renderer', () => {
       renderer: TextTableCellRendererComponent,
       parser: new TableCellStringParser(undefined!),
       filterValues: [],
-      sortable: true
+      sortable: true,
     };
 
     const spectator = createHost(undefined, {
       hostProps: {
         columnConfig: columnConfig,
-        sortChange: sortChange
-      }
+        sortChange: sortChange,
+      },
     });
 
     spectator.click(spectator.query('.title')!);
@@ -105,13 +105,13 @@ describe('Table Header Cell Renderer', () => {
       renderer: TextTableCellRendererComponent,
       parser: new TableCellStringParser(undefined!),
       filterValues: [],
-      sortable: true
+      sortable: true,
     };
 
     const spectator = createHost(undefined, {
       hostProps: {
-        columnConfig: columnConfig
-      }
+        columnConfig: columnConfig,
+      },
     });
 
     spectator.click('.options-button');
@@ -125,13 +125,13 @@ describe('Table Header Cell Renderer', () => {
       renderer: TextTableCellRendererComponent,
       parser: new TableCellStringParser(undefined!),
       filterValues: [],
-      sortable: false
+      sortable: false,
     };
 
     const spectator = createHost(undefined, {
       hostProps: {
-        columnConfig: columnConfig
-      }
+        columnConfig: columnConfig,
+      },
     });
 
     expect(spectator.query('.options-button', { root: true })).not.toExist();
@@ -144,13 +144,13 @@ describe('Table Header Cell Renderer', () => {
       parser: new TableCellStringParser(undefined!),
       filterValues: [],
       titleTooltip: 'html:<div></div>',
-      sortable: false
+      sortable: false,
     };
 
     const spectator = createHost(undefined, {
       hostProps: {
-        columnConfig: columnConfig
-      }
+        columnConfig: columnConfig,
+      },
     });
 
     expect(spectator.component.getTooltip('<div></div>', 'title') instanceof TemplateRef).toBe(true);

@@ -5,7 +5,7 @@ import {
   FileDownloadService,
   TableColumnConfig,
   TableDataSource,
-  TableRow
+  TableRow,
 } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
 import { Observable, throwError } from 'rxjs';
@@ -51,7 +51,7 @@ export type GlobalCsvDownloadData = GlobalCsvDownloadTableDataSource | GlobalCsv
 
 export const enum GlobalCsvDownloadDataType {
   Table = 'table',
-  DataSource = 'datasource'
+  DataSource = 'datasource',
 }
 export interface GlobalCsvDownloadTableDataSource {
   type: GlobalCsvDownloadDataType.Table;

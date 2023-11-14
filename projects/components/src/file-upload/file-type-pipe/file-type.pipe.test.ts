@@ -3,7 +3,7 @@ import { FileTypePipe } from './file-type.pipe';
 
 describe('FileTypePipe', () => {
   const createPipe = createPipeFactory({
-    pipe: FileTypePipe
+    pipe: FileTypePipe,
   });
 
   test('should return the correct file type', () => {

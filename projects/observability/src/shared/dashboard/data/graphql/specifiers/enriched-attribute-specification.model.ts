@@ -7,14 +7,14 @@ import { AttributeSpecificationModel } from './attribute-specification.model';
 
 @Model({
   type: 'enriched-attribute-specification',
-  displayName: 'Enriched Attribute'
+  displayName: 'Enriched Attribute',
 })
 export class EnrichedAttributeSpecificationModel extends AttributeSpecificationModel {
   @ModelProperty({
     key: 'units',
     displayName: 'Units',
     type: STRING_PROPERTY.type,
-    required: false
+    required: false,
   })
   public units: string = '';
 

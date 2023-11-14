@@ -3,13 +3,13 @@ import { isNil } from 'lodash-es';
 
 export const ENUM_TYPE: ModelPropertyTypeRegistrationInformation = {
   type: 'enum',
-  validator: enumValidator
+  validator: enumValidator,
 };
 
 export function enumValidator(
   value: unknown,
   allowUndefinedOrNull: boolean,
-  instance: ModelPropertyTypeInstance
+  instance: ModelPropertyTypeInstance,
 ): string | undefined {
   if (!propertyInstanceIsEnum(instance)) {
     return 'Property must be registered with EnumPropertyTypeInstance';
@@ -25,7 +25,7 @@ export function enumValidator(
 }
 
 const propertyInstanceIsEnum = (
-  propertyType: ModelPropertyTypeInstance | EnumPropertyTypeInstance
+  propertyType: ModelPropertyTypeInstance | EnumPropertyTypeInstance,
 ): propertyType is EnumPropertyTypeInstance =>
   propertyType.key === 'enum' && 'values' in propertyType && Array.isArray(propertyType.values);
 

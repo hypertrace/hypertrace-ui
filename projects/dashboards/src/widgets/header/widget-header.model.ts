@@ -5,19 +5,19 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
-  STRING_PROPERTY
+  STRING_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '../../properties/enums/enum-property-type';
 import { LinkWidgetModel } from '../link/link-widget.model';
 
 @Model({
-  type: 'widget-header'
+  type: 'widget-header',
 })
 export class WidgetHeaderModel {
   @ModelProperty({
     type: STRING_PROPERTY.type,
     key: 'title',
-    required: false
+    required: false,
   })
   public title?: string;
 
@@ -25,16 +25,16 @@ export class WidgetHeaderModel {
     key: 'title-position',
     type: {
       key: ENUM_TYPE.type,
-      values: [TitlePosition.Footer, TitlePosition.Header]
+      values: [TitlePosition.Footer, TitlePosition.Header],
     } as EnumPropertyTypeInstance,
-    required: false
+    required: false,
   })
   public titlePosition?: TitlePosition;
 
   @ModelProperty({
     type: BOOLEAN_PROPERTY.type,
     key: 'hide-title',
-    required: false
+    required: false,
   })
   public hideTitle?: boolean;
 
@@ -43,8 +43,8 @@ export class WidgetHeaderModel {
     required: false,
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: LinkWidgetModel
-    } as ModelModelPropertyTypeInstance
+      defaultModelClass: LinkWidgetModel,
+    } as ModelModelPropertyTypeInstance,
   })
   public link?: LinkWidgetModel;
 }

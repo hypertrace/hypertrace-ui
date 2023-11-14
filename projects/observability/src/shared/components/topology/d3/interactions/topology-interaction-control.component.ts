@@ -8,13 +8,13 @@ import {
   TopologyConfiguration,
   TopologyDataSpecifier,
   TopologyEdge,
-  TopologyNode
+  TopologyNode,
 } from '../../topology';
 import { TopologyStateManager } from './state/topology-state-manager';
 import { TopologyZoom } from './zoom/topology-zoom';
 
 export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInteractionControlData>(
-  'TOPOLOGY_INTERACTION_CONTROL_DATA'
+  'TOPOLOGY_INTERACTION_CONTROL_DATA',
 );
 
 @Component({
@@ -67,7 +67,7 @@ export const TOPOLOGY_INTERACTION_CONTROL_DATA = new InjectionToken<TopologyInte
         </div>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class TopologyInteractionControlComponent implements OnInit {
   public currentZoomPercentage: string = '100';
@@ -93,7 +93,7 @@ export class TopologyInteractionControlComponent implements OnInit {
   public constructor(
     changeDetector: ChangeDetectorRef,
     subscriptionLifecycle: SubscriptionLifecycle,
-    @Inject(TOPOLOGY_INTERACTION_CONTROL_DATA) private readonly interactionControlData: TopologyInteractionControlData
+    @Inject(TOPOLOGY_INTERACTION_CONTROL_DATA) private readonly interactionControlData: TopologyInteractionControlData,
   ) {
     if (this.interactionControlData.zoom) {
       const zoom = this.interactionControlData.zoom;
@@ -103,7 +103,7 @@ export class TopologyInteractionControlComponent implements OnInit {
           this.canIncrement = zoom.canIncreaseScale();
           this.canDecrement = zoom.canDecreaseScale();
           changeDetector.markForCheck();
-        })
+        }),
       );
     }
 

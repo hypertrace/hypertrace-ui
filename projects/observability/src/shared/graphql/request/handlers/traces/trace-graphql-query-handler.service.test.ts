@@ -9,7 +9,7 @@ import { SpecificationBuilder } from '../../builders/specification/specification
 import {
   GraphQlTraceRequest,
   TraceGraphQlQueryHandlerService,
-  TRACE_GQL_REQUEST
+  TRACE_GQL_REQUEST,
 } from './trace-graphql-query-handler.service';
 
 describe('TraceGraphQlQueryHandlerService', () => {
@@ -19,13 +19,13 @@ describe('TraceGraphQlQueryHandlerService', () => {
       mockProvider(TimeRangeService, {
         getCurrentTimeRange: jest
           .fn()
-          .mockReturnValue(new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)))
-      })
-    ]
+          .mockReturnValue(new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))),
+      }),
+    ],
   });
 
   const testTimeRange = GraphQlTimeRange.fromTimeRange(
-    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
+    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)),
   );
   const specBuilder = new SpecificationBuilder();
   const buildRequest = (timestamp?: Date): GraphQlTraceRequest => ({
@@ -34,7 +34,7 @@ describe('TraceGraphQlQueryHandlerService', () => {
     timestamp: timestamp,
     traceProperties: [specBuilder.attributeSpecificationForKey('name')],
     spanLimit: 10,
-    spanProperties: [specBuilder.attributeSpecificationForKey('name')]
+    spanProperties: [specBuilder.attributeSpecificationForKey('name')],
   });
 
   test('matches trace request', () => {
@@ -51,18 +51,18 @@ describe('TraceGraphQlQueryHandlerService', () => {
       arguments: [
         {
           name: 'type',
-          value: new GraphQlEnumArgument(TRACE_SCOPE)
+          value: new GraphQlEnumArgument(TRACE_SCOPE),
         },
         {
           name: 'limit',
-          value: 1
+          value: 1,
         },
         {
           name: 'between',
           value: {
             startTime: new Date(testTimeRange.from),
-            endTime: new Date(testTimeRange.to)
-          }
+            endTime: new Date(testTimeRange.to),
+          },
         },
         {
           name: 'filterBy',
@@ -71,20 +71,20 @@ describe('TraceGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-              idScope: TRACE_SCOPE
-            }
-          ]
-        }
+              idScope: TRACE_SCOPE,
+            },
+          ],
+        },
       ],
       children: [
         {
           path: 'results',
           children: [
             { path: 'id' },
-            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] }
-          ]
-        }
-      ]
+            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] },
+          ],
+        },
+      ],
     });
 
     expect(requestMap.get('spans')).toEqual({
@@ -92,14 +92,14 @@ describe('TraceGraphQlQueryHandlerService', () => {
       arguments: [
         {
           name: 'limit',
-          value: 10
+          value: 10,
         },
         {
           name: 'between',
           value: {
             startTime: new Date(testTimeRange.from),
-            endTime: new Date(testTimeRange.to)
-          }
+            endTime: new Date(testTimeRange.to),
+          },
         },
         {
           name: 'filterBy',
@@ -108,20 +108,20 @@ describe('TraceGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-              idScope: TRACE_SCOPE
-            }
-          ]
-        }
+              idScope: TRACE_SCOPE,
+            },
+          ],
+        },
       ],
       children: [
         {
           path: 'results',
           children: [
             { path: 'id' },
-            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] }
-          ]
-        }
-      ]
+            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] },
+          ],
+        },
+      ],
     });
   });
 
@@ -134,18 +134,18 @@ describe('TraceGraphQlQueryHandlerService', () => {
       arguments: [
         {
           name: 'type',
-          value: new GraphQlEnumArgument(TRACE_SCOPE)
+          value: new GraphQlEnumArgument(TRACE_SCOPE),
         },
         {
           name: 'limit',
-          value: 1
+          value: 1,
         },
         {
           name: 'between',
           value: {
             startTime: new Date(0),
-            endTime: new Date(traceTimestamp.getTime() * 2)
-          }
+            endTime: new Date(traceTimestamp.getTime() * 2),
+          },
         },
         {
           name: 'filterBy',
@@ -154,20 +154,20 @@ describe('TraceGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-              idScope: TRACE_SCOPE
-            }
-          ]
-        }
+              idScope: TRACE_SCOPE,
+            },
+          ],
+        },
       ],
       children: [
         {
           path: 'results',
           children: [
             { path: 'id' },
-            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] }
-          ]
-        }
-      ]
+            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] },
+          ],
+        },
+      ],
     });
 
     expect(requestMap.get('spans')).toEqual({
@@ -175,14 +175,14 @@ describe('TraceGraphQlQueryHandlerService', () => {
       arguments: [
         {
           name: 'limit',
-          value: 10
+          value: 10,
         },
         {
           name: 'between',
           value: {
             startTime: new Date(0),
-            endTime: new Date(traceTimestamp.getTime() * 2)
-          }
+            endTime: new Date(traceTimestamp.getTime() * 2),
+          },
         },
         {
           name: 'filterBy',
@@ -191,20 +191,20 @@ describe('TraceGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-              idScope: TRACE_SCOPE
-            }
-          ]
-        }
+              idScope: TRACE_SCOPE,
+            },
+          ],
+        },
       ],
       children: [
         {
           path: 'results',
           children: [
             { path: 'id' },
-            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] }
-          ]
-        }
-      ]
+            { path: 'attribute', alias: 'name', arguments: [{ name: 'expression', value: { key: 'name' } }] },
+          ],
+        },
+      ],
     });
   });
 
@@ -220,27 +220,27 @@ describe('TraceGraphQlQueryHandlerService', () => {
       results: [
         {
           id: 'first-trace-id',
-          name: 'first-trace-name'
-        }
-      ]
+          name: 'first-trace-name',
+        },
+      ],
     };
 
     const serverSpanResponse = {
       results: [
         {
           id: 'first-span-id',
-          name: 'first-span-name'
+          name: 'first-span-name',
         },
         {
           id: 'second-span-id',
-          name: 'second-span-name'
-        }
-      ]
+          name: 'second-span-name',
+        },
+      ],
     };
 
     const serverResponseMap = new Map([
       ['traces', serverTraceResponse],
-      ['spans', serverSpanResponse]
+      ['spans', serverSpanResponse],
     ]);
 
     expect(spectator.service.convertResponse(serverResponseMap, buildRequest())).toEqual({
@@ -250,13 +250,13 @@ describe('TraceGraphQlQueryHandlerService', () => {
       spans: [
         {
           [spanIdKey]: 'first-span-id',
-          name: 'first-span-name'
+          name: 'first-span-name',
         },
         {
           [spanIdKey]: 'second-span-id',
-          name: 'second-span-name'
-        }
-      ]
+          name: 'second-span-name',
+        },
+      ],
     });
   });
 
@@ -266,16 +266,16 @@ describe('TraceGraphQlQueryHandlerService', () => {
       results: [
         {
           id: 'first-trace-id',
-          name: 'first-trace-name'
-        }
-      ]
+          name: 'first-trace-name',
+        },
+      ],
     };
     const serverResponseMap = new Map([['traces', serverTraceResponse]]);
 
     expect(spectator.service.convertResponse(serverResponseMap, buildRequest())).toEqual({
       [traceIdKey]: 'first-trace-id',
       [traceTypeKey]: TRACE_SCOPE,
-      name: 'first-trace-name'
+      name: 'first-trace-name',
     });
   });
 });

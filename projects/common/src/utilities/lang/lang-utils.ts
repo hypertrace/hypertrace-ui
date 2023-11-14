@@ -7,14 +7,14 @@ import { isEqualWith, mapValues } from 'lodash-es';
  */
 export const assertUnreachable = (
   value: never,
-  message: string = `Unexpectedly reached unreachable code with value: ${value}`
+  message: string = `Unexpectedly reached unreachable code with value: ${value}`,
 ): never => {
   throw Error(message);
 };
 
 export const throwIfNil = <T>(
   value: T | undefined | null,
-  message: string = `Unexpectedly found undefined value`
+  message: string = `Unexpectedly found undefined value`,
 ): T => {
   if (value === undefined || value === null) {
     throw Error(message);

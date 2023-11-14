@@ -9,7 +9,7 @@ describe('Trace status table cell renderer component', () => {
   const traceStatus: TraceStatus = {
     status: TraceStatusType.FAIL,
     statusCode: '404',
-    statusMessage: 'Not Found'
+    statusMessage: 'Not Found',
   };
 
   const buildComponent = createComponentFactory({
@@ -18,14 +18,14 @@ describe('Trace status table cell renderer component', () => {
     providers: [
       tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
         new TraceStatusTableCellParser(undefined!),
         0,
-        traceStatus
-      )
+        traceStatus,
+      ),
     ],
-    shallow: true
+    shallow: true,
   });
 
   test('should render trace status with correct data', () => {

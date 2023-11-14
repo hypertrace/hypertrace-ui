@@ -34,7 +34,7 @@ import { IconSize } from '../icon/icon-size';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class BreadcrumbsComponent implements OnChanges {
   @Input()

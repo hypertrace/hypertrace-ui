@@ -7,6 +7,6 @@ import { TextareaComponent } from './textarea.component';
 @NgModule({
   imports: [CommonModule, FormsModule, MatInputModule],
   declarations: [TextareaComponent],
-  exports: [TextareaComponent]
+  exports: [TextareaComponent],
 })
 export class TraceTextareaModule {}

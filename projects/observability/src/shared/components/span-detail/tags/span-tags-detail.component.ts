@@ -32,7 +32,7 @@ import { MetadataService } from '../../../services/metadata/metadata.service';
         </ht-list-view>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class SpanTagsDetailComponent implements OnChanges {
   @Input()
@@ -60,9 +60,9 @@ export class SpanTagsDetailComponent implements OnChanges {
           metadata.map(attributeMetadata => ({
             name: attributeMetadata.name,
             displayName: attributeMetadata.displayName,
-            type: toFilterAttributeType(attributeMetadata.type)
-          }))
-        )
+            type: toFilterAttributeType(attributeMetadata.type),
+          })),
+        ),
       );
     }
   }
@@ -79,8 +79,8 @@ export class SpanTagsDetailComponent implements OnChanges {
           .sort((key1, key2) => key1.localeCompare(key2))
           .map(key => ({
             key: key,
-            value: this.tags![key] as string | number
-          }))
+            value: this.tags![key] as string | number,
+          })),
       );
     }
   }

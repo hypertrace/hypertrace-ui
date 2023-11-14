@@ -11,17 +11,17 @@ describe('Time Ago table cell renderer component', () => {
     providers: [
       tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
-        new TableCellTimestampParser(undefined!)
-      )
+        new TableCellTimestampParser(undefined!),
+      ),
     ],
-    shallow: true
+    shallow: true,
   });
 
   test('should render everything correctly for null value', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(null)]
+      providers: [tableCellDataProvider(null)],
     });
 
     expect(spectator.element).toHaveText('-');
@@ -29,7 +29,7 @@ describe('Time Ago table cell renderer component', () => {
 
   test('renders less than a minute ago', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(new Date().getTime())]
+      providers: [tableCellDataProvider(new Date().getTime())],
     });
 
     expect(spectator.element).toHaveText('Just now');
@@ -41,7 +41,7 @@ describe('Time Ago table cell renderer component', () => {
     before.setMinutes(now.getMinutes() - 1);
 
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(before)]
+      providers: [tableCellDataProvider(before)],
     });
 
     expect(spectator.element).toHaveText('1 minute ago');
@@ -53,7 +53,7 @@ describe('Time Ago table cell renderer component', () => {
     before.setMinutes(now.getMinutes() - 2);
 
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(before)]
+      providers: [tableCellDataProvider(before)],
     });
 
     expect(spectator.element).toHaveText('2 minutes ago');
@@ -65,7 +65,7 @@ describe('Time Ago table cell renderer component', () => {
     before.setHours(now.getHours() - 2);
 
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(before)]
+      providers: [tableCellDataProvider(before)],
     });
 
     expect(spectator.element).toHaveText('2 hours ago');

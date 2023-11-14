@@ -9,7 +9,7 @@ import {
   Input,
   Output,
   QueryList,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { IconType } from '@hypertrace/assets-library';
@@ -92,7 +92,7 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SubscriptionLifecycle],
-  styleUrls: ['./stepper.component.scss']
+  styleUrls: ['./stepper.component.scss'],
 })
 export class StepperComponent implements AfterContentInit {
   // TODO: Fix support for custom icon, currently broken.
@@ -131,13 +131,13 @@ export class StepperComponent implements AfterContentInit {
     this.subs.add(
       merge(
         this.selectionChange.pipe(map(({ selectedStep }) => selectedStep)),
-        this.steps$.pipe(map(([firstStep]) => firstStep))
+        this.steps$.pipe(map(([firstStep]) => firstStep)),
       )
         .pipe(
           filter(step => !isNil(step.stepControl)),
-          switchMap(step => step.stepControl!.statusChanges)
+          switchMap(step => step.stepControl!.statusChanges),
         )
-        .subscribe(() => this.cdr.markForCheck())
+        .subscribe(() => this.cdr.markForCheck()),
     );
   }
 
@@ -239,7 +239,7 @@ export class StepperComponent implements AfterContentInit {
 }
 
 export enum StepperOrientation {
-  Horizontal = 'horizontal'
+  Horizontal = 'horizontal',
 }
 
 export type StepperSelectionChange = StepperSelectionEvent;

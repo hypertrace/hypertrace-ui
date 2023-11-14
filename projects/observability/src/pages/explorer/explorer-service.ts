@@ -4,7 +4,7 @@ import {
   NavigationParams,
   NavigationParamsType,
   TimeRange,
-  TimeRangeService
+  TimeRangeService,
 } from '@hypertrace/common';
 import { Filter, FilterBuilderLookupService } from '@hypertrace/components';
 import { isNil } from 'lodash-es';
@@ -21,18 +21,18 @@ export class ExplorerService {
   public constructor(
     private readonly metadataService: MetadataService,
     private readonly filterBuilderLookupService: FilterBuilderLookupService,
-    private readonly timeRangeService: TimeRangeService
+    private readonly timeRangeService: TimeRangeService,
   ) {}
   public buildNavParamsWithFilters(
     scopeQueryParam: ScopeQueryParam,
     filters: ExplorerDrilldownFilter[],
-    timeRange?: TimeRange
+    timeRange?: TimeRange,
   ): Observable<NavigationParams> {
     const filterStrings$: Observable<string>[] = filters.map(filter =>
       this.metadataService
         .getAttribute(
           scopeQueryParam === ScopeQueryParam.EndpointTraces ? ObservabilityTraceType.Api : SPAN_SCOPE,
-          filter.field
+          filter.field,
         )
         .pipe(
           map(attribute => ({ ...attribute, type: toFilterAttributeType(attribute.type) })),
@@ -40,9 +40,9 @@ export class ExplorerService {
             filterAttribute =>
               this.filterBuilderLookupService
                 .lookup(filterAttribute.type)
-                .buildFilter(filterAttribute, filter.operator, filter.value, filter.subpath).urlString
-          )
-        )
+                .buildFilter(filterAttribute, filter.operator, filter.value, filter.subpath).urlString,
+          ),
+        ),
     );
 
     return forkJoinSafeEmpty(filterStrings$).pipe(
@@ -52,9 +52,9 @@ export class ExplorerService {
         queryParams: {
           filter: filterStrings,
           scope: scopeQueryParam,
-          ...(!isNil(timeRange) ? this.timeRangeService.toQueryParams(timeRange) : {})
-        }
-      }))
+          ...(!isNil(timeRange) ? this.timeRangeService.toQueryParams(timeRange) : {}),
+        },
+      })),
     );
   }
 }

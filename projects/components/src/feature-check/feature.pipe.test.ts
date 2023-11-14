@@ -13,14 +13,14 @@ describe('Feature pipe', () => {
   const createHost = createHostFactory({
     component: Component({
       selector: 'pipe-holder',
-      template: '<ng-content></ng-content>'
+      template: '<ng-content></ng-content>',
     })(class {}),
     declarations: [FeaturePipe],
     providers: [
       mockProvider(FeatureStateResolver, {
-        getCombinedFeatureState: jest.fn(() => featureState$)
-      })
-    ]
+        getCombinedFeatureState: jest.fn(() => featureState$),
+      }),
+    ],
   });
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('Feature pipe', () => {
   test('returns the resolved feature state', () => {
     featureState$ = of(FeatureState.Preview);
     spectator.setHostInput({
-      features: ['test-feature-1', 'test-feature-2']
+      features: ['test-feature-1', 'test-feature-2'],
     });
     expect(spectator.element).toHaveExactText(FeatureState.Preview);
     expect(getCombinedFeatureStateMock).toHaveBeenCalledWith(['test-feature-1', 'test-feature-2']);
@@ -43,7 +43,7 @@ describe('Feature pipe', () => {
   test('handles single feature', () => {
     featureState$ = of(FeatureState.Preview);
     spectator.setHostInput({
-      features: 'test-feature-1'
+      features: 'test-feature-1',
     });
     expect(spectator.element).toHaveExactText(FeatureState.Preview);
     expect(getCombinedFeatureStateMock).toHaveBeenCalledWith(['test-feature-1']);
@@ -52,7 +52,7 @@ describe('Feature pipe', () => {
   test('updates the feature state async', fakeAsync(() => {
     featureState$ = merge(of(FeatureState.Preview), of(FeatureState.Enabled).pipe(delay(5)));
     spectator.setHostInput({
-      features: 'test-feature'
+      features: 'test-feature',
     });
 
     expect(spectator.element).toHaveExactText(FeatureState.Preview);
@@ -64,14 +64,14 @@ describe('Feature pipe', () => {
   test('handles changing features', fakeAsync(() => {
     featureState$ = merge(of(FeatureState.Preview), of(FeatureState.Enabled).pipe(delay(5)));
     spectator.setHostInput({
-      features: 'test-feature-1'
+      features: 'test-feature-1',
     });
 
     expect(spectator.element).toHaveExactText(FeatureState.Preview);
 
     featureState$ = of(FeatureState.Disabled);
     spectator.setHostInput({
-      features: 'test-feature-2'
+      features: 'test-feature-2',
     });
 
     expect(spectator.element).toHaveExactText(FeatureState.Disabled);
@@ -85,13 +85,13 @@ describe('Feature pipe', () => {
   test('handles empty features', () => {
     featureState$ = of(FeatureState.Enabled);
     spectator.setHostInput({
-      features: []
+      features: [],
     });
     expect(spectator.element).toHaveExactText(FeatureState.Enabled);
     expect(getCombinedFeatureStateMock).toHaveBeenLastCalledWith([]);
     expect(getCombinedFeatureStateMock).toHaveBeenCalledTimes(1);
     spectator.setHostInput({
-      features: undefined
+      features: undefined,
     });
     expect(spectator.element).toHaveExactText(FeatureState.Enabled);
 
@@ -99,7 +99,7 @@ describe('Feature pipe', () => {
     expect(getCombinedFeatureStateMock).toHaveBeenCalledTimes(2);
 
     spectator.setHostInput({
-      features: null
+      features: null,
     });
     expect(spectator.element).toHaveExactText(FeatureState.Enabled);
 

@@ -6,15 +6,15 @@ import { SpanTraceNavigationHandlerModel } from './span-trace-navigation-handler
 
 describe('Span Trace Navigation Handler Model', () => {
   const span: Span = {
-    [spanIdKey]: 'test-id'
+    [spanIdKey]: 'test-id',
   };
 
   const buildModel = createModelFactory({
     providers: [
       mockProvider(NavigationService, {
-        navigate: jest.fn()
-      })
-    ]
+        navigate: jest.fn(),
+      }),
+    ],
   });
 
   test('calls navigateWithinApp with correct parameters', () => {
@@ -30,7 +30,7 @@ describe('Span Trace Navigation Handler Model', () => {
 
     expect(navService.navigate).toHaveBeenLastCalledWith({
       navType: NavigationParamsType.InApp,
-      path: ['/trace', 'test-trace-id', { spanId: 'test-id' }]
+      path: ['/trace', 'test-trace-id', { spanId: 'test-id' }],
     });
   });
 });

@@ -45,7 +45,7 @@ import { SpanDetailWidgetModel } from './span-detail-widget.model';
         </ht-span-detail>
       </div>
     </div>
-  `
+  `,
 })
 export class SpanDetailWidgetRendererComponent
   extends WidgetRenderer<SpanDetailWidgetModel, SpanDetailData>

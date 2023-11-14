@@ -6,6 +6,6 @@ export const getPreviousTimeRange = (timeRange: GraphQlTimeRange): GraphQlTimeRa
 
   return new GraphQlTimeRange(
     timeRange.asArgumentObject().startTime.getTime() - requiredDuration.getAmountForUnit(TimeUnit.Millisecond),
-    timeRange.asArgumentObject().startTime.getTime()
+    timeRange.asArgumentObject().startTime.getTime(),
   );
 };

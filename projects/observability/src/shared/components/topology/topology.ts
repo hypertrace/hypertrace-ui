@@ -192,7 +192,7 @@ export const enum TopologyLayoutType {
   ForceLayout = 'force-layout',
   TreeLayout = 'tree-layout',
   CustomTreeLayout = 'custom-tree-layout',
-  GraphLayout = 'graph-layout'
+  GraphLayout = 'graph-layout',
 }
 
 export const enum TopologyElementVisibility {
@@ -200,7 +200,7 @@ export const enum TopologyElementVisibility {
   Emphasized = 'emphasized',
   Focused = 'focused',
   Background = 'background',
-  Hidden = 'hidden'
+  Hidden = 'hidden',
 }
 
 export interface TopologyTooltipRenderer {

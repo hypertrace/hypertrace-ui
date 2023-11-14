@@ -20,9 +20,9 @@ describe('BreadcrumbsComponent', () => {
     providers: [
       mockProvider(NavigationService, {
         navigation$: EMPTY,
-        navigateWithinApp: jest.fn()
-      })
-    ]
+        navigateWithinApp: jest.fn(),
+      }),
+    ],
   });
 
   beforeEach(() => {
@@ -34,22 +34,22 @@ describe('BreadcrumbsComponent', () => {
             type: 'First Type',
             icon: 'firstIcon',
             url: ['first', 'second'],
-            alwaysShowIcon: false
+            alwaysShowIcon: false,
           },
           {
             label: 'Second',
             icon: 'secondIcon',
-            alwaysShowIcon: true
+            alwaysShowIcon: true,
           },
           {
             label: 'Third',
             type: 'Third Type',
             icon: 'thirdIcon',
             url: ['first', 'second', 'third'],
-            alwaysShowIcon: false
-          }
-        ]
-      }
+            alwaysShowIcon: false,
+          },
+        ],
+      },
     });
 
     spy = spectator.inject(NavigationService).navigateWithinApp;

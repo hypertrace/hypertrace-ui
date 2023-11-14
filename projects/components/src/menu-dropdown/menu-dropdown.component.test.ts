@@ -17,16 +17,16 @@ describe('Menu dropdown Component', () => {
     shallow: true,
     providers: [
       mockProvider(NavigationService, {
-        navigation$: of(true)
-      })
-    ]
+        navigation$: of(true),
+      }),
+    ],
   });
 
   let spectator: SpectatorHost<MenuDropdownComponent>;
 
   test('should display trigger content as expected', () => {
     spectator = createHost(
-      `<ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}"><ht-menu-item label="Option 1"></ht-menu-item></ht-menu-dropdown>`
+      `<ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}"><ht-menu-item label="Option 1"></ht-menu-item></ht-menu-dropdown>`,
     );
 
     expect(spectator.query('.trigger-content')).toExist();
@@ -39,7 +39,7 @@ describe('Menu dropdown Component', () => {
       `<ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}">
           <ht-menu-item label="Do X"></ht-menu-item>
           <ht-menu-item label="Do Y"></ht-menu-item>
-        </ht-menu-dropdown>`
+        </ht-menu-dropdown>`,
     );
 
     expect(spectator.queryAll(MenuItemComponent).map(component => component.label)).toEqual(['Do X', 'Do Y']);
@@ -50,7 +50,7 @@ describe('Menu dropdown Component', () => {
       `<ht-menu-dropdown label="Settings" icon="${IconType.MoreHorizontal}" [disabled]="true">
           <ht-menu-item label="Do X"></ht-menu-item>
           <ht-menu-item label="Do Y"></ht-menu-item>
-        </ht-menu-dropdown>`
+        </ht-menu-dropdown>`,
     );
 
     expect(spectator.query(PopoverComponent)?.disabled).toBe(true);
@@ -67,9 +67,9 @@ describe('Menu dropdown Component', () => {
         </ht-menu-dropdown>`,
       {
         hostProps: {
-          onClick: onClickSpy
-        }
-      }
+          onClick: onClickSpy,
+        },
+      },
     );
 
     spectator.click('.trigger-content');

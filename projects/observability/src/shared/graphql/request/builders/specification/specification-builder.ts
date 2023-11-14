@@ -19,7 +19,7 @@ export class SpecificationBuilder {
    */
   public buildCompositeSpecification(
     specifications: Specification[] | Dictionary<Specification>,
-    orderByKey: string
+    orderByKey: string,
   ): CompositeSpecification {
     if (!Array.isArray(specifications)) {
       const specs = Object.values(specifications);
@@ -31,8 +31,8 @@ export class SpecificationBuilder {
         asGraphQlSelections: () => this.selectionBuilder.fromSpecifications(specs),
         extractFromServerData: serverData => this.extractForSpecificationsObject(serverData, specifications),
         asGraphQlOrderByFragment: () => ({
-          expression: { key: orderByKey }
-        })
+          expression: { key: orderByKey },
+        }),
       };
     }
 
@@ -45,8 +45,8 @@ export class SpecificationBuilder {
       extractFromServerData: serverData =>
         specifications.map(specification => specification.extractFromServerData(serverData)),
       asGraphQlOrderByFragment: () => ({
-        expression: { key: orderByKey }
-      })
+        expression: { key: orderByKey },
+      }),
     };
   }
 
@@ -63,7 +63,7 @@ export class SpecificationBuilder {
       asGraphQlSelections: () => ({
         path: 'attribute',
         alias: queryAlias,
-        arguments: [this.argBuilder.forAttributeKey(attributeKey)]
+        arguments: [this.argBuilder.forAttributeKey(attributeKey)],
       }),
       extractFromServerData: serverData => {
         const serverValue = serverData[queryAlias];
@@ -71,8 +71,8 @@ export class SpecificationBuilder {
         return serverValue === 'null' ? undefined : serverValue;
       },
       asGraphQlOrderByFragment: () => ({
-        expression: { key: attributeKey }
-      })
+        expression: { key: attributeKey },
+      }),
     };
   }
 
@@ -82,7 +82,7 @@ export class SpecificationBuilder {
 
   private extractForSpecificationsObject(
     serverData: Dictionary<unknown>,
-    specifications: Dictionary<Specification>
+    specifications: Dictionary<Specification>,
   ): Dictionary<unknown> {
     const extractedData: Dictionary<unknown> = {};
     const specs = Object.values(specifications);
@@ -92,9 +92,9 @@ export class SpecificationBuilder {
       .reduce(
         (acc, [key, value]) => ({
           ...acc,
-          [key]: value
+          [key]: value,
         }),
-        extractedData
+        extractedData,
       );
   }
 }

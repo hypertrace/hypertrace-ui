@@ -13,14 +13,14 @@ import { TopologyWidgetModel } from './topology-widget.model';
   imports: [
     DashboardCoreModule.with({
       models: [TopologyWidgetModel],
-      renderers: [TopologyWidgetRendererComponent]
+      renderers: [TopologyWidgetRendererComponent],
     }),
     TopologyModule,
     CommonModule,
     FormattingModule,
     TitledContentModule,
     LoadAsyncModule,
-    IconModule
-  ]
+    IconModule,
+  ],
 })
 export class TopologyWidgetModule {}

@@ -3,7 +3,7 @@ import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import {
   ExternalNavigationPathParams,
   ExternalNavigationWindowHandling,
-  NavigationService
+  NavigationService,
 } from '../navigation/navigation.service';
 import { ExternalUrlNavigator } from './external-url-navigator';
 
@@ -13,9 +13,9 @@ describe('External URL navigator', () => {
     providers: [
       mockProvider(NavigationService, {
         canGoBackWithoutLeavingApp: jest.fn().mockReturnValue(true),
-        firstNavigatedUrl: '/test-url'
-      })
-    ]
+        firstNavigatedUrl: '/test-url',
+      }),
+    ],
   });
 
   beforeEach(() => {
@@ -27,12 +27,12 @@ describe('External URL navigator', () => {
       providers: [
         mockProvider(NavigationService, {
           canGoBackWithoutLeavingApp: jest.fn().mockReturnValue(false),
-          firstNavigatedUrl: '/external'
-        })
-      ]
+          firstNavigatedUrl: '/external',
+        }),
+      ],
     });
     spectator.service.canActivate({
-      paramMap: convertToParamMap({ [ExternalNavigationPathParams.Url]: 'https://www.google.com' })
+      paramMap: convertToParamMap({ [ExternalNavigationPathParams.Url]: 'https://www.google.com' }),
     } as ActivatedRouteSnapshot);
 
     expect(spectator.inject(NavigationService).navigateToErrorPage).toHaveBeenCalledTimes(1);
@@ -42,15 +42,15 @@ describe('External URL navigator', () => {
     const spectator = buildNavigator();
 
     spectator.service.canActivate({
-      paramMap: convertToParamMap({})
+      paramMap: convertToParamMap({}),
     } as ActivatedRouteSnapshot);
 
     expect(spectator.inject(NavigationService).navigateBack).toHaveBeenCalledTimes(1);
 
     spectator.service.canActivate({
       paramMap: convertToParamMap({
-        [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow
-      })
+        [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow,
+      }),
     } as ActivatedRouteSnapshot);
 
     expect(spectator.inject(NavigationService).navigateBack).toHaveBeenCalledTimes(2);
@@ -61,7 +61,7 @@ describe('External URL navigator', () => {
     const spectator = buildNavigator();
 
     spectator.service.canActivate({
-      paramMap: convertToParamMap({ [ExternalNavigationPathParams.Url]: 'https://www.google.com' })
+      paramMap: convertToParamMap({ [ExternalNavigationPathParams.Url]: 'https://www.google.com' }),
     } as ActivatedRouteSnapshot);
 
     expect(window.open).toHaveBeenNthCalledWith(1, 'https://www.google.com', '_self');
@@ -69,8 +69,8 @@ describe('External URL navigator', () => {
     spectator.service.canActivate({
       paramMap: convertToParamMap({
         [ExternalNavigationPathParams.Url]: 'https://www.bing.com',
-        [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow
-      })
+        [ExternalNavigationPathParams.WindowHandling]: ExternalNavigationWindowHandling.NewWindow,
+      }),
     } as ActivatedRouteSnapshot);
 
     expect(window.open).toHaveBeenNthCalledWith(2, 'https://www.bing.com', undefined);

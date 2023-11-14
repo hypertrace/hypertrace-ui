@@ -16,14 +16,14 @@ describe('File Upload Component', () => {
     declarations: [MockComponent(IconComponent)],
     providers: [
       mockProvider(NotificationService, {
-        createFailureToast: jest.fn()
-      })
-    ]
+        createFailureToast: jest.fn(),
+      }),
+    ],
   });
 
   test('should render everything correctly', () => {
     const file: File = new File([new Blob(['test'])], 'test-file.json', {
-      type: 'application/json'
+      type: 'application/json',
     });
     const fileList: FileList = { 0: file, length: 1, item: (_index: number) => file };
     const spectator = createHost(`<ht-file-upload></ht-file-upload>`);
@@ -37,7 +37,7 @@ describe('File Upload Component', () => {
 
   test('should work correctly with drag and drop', () => {
     const file: File = new File([new Blob(['test'])], 'test-file.json', {
-      type: 'application/json'
+      type: 'application/json',
     });
     const fileList: FileList = { 0: file, length: 1, item: (_index: number) => file };
     const spectator = createHost(`<ht-file-upload></ht-file-upload>`);
@@ -56,22 +56,22 @@ describe('File Upload Component', () => {
     const config: UploaderConfig = {
       maxNumberOfFiles: 1,
       maxFileSizeInBytes: 1000,
-      supportedFileTypes: Object.values(SupportedFileType)
+      supportedFileTypes: Object.values(SupportedFileType),
     };
     const file: File = new File([new Blob(['test'])], 'test-file.json', {
-      type: 'application/json'
+      type: 'application/json',
     });
     const fileList: FileList = { 0: file, 1: file, length: 2, item: (_index: number) => file };
     const spectator = createHost(`<ht-file-upload [config]="config"></ht-file-upload>`, {
       hostProps: {
-        config: config
-      }
+        config: config,
+      },
     });
     const filesAddedSpy = jest.spyOn(spectator.component.filesAdded, 'emit');
     spectator.triggerEventHandler('input', 'change', { target: { files: fileList } });
     expect(filesAddedSpy).not.toHaveBeenCalled();
     expect(spectator.inject(NotificationService).createFailureToast).toHaveBeenCalledWith(
-      `File count should not be more than ${config.maxNumberOfFiles}`
+      `File count should not be more than ${config.maxNumberOfFiles}`,
     );
   });
 
@@ -79,22 +79,22 @@ describe('File Upload Component', () => {
     const config: UploaderConfig = {
       maxNumberOfFiles: 1,
       maxFileSizeInBytes: 1000,
-      supportedFileTypes: [SupportedFileType.Json]
+      supportedFileTypes: [SupportedFileType.Json],
     };
     const file: File = new File([new Blob(['test'])], 'test-file.yaml', {
-      type: 'application/x-yaml'
+      type: 'application/x-yaml',
     });
     const fileList: FileList = { 0: file, length: 1, item: (_index: number) => file };
     const spectator = createHost(`<ht-file-upload [config]="config"></ht-file-upload>`, {
       hostProps: {
-        config: config
-      }
+        config: config,
+      },
     });
     const filesAddedSpy = jest.spyOn(spectator.component.filesAdded, 'emit');
     spectator.triggerEventHandler('input', 'change', { target: { files: fileList } });
     expect(filesAddedSpy).toHaveBeenCalled();
     expect(spectator.inject(NotificationService).createInfoToast).toHaveBeenCalledWith(
-      `Make sure to choose file of type ${config.supportedFileTypes.join(', ')}`
+      `Make sure to choose file of type ${config.supportedFileTypes.join(', ')}`,
     );
   });
 
@@ -102,23 +102,23 @@ describe('File Upload Component', () => {
     const config: UploaderConfig = {
       maxNumberOfFiles: 1,
       maxFileSizeInBytes: 1024,
-      supportedFileTypes: [SupportedFileType.Json]
+      supportedFileTypes: [SupportedFileType.Json],
     };
     const file: File = new File([new Blob(['test'])], 'test-file.json', {
-      type: 'application/json'
+      type: 'application/json',
     });
     Object.defineProperty(file, 'size', { value: 1025 });
     const fileList: FileList = { 0: file, length: 1, item: (_index: number) => file };
     const spectator = createHost(`<ht-file-upload [config]="config"></ht-file-upload>`, {
       hostProps: {
-        config: config
-      }
+        config: config,
+      },
     });
     const filesAddedSpy = jest.spyOn(spectator.component.filesAdded, 'emit');
     spectator.triggerEventHandler('input', 'change', { target: { files: fileList } });
     expect(filesAddedSpy).not.toHaveBeenCalled();
     expect(spectator.inject(NotificationService).createFailureToast).toHaveBeenCalledWith(
-      `File size should not be more than 1 KB`
+      `File size should not be more than 1 KB`,
     );
   });
 
@@ -126,17 +126,17 @@ describe('File Upload Component', () => {
     const config: UploaderConfig = {
       maxNumberOfFiles: 1,
       maxFileSizeInBytes: 1024,
-      supportedFileTypes: [SupportedFileType.Json]
+      supportedFileTypes: [SupportedFileType.Json],
     };
     const file: File = new File([new Blob([''])], 'test-file.json', {
-      type: 'application/json'
+      type: 'application/json',
     });
     Object.defineProperty(file, 'size', { value: 0 });
     const fileList: FileList = { 0: file, length: 1, item: (_index: number) => file };
     const spectator = createHost(`<ht-file-upload [config]="config"></ht-file-upload>`, {
       hostProps: {
-        config: config
-      }
+        config: config,
+      },
     });
     const filesAddedSpy = jest.spyOn(spectator.component.filesAdded, 'emit');
     spectator.triggerEventHandler('input', 'change', { target: { files: fileList } });

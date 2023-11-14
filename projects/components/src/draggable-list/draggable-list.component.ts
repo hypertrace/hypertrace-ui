@@ -7,7 +7,7 @@ import {
   EventEmitter,
   Input,
   Output,
-  QueryList
+  QueryList,
 } from '@angular/core';
 import { queryListAndChanges$ } from '@hypertrace/common';
 import { Observable } from 'rxjs';
@@ -35,7 +35,7 @@ import { DraggableItemComponent } from './draggable-item/draggable-item.componen
         <ng-container *ngTemplateOutlet="draggableItem.content"></ng-container>
       </div>
     </div>
-  `
+  `,
 })
 export class DraggableListComponent<T> implements AfterContentInit {
   @Input()
@@ -51,13 +51,13 @@ export class DraggableListComponent<T> implements AfterContentInit {
 
   public ngAfterContentInit(): void {
     this.draggableItems$ = queryListAndChanges$(this.draggableItemsRef).pipe(
-      map(draggableItems => draggableItems.toArray())
+      map(draggableItems => draggableItems.toArray()),
     );
   }
 
   public dropList(
     event: CdkDragDrop<DraggableItemComponent<unknown>[]>,
-    draggableItems: DraggableItemComponent<T>[]
+    draggableItems: DraggableItemComponent<T>[],
   ): void {
     moveItemInArray(draggableItems, event.previousIndex, event.currentIndex);
     this.draggableListChange.emit(draggableItems.map(dragabbleItem => dragabbleItem.data!));

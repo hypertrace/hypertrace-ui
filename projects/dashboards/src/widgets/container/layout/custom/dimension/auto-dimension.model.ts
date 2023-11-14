@@ -3,13 +3,13 @@ import { EnumPropertyTypeInstance, ENUM_TYPE } from '../../../../../properties/e
 import { CellDimension, DimensionUnit } from './dimension.model';
 
 @Model({
-  type: 'auto-dimension-model'
+  type: 'auto-dimension-model',
 })
 export class AutoDimensionModel implements CellDimension {
   @ModelProperty({
     key: 'max-dimension',
     type: NUMBER_PROPERTY.type,
-    required: false
+    required: false,
   })
   public maxDimension?: number;
 
@@ -18,8 +18,8 @@ export class AutoDimensionModel implements CellDimension {
     required: false,
     type: {
       key: ENUM_TYPE.type,
-      values: [DimensionUnit.Px]
-    } as EnumPropertyTypeInstance
+      values: [DimensionUnit.Px],
+    } as EnumPropertyTypeInstance,
   })
   public maxDimensionUnit: DimensionUnit = DimensionUnit.Px;
 

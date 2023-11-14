@@ -14,11 +14,11 @@ export const spanListDashboard: DashboardDefaultConfiguration = {
         title: 'Name',
         value: {
           type: 'attribute-specification',
-          attribute: 'displaySpanName'
+          attribute: 'displaySpanName',
         },
         'click-handler': {
-          type: 'span-trace-navigation-handler'
-        }
+          type: 'span-trace-navigation-handler',
+        },
       },
       {
         type: 'table-widget-column',
@@ -26,11 +26,11 @@ export const spanListDashboard: DashboardDefaultConfiguration = {
         width: '100px', // Use Status Cell Renderer
         value: {
           type: 'attribute-specification',
-          attribute: 'statusCode'
+          attribute: 'statusCode',
         },
         'click-handler': {
-          type: 'span-trace-navigation-handler'
-        }
+          type: 'span-trace-navigation-handler',
+        },
       },
       {
         type: 'table-widget-column',
@@ -39,11 +39,11 @@ export const spanListDashboard: DashboardDefaultConfiguration = {
         display: TracingTableCellType.Metric,
         value: {
           type: 'attribute-specification',
-          attribute: 'duration'
+          attribute: 'duration',
         },
         'click-handler': {
-          type: 'span-trace-navigation-handler'
-        }
+          type: 'span-trace-navigation-handler',
+        },
       },
       {
         type: 'table-widget-column',
@@ -52,12 +52,12 @@ export const spanListDashboard: DashboardDefaultConfiguration = {
         display: CoreTableCellRendererType.Timestamp,
         value: {
           type: 'attribute-specification',
-          attribute: 'startTime'
+          attribute: 'startTime',
         },
         sort: TableSortDirection.Descending,
         'click-handler': {
-          type: 'span-trace-navigation-handler'
-        }
+          type: 'span-trace-navigation-handler',
+        },
       },
       {
         type: 'table-widget-column',
@@ -66,9 +66,9 @@ export const spanListDashboard: DashboardDefaultConfiguration = {
         visible: false,
         value: {
           type: 'attribute-specification',
-          attribute: 'traceId'
-        }
-      }
+          attribute: 'traceId',
+        },
+      },
     ],
     mode: TableMode.Detail,
     'child-template': {
@@ -76,11 +76,11 @@ export const spanListDashboard: DashboardDefaultConfiguration = {
       data: {
         type: 'span-detail-data-source',
 
-        span: '${row}'
-      }
+        span: '${row}',
+      },
     },
     data: {
-      type: 'spans-table-data-source'
-    }
-  }
+      type: 'spans-table-data-source',
+    },
+  },
 };

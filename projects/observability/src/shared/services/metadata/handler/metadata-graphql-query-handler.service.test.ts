@@ -6,16 +6,16 @@ import { SPAN_SCOPE } from '../../../graphql/model/schema/span';
 import {
   GraphQlMetadataRequest,
   MetadataGraphQlQueryHandlerService,
-  METADATA_GQL_REQUEST
+  METADATA_GQL_REQUEST,
 } from './metadata-graphql-query-handler.service';
 
 describe('Metadata graphql query handler service', () => {
   const createService = createServiceFactory({
-    service: MetadataGraphQlQueryHandlerService
+    service: MetadataGraphQlQueryHandlerService,
   });
 
   const buildRequest = (): GraphQlMetadataRequest => ({
-    requestType: METADATA_GQL_REQUEST
+    requestType: METADATA_GQL_REQUEST,
   });
 
   test('matches events request', () => {
@@ -30,36 +30,36 @@ describe('Metadata graphql query handler service', () => {
       path: 'metadata',
       children: [
         {
-          path: 'name'
+          path: 'name',
         },
         {
-          path: 'displayName'
+          path: 'displayName',
         },
         {
-          path: 'type'
+          path: 'type',
         },
         {
-          path: 'scope'
+          path: 'scope',
         },
         {
-          path: 'units'
+          path: 'units',
         },
         {
-          path: 'onlySupportsAggregation'
+          path: 'onlySupportsAggregation',
         },
         {
-          path: 'onlySupportsGrouping'
+          path: 'onlySupportsGrouping',
         },
         {
-          path: 'supportedAggregations'
+          path: 'supportedAggregations',
         },
         {
-          path: 'groupable'
+          path: 'groupable',
         },
         {
-          path: 'isCustom'
-        }
-      ]
+          path: 'isCustom',
+        },
+      ],
     });
   });
 
@@ -81,10 +81,10 @@ describe('Metadata graphql query handler service', () => {
           GraphQlMetricAggregationType.Sum,
           GraphQlMetricAggregationType.Avgrate,
           GraphQlMetricAggregationType.Count,
-          GraphQlMetricAggregationType.Percentile
+          GraphQlMetricAggregationType.Percentile,
         ],
         groupable: false,
-        isCustom: false
+        isCustom: false,
       },
       {
         name: 'second',
@@ -96,7 +96,7 @@ describe('Metadata graphql query handler service', () => {
         onlySupportsGrouping: false,
         supportedAggregations: [],
         groupable: false,
-        isCustom: false
+        isCustom: false,
       },
       {
         name: 'Third',
@@ -108,8 +108,8 @@ describe('Metadata graphql query handler service', () => {
         onlySupportsGrouping: false,
         supportedAggregations: [],
         groupable: false,
-        isCustom: false
-      }
+        isCustom: false,
+      },
     ];
 
     expect(spectator.service.convertResponse(serverResponse)).toEqual([
@@ -132,10 +132,10 @@ describe('Metadata graphql query handler service', () => {
           MetricAggregationType.P99,
           MetricAggregationType.P95,
           MetricAggregationType.P90,
-          MetricAggregationType.P50
+          MetricAggregationType.P50,
         ],
         groupable: false,
-        isCustom: false
+        isCustom: false,
       },
       {
         name: 'second',
@@ -147,7 +147,7 @@ describe('Metadata graphql query handler service', () => {
         onlySupportsGrouping: false,
         allowedAggregations: [],
         groupable: false,
-        isCustom: false
+        isCustom: false,
       },
       {
         name: 'Third',
@@ -159,8 +159,8 @@ describe('Metadata graphql query handler service', () => {
         onlySupportsGrouping: false,
         allowedAggregations: [],
         groupable: false,
-        isCustom: false
-      }
+        isCustom: false,
+      },
     ]);
   });
 });

@@ -5,7 +5,7 @@ import {
   DynamicComponentService,
   NumericFormatter,
   PartialBy,
-  selector
+  selector,
 } from '@hypertrace/common';
 import { BaseType, Selection } from 'd3-selection';
 import { arc, pie, PieArcDatum } from 'd3-shape';
@@ -19,7 +19,7 @@ import {
   ChartConfig,
   ChartDimensions,
   D3VisualizationBuilderService,
-  TooltipOption
+  TooltipOption,
 } from '../utils/d3/d3-visualization-builder.service';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { Donut, DonutCenter, DonutConfiguration, DonutSeries } from './donut';
@@ -51,7 +51,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
     measurer: DomElementMeasurerService,
     dynamicComponent: DynamicComponentService,
     chartTooltipBuilderService: ChartTooltipBuilderService,
-    private readonly colorService: ColorService
+    private readonly colorService: ColorService,
   ) {
     super(d3, measurer, dynamicComponent, chartTooltipBuilderService);
   }
@@ -62,7 +62,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
 
   protected updateVisualizationSize(
     visualizationContainer: DonutContainerSelection,
-    dimensions: DonutDimensions
+    dimensions: DonutDimensions,
   ): void {
     visualizationContainer
       .select(selector(DonutBuilderService.DONUT_CHART_SVG_CLASS))
@@ -80,8 +80,8 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
         'font-size',
         Math.min(
           Math.max(DonutBuilderService.MIN_FONT_SIZE_FOR_TITLE, Math.floor(dimensions.donutInnerRadius / 8)),
-          DonutBuilderService.MAX_FONT_SIZE_FOR_TITLE
-        )
+          DonutBuilderService.MAX_FONT_SIZE_FOR_TITLE,
+        ),
       );
 
     visualizationContainer
@@ -89,14 +89,14 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
       .attr('transform', `translate(0,-${dimensions.donutInnerRadius / 4})`)
       .attr(
         'font-size',
-        Math.min(Math.floor(dimensions.donutInnerRadius / 2), DonutBuilderService.MAX_FONT_SIZE_FOR_VALUE)
+        Math.min(Math.floor(dimensions.donutInnerRadius / 2), DonutBuilderService.MAX_FONT_SIZE_FOR_VALUE),
       );
   }
 
   protected drawVisualization(
     visualizationContainer: DonutContainerSelection,
     config: InternalConfiguration,
-    renderer: Renderer2
+    renderer: Renderer2,
   ): void {
     const groupSelection = visualizationContainer
       .append('svg')
@@ -137,7 +137,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
       config,
       renderer,
       new DonutDataLookupStrategy(pieData),
-      data => this.buildTooltipRenderableData(data)
+      data => this.buildTooltipRenderableData(data),
     );
   }
 
@@ -153,7 +153,7 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
     return {
       ...calculatedDimensions,
       donutOuterRadius: diameter / 2,
-      donutInnerRadius: (diameter / 2) * 0.72
+      donutInnerRadius: (diameter / 2) * 0.72,
     };
   }
 
@@ -164,13 +164,13 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
     return {
       series: provided.series.map(providedSeries => ({
         ...providedSeries,
-        color: isEmpty(providedSeries.color) ? colors.shift()! : providedSeries.color!
+        color: isEmpty(providedSeries.color) ? colors.shift()! : providedSeries.color!,
       })),
       center: provided.center,
       legend: provided.legendPosition === undefined ? LegendPosition.None : provided.legendPosition,
       tooltipOption: provided.tooltipOption === undefined ? { title: '' } : provided.tooltipOption,
       displayLegendCounts: provided.displayLegendCounts ?? true,
-      legendFontSize: provided.legendFontSize ?? LegendFontSize.ExtraSmall
+      legendFontSize: provided.legendFontSize ?? LegendFontSize.ExtraSmall,
     };
   }
 
@@ -179,24 +179,24 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
       data: {
         name: series.name,
         color: series.color,
-        value: config.displayLegendCounts ? series.value : undefined
+        value: config.displayLegendCounts ? series.value : undefined,
       },
       name: series.name,
-      color: series.color
+      color: series.color,
     }));
   }
 
   private buildTooltipRenderableData(
     data: MouseLocationData<DonutSeries, undefined>[],
-    title: string = ''
+    title: string = '',
   ): DefaultChartTooltipRenderData | undefined {
     return {
       title: title,
       labeledValues: data.map(datum => ({
         label: datum.dataPoint.name,
         value: datum.dataPoint.value,
-        color: datum.dataPoint.color!
-      }))
+        color: datum.dataPoint.color!,
+      })),
     };
   }
 }

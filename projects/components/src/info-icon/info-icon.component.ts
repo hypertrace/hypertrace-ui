@@ -9,7 +9,7 @@ import { IconSize } from '../icon/icon-size';
     <ng-container *ngIf="this.info"
       ><ht-icon icon="${IconType.Info}" [size]="this.iconSize" [htTooltip]="this.info"></ht-icon>
     </ng-container>
-  `
+  `,
 })
 export class InfoIconComponent {
   @Input()

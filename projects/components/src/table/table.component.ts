@@ -3,7 +3,7 @@
 import { ModalService } from '../modal/modal.service';
 import {
   TableEditColumnsModalComponent,
-  TableEditColumnsModalConfig
+  TableEditColumnsModalConfig,
 } from './columns/table-edit-columns-modal.component';
 import { CdkHeaderRow } from '@angular/cdk/table';
 import {
@@ -21,7 +21,7 @@ import {
   QueryList,
   TemplateRef,
   ViewChild,
-  ViewChildren
+  ViewChildren,
 } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import {
@@ -35,7 +35,7 @@ import {
   PreferenceService,
   StorageType,
   SubscriptionLifecycle,
-  TypedSimpleChanges
+  TypedSimpleChanges,
 } from '@hypertrace/common';
 import { isNil, without } from 'lodash-es';
 import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
@@ -52,7 +52,7 @@ import {
   ColumnStateChangeProvider,
   FiltersProvider,
   RowStateChangeProvider,
-  TableDataSourceProvider
+  TableDataSourceProvider,
 } from './data/table-cdk-data-source-api';
 import { TableCdkRowUtil } from './data/table-cdk-row-util';
 import { TableDataResponse, TableDataSource } from './data/table-data-source';
@@ -65,7 +65,7 @@ import {
   TableRow,
   TableSelectionMode,
   TableSortDirection,
-  TableStyle
+  TableStyle,
 } from './table-api';
 import { TableColumnConfigExtended, TableService } from './table.service';
 import { ModalSize } from '../modal/modal';
@@ -274,7 +274,7 @@ import { CsvFileName } from '../download-file/service/file-download.service';
         ></ht-paginator>
       </div>
     </div>
-  `
+  `,
 })
 export class TableComponent
   implements
@@ -299,7 +299,7 @@ export class TableComponent
     width: '32px',
     visible: true,
     display: CoreTableCellRendererType.RowExpander,
-    onClick: (row: StatefulTableRow) => this.toggleRowExpanded(row)
+    onClick: (row: StatefulTableRow) => this.toggleRowExpanded(row),
   };
 
   private readonly multiSelectRowColumnConfig: TableColumnConfig = {
@@ -307,11 +307,11 @@ export class TableComponent
     width: '32px',
     visible: true,
     display: CoreTableCellRendererType.Checkbox,
-    onClick: (row: StatefulTableRow) => this.toggleRowSelected(row)
+    onClick: (row: StatefulTableRow) => this.toggleRowSelected(row),
   };
 
   public readonly expandedDetailColumnConfig: TableColumnConfig = {
-    id: '$$detail'
+    id: '$$detail',
   };
 
   @Input()
@@ -488,7 +488,7 @@ export class TableComponent
   public readonly paginationReset$: Observable<Partial<PageEvent>> = combineLatest([
     this.activatedRoute.queryParamMap,
     this.columnState$,
-    this.filters$
+    this.filters$,
   ]).pipe(map(([params]) => this.calculateDefaultPagination(params)));
   public readonly currentPage$: Observable<Partial<PageEvent>> = merge(this.pageSubject, this.paginationReset$);
 
@@ -520,18 +520,18 @@ export class TableComponent
     private readonly modalService: ModalService,
     private readonly tableCsvDownloaderService: TableCsvDownloaderService,
     private readonly preferenceService: PreferenceService,
-    private readonly subscriptionLifecycle: SubscriptionLifecycle
+    private readonly subscriptionLifecycle: SubscriptionLifecycle,
   ) {
     this.subscriptionLifecycle.add(
       this.tableCsvDownloaderService.csvDownloadRequest$.pipe(filter(tableId => tableId === this.id)).subscribe(() => {
         this.downloadCsv();
-      })
+      }),
     );
 
     combineLatest([this.activatedRoute.queryParamMap, this.columnConfigs$])
       .pipe(
         map(([queryParamMap, columns]) => this.sortDataFromUrl(queryParamMap, columns)),
-        filter((sort): sort is Required<SortedColumn<TableColumnConfigExtended>> => sort !== undefined)
+        filter((sort): sort is Required<SortedColumn<TableColumnConfigExtended>> => sort !== undefined),
       )
       .subscribe(sort => this.updateSort(sort));
   }
@@ -647,7 +647,7 @@ export class TableComponent
     return {
       'min-height': this.rowHeight,
       ...(!isNil(this.maxRowHeight) ? { 'max-height': this.maxRowHeight } : {}),
-      ...(this.showFloatingPaginator ? { height: this.rowHeight } : {})
+      ...(this.showFloatingPaginator ? { height: this.rowHeight } : {}),
     };
   }
 
@@ -669,19 +669,19 @@ export class TableComponent
           ? this.data.getData({
               columns: columnConfigs,
               position: { limit: this.csvDownloadConfig?.limit ?? 1000, startIndex: 0 },
-              filters: filters ?? []
+              filters: filters ?? [],
             })
           : of({ data: [], totalCount: 0 })
         ).pipe(
           take(1),
-          map((response: TableDataResponse<TableRow>) => ({ rows: response.data, columnConfigs: columnConfigs }))
-        )
-      )
+          map((response: TableDataResponse<TableRow>) => ({ rows: response.data, columnConfigs: columnConfigs })),
+        ),
+      ),
     );
 
     this.tableCsvDownloaderService.executeDownload(
       downloadConfig$,
-      this.csvDownloadConfig?.fileName ?? `table-data-${this.id}-${new Date()}.csv`
+      this.csvDownloadConfig?.fileName ?? `table-data-${this.id}-${new Date()}.csv`,
     );
   }
 
@@ -742,7 +742,7 @@ export class TableComponent
     if (isNonEmptyString(this.id)) {
       this.setLocalPreferences({
         ...this.getLocalPreferences(),
-        columns: columns.map(column => this.dehydratePersistedColumnConfig(column))
+        columns: columns.map(column => this.dehydratePersistedColumnConfig(column)),
       });
     }
   }
@@ -761,14 +761,14 @@ export class TableComponent
 
   private hydratePersistedColumnConfigs(
     columns: TableColumnConfigExtended[],
-    persistedColumns: PersistedTableColumnConfig[]
+    persistedColumns: PersistedTableColumnConfig[],
   ): TableColumnConfigExtended[] {
     return columns.map(column => {
       const found = persistedColumns.find(persistedColumn => persistedColumn.id === column.id);
 
       return {
         ...column, // Apply default column config
-        ...(found ? { visible: found.visible } : {}) // Override with any saved properties
+        ...(found ? { visible: found.visible } : {}), // Override with any saved properties
       };
     });
   }
@@ -791,8 +791,8 @@ export class TableComponent
       bounds: {
         // We add additional padding so a portion of the column remains visible to resize (asymmetry due to resize-handle)
         left: boundingBox.left + 12,
-        right: boundingBox.left + boundingBox.width - 8
-      }
+        right: boundingBox.left + boundingBox.width - 8,
+      },
     };
   }
 
@@ -809,7 +809,7 @@ export class TableComponent
     const preferences = this.getLocalPreferences();
     const columnConfigsWithUserPref = this.hydratePersistedColumnConfigs(
       columnConfigurations,
-      preferences.columns ?? []
+      preferences.columns ?? [],
     );
 
     const visibleColumns = columnConfigsWithUserPref.filter(column => column.visible);
@@ -901,7 +901,7 @@ export class TableComponent
     if (TableCdkColumnUtil.isColumnSortable(columnConfig)) {
       const sortedColumn: SortedColumn<TableColumnConfigExtended> = {
         column: columnConfig,
-        direction: direction
+        direction: direction,
       };
       this.sortChange.emit(sortedColumn);
       this.updateSort(sortedColumn);
@@ -910,7 +910,7 @@ export class TableComponent
     if (this.syncWithUrl) {
       this.navigationService.addQueryParametersToUrl({
         [TableComponent.SORT_COLUMN_URL_PARAM]: columnConfig.sort === undefined ? undefined : columnConfig.id,
-        [TableComponent.SORT_DIRECTION_URL_PARAM]: columnConfig.sort
+        [TableComponent.SORT_DIRECTION_URL_PARAM]: columnConfig.sort,
       });
     }
   }
@@ -937,10 +937,10 @@ export class TableComponent
               title: 'Edit Columns',
               data: {
                 availableColumns: availableColumns,
-                defaultColumns: this.columnDefaultConfigs ?? []
-              }
-            }).closed$
-        )
+                defaultColumns: this.columnDefaultConfigs ?? [],
+              },
+            }).closed$,
+        ),
       )
       .subscribe(editedColumnConfigs => {
         this.saveTablePreferences(editedColumnConfigs);
@@ -1022,7 +1022,7 @@ export class TableComponent
     return this.tableService.buildExtendedColumnConfigs(
       [...stateColumns, ...columnConfigs],
       this.dataSource,
-      this.metadata || []
+      this.metadata || [],
     );
   }
 
@@ -1151,18 +1151,18 @@ export class TableComponent
       'max-width': TableColumnWidthUtil.getWidth(column.width),
       'min-width': TableColumnWidthUtil.getMinWidth(column.minWidth),
       'flex-grow': TableColumnWidthUtil.getFlexGrow(column.width),
-      'flex-basis': TableColumnWidthUtil.getFlexBasis(column.width)
+      'flex-basis': TableColumnWidthUtil.getFlexBasis(column.width),
     };
   }
 
   public getDataColumnStyles = (
     column: TableColumnConfigExtended,
     index: number,
-    row: StatefulTableRow
+    row: StatefulTableRow,
   ): Dictionary<string | number | undefined> => ({
     ...this.getHeaderColumnStyles(column),
     'margin-left': index === 0 ? this.calcLeftMarginIndent(row) : 0,
-    'margin-right': index === 1 ? this.calcRightMarginIndent(row, column) : 0
+    'margin-right': index === 1 ? this.calcRightMarginIndent(row, column) : 0,
   });
 
   public onPageChange(pageEvent: PageEvent): void {
@@ -1170,7 +1170,7 @@ export class TableComponent
     if (this.syncWithUrl) {
       this.navigationService.addQueryParametersToUrl({
         [TableComponent.PAGE_INDEX_URL_PARAM]: pageEvent.pageIndex,
-        [TableComponent.PAGE_SIZE_URL_PARAM]: pageEvent.pageSize
+        [TableComponent.PAGE_SIZE_URL_PARAM]: pageEvent.pageSize,
       });
     }
 
@@ -1187,19 +1187,19 @@ export class TableComponent
     return this.syncWithUrl
       ? {
           pageSize: new NumberCoercer({ defaultValue: this.pageSize }).coerce(
-            params.get(TableComponent.PAGE_SIZE_URL_PARAM)
+            params.get(TableComponent.PAGE_SIZE_URL_PARAM),
           ),
-          pageIndex: new NumberCoercer().coerce(params.get(TableComponent.PAGE_INDEX_URL_PARAM))
+          pageIndex: new NumberCoercer().coerce(params.get(TableComponent.PAGE_INDEX_URL_PARAM)),
         }
       : {
           pageSize: this.pageSize,
-          pageIndex: 0
+          pageIndex: 0,
         };
   }
 
   private sortDataFromUrl(
     params: ParamMap,
-    columns: TableColumnConfigExtended[]
+    columns: TableColumnConfigExtended[],
   ): Required<SortedColumn<TableColumnConfigExtended>> | undefined {
     if (!this.syncWithUrl) {
       return undefined;
@@ -1211,7 +1211,7 @@ export class TableComponent
     return sortColumn !== undefined && sortDirection !== null
       ? {
           column: sortColumn,
-          direction: sortDirection
+          direction: sortDirection,
         }
       : undefined;
   }

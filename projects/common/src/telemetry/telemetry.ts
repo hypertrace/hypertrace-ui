@@ -31,5 +31,5 @@ export interface UserTraits extends Dictionary<unknown> {
 
 export const enum TrackUserEventsType {
   Click = 'click',
-  ContextMenu = 'context-menu'
+  ContextMenu = 'context-menu',
 }

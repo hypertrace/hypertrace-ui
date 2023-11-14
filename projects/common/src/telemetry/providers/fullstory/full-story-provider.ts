@@ -9,7 +9,7 @@ export class FullStoryTelemetry<InitConfig extends TelemetryProviderConfig>
   public initialize(config: InitConfig): void {
     FullStory.init({
       orgId: config.orgId,
-      devMode: false
+      devMode: false,
     });
   }
 
@@ -21,7 +21,7 @@ export class FullStoryTelemetry<InitConfig extends TelemetryProviderConfig>
       licenseTier: userTraits.licenseTier,
       licenseExpiration: userTraits.licenseExpiration,
       isPlayground: userTraits.isPlayground,
-      accountEmail: userTraits.accountEmail
+      accountEmail: userTraits.accountEmail,
     });
   }
 

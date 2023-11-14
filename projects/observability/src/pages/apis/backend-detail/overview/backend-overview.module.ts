@@ -6,6 +6,6 @@ import { BackendOverviewComponent } from './backend-overview.component';
 @NgModule({
   imports: [ObservabilityDashboardModule, CommonModule],
   declarations: [BackendOverviewComponent],
-  exports: [BackendOverviewComponent]
+  exports: [BackendOverviewComponent],
 })
 export class BackendOverviewModule {}

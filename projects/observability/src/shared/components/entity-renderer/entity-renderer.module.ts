@@ -8,6 +8,6 @@ import { EntityRendererComponent } from './entity-renderer.component';
 @NgModule({
   imports: [CommonModule, TooltipModule, IconModule, LinkModule, FormattingModule],
   declarations: [EntityRendererComponent],
-  exports: [EntityRendererComponent]
+  exports: [EntityRendererComponent],
 })
 export class EntityRendererModule {}

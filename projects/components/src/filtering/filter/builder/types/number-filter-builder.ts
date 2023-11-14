@@ -17,7 +17,7 @@ export class NumberFilterBuilder extends AbstractFilterBuilder<number | number[]
       FilterOperator.GreaterThan,
       FilterOperator.GreaterThanOrEqualTo,
       FilterOperator.In,
-      FilterOperator.NotIn
+      FilterOperator.NotIn,
     ];
   }
 

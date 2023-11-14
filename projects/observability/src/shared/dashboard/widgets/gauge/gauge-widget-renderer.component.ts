@@ -18,7 +18,7 @@ import { GaugeWidgetModel } from './gauge-widget.model';
         [thresholds]="gaugeData.thresholds"
       ></ht-gauge>
     </ht-titled-content>
-  `
+  `,
 })
 export class GaugeWidgetRendererComponent extends WidgetRenderer<GaugeWidgetModel, GaugeWidgetData> {
   protected fetchData(): Observable<GaugeWidgetData> {

@@ -13,7 +13,7 @@ describe('Paginator component', () => {
     component: PaginatorComponent,
     shallow: true,
     declarations: [MockComponent(SelectComponent), MockComponent(LabelComponent)],
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService)],
   });
 
   test('should notify when page size selection changes', () => {
@@ -33,9 +33,9 @@ describe('Paginator component', () => {
           totalItems: totalResults,
           onPageChange: onPageChangeSpy,
           onRecordsDisplayedChange: onRecordsDisplayedChangeSpy,
-          onTotalRecordsChange: onTotalRecordsChangeSpy
-        }
-      }
+          onTotalRecordsChange: onTotalRecordsChangeSpy,
+        },
+      },
     );
     expect(spectator.component.pageSize).toBe(defaultPageSize);
 
@@ -43,7 +43,7 @@ describe('Paginator component', () => {
 
     expect(onPageChangeSpy).toHaveBeenCalledWith({
       pageIndex: 0,
-      pageSize: 25
+      pageSize: 25,
     });
 
     expect(onRecordsDisplayedChangeSpy).toHaveBeenLastCalledWith(25);
@@ -65,9 +65,9 @@ describe('Paginator component', () => {
         hostProps: {
           totalItems: 10,
           onRecordsDisplayedChange: onRecordsDisplayedChangeSpy,
-          onTotalRecordsChange: onTotalRecordsChangeSpy
-        }
-      }
+          onTotalRecordsChange: onTotalRecordsChangeSpy,
+        },
+      },
     );
     expect(spectator.component.pageSize).toBe(defaultPageSize);
 
@@ -80,8 +80,8 @@ describe('Paginator component', () => {
   test('should have the correct number of pages for the provided page size and total items', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
-        totalItems: totalResults
-      }
+        totalItems: totalResults,
+      },
     });
 
     expect(spectator.query(LabelComponent)!.label).toEqual('1-50 of 202');
@@ -116,8 +116,8 @@ describe('Paginator component', () => {
   test('should stop at the first page when trying to go to a lower page than available', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
-        totalItems: totalResults
-      }
+        totalItems: totalResults,
+      },
     });
 
     expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of 202');
@@ -133,8 +133,8 @@ describe('Paginator component', () => {
   test('should navigate to first page when totalItems is changed', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
-        totalItems: totalResults
-      }
+        totalItems: totalResults,
+      },
     });
 
     const nextPageElement = spectator.query('.next-button')!;
@@ -154,8 +154,8 @@ describe('Paginator component', () => {
   test('should work as expected for `unknown` total count', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
-        totalItems: PaginatorTotalCode.Unknown
-      }
+        totalItems: PaginatorTotalCode.Unknown,
+      },
     });
 
     expect(spectator.component.hasPrevPage()).toBe(false);
@@ -166,8 +166,8 @@ describe('Paginator component', () => {
   test('should work as expected for `last` total count', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
-        totalItems: PaginatorTotalCode.Last
-      }
+        totalItems: PaginatorTotalCode.Last,
+      },
     });
 
     expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of last');
@@ -177,8 +177,8 @@ describe('Paginator component', () => {
   test('should hide the paginator when totalItems is less than the minItemsBeforeDisplay', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
-        totalItems: 9
-      }
+        totalItems: 9,
+      },
     });
 
     const paginator = spectator.query('.paginator')!;
@@ -188,8 +188,8 @@ describe('Paginator component', () => {
   test('should show the paginator when totalItems is at least minItemsBeforeDisplay', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
-        totalItems: 10
-      }
+        totalItems: 10,
+      },
     });
 
     const paginator = spectator.query('.paginator')!;

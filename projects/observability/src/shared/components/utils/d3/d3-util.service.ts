@@ -15,7 +15,7 @@ export class D3UtilService {
 
   public select<TElement extends Element, TData = unknown>(
     selector: string | TElement | ElementRef,
-    renderer: Renderer2
+    renderer: Renderer2,
   ): Selection<TElement, TData, null, undefined> {
     const selectable: TElement = selector instanceof ElementRef ? selector.nativeElement : selector;
 
@@ -24,7 +24,7 @@ export class D3UtilService {
 
   public selectAll<TElement extends Element, TData = unknown>(
     selector: string | ArrayLike<TElement> | Element[],
-    renderer: Renderer2
+    renderer: Renderer2,
   ): Selection<TElement, TData, null, undefined> {
     return new TraceD3Selection(renderer, this, selectAll<TElement, TData>(selector as ArrayLike<TElement>));
   }
@@ -46,8 +46,8 @@ export class D3UtilService {
               .attr('dominant-baseline', 'text-before-edge')
               .classed(iconInfo.fontSet, true)
               .style('font-size', 'inherit')
-              .node()
-          )
+              .node(),
+          ),
         );
       default:
         return assertUnreachable(iconInfo);

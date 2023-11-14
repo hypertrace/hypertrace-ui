@@ -4,11 +4,11 @@ import { LegendPosition } from '../../../../shared/components/legend/legend.comp
 import { DashboardDefaultConfiguration } from '../../../../shared/dashboard/dashboard-wrapper/navigable-dashboard.module';
 import {
   defaultPrimaryEdgeMetricCategories,
-  defaultSecondaryEdgeMetricCategories
+  defaultSecondaryEdgeMetricCategories,
 } from '../../../../shared/dashboard/widgets/topology/metric/edge-metric-category';
 import {
   defaultPrimaryNodeMetricCategories,
-  defaultSecondaryNodeMetricCategories
+  defaultSecondaryNodeMetricCategories,
 } from '../../../../shared/dashboard/widgets/topology/metric/node-metric-category';
 import { MetricAggregationType } from '../../../../shared/graphql/model/metrics/metric-aggregation';
 import { ObservabilityEntityType } from '../../../../shared/graphql/model/schema/entity';
@@ -24,21 +24,21 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
         {
           type: 'dimension-model',
           dimension: 1,
-          unit: 'FR'
+          unit: 'FR',
         },
         {
           type: 'dimension-model',
           dimension: 0.3,
           unit: 'FR',
-          'min-dimension': 345
-        }
+          'min-dimension': 345,
+        },
       ],
       'row-dimensions': [
         {
           type: 'dimension-model',
           dimension: 1084,
-          unit: 'PX'
-        }
+          unit: 'PX',
+        },
       ],
       'cell-spans': [
         {
@@ -46,16 +46,16 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
           'col-start': 0,
           'col-end': 1,
           'row-start': 0,
-          'row-end': 1
+          'row-end': 1,
         },
         {
           type: 'cell-span-model',
           'col-start': 1,
           'col-end': 2,
           'row-start': 0,
-          'row-end': 1
-        }
-      ]
+          'row-end': 1,
+        },
+      ],
     },
     children: [
       {
@@ -66,35 +66,35 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
             {
               type: 'dimension-model',
               dimension: 1,
-              unit: 'FR'
+              unit: 'FR',
             },
             {
               type: 'dimension-model',
               dimension: 1,
-              unit: 'FR'
+              unit: 'FR',
             },
             {
               type: 'dimension-model',
               dimension: 1,
-              unit: 'FR'
-            }
+              unit: 'FR',
+            },
           ],
           'row-dimensions': [
             {
               type: 'dimension-model',
               dimension: 88,
-              unit: 'PX'
+              unit: 'PX',
             },
             {
               type: 'dimension-model',
               dimension: 320,
-              unit: 'PX'
+              unit: 'PX',
             },
             {
               type: 'dimension-model',
               dimension: 640,
-              unit: 'PX'
-            }
+              unit: 'PX',
+            },
           ],
           'cell-spans': [
             {
@@ -102,37 +102,37 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
               'col-start': 0,
               'col-end': 1,
               'row-start': 0,
-              'row-end': 1
+              'row-end': 1,
             },
             {
               type: 'cell-span-model',
               'col-start': 1,
               'col-end': 2,
               'row-start': 0,
-              'row-end': 1
+              'row-end': 1,
             },
             {
               type: 'cell-span-model',
               'col-start': 2,
               'col-end': 3,
               'row-start': 0,
-              'row-end': 1
+              'row-end': 1,
             },
             {
               type: 'cell-span-model',
               'col-start': 0,
               'col-end': 3,
               'row-start': 1,
-              'row-end': 2
+              'row-end': 2,
             },
             {
               type: 'cell-span-model',
               'col-start': 0,
               'col-end': 3,
               'row-start': 2,
-              'row-end': 3
-            }
-          ]
+              'row-end': 3,
+            },
+          ],
         },
         children: [
           {
@@ -140,7 +140,7 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
             layout: {
               type: 'auto-container-layout',
               rows: 1,
-              'enable-style': false
+              'enable-style': false,
             },
             children: [
               {
@@ -152,9 +152,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'metric-aggregation',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P99
-                  }
-                }
+                    aggregation: MetricAggregationType.P99,
+                  },
+                },
               },
               {
                 type: 'metric-display-widget',
@@ -165,18 +165,18 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'metric-aggregation',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P50
-                  }
-                }
-              }
-            ]
+                    aggregation: MetricAggregationType.P50,
+                  },
+                },
+              },
+            ],
           },
           {
             type: 'container-widget',
             layout: {
               type: 'auto-container-layout',
               rows: 1,
-              'enable-style': false
+              'enable-style': false,
             },
             children: [
               {
@@ -187,9 +187,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'metric-aggregation',
                     metric: 'errorCount',
-                    aggregation: MetricAggregationType.AvgrateSecond
-                  }
-                }
+                    aggregation: MetricAggregationType.AvgrateSecond,
+                  },
+                },
               },
               {
                 type: 'metric-display-widget',
@@ -199,18 +199,18 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'metric-aggregation',
                     metric: 'errorCount',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
-              }
-            ]
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
+              },
+            ],
           },
           {
             type: 'container-widget',
             layout: {
               type: 'auto-container-layout',
               rows: 1,
-              'enable-style': false
+              'enable-style': false,
             },
             children: [
               {
@@ -221,9 +221,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'metric-aggregation',
                     metric: 'numCalls',
-                    aggregation: MetricAggregationType.AvgrateSecond
-                  }
-                }
+                    aggregation: MetricAggregationType.AvgrateSecond,
+                  },
+                },
               },
               {
                 type: 'metric-display-widget',
@@ -233,11 +233,11 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'metric-aggregation',
                     metric: 'numCalls',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
-              }
-            ]
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
+              },
+            ],
           },
           {
             type: 'container-widget',
@@ -245,7 +245,7 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
               type: 'auto-container-layout',
               rows: 1,
               'enable-style': false,
-              'grid-gap': '48px'
+              'grid-gap': '48px',
             },
             children: [
               {
@@ -255,13 +255,13 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                 'legend-position': LegendPosition.None,
                 'x-axis': {
                   type: 'cartesian-axis',
-                  'show-grid-lines': false
+                  'show-grid-lines': false,
                 },
                 'show-y-axis': true,
                 'y-axis': {
                   type: 'cartesian-axis',
                   'show-grid-lines': true,
-                  'min-upper-limit': 25
+                  'min-upper-limit': 25,
                 },
                 'max-series-data-points': 150,
                 bands: [
@@ -275,10 +275,10 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries-band',
                         metric: 'duration',
-                        aggregation: MetricAggregationType.P99
-                      }
-                    }
-                  }
+                        aggregation: MetricAggregationType.P99,
+                      },
+                    },
+                  },
                 ],
                 series: [
                   {
@@ -291,9 +291,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'duration',
-                        aggregation: MetricAggregationType.P99
-                      }
-                    }
+                        aggregation: MetricAggregationType.P99,
+                      },
+                    },
                   },
                   {
                     type: 'series',
@@ -305,9 +305,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'duration',
-                        aggregation: MetricAggregationType.P50
-                      }
-                    }
+                        aggregation: MetricAggregationType.P50,
+                      },
+                    },
                   },
                   {
                     type: 'series',
@@ -320,9 +320,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'errorCount',
-                        aggregation: MetricAggregationType.Sum
-                      }
-                    }
+                        aggregation: MetricAggregationType.Sum,
+                      },
+                    },
                   },
                   {
                     type: 'series',
@@ -335,15 +335,15 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'numCalls',
-                        aggregation: MetricAggregationType.Sum
-                      }
-                    }
-                  }
+                        aggregation: MetricAggregationType.Sum,
+                      },
+                    },
+                  },
                 ],
                 'selection-handler': {
                   type: 'cartesian-explorer-selection-handler',
-                  'show-context-menu': true
-                }
+                  'show-context-menu': true,
+                },
               },
               {
                 type: 'cartesian-widget',
@@ -352,13 +352,13 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                 'legend-position': LegendPosition.None,
                 'x-axis': {
                   type: 'cartesian-axis',
-                  'show-grid-lines': false
+                  'show-grid-lines': false,
                 },
                 'show-y-axis': true,
                 'y-axis': {
                   type: 'cartesian-axis',
                   'show-grid-lines': true,
-                  'min-upper-limit': 25
+                  'min-upper-limit': 25,
                 },
                 'max-series-data-points': 150,
                 bands: [
@@ -372,10 +372,10 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries-band',
                         metric: 'errorCount',
-                        aggregation: MetricAggregationType.Sum
-                      }
-                    }
-                  }
+                        aggregation: MetricAggregationType.Sum,
+                      },
+                    },
+                  },
                 ],
                 series: [
                   {
@@ -388,9 +388,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'errorCount',
-                        aggregation: MetricAggregationType.Sum
-                      }
-                    }
+                        aggregation: MetricAggregationType.Sum,
+                      },
+                    },
                   },
                   {
                     type: 'series',
@@ -403,9 +403,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'duration',
-                        aggregation: MetricAggregationType.P99
-                      }
-                    }
+                        aggregation: MetricAggregationType.P99,
+                      },
+                    },
                   },
                   {
                     type: 'series',
@@ -418,9 +418,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'duration',
-                        aggregation: MetricAggregationType.P50
-                      }
-                    }
+                        aggregation: MetricAggregationType.P50,
+                      },
+                    },
                   },
                   {
                     type: 'series',
@@ -433,15 +433,15 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'numCalls',
-                        aggregation: MetricAggregationType.Sum
-                      }
-                    }
-                  }
+                        aggregation: MetricAggregationType.Sum,
+                      },
+                    },
+                  },
                 ],
                 'selection-handler': {
                   type: 'cartesian-explorer-selection-handler',
-                  'show-context-menu': true
-                }
+                  'show-context-menu': true,
+                },
               },
               {
                 type: 'cartesian-widget',
@@ -450,13 +450,13 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                 'legend-position': LegendPosition.None,
                 'x-axis': {
                   type: 'cartesian-axis',
-                  'show-grid-lines': false
+                  'show-grid-lines': false,
                 },
                 'show-y-axis': true,
                 'y-axis': {
                   type: 'cartesian-axis',
                   'show-grid-lines': true,
-                  'min-upper-limit': 25
+                  'min-upper-limit': 25,
                 },
                 'max-series-data-points': 150,
                 bands: [
@@ -470,10 +470,10 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries-band',
                         metric: 'numCalls',
-                        aggregation: MetricAggregationType.Sum
-                      }
-                    }
-                  }
+                        aggregation: MetricAggregationType.Sum,
+                      },
+                    },
+                  },
                 ],
                 series: [
                   {
@@ -486,9 +486,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'numCalls',
-                        aggregation: MetricAggregationType.Sum
-                      }
-                    }
+                        aggregation: MetricAggregationType.Sum,
+                      },
+                    },
                   },
                   {
                     type: 'series',
@@ -501,9 +501,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'duration',
-                        aggregation: MetricAggregationType.P99
-                      }
-                    }
+                        aggregation: MetricAggregationType.P99,
+                      },
+                    },
                   },
                   {
                     type: 'series',
@@ -516,9 +516,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'duration',
-                        aggregation: MetricAggregationType.P50
-                      }
-                    }
+                        aggregation: MetricAggregationType.P50,
+                      },
+                    },
                   },
                   {
                     type: 'series',
@@ -531,17 +531,17 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'errorCount',
-                        aggregation: MetricAggregationType.Sum
-                      }
-                    }
-                  }
+                        aggregation: MetricAggregationType.Sum,
+                      },
+                    },
+                  },
                 ],
                 'selection-handler': {
                   type: 'cartesian-explorer-selection-handler',
-                  'show-context-menu': true
-                }
-              }
-            ]
+                  'show-context-menu': true,
+                },
+              },
+            ],
           },
           {
             type: 'topology-widget',
@@ -556,48 +556,48 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   type: 'topology-metric-with-category',
                   specification: {
                     type: 'percentile-latency-metric-aggregation',
-                    'display-name': 'P99 Latency'
+                    'display-name': 'P99 Latency',
                   },
                   categories: [
                     {
                       type: 'topology-metric-category',
-                      ...defaultPrimaryNodeMetricCategories[0]
+                      ...defaultPrimaryNodeMetricCategories[0],
                     },
                     {
                       type: 'topology-metric-category',
-                      ...defaultPrimaryNodeMetricCategories[1]
+                      ...defaultPrimaryNodeMetricCategories[1],
                     },
                     {
                       type: 'topology-metric-category',
-                      ...defaultPrimaryNodeMetricCategories[2]
+                      ...defaultPrimaryNodeMetricCategories[2],
                     },
                     {
                       type: 'topology-metric-category',
-                      ...defaultPrimaryNodeMetricCategories[3]
+                      ...defaultPrimaryNodeMetricCategories[3],
                     },
                     {
                       type: 'topology-metric-category',
-                      ...defaultPrimaryNodeMetricCategories[4]
-                    }
-                  ]
+                      ...defaultPrimaryNodeMetricCategories[4],
+                    },
+                  ],
                 },
                 secondary: {
                   type: 'topology-metric-with-category',
                   specification: {
                     type: 'error-percentage-metric-aggregation',
                     aggregation: MetricAggregationType.Average,
-                    'display-name': 'Error %'
+                    'display-name': 'Error %',
                   },
                   categories: [
                     {
                       type: 'topology-metric-category',
-                      ...defaultSecondaryNodeMetricCategories[0]
+                      ...defaultSecondaryNodeMetricCategories[0],
                     },
                     {
                       type: 'topology-metric-category',
-                      ...defaultSecondaryNodeMetricCategories[1]
-                    }
-                  ]
+                      ...defaultSecondaryNodeMetricCategories[1],
+                    },
+                  ],
                 },
                 others: [
                   {
@@ -606,8 +606,8 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       type: 'metric-aggregation',
                       metric: 'duration',
                       aggregation: MetricAggregationType.P50,
-                      'display-name': 'P50 Latency'
-                    }
+                      'display-name': 'P50 Latency',
+                    },
                   },
                   {
                     type: 'topology-metric-with-category',
@@ -615,8 +615,8 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       type: 'metric-aggregation',
                       metric: 'errorCount',
                       aggregation: MetricAggregationType.Sum,
-                      'display-name': 'Error Count'
-                    }
+                      'display-name': 'Error Count',
+                    },
                   },
                   {
                     type: 'topology-metric-with-category',
@@ -624,8 +624,8 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       type: 'metric-aggregation',
                       metric: 'numCalls',
                       aggregation: MetricAggregationType.AvgrateSecond,
-                      'display-name': 'Call Rate/sec'
-                    }
+                      'display-name': 'Call Rate/sec',
+                    },
                   },
                   {
                     type: 'topology-metric-with-category',
@@ -633,10 +633,10 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       type: 'metric-aggregation',
                       metric: 'numCalls',
                       aggregation: MetricAggregationType.Sum,
-                      'display-name': 'Call Count'
-                    }
-                  }
-                ]
+                      'display-name': 'Call Count',
+                    },
+                  },
+                ],
               },
               'edge-metrics': {
                 type: 'topology-metrics',
@@ -644,48 +644,48 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                   type: 'topology-metric-with-category',
                   specification: {
                     type: 'percentile-latency-metric-aggregation',
-                    'display-name': 'P99 Latency'
+                    'display-name': 'P99 Latency',
                   },
                   categories: [
                     {
                       type: 'topology-metric-category',
-                      ...defaultPrimaryEdgeMetricCategories[0]
+                      ...defaultPrimaryEdgeMetricCategories[0],
                     },
                     {
                       type: 'topology-metric-category',
-                      ...defaultPrimaryEdgeMetricCategories[1]
+                      ...defaultPrimaryEdgeMetricCategories[1],
                     },
                     {
                       type: 'topology-metric-category',
-                      ...defaultPrimaryEdgeMetricCategories[2]
+                      ...defaultPrimaryEdgeMetricCategories[2],
                     },
                     {
                       type: 'topology-metric-category',
-                      ...defaultPrimaryEdgeMetricCategories[3]
+                      ...defaultPrimaryEdgeMetricCategories[3],
                     },
                     {
                       type: 'topology-metric-category',
-                      ...defaultPrimaryEdgeMetricCategories[4]
-                    }
-                  ]
+                      ...defaultPrimaryEdgeMetricCategories[4],
+                    },
+                  ],
                 },
                 secondary: {
                   type: 'topology-metric-with-category',
                   specification: {
                     type: 'error-percentage-metric-aggregation',
                     aggregation: MetricAggregationType.Average,
-                    'display-name': 'Error %'
+                    'display-name': 'Error %',
                   },
                   categories: [
                     {
                       type: 'topology-metric-category',
-                      ...defaultSecondaryEdgeMetricCategories[0]
+                      ...defaultSecondaryEdgeMetricCategories[0],
                     },
                     {
                       type: 'topology-metric-category',
-                      ...defaultSecondaryEdgeMetricCategories[1]
-                    }
-                  ]
+                      ...defaultSecondaryEdgeMetricCategories[1],
+                    },
+                  ],
                 },
                 others: [
                   {
@@ -694,8 +694,8 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       type: 'metric-aggregation',
                       metric: 'duration',
                       aggregation: MetricAggregationType.P50,
-                      'display-name': 'P50 Latency'
-                    }
+                      'display-name': 'P50 Latency',
+                    },
                   },
                   {
                     type: 'topology-metric-with-category',
@@ -703,8 +703,8 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       type: 'metric-aggregation',
                       metric: 'errorCount',
                       aggregation: MetricAggregationType.Sum,
-                      'display-name': 'Error Count'
-                    }
+                      'display-name': 'Error Count',
+                    },
                   },
                   {
                     type: 'topology-metric-with-category',
@@ -712,8 +712,8 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       type: 'metric-aggregation',
                       metric: 'numCalls',
                       aggregation: MetricAggregationType.AvgrateSecond,
-                      'display-name': 'Call Rate/sec'
-                    }
+                      'display-name': 'Call Rate/sec',
+                    },
                   },
                   {
                     type: 'topology-metric-with-category',
@@ -721,14 +721,14 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                       type: 'metric-aggregation',
                       metric: 'numCalls',
                       aggregation: MetricAggregationType.Sum,
-                      'display-name': 'Call Count'
-                    }
-                  }
-                ]
-              }
-            }
-          }
-        ]
+                      'display-name': 'Call Count',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         type: 'container-widget',
@@ -738,20 +738,20 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
             {
               type: 'dimension-model',
               dimension: 1,
-              unit: 'FR'
-            }
+              unit: 'FR',
+            },
           ],
           'row-dimensions': [
             {
               type: 'dimension-model',
               dimension: 424,
-              unit: 'PX'
+              unit: 'PX',
             },
             {
               type: 'dimension-model',
               dimension: 640,
-              unit: 'PX'
-            }
+              unit: 'PX',
+            },
           ],
           'cell-spans': [
             {
@@ -759,16 +759,16 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
               'col-start': 0,
               'col-end': 1,
               'row-start': 0,
-              'row-end': 1
+              'row-end': 1,
             },
             {
               type: 'cell-span-model',
               'col-start': 0,
               'col-end': 1,
               'row-start': 1,
-              'row-end': 2
-            }
-          ]
+              'row-end': 2,
+            },
+          ],
         },
         children: [
           {
@@ -778,53 +778,53 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
             series: {
               type: 'radar-series',
               name: 'Current Time Range',
-              color: Color.Gray7
+              color: Color.Gray7,
             },
             data: {
               type: 'entity-radar-data-source',
               metrics: [
                 {
                   type: 'percentile-latency-metric-aggregation',
-                  'display-name': 'P99 Latency'
+                  'display-name': 'P99 Latency',
                 },
                 {
                   type: 'metric-aggregation',
                   metric: 'duration',
                   aggregation: MetricAggregationType.P50,
-                  'display-name': 'P50 Latency'
+                  'display-name': 'P50 Latency',
                 },
                 {
                   type: 'error-percentage-metric-aggregation',
                   aggregation: MetricAggregationType.Average,
-                  'display-name': 'Error %'
+                  'display-name': 'Error %',
                 },
 
                 {
                   type: 'metric-aggregation',
                   metric: 'errorCount',
                   aggregation: MetricAggregationType.Sum,
-                  'display-name': 'Error Count'
+                  'display-name': 'Error Count',
                 },
                 {
                   type: 'metric-aggregation',
                   metric: 'numCalls',
                   aggregation: MetricAggregationType.AvgrateSecond,
-                  'display-name': 'Call Rate/sec'
+                  'display-name': 'Call Rate/sec',
                 },
                 {
                   type: 'metric-aggregation',
                   metric: 'numCalls',
                   aggregation: MetricAggregationType.Sum,
-                  'display-name': 'Call Count'
-                }
-              ]
-            }
+                  'display-name': 'Call Count',
+                },
+              ],
+            },
           },
           {
             type: 'top-n-widget',
             header: {
               type: 'widget-header',
-              title: 'Top Endpoints'
+              title: 'Top Endpoints',
             },
             data: {
               type: 'top-n-data-source',
@@ -837,9 +837,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                     type: 'explore-selection',
                     'display-name': 'Calls',
                     metric: 'numCalls',
-                    aggregation: MetricAggregationType.Sum
+                    aggregation: MetricAggregationType.Sum,
                   },
-                  context: ObservabilityEntityType.Api
+                  context: ObservabilityEntityType.Api,
                 },
                 {
                   type: 'top-n-explore-selection',
@@ -847,9 +847,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                     type: 'explore-selection',
                     'display-name': 'Errors',
                     metric: 'errorCount',
-                    aggregation: MetricAggregationType.Sum
+                    aggregation: MetricAggregationType.Sum,
                   },
-                  context: ObservabilityEntityType.Api
+                  context: ObservabilityEntityType.Api,
                 },
                 {
                   type: 'top-n-explore-selection',
@@ -857,9 +857,9 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                     type: 'explore-selection',
                     'display-name': 'p99 Latency',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P99
+                    aggregation: MetricAggregationType.P99,
                   },
-                  context: ObservabilityEntityType.Api
+                  context: ObservabilityEntityType.Api,
                 },
                 {
                   type: 'top-n-explore-selection',
@@ -867,15 +867,15 @@ export const serviceOverviewDashboard: DashboardDefaultConfiguration = {
                     type: 'explore-selection',
                     'display-name': 'p50 Latency',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P50
+                    aggregation: MetricAggregationType.P50,
                   },
-                  context: ObservabilityEntityType.Api
-                }
-              ]
-            }
-          }
-        ]
-      }
-    ]
-  }
+                  context: ObservabilityEntityType.Api,
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  },
 };

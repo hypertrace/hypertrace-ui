@@ -28,9 +28,9 @@ import { TimeRangeComponent } from './time-range.component';
     TooltipModule,
     MemoizeModule,
     LayoutChangeModule,
-    RefreshButtonModule
+    RefreshButtonModule,
   ],
   declarations: [TimeRangeComponent, PredefinedTimeRangeSelectionComponent, CustomTimeRangeSelectionComponent],
-  exports: [TimeRangeComponent]
+  exports: [TimeRangeComponent],
 })
 export class TimeRangeModule {}

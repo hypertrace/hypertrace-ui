@@ -11,7 +11,7 @@ import { FeatureState } from './state/feature.state';
 export class FeatureGuard implements CanLoad, CanActivate {
   public constructor(
     private readonly navService: NavigationService,
-    private readonly featureStateResolver: FeatureStateResolver
+    private readonly featureStateResolver: FeatureStateResolver,
   ) {}
 
   public canLoad(route: HtRoute, segments: UrlSegment[]): Observable<boolean> {
@@ -24,7 +24,7 @@ export class FeatureGuard implements CanLoad, CanActivate {
           const parentUrl = this.navService.getUrlTree(segments.slice(0, -1)).toString();
           this.navService.navigateWithinApp([parentUrl]);
         }
-      })
+      }),
     );
   }
 
@@ -38,16 +38,16 @@ export class FeatureGuard implements CanLoad, CanActivate {
         value =>
           value ||
           this.navService.getUrlTreeForRouteSnapshot(
-            routeSnapshot.parent ? routeSnapshot.parent : this.navService.rootRoute().snapshot
-          )
-      )
+            routeSnapshot.parent ? routeSnapshot.parent : this.navService.rootRoute().snapshot,
+          ),
+      ),
     );
   }
 
   private checkRouteValidity(route: HtRoute): Observable<boolean> {
     return this.getCombinedFeatureState(this.getFeaturesForRoute(route)).pipe(
       catchError(() => of(FeatureState.Disabled)),
-      map(state => state !== FeatureState.Disabled)
+      map(state => state !== FeatureState.Disabled),
     );
   }
 

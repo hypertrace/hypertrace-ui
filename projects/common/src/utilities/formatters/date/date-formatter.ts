@@ -46,12 +46,12 @@ export const enum DateFormatMode {
   /**
    * `HH:mm:ssZZZZZ` -> `21:00:00Z` or `21:00:00-08:00`
    */
-  TimeWithTimeZoneOffset
+  TimeWithTimeZoneOffset,
 }
 
 export class DateFormatter {
   private static readonly DEFAULT_OPTIONS: Readonly<Required<DateFormatOptions>> = {
-    mode: DateFormatMode.DateWithYearAndTime
+    mode: DateFormatMode.DateWithYearAndTime,
   };
 
   protected readonly options: Readonly<Required<DateFormatOptions>>;

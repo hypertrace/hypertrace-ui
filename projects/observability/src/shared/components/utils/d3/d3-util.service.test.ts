@@ -8,8 +8,8 @@ describe('D3 util service', () => {
   const createHost = createHostFactory({
     component: Component({
       selector: 'host-component',
-      template: '<ng-content></ng-content>'
-    })(class {})
+      template: '<ng-content></ng-content>',
+    })(class {}),
   });
 
   test('can create selections that support merge', () => {

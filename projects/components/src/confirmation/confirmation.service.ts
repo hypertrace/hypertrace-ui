@@ -6,7 +6,7 @@ import { ModalService } from '../modal/modal.service';
 import { ConfirmationModalComponent, ConfirmationModalData } from './confirmation-modal.component';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfirmationService {
   public constructor(private readonly modalService: ModalService) {}
@@ -17,7 +17,7 @@ export class ConfirmationService {
         size: config.size ?? ModalSize.Small,
         content: ConfirmationModalComponent,
         data: config,
-        title: config.title
+        title: config.title,
       })
       .closed$.pipe(defaultIfEmpty(false));
   }

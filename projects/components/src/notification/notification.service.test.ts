@@ -9,7 +9,7 @@ describe('NotificationService', () => {
 
   const createService = createServiceFactory({
     service: NotificationService,
-    providers: [mockProvider(MatSnackBar, { openFromComponent: jest.fn() })]
+    providers: [mockProvider(MatSnackBar, { openFromComponent: jest.fn() })],
   });
 
   test('should create success notification correctly', () => {
@@ -23,8 +23,8 @@ describe('NotificationService', () => {
         verticalPosition: 'top',
         duration: 5000,
         politeness: 'polite',
-        data: expect.objectContaining({ message: 'Success', mode: NotificationMode.Success })
-      })
+        data: expect.objectContaining({ message: 'Success', mode: NotificationMode.Success }),
+      }),
     );
   });
 
@@ -39,8 +39,8 @@ describe('NotificationService', () => {
         verticalPosition: 'top',
         duration: 0,
         politeness: 'assertive',
-        data: expect.objectContaining({ message: 'Fail', mode: NotificationMode.Failure })
-      })
+        data: expect.objectContaining({ message: 'Fail', mode: NotificationMode.Failure }),
+      }),
     );
   });
 
@@ -55,8 +55,8 @@ describe('NotificationService', () => {
         verticalPosition: 'top',
         duration: 5000,
         politeness: 'polite',
-        data: expect.objectContaining({ message: 'info', mode: NotificationMode.Info })
-      })
+        data: expect.objectContaining({ message: 'info', mode: NotificationMode.Info }),
+      }),
     );
   });
 
@@ -71,8 +71,8 @@ describe('NotificationService', () => {
         horizontalPosition: 'center',
         verticalPosition: 'top',
         duration: 5000,
-        data: expect.objectContaining({ message: 'success', mode: NotificationMode.Success })
-      })
+        data: expect.objectContaining({ message: 'success', mode: NotificationMode.Success }),
+      }),
     );
 
     spectator.service.wrapWithNotification(throwError('error'), 'success', 'failure').subscribe();
@@ -84,8 +84,8 @@ describe('NotificationService', () => {
         verticalPosition: 'top',
         duration: 0,
         politeness: 'assertive',
-        data: expect.objectContaining({ message: 'failure', mode: NotificationMode.Failure })
-      })
+        data: expect.objectContaining({ message: 'failure', mode: NotificationMode.Failure }),
+      }),
     );
   });
 
@@ -102,8 +102,8 @@ describe('NotificationService', () => {
         verticalPosition: 'top',
         duration: 5000,
         politeness: 'polite',
-        data: expect.objectContaining({ message: 'success', mode: NotificationMode.Success })
-      })
+        data: expect.objectContaining({ message: 'success', mode: NotificationMode.Success }),
+      }),
     );
 
     throwError('error').pipe(spectator.service.withNotification('success', 'failure')).subscribe();
@@ -115,8 +115,8 @@ describe('NotificationService', () => {
         verticalPosition: 'top',
         duration: 0,
         politeness: 'assertive',
-        data: expect.objectContaining({ message: 'failure', mode: NotificationMode.Failure })
-      })
+        data: expect.objectContaining({ message: 'failure', mode: NotificationMode.Failure }),
+      }),
     );
 
     // Completing the source observable without emitting a value should not show any message

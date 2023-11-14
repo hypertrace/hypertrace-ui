@@ -7,6 +7,6 @@ import { DownloadFileComponent } from './download-file.component';
 @NgModule({
   declarations: [DownloadFileComponent],
   imports: [CommonModule, ButtonModule, IconModule],
-  exports: [DownloadFileComponent]
+  exports: [DownloadFileComponent],
 })
 export class DownloadFileModule {}

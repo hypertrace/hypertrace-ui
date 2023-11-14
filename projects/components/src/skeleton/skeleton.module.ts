@@ -5,6 +5,6 @@ import { SkeletonComponent } from './skeleton.component';
 @NgModule({
   declarations: [SkeletonComponent],
   imports: [CommonModule],
-  exports: [SkeletonComponent]
+  exports: [SkeletonComponent],
 })
 export class SkeletonModule {}

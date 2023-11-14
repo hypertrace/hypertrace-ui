@@ -6,7 +6,7 @@ import {
   TABLE_COLUMN_CONFIG,
   TABLE_COLUMN_INDEX,
   TABLE_DATA_PARSER,
-  TABLE_ROW_DATA
+  TABLE_ROW_DATA,
 } from '../../table-cell-injection';
 import { TableCellParserBase } from '../../table-cell-parser-base';
 import { TableCellRenderer } from '../../table-cell-renderer';
@@ -30,16 +30,16 @@ export interface RowData extends Dictionary<unknown> {
     >
       {{ this.duration }} ms
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: CoreTableCellRendererType.RelativeTimestamp,
   alignment: TableCellAlignmentType.Left,
-  parser: CoreTableCellParserType.NoOp
+  parser: CoreTableCellParserType.NoOp,
 })
 export class RelativeTimestampTableCellRendererComponent extends TableCellRendererBase<Date> implements OnInit {
   public readonly dateFormat: DateFormatOptions = {
-    mode: DateFormatMode.DateAndTimeWithSeconds
+    mode: DateFormatMode.DateAndTimeWithSeconds,
   };
   public readonly duration: number;
 
@@ -49,7 +49,7 @@ export class RelativeTimestampTableCellRendererComponent extends TableCellRender
     @Inject(TABLE_DATA_PARSER)
     parser: TableCellParserBase<Date, Date, unknown>,
     @Inject(TABLE_CELL_DATA) cellData: Date,
-    @Inject(TABLE_ROW_DATA) rowData: RowData
+    @Inject(TABLE_ROW_DATA) rowData: RowData,
   ) {
     super(columnConfig, index, parser, cellData, rowData);
     this.duration = cellData?.getTime() - rowData?.baseTimestamp?.getTime();

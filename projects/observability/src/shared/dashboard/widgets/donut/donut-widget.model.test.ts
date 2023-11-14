@@ -12,29 +12,29 @@ describe('Donut widget model', () => {
       series: [
         {
           name: 'first',
-          value: 10
+          value: 10,
         },
         {
           name: 'second',
-          value: 20
-        }
+          value: 20,
+        },
       ],
-      total: 2
+      total: 2,
     };
 
     const spectator = modelFactory(DonutWidgetModel, {
       api: {
-        getData: () => of(series)
+        getData: () => of(series),
       },
       providers: [
         {
           provide: DEFAULT_COLOR_PALETTE,
           useValue: {
             name: 'default',
-            colors: []
-          }
-        }
-      ]
+            colors: [],
+          },
+        },
+      ],
     });
 
     spectator.model.colorPalette = ['red', 'blue'];
@@ -46,15 +46,15 @@ describe('Donut widget model', () => {
             {
               color: 'rgb(255, 0, 0)',
               name: 'first',
-              value: 10
+              value: 10,
             },
             {
               color: 'rgb(0, 0, 255)',
               name: 'second',
-              value: 20
-            }
-          ]
-        }
+              value: 20,
+            },
+          ],
+        },
       });
     });
   });

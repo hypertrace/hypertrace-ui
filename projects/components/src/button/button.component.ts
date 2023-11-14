@@ -42,7 +42,7 @@ import { ButtonSize, ButtonStyle, ButtonType, ButtonVariant } from './button';
         ></ht-icon>
       </button>
     </ht-event-blocker>
-  `
+  `,
 })
 export class ButtonComponent {
   @Input()

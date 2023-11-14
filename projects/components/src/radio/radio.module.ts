@@ -10,6 +10,6 @@ import { RadioGroupComponent } from './radio-group.component';
 @NgModule({
   imports: [CommonModule, InfoIconModule, FormsModule, MatRadioModule, LabelModule, TooltipModule],
   declarations: [RadioGroupComponent],
-  exports: [RadioGroupComponent]
+  exports: [RadioGroupComponent],
 })
 export class TraceRadioModule {}

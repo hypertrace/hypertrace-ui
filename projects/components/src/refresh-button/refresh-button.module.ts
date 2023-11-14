@@ -7,6 +7,6 @@ import { RefreshButtonComponent } from './refresh-button.component';
 @NgModule({
   declarations: [RefreshButtonComponent],
   exports: [RefreshButtonComponent],
-  imports: [AsyncPipe, ButtonModule, MemoizeModule, NgIf, NgClass]
+  imports: [AsyncPipe, ButtonModule, MemoizeModule, NgIf, NgClass],
 })
 export class RefreshButtonModule {}

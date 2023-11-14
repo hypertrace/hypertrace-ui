@@ -6,9 +6,9 @@ import { SpanTraceNavigationHandlerModel } from './span-trace/model/span-trace-n
 @NgModule({
   imports: [
     DashboardCoreModule.with({
-      models: [SpanTraceNavigationHandlerModel]
+      models: [SpanTraceNavigationHandlerModel],
     }),
-    DetailSheetInteractionModule
-  ]
+    DetailSheetInteractionModule,
+  ],
 })
 export class TracingDashboardInteractionsModule {}

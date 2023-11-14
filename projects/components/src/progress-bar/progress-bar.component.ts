@@ -12,7 +12,7 @@ import { Color } from '@hypertrace/common';
       </div>
       <div *ngIf="this.showProgressPercentage" class="progress-percentage">{{ this.progress }}%</div>
     </div>
-  `
+  `,
 })
 export class ProgressBarComponent {
   @Input()

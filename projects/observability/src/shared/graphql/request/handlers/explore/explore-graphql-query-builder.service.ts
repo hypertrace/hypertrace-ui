@@ -17,7 +17,7 @@ import {
   GraphQlExploreResult,
   GraphQlExploreResultValue,
   GraphQlExploreServerResponse,
-  GraphQlExploreServerResult
+  GraphQlExploreServerResult,
 } from './explore-query';
 
 @Injectable({ providedIn: 'root' })
@@ -33,7 +33,7 @@ export class ExploreGraphqlQueryBuilderService {
     return [
       {
         name: 'scope',
-        value: request.context
+        value: request.context,
       },
       this.argBuilder.forLimit(request.limit),
       this.argBuilder.forTimeRange(request.timeRange),
@@ -42,7 +42,7 @@ export class ExploreGraphqlQueryBuilderService {
       ...this.buildFilters(request),
       ...this.argBuilder.forGroupBy(request.groupBy),
       ...this.argBuilder.forOrderBys(request.orderBy),
-      ...this.buildEntityContextOptionsArgument(request.entityContextOptions)
+      ...this.buildEntityContextOptionsArgument(request.entityContextOptions),
     ];
   }
 
@@ -50,7 +50,7 @@ export class ExploreGraphqlQueryBuilderService {
     return this.argBuilder.forFilters(
       request.ignoreGlobalFilters ?? false
         ? request.filters ?? []
-        : this.globalGraphQlFilterService.mergeGlobalFilters(request.context, request.filters)
+        : this.globalGraphQlFilterService.mergeGlobalFilters(request.context, request.filters),
     );
   }
 
@@ -58,14 +58,14 @@ export class ExploreGraphqlQueryBuilderService {
     return [
       ...this.getAnyIntervalSelections(request),
       ...this.selectionBuilder.fromSpecifications(this.groupByAsSpecifications(request.groupBy)),
-      ...this.selectionBuilder.fromSpecifications(request.selections)
+      ...this.selectionBuilder.fromSpecifications(request.selections),
     ];
   }
 
   public buildResponse(response: GraphQlExploreServerResponse, request: GraphQlExploreRequest): GraphQlExploreResponse {
     return {
       total: response.total,
-      results: response.results.map(result => this.convertResultRow(result, request))
+      results: response.results.map(result => this.convertResultRow(result, request)),
     };
   }
 
@@ -73,17 +73,17 @@ export class ExploreGraphqlQueryBuilderService {
     return {
       ...this.getIntervalResultFragment(row, request),
       ...this.getSelectionResultFragment(row, this.groupByAsSpecifications(request.groupBy)),
-      ...this.getSelectionResultFragment(row, request.selections)
+      ...this.getSelectionResultFragment(row, request.selections),
     };
   }
 
   private getIntervalResultFragment(
     row: GraphQlExploreServerResult,
-    request: GraphQlExploreRequest
+    request: GraphQlExploreRequest,
   ): Pick<GraphQlExploreResult, typeof GQL_EXPLORE_RESULT_INTERVAL_KEY> {
     if (request.interval) {
       return {
-        [GQL_EXPLORE_RESULT_INTERVAL_KEY]: this.dateCoercer.coerce(row[INTERVAL_START_QUERY_KEY])
+        [GQL_EXPLORE_RESULT_INTERVAL_KEY]: this.dateCoercer.coerce(row[INTERVAL_START_QUERY_KEY]),
       };
     }
 
@@ -92,13 +92,15 @@ export class ExploreGraphqlQueryBuilderService {
 
   private getSelectionResultFragment(
     row: GraphQlExploreServerResult,
-    specifications: ExploreSpecification[]
+    specifications: ExploreSpecification[],
   ): Pick<GraphQlExploreResult, string> {
     return Object.assign(
       {},
       ...specifications.map(specification => ({
-        [specification.resultAlias()]: specification.extractFromServerData(row as Dictionary<GraphQlExploreResultValue>)
-      }))
+        [specification.resultAlias()]: specification.extractFromServerData(
+          row as Dictionary<GraphQlExploreResultValue>,
+        ),
+      })),
     ) as Pick<GraphQlExploreResult, string>;
   }
 
@@ -108,14 +110,17 @@ export class ExploreGraphqlQueryBuilderService {
 
   private groupByAsSpecifications(groupBy?: GraphQlGroupBy): ExploreSpecification[] {
     return (groupBy?.keyExpressions ?? []).map(expression =>
-      this.specBuilder.exploreSpecificationForAttributeExpression(expression)
+      this.specBuilder.exploreSpecificationForAttributeExpression(expression),
     );
   }
 
   private buildEntityContextOptionsArgument(entityContextOptions?: EntityContextOptions): GraphQlArgument[] {
     if (!isNil(entityContextOptions) && !isNil(entityContextOptions.includeNonLiveEntities)) {
       return [
-        { name: 'entityContextOptions', value: { includeNonLiveEntities: entityContextOptions.includeNonLiveEntities } }
+        {
+          name: 'entityContextOptions',
+          value: { includeNonLiveEntities: entityContextOptions.includeNonLiveEntities },
+        },
       ];
     }
 

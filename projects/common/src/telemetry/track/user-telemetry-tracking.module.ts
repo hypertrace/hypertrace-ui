@@ -5,6 +5,6 @@ import { TrackDirective } from './track.directive';
 @NgModule({
   imports: [CommonModule],
   declarations: [TrackDirective],
-  exports: [TrackDirective]
+  exports: [TrackDirective],
 })
 export class UserTelemetryTrackingModule {}

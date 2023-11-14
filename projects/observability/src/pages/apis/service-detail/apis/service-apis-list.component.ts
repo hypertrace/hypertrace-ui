@@ -13,12 +13,12 @@ import { serviceApisListDashboard } from './service-apis-list.dashboard';
       (dashboardReady)="this.onDashboardReady($event)"
     >
     </ht-navigable-dashboard>
-  `
+  `,
 })
 export class ServiceApisListComponent {
   public constructor(
     private readonly serviceDetailService: ServiceDetailService,
-    private readonly subscriptionLifecycle: SubscriptionLifecycle
+    private readonly subscriptionLifecycle: SubscriptionLifecycle,
   ) {}
 
   public onDashboardReady(dashboard: Dashboard): void {

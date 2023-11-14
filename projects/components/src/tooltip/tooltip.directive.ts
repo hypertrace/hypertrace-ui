@@ -8,7 +8,7 @@ import { PopoverService } from '../popover/popover.service';
 import { TooltipContentContainerComponent } from './tooltip-content-container.component';
 
 @Directive({
-  selector: '[htTooltip]'
+  selector: '[htTooltip]',
 })
 export class TooltipDirective implements OnDestroy {
   private static readonly DEFAULT_HOVER_DELAY_MS: number = 400;
@@ -35,9 +35,9 @@ export class TooltipDirective implements OnDestroy {
         .pipe(
           delay(TooltipDirective.DEFAULT_HOVER_DELAY_MS),
           takeUntil(this.mouseLeave$),
-          finalize(() => this.removeTooltip())
+          finalize(() => this.removeTooltip()),
         )
-        .subscribe(() => this.showTooltip())
+        .subscribe(() => this.showTooltip()),
     );
 
     this.mouseEnter$.next(event);
@@ -69,9 +69,9 @@ export class TooltipDirective implements OnDestroy {
           PopoverRelativePositionLocation.BelowCentered,
           PopoverRelativePositionLocation.AboveCentered,
           PopoverRelativePositionLocation.RightCentered,
-          PopoverRelativePositionLocation.LeftCentered
-        ]
-      }
+          PopoverRelativePositionLocation.LeftCentered,
+        ],
+      },
     });
   }
 

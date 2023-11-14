@@ -39,7 +39,7 @@ import { FilterUrlService } from '../filter/filter-url.service';
         ></ht-button>
       </div>
     </div>
-  `
+  `,
 })
 export class InFilterModalComponent {
   public isSupported: boolean = false;
@@ -49,7 +49,7 @@ export class InFilterModalComponent {
     private readonly modalRef: ModalRef<never>,
     @Inject(MODAL_DATA) public readonly modalData: InFilterModalData,
     private readonly filterUrlService: FilterUrlService,
-    private readonly filterBuilderLookupService: FilterBuilderLookupService
+    private readonly filterBuilderLookupService: FilterBuilderLookupService,
   ) {
     this.getCurrentValues();
   }
@@ -79,7 +79,7 @@ export class InFilterModalComponent {
     } else {
       const incompleteFilter: IncompleteFilter = {
         ...filter,
-        value: undefined
+        value: undefined,
       };
       this.filterUrlService.removeUrlFilter(this.modalData.metadata, incompleteFilter);
     }

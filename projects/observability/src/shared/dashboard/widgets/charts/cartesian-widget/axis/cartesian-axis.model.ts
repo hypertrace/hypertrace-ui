@@ -3,7 +3,7 @@ import { BOOLEAN_PROPERTY, Model, ModelProperty, NUMBER_PROPERTY } from '@hypert
 import { Axis, ScaleType } from '../../../../../components/cartesian/chart';
 
 @Model({
-  type: 'cartesian-axis'
+  type: 'cartesian-axis',
 })
 export class CartesianAxisModel {
   @ModelProperty({
@@ -12,8 +12,8 @@ export class CartesianAxisModel {
     displayName: 'Scale Type',
     type: {
       key: ENUM_TYPE.type,
-      values: [ScaleType.Band, ScaleType.Linear, ScaleType.Time]
-    } as EnumPropertyTypeInstance
+      values: [ScaleType.Band, ScaleType.Linear, ScaleType.Time],
+    } as EnumPropertyTypeInstance,
   })
   public scale?: ScaleType;
 
@@ -21,7 +21,7 @@ export class CartesianAxisModel {
     key: 'show-grid-lines',
     required: false,
     displayName: 'Show Grid Lines',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public showGridLines?: boolean;
 
@@ -33,7 +33,7 @@ export class CartesianAxisModel {
     key: 'min-upper-limit',
     required: false,
     displayName: 'Minimum Upper Limit',
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public minUpperLimit?: number;
 
@@ -41,7 +41,7 @@ export class CartesianAxisModel {
     key: 'show-tick-labels',
     required: false,
     displayName: 'Show Tick Labels',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public showTickLabels?: boolean;
 
@@ -50,7 +50,7 @@ export class CartesianAxisModel {
       scale: this.scale,
       gridLines: this.showGridLines,
       max: this.minUpperLimit,
-      tickLabels: this.showTickLabels
+      tickLabels: this.showTickLabels,
     };
   }
 }

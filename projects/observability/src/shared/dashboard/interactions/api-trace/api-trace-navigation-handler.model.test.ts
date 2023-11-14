@@ -8,15 +8,15 @@ import { ApiTraceNavigationHandlerModel } from './api-trace-navigation-handler.m
 describe('Api Trace Navigation Handler Model', () => {
   const trace: Trace = {
     [traceIdKey]: 'test-id',
-    [traceTypeKey]: ObservabilityTraceType.Transaction
+    [traceTypeKey]: ObservabilityTraceType.Transaction,
   };
 
   const buildModel = createModelFactory({
     providers: [
       mockProvider(TracingNavigationService, {
-        navigateToApiTraceDetail: jest.fn()
-      })
-    ]
+        navigateToApiTraceDetail: jest.fn(),
+      }),
+    ],
   });
 
   test('calls navigateToApiTraceDetail with correct parameters', () => {
@@ -37,7 +37,7 @@ describe('Api Trace Navigation Handler Model', () => {
     const traceWithStarTime: Trace = {
       [traceIdKey]: 'test-id',
       [traceTypeKey]: ObservabilityTraceType.Api,
-      startTime: 1576364117792
+      startTime: 1576364117792,
     };
     const spectator = buildModel(ApiTraceNavigationHandlerModel);
     const navService = spectator.get(TracingNavigationService);

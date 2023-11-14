@@ -15,7 +15,7 @@ export const FILTER_BUTTON_WRAPPER = new InjectionToken<FilterButtonWrapperData>
       [value]="this.value"
       [subpath]="this.targetAttributeSubpath"
     ></ht-filter-button>
-  `
+  `,
 })
 export class FilterButtonWrapperComponent {
   public targetAttribute: FilterAttribute;

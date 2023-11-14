@@ -8,16 +8,16 @@ import { ExploreSelectionSpecificationModel } from '../../specifiers/explore-sel
 import { TraceValueDataSourceModel } from '../trace-value-data-source.model';
 
 @Model({
-  type: 'trace-metric-aggregation-data-source'
+  type: 'trace-metric-aggregation-data-source',
 })
 export class TraceMetricAggregationDataSourceModel extends TraceValueDataSourceModel<MetricAggregation> {
   @ModelProperty({
     key: 'metric',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: ExploreSelectionSpecificationModel
+      defaultModelClass: ExploreSelectionSpecificationModel,
     } as ModelModelPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public specification!: ExploreSpecification;
 
@@ -26,8 +26,8 @@ export class TraceMetricAggregationDataSourceModel extends TraceValueDataSourceM
       map(result => ({
         value: result.value as number,
         health: MetricHealth.NotSpecified,
-        units: '' // TODO: pipe in units to result.units in explore-graphql-query-handler.service.ts
-      }))
+        units: '', // TODO: pipe in units to result.units in explore-graphql-query-handler.service.ts
+      })),
     );
   }
 }

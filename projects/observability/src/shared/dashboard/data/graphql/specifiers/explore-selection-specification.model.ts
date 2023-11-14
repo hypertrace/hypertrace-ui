@@ -4,14 +4,14 @@ import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 import { MetricAggregationType } from '../../../../graphql/model/metrics/metric-aggregation';
 import {
   ExploreSpecification,
-  ExploreValue
+  ExploreValue,
 } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSpecificationBuilder } from '../../../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { SpecificationModel } from './specification.model';
 
 @Model({
   type: 'explore-selection',
-  displayName: 'Explore Selection'
+  displayName: 'Explore Selection',
 })
 export class ExploreSelectionSpecificationModel
   extends SpecificationModel<ExploreSpecification>
@@ -20,7 +20,7 @@ export class ExploreSelectionSpecificationModel
     key: 'metric',
     displayName: 'Metric',
     type: STRING_PROPERTY.type,
-    required: true
+    required: true,
   })
   public metric!: string;
 
@@ -42,9 +42,9 @@ export class ExploreSelectionSpecificationModel
         MetricAggregationType.AvgrateMinute,
         MetricAggregationType.AvgrateSecond,
         MetricAggregationType.Count,
-        MetricAggregationType.DistinctCount
-      ]
-    } as EnumPropertyTypeInstance
+        MetricAggregationType.DistinctCount,
+      ],
+    } as EnumPropertyTypeInstance,
   })
   public aggregation?: MetricAggregationType;
 

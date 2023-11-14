@@ -6,6 +6,6 @@ import { FilterButtonWrapperComponent } from './filter-button-wrapper.component'
 @NgModule({
   declarations: [FilterButtonWrapperComponent],
   imports: [CommonModule, FilterButtonModule],
-  exports: [FilterButtonWrapperComponent]
+  exports: [FilterButtonWrapperComponent],
 })
 export class FilterButtonWrapperModule {}

@@ -56,5 +56,5 @@ export const enum RadarLayoutStyleClass {
   Plot = 'plot-section',
   Axis = 'axis-section',
   Legend = 'legend-section',
-  Tooltip = 'tooltip-section'
+  Tooltip = 'tooltip-section',
 }

@@ -14,7 +14,7 @@ import { EnumPropertyTypeInstance, ENUM_TYPE } from './enum-property-type';
       <ht-select-option *ngFor="let option of options" [value]="option.value" [label]="option.label">
       </ht-select-option>
     </ht-select>
-  `
+  `,
 })
 export class EnumPropertyTypeEditorComponent {
   public readonly options: RadioOption[];
@@ -28,7 +28,7 @@ export class EnumPropertyTypeEditorComponent {
 
     return propertyTypeInstance.values.map(value => ({
       label: this.capitalizeAndSpace(value),
-      value: value
+      value: value,
     }));
   }
 

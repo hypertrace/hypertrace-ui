@@ -12,7 +12,7 @@ describe('Filter Builder Lookup service', () => {
   let spectator: SpectatorService<FilterBuilderLookupService>;
 
   const buildService = createServiceFactory({
-    service: FilterBuilderLookupService
+    service: FilterBuilderLookupService,
   });
 
   beforeEach(() => {
@@ -39,7 +39,7 @@ describe('Filter Builder Lookup service', () => {
     expect(
       spectator.service
         .lookup(FilterAttributeType.Boolean)
-        .buildFiltersForSupportedOperators(getTestFilterAttribute(FilterAttributeType.Boolean), false)
+        .buildFiltersForSupportedOperators(getTestFilterAttribute(FilterAttributeType.Boolean), false),
     ).toEqual([
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Boolean),
@@ -47,7 +47,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.Equals,
         value: false,
         userString: 'Boolean Attribute = false',
-        urlString: 'booleanAttribute_eq_false'
+        urlString: 'booleanAttribute_eq_false',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Boolean),
@@ -55,7 +55,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.NotEquals,
         value: false,
         userString: 'Boolean Attribute != false',
-        urlString: 'booleanAttribute_neq_false'
+        urlString: 'booleanAttribute_neq_false',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Boolean),
@@ -63,7 +63,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.In,
         value: false,
         userString: 'Boolean Attribute IN false',
-        urlString: 'booleanAttribute_in_false'
+        urlString: 'booleanAttribute_in_false',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Boolean),
@@ -71,14 +71,14 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.NotIn,
         value: false,
         userString: 'Boolean Attribute NOT_IN false',
-        urlString: 'booleanAttribute_nin_false'
-      }
+        urlString: 'booleanAttribute_nin_false',
+      },
     ]);
 
     expect(
       spectator.service
         .lookup(FilterAttributeType.Number)
-        .buildFiltersForSupportedOperators(getTestFilterAttribute(FilterAttributeType.Number), 217)
+        .buildFiltersForSupportedOperators(getTestFilterAttribute(FilterAttributeType.Number), 217),
     ).toEqual([
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Number),
@@ -86,7 +86,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.Equals,
         value: 217,
         userString: 'Number Attribute = 217',
-        urlString: 'numberAttribute_eq_217'
+        urlString: 'numberAttribute_eq_217',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Number),
@@ -94,7 +94,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.NotEquals,
         value: 217,
         userString: 'Number Attribute != 217',
-        urlString: 'numberAttribute_neq_217'
+        urlString: 'numberAttribute_neq_217',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Number),
@@ -102,7 +102,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.LessThan,
         value: 217,
         userString: 'Number Attribute < 217',
-        urlString: 'numberAttribute_lt_217'
+        urlString: 'numberAttribute_lt_217',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Number),
@@ -110,7 +110,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.LessThanOrEqualTo,
         value: 217,
         userString: 'Number Attribute <= 217',
-        urlString: 'numberAttribute_lte_217'
+        urlString: 'numberAttribute_lte_217',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Number),
@@ -118,7 +118,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.GreaterThan,
         value: 217,
         userString: 'Number Attribute > 217',
-        urlString: 'numberAttribute_gt_217'
+        urlString: 'numberAttribute_gt_217',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Number),
@@ -126,7 +126,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.GreaterThanOrEqualTo,
         value: 217,
         userString: 'Number Attribute >= 217',
-        urlString: 'numberAttribute_gte_217'
+        urlString: 'numberAttribute_gte_217',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Number),
@@ -134,7 +134,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.In,
         value: 217,
         userString: 'Number Attribute IN 217',
-        urlString: 'numberAttribute_in_217'
+        urlString: 'numberAttribute_in_217',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Number),
@@ -142,14 +142,14 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.NotIn,
         value: 217,
         userString: 'Number Attribute NOT_IN 217',
-        urlString: 'numberAttribute_nin_217'
-      }
+        urlString: 'numberAttribute_nin_217',
+      },
     ]);
 
     expect(
       spectator.service
         .lookup(FilterAttributeType.String)
-        .buildFiltersForSupportedOperators(getTestFilterAttribute(FilterAttributeType.String), 'test value')
+        .buildFiltersForSupportedOperators(getTestFilterAttribute(FilterAttributeType.String), 'test value'),
     ).toEqual([
       {
         metadata: getTestFilterAttribute(FilterAttributeType.String),
@@ -157,7 +157,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.Equals,
         value: 'test value',
         userString: 'String Attribute = test value',
-        urlString: 'stringAttribute_eq_test%20value'
+        urlString: 'stringAttribute_eq_test%20value',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.String),
@@ -165,7 +165,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.NotEquals,
         value: 'test value',
         userString: 'String Attribute != test value',
-        urlString: 'stringAttribute_neq_test%20value'
+        urlString: 'stringAttribute_neq_test%20value',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.String),
@@ -173,7 +173,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.In,
         value: 'test value',
         userString: 'String Attribute IN test value',
-        urlString: 'stringAttribute_in_test%20value'
+        urlString: 'stringAttribute_in_test%20value',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.String),
@@ -181,7 +181,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.NotIn,
         value: 'test value',
         userString: 'String Attribute NOT_IN test value',
-        urlString: 'stringAttribute_nin_test%20value'
+        urlString: 'stringAttribute_nin_test%20value',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.String),
@@ -189,7 +189,7 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.Like,
         value: 'test value',
         userString: 'String Attribute ~ test value',
-        urlString: 'stringAttribute_lk_test%20value'
+        urlString: 'stringAttribute_lk_test%20value',
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.String),
@@ -197,27 +197,27 @@ describe('Filter Builder Lookup service', () => {
         operator: FilterOperator.Contains,
         value: 'test value',
         userString: 'String Attribute CONTAINS test value',
-        urlString: 'stringAttribute_c_test%20value'
-      }
+        urlString: 'stringAttribute_c_test%20value',
+      },
     ]);
 
     expect(
       spectator.service
         .lookup(FilterAttributeType.StringMap)
-        .buildFilter(getTestFilterAttribute(FilterAttributeType.StringMap), FilterOperator.ContainsKey, 'myKey')
+        .buildFilter(getTestFilterAttribute(FilterAttributeType.StringMap), FilterOperator.ContainsKey, 'myKey'),
     ).toEqual({
       metadata: getTestFilterAttribute(FilterAttributeType.StringMap),
       field: getTestFilterAttribute(FilterAttributeType.StringMap).name,
       operator: FilterOperator.ContainsKey,
       value: 'myKey',
       userString: 'String Map Attribute CONTAINS_KEY myKey',
-      urlString: 'stringMapAttribute_ck_myKey'
+      urlString: 'stringMapAttribute_ck_myKey',
     });
 
     expect(
       spectator.service
         .lookup(FilterAttributeType.StringMap)
-        .buildFilter(getTestFilterAttribute(FilterAttributeType.StringMap), FilterOperator.Equals, 'myValue', 'myKey')
+        .buildFilter(getTestFilterAttribute(FilterAttributeType.StringMap), FilterOperator.Equals, 'myValue', 'myKey'),
     ).toEqual({
       metadata: getTestFilterAttribute(FilterAttributeType.StringMap),
       field: getTestFilterAttribute(FilterAttributeType.StringMap).name,
@@ -225,7 +225,7 @@ describe('Filter Builder Lookup service', () => {
       operator: FilterOperator.Equals,
       value: 'myValue',
       userString: 'String Map Attribute.myKey = myValue',
-      urlString: 'stringMapAttribute.myKey_eq_myValue'
+      urlString: 'stringMapAttribute.myKey_eq_myValue',
     });
   });
 });

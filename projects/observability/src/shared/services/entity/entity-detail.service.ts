@@ -14,7 +14,7 @@ import { GraphQlTimeRange } from '../../graphql/model/schema/timerange/graphql-t
 import { SpecificationBuilder } from '../../graphql/request/builders/specification/specification-builder';
 import {
   EntityGraphQlQueryHandlerService,
-  ENTITY_GQL_REQUEST
+  ENTITY_GQL_REQUEST,
 } from '../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 
 @Injectable()
@@ -28,12 +28,12 @@ export abstract class EntityDetailService<T extends Entity> implements OnDestroy
   public constructor(
     private readonly timeRangeService: TimeRangeService,
     route: ActivatedRoute,
-    graphQlQueryService: GraphQlRequestService
+    graphQlQueryService: GraphQlRequestService,
   ) {
     this.entityId$ = route.paramMap.pipe(
       map(paramMap => paramMap.get(this.getEntityIdParamName())!),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay(1),
     );
 
     this.entity$ = combineLatest([this.entityId$, this.timeRangeService.getTimeRangeAndChanges()]).pipe(
@@ -43,11 +43,11 @@ export abstract class EntityDetailService<T extends Entity> implements OnDestroy
           entityType: this.getEntityType(),
           id: entityId,
           properties: this.getAttributeSpecifications(),
-          timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime)
-        })
+          timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime),
+        }),
       ),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay(1),
     );
 
     this.entityFilter$ = this.entityId$.pipe(map(id => new GraphQlEntityFilter(id, this.getEntityType())));
@@ -80,7 +80,7 @@ export abstract class EntityDetailService<T extends Entity> implements OnDestroy
 
   protected getAttributeSpecifications(): Specification[] {
     return this.getAttributeKeys().map(attributeKey =>
-      this.specificationBuilder.attributeSpecificationForKey(attributeKey)
+      this.specificationBuilder.attributeSpecificationForKey(attributeKey),
     );
   }
 }

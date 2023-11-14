@@ -7,7 +7,7 @@ export class GraphQlIdFilter implements GraphQlFilter {
   public constructor(
     public readonly id: string,
     public readonly idScope: string,
-    public readonly operator: GraphQlOperatorType = GraphQlOperatorType.Equals
+    public readonly operator: GraphQlOperatorType = GraphQlOperatorType.Equals,
   ) {}
 
   public asArgumentObjects(): [GraphQlIdFilterArgument] {
@@ -16,8 +16,8 @@ export class GraphQlIdFilter implements GraphQlFilter {
         operator: new GraphQlEnumArgument(this.operator),
         value: this.id,
         type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-        idScope: this.idScope
-      }
+        idScope: this.idScope,
+      },
     ];
   }
 }

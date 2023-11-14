@@ -11,9 +11,9 @@ import { DividerWidgetModel } from './divider-widget.model';
     CommonModule,
     DashboardCoreModule.with({
       models: [DividerWidgetModel],
-      renderers: [DividerWidgetRendererComponent]
+      renderers: [DividerWidgetRendererComponent],
     }),
-    DividerModule
-  ]
+    DividerModule,
+  ],
 })
 export class DividerWidgetModule {}

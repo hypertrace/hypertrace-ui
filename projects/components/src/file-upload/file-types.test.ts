@@ -5,13 +5,13 @@ describe('FileTypes', () => {
     expect(FileTypeUtil.supportedFileExtensions([SupportedFileType.Json, SupportedFileType.Yaml])).toEqual([
       '.json',
       '.yaml',
-      '.yml'
+      '.yml',
     ]);
   });
 
   test('should return supported file extensions set correctly', () => {
     expect(FileTypeUtil.supportedFileExtensionsSet([SupportedFileType.Json, SupportedFileType.Yaml])).toEqual(
-      new Set(['.json', '.yaml', '.yml'])
+      new Set(['.json', '.yaml', '.yml']),
     );
   });
 
@@ -21,13 +21,13 @@ describe('FileTypes', () => {
       'application/x-yaml',
       'text/yaml',
       'text/x-yaml',
-      'application/yaml'
+      'application/yaml',
     ]);
   });
 
   test('should return supported mime types set correctly', () => {
     expect(FileTypeUtil.supportedFileMimeTypesSet([SupportedFileType.Json, SupportedFileType.Yaml])).toEqual(
-      new Set(['application/json', 'application/x-yaml', 'text/yaml', 'text/x-yaml', 'application/yaml'])
+      new Set(['application/json', 'application/x-yaml', 'text/yaml', 'text/x-yaml', 'application/yaml']),
     );
   });
 });

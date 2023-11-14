@@ -11,7 +11,7 @@ import {
   Output,
   QueryList,
   ViewChild,
-  ViewChildren
+  ViewChildren,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
@@ -30,8 +30,8 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: ComboBoxComponent
-    }
+      useExisting: ComboBoxComponent,
+    },
   ],
   template: `
     <ht-popover
@@ -131,7 +131,7 @@ import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from './combo-box-api';
         </div>
       </ht-popover-content>
     </ht-popover>
-  `
+  `,
 })
 export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChanges, OnDestroy, ControlValueAccessor {
   @Input()
@@ -210,7 +210,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
 
   public constructor(
     private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly scrollIntoViewService: DomElementScrollIntoViewService
+    private readonly scrollIntoViewService: DomElementScrollIntoViewService,
   ) {}
 
   public ngAfterViewInit(): void {
@@ -231,7 +231,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
     return {
       text: `${this.createOptionLabel} "${text}"`,
       tooltip: text,
-      icon: IconType.AddCircleOutline
+      icon: IconType.AddCircleOutline,
     };
   }
 
@@ -267,7 +267,7 @@ export class ComboBoxComponent<TValue = string> implements AfterViewInit, OnChan
       ? this.filteredOptions.findIndex(option => option.text === this.text)
       : Math.max(
           this.filteredOptions.findIndex(option => option.text === this.text),
-          0
+          0,
         );
   }
 

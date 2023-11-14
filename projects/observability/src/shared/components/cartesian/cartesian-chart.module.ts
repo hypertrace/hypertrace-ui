@@ -19,7 +19,7 @@ import { CartesianSummaryComponent } from './d3/legend/cartesian-summary.compone
     LayoutChangeModule,
     IntervalSelectModule,
     ChartTooltipModule,
-    FilterButtonWrapperModule
-  ]
+    FilterButtonWrapperModule,
+  ],
 })
 export class CartesianChartModule {}

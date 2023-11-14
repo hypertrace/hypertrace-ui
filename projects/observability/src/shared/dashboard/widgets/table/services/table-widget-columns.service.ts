@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import {
   AttributeMetadata,
   AttributeMetadataType,
-  toFilterAttributeType
+  toFilterAttributeType,
 } from '../../../../graphql/model/metadata/attribute-metadata';
 import { SpecificationBuilder } from '../../../../graphql/request/builders/specification/specification-builder';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
@@ -15,12 +15,12 @@ import { SpecificationBackedTableColumnDef } from '../table-widget-column.model'
 export class TableWidgetColumnsService {
   public constructor(
     private readonly metadataService: MetadataService,
-    private readonly filterBuilderLookupService: FilterBuilderLookupService
+    private readonly filterBuilderLookupService: FilterBuilderLookupService,
   ) {}
 
   public fetchColumn(
     scope: string,
-    existingColumns: SpecificationBackedTableColumnDef[]
+    existingColumns: SpecificationBackedTableColumnDef[],
   ): Observable<SpecificationBackedTableColumnDef[]> {
     return this.metadataService.getSelectionAttributes(scope).pipe(
       map(attributes => [
@@ -28,14 +28,14 @@ export class TableWidgetColumnsService {
         ...attributes
           .filter(attribute => !this.isExplicitlyDeclaredAttribute(attribute, existingColumns))
           .filter(attribute => !this.isAggregationOnlyAttribute(attribute))
-          .map(attribute => this.mapAttributeToColumnConfig(attribute))
-      ])
+          .map(attribute => this.mapAttributeToColumnConfig(attribute)),
+      ]),
     );
   }
 
   private isExplicitlyDeclaredAttribute(
     attribute: AttributeMetadata,
-    existingColumns: SpecificationBackedTableColumnDef[]
+    existingColumns: SpecificationBackedTableColumnDef[],
   ): boolean {
     return existingColumns.find(column => column.name === attribute.name) !== undefined;
   }
@@ -56,7 +56,7 @@ export class TableWidgetColumnsService {
       visible: false,
       editable: true,
       filterable: this.isFilterable(attribute.type),
-      specification: new SpecificationBuilder().attributeSpecificationForKey(attribute.name)
+      specification: new SpecificationBuilder().attributeSpecificationForKey(attribute.name),
     };
   }
 

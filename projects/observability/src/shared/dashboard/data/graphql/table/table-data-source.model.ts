@@ -16,7 +16,7 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
   @ModelProperty({
     key: 'limit',
     displayName: 'Query Limit',
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public limit?: number;
 
@@ -24,9 +24,9 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
     return observableOf({
       getData: request =>
         this.query(filters => this.buildGraphQlRequest(filters, request), this.buildGraphqlRequestOptions()).pipe(
-          map(response => this.buildTableResponse(response, request))
+          map(response => this.buildTableResponse(response, request)),
         ),
-      getScope: () => this.getScope()
+      getScope: () => this.getScope(),
     });
   }
 
@@ -38,12 +38,12 @@ export abstract class TableDataSourceModel extends GraphQlDataSourceModel<TableD
 
   protected abstract buildGraphQlRequest(
     inheritedFilters: GraphQlFilter[],
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
   ): unknown;
 
   protected abstract buildTableResponse(
     response: unknown,
-    request: TableDataRequest<SpecificationBackedTableColumnDef>
+    request: TableDataRequest<SpecificationBackedTableColumnDef>,
   ): TableDataResponse<TableRow>;
 
   protected toGraphQlFilters(tableFilters: TableFilter[] = []): GraphQlFilter[] {

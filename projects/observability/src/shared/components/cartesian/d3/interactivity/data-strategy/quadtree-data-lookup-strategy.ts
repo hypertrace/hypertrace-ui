@@ -2,7 +2,7 @@ import { quadtree, Quadtree } from 'd3-quadtree';
 import {
   MouseDataLookupStrategy,
   MouseLocationData,
-  RelativeMouseLocation
+  RelativeMouseLocation,
 } from '../../../../utils/mouse-tracking/mouse-tracking';
 import { AnyCartesianScale } from '../../scale/cartesian-scale-builder';
 
@@ -14,12 +14,12 @@ export class QuadtreeDataLookupStrategy<TData, TContext> implements MouseDataLoo
     data: TData[],
     private readonly xScale: AnyCartesianScale<TData>,
     private readonly yScale: AnyCartesianScale<TData>,
-    private readonly searchRadius?: number
+    private readonly searchRadius?: number,
   ) {
     const locationData = data.map(dataPoint => ({
       dataPoint: dataPoint,
       context: context,
-      location: this.dataToLocationCoordinates(dataPoint)
+      location: this.dataToLocationCoordinates(dataPoint),
     }));
 
     this.quadTree = quadtree<MouseLocationData<TData, TContext>>()
@@ -37,7 +37,7 @@ export class QuadtreeDataLookupStrategy<TData, TContext> implements MouseDataLoo
   private dataToLocationCoordinates(data: TData): RelativeMouseLocation {
     return {
       x: this.xScale.transformToTooltipAnchor(data),
-      y: this.yScale.transformToTooltipAnchor(data)
+      y: this.yScale.transformToTooltipAnchor(data),
     };
   }
 }

@@ -6,7 +6,7 @@ import {
   forceSimulation,
   forceX,
   forceY,
-  SimulationNodeDatum
+  SimulationNodeDatum,
 } from 'd3-force';
 import {
   RenderableTopology,
@@ -15,7 +15,7 @@ import {
   TopologyCoordinates,
   TopologyEdge,
   TopologyLayout,
-  TopologyNode
+  TopologyNode,
 } from '../../topology';
 import { CustomForceBuilder } from './custom-force-builder';
 
@@ -39,7 +39,7 @@ export class ForceLayout implements TopologyLayout {
         'collide',
         forceCollide<D3ProxyNode>()
           .radius(node => this.getCollisionRadiusForNode(node.sourceNode))
-          .strength(1)
+          .strength(1),
       )
       .force('link', forceLink(proxyEdges).distance(200))
       .force('edgeDirection', forceBuilder.buildEdgeDirectionalityForce(proxyEdges))
@@ -58,17 +58,17 @@ export class ForceLayout implements TopologyLayout {
 
   private getProxyNodes(
     nodes: RenderableTopologyNode[],
-    startingLocation: TopologyCoordinates
+    startingLocation: TopologyCoordinates,
   ): Map<RenderableTopologyNode, D3ProxyNode> {
     return new Map(
       nodes.map(topologyNode => {
         const d3Node: D3ProxyNode = {
           sourceNode: topologyNode,
-          ...startingLocation
+          ...startingLocation,
         };
 
         return [topologyNode, d3Node];
-      })
+      }),
     );
   }
 
@@ -84,11 +84,11 @@ export class ForceLayout implements TopologyLayout {
 
   private getProxyEdges(
     edges: RenderableTopologyEdge[],
-    nodeMap: Map<RenderableTopologyNode, D3ProxyNode>
+    nodeMap: Map<RenderableTopologyNode, D3ProxyNode>,
   ): D3ProxyEdge[] {
     return edges.map(edge => ({
       source: nodeMap.get(edge.source)!,
-      target: nodeMap.get(edge.target)!
+      target: nodeMap.get(edge.target)!,
     }));
   }
 }

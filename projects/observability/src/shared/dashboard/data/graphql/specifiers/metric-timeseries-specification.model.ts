@@ -10,7 +10,7 @@ import { MetricSpecificationModel } from './metric-specification.model';
 
 @Model({
   type: 'metric-timeseries',
-  displayName: 'Metric'
+  displayName: 'Metric',
 })
 export class MetricTimeseriesSpecificationModel
   extends MetricSpecificationModel<MetricTimeseriesSpecification>
@@ -18,7 +18,7 @@ export class MetricTimeseriesSpecificationModel
   @ModelProperty({
     key: 'interval-duration',
     displayName: 'Interval Duration',
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public intervalDuration?: number;
 
@@ -27,8 +27,8 @@ export class MetricTimeseriesSpecificationModel
     displayName: 'Interval Unit',
     type: {
       key: ENUM_TYPE.type,
-      values: [TimeUnit.Second, TimeUnit.Minute, TimeUnit.Hour, TimeUnit.Day]
-    } as EnumPropertyTypeInstance
+      values: [TimeUnit.Second, TimeUnit.Minute, TimeUnit.Hour, TimeUnit.Day],
+    } as EnumPropertyTypeInstance,
   })
   public timeUnit?: TimeUnit;
 
@@ -39,7 +39,7 @@ export class MetricTimeseriesSpecificationModel
     return new ObservabilitySpecificationBuilder().metricTimeseriesSpec(
       this.metric,
       this.aggregation,
-      this.intervalDurationService.getAutoDuration()
+      this.intervalDurationService.getAutoDuration(),
     );
   }
 
@@ -52,7 +52,7 @@ export class MetricTimeseriesSpecificationModel
   }
 
   public extractFromServerData(
-    resultContainer: Dictionary<GraphQlMetricTimeseriesContainer>
+    resultContainer: Dictionary<GraphQlMetricTimeseriesContainer>,
   ): MetricTimeseriesInterval[] {
     return this.innerSpec.extractFromServerData(resultContainer);
   }

@@ -7,9 +7,9 @@ describe('Telemetry Global Error Handler ', () => {
     service: TelemetryGlobalErrorHandler,
     providers: [
       mockProvider(UserTelemetryImplService, {
-        trackErrorEvent: jest.fn()
-      })
-    ]
+        trackErrorEvent: jest.fn(),
+      }),
+    ],
   });
 
   test('should delegate to telemetry provider after registration', () => {
@@ -25,8 +25,8 @@ describe('Telemetry Global Error Handler ', () => {
       expect.objectContaining({
         message: 'Test error',
         name: 'Error',
-        isError: true
-      })
+        isError: true,
+      }),
     );
   });
 });

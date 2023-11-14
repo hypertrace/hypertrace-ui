@@ -5,7 +5,7 @@ import {
   RelativeTimeRange,
   TimeDuration,
   TimeRangeService,
-  TimeUnit
+  TimeUnit,
 } from '@hypertrace/common';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
@@ -19,7 +19,7 @@ import { TraceDetailService } from './trace-detail.service';
 
 describe('TraceDetailService', () => {
   const createService = createServiceFactory({
-    service: TraceDetailService
+    service: TraceDetailService,
   });
 
   test('should fetch and map trace details', () => {
@@ -33,13 +33,13 @@ describe('TraceDetailService', () => {
               }
 
               return 'test-id';
-            }
-          })
+            },
+          }),
         }),
         mockProvider(TimeRangeService, {
           getTimeRangeAndChanges: jest
             .fn()
-            .mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))))
+            .mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)))),
         }),
         mockProvider(GraphQlRequestService, {
           query: jest.fn().mockReturnValue(
@@ -52,11 +52,11 @@ describe('TraceDetailService', () => {
                 {
                   [spanIdKey]: 'test-id',
                   serviceName: 'test service',
-                  displaySpanName: 'egress'
-                }
-              ]
-            })
-          )
+                  displaySpanName: 'egress',
+                },
+              ],
+            }),
+          ),
         }),
         mockProvider(MetadataService, {
           getAttribute: (scope: string, attributeKey: string) =>
@@ -68,10 +68,10 @@ describe('TraceDetailService', () => {
               scope: scope,
               onlySupportsAggregation: false,
               onlySupportsGrouping: false,
-              allowedAggregations: []
-            })
-        })
-      ]
+              allowedAggregations: [],
+            }),
+        }),
+      ],
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -81,11 +81,11 @@ describe('TraceDetailService', () => {
           entrySpanId: 'test-id',
           startTime: 1608151401295,
           timeString: `${new DisplayDatePipe().transform(1576364117792, {
-            mode: DateFormatMode.DateAndTimeWithSeconds
+            mode: DateFormatMode.DateAndTimeWithSeconds,
           })} for 20 ms`,
           titleString: 'test service egress',
-          type: TRACE_SCOPE
-        }
+          type: TRACE_SCOPE,
+        },
       });
     });
   });
@@ -101,18 +101,18 @@ describe('TraceDetailService', () => {
               }
 
               return 'test-id';
-            }
-          })
+            },
+          }),
         }),
         mockProvider(GraphQlRequestService, {
-          query: jest.fn().mockReturnValue(of('result'))
-        })
-      ]
+          query: jest.fn().mockReturnValue(of('result')),
+        }),
+      ],
     });
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.service.fetchExportSpans()).toBe('(x|)', {
-        x: 'result'
+        x: 'result',
       });
     });
   });
@@ -128,8 +128,8 @@ describe('TraceDetailService', () => {
               }
 
               return 'test-id';
-            }
-          })
+            },
+          }),
         }),
         mockProvider(GraphQlRequestService, {
           query: jest.fn().mockReturnValue(
@@ -141,20 +141,20 @@ describe('TraceDetailService', () => {
                       {
                         timestamp: 'time',
                         attributes: undefined,
-                        summary: 'summary'
-                      }
-                    ]
+                        summary: 'summary',
+                      },
+                    ],
                   },
                   serviceName: 'service',
                   displaySpanName: 'span',
                   protocolName: 'protocol',
-                  startTime: 1608151401295
-                }
-              ]
-            })
-          )
-        })
-      ]
+                  startTime: 1608151401295,
+                },
+              ],
+            }),
+          ),
+        }),
+      ],
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -167,11 +167,11 @@ describe('TraceDetailService', () => {
             $$spanName: {
               serviceName: 'service',
               protocolName: 'protocol',
-              apiName: 'span'
+              apiName: 'span',
             },
-            spanStartTime: 1608151401295
-          }
-        ]
+            spanStartTime: 1608151401295,
+          },
+        ],
       });
     });
   });

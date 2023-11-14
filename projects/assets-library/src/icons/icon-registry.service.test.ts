@@ -8,22 +8,22 @@ import { IconType } from './icon-type';
 
 describe('Icon Registry Service', () => {
   const buildService = createServiceFactory({
-    service: IconRegistryService
+    service: IconRegistryService,
   });
   test('registered injected svg icons', () => {
     const spectator = buildService({
-      providers: [mockProvider(MatIconRegistry)]
+      providers: [mockProvider(MatIconRegistry)],
     });
 
     spectator.service.registerSvgIcon({
       key: IconType.Hypertrace,
-      url: 'test-url'
+      url: 'test-url',
     });
 
     expect(spectator.inject(MatIconRegistry).addSvgIcon).toHaveBeenCalledTimes(1);
     expect(spectator.inject(MatIconRegistry).addSvgIcon).toHaveBeenCalledWith(
       'hypertrace',
-      spectator.inject(DomSanitizer).bypassSecurityTrustResourceUrl('test-url')
+      spectator.inject(DomSanitizer).bypassSecurityTrustResourceUrl('test-url'),
     );
     expect(spectator.service.getRegisteredIcons()).toMatchObject([IconType.Hypertrace]);
   });
@@ -35,14 +35,14 @@ describe('Icon Registry Service', () => {
       iconRenderType: 'ligature',
       ligatureText: IconType.Debug,
       fontSet: 'material-icons-outlined',
-      label: 'test-label'
+      label: 'test-label',
     });
 
     expect(spectator.service.getIconRenderInfo(IconType.Debug)).toEqual({
       iconRenderType: 'ligature',
       ligatureText: IconType.Debug,
       fontSet: 'material-icons-outlined',
-      label: 'bug_report'
+      label: 'bug_report',
     });
   });
 
@@ -50,9 +50,9 @@ describe('Icon Registry Service', () => {
     const spectator = buildService({
       providers: [
         mockProvider(MatIconRegistry, {
-          getNamedSvgIcon: jest.fn().mockReturnValue(of('fake-svg'))
-        })
-      ]
+          getNamedSvgIcon: jest.fn().mockReturnValue(of('fake-svg')),
+        }),
+      ],
     });
 
     const svgRenderInfo = spectator.service.getIconRenderInfo(IconType.Hypertrace, 'test-label');
@@ -60,13 +60,13 @@ describe('Icon Registry Service', () => {
       iconRenderType: 'svg',
       label: 'test-label',
       svgIcon: 'hypertrace',
-      getSvgElement: expect.any(Function)
+      getSvgElement: expect.any(Function),
     });
 
     if (svgRenderInfo.iconRenderType === 'svg') {
       runFakeRxjs(({ expectObservable }) => {
         expectObservable(svgRenderInfo.getSvgElement()).toBe('(x|)', {
-          x: 'fake-svg'
+          x: 'fake-svg',
         });
       });
     }

@@ -9,21 +9,21 @@ describe('String array Display component', () => {
     component: StringArrayDisplayComponent,
     declarations: [MockComponent(XMoreComponent)],
     imports: [FormattingModule],
-    shallow: true
+    shallow: true,
   });
 
   test('should render an array with one item as expected', () => {
     const spectator = buildHost(`<ht-string-array-display [values]="values"></ht-string-array-display>`, {
       hostProps: {
-        values: ['foo 1', 'bar 1', 'foo 2', 'bar 2']
-      }
+        values: ['foo 1', 'bar 1', 'foo 2', 'bar 2'],
+      },
     });
 
     expect(spectator.query('.first-item')).toHaveText('foo 1');
     expect(spectator.query(XMoreComponent)?.count).toBe(3);
 
     spectator.setHostInput({
-      values: undefined
+      values: undefined,
     });
 
     expect(spectator.query('.first-item')).not.toExist();

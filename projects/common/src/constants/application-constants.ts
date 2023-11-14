@@ -1,3 +1,3 @@
 export const enum ApplicationFeature {
-  TriggerBasedSearch = 'ui.trigger-based-search'
+  TriggerBasedSearch = 'ui.trigger-based-search',
 }
