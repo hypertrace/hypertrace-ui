@@ -87,10 +87,7 @@ import { CsvFileName } from '../download-file/service/file-download.service';
         #cdkTable
         [multiTemplateDataRows]="this.isDetailType()"
         [dataSource]="this.dataSource"
-        [ngClass]="[
-          this.display,
-          !this.showFloatingPaginator ? 'table' : ''
-        ]"
+        [ngClass]="[this.display, !this.showFloatingPaginator ? 'table' : '']"
         cdkDropList
         cdkDropListOrientation="horizontal"
         (cdkDropListDropped)="this.dropList($event)"
