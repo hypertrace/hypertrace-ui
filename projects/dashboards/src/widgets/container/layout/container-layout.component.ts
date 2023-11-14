@@ -17,12 +17,12 @@ export const CONTAINER_LAYOUT = new InjectionToken<ContainerLayoutData>('CONTAIN
         <ng-container [hdaDashboardModel]="child.model"> </ng-container>
       </div>
     </div>
-  `
+  `,
 })
 export class ContainerLayoutComponent {
   public constructor(
     @Inject(CONTAINER_LAYOUT) public readonly layout: ContainerLayoutData,
-    changeDetector: ChangeDetectorRef
+    changeDetector: ChangeDetectorRef,
   ) {
     setTimeout(() => changeDetector.markForCheck());
   }

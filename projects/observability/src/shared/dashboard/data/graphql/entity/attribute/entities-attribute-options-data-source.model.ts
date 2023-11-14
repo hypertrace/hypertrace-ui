@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { EntitiesAttributeDataSourceModel } from './entities-attribute-data-source.model';
 
 @Model({
-  type: 'entities-attribute-options-data-source'
+  type: 'entities-attribute-options-data-source',
 })
 export class EntitiesAttributeOptionsDataSourceModel extends EntitiesAttributeDataSourceModel {
   public getData(): Observable<TableSelectControlOption[]> {
@@ -17,10 +17,10 @@ export class EntitiesAttributeOptionsDataSourceModel extends EntitiesAttributeDa
           metaValue: {
             field: this.specification.name,
             operator: FilterOperator.Equals,
-            value: value as FilterValue
-          }
-        }))
-      )
+            value: value as FilterValue,
+          },
+        })),
+      ),
     );
   }
 }

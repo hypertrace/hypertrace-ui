@@ -22,7 +22,7 @@ import { BackendTraceListModule } from './traces/backend-trace-list.module';
     BackendOverviewModule,
     BackendTraceListModule,
     BackendMetricsModule,
-    PageHeaderModule
-  ]
+    PageHeaderModule,
+  ],
 })
 export class BackendDetailModule {}

@@ -8,7 +8,7 @@ describe('Info Icon Component', () => {
   const createComponent = createComponentFactory({
     component: InfoIconComponent,
     declarations: [MockComponent(IconComponent)],
-    shallow: true
+    shallow: true,
   });
 
   test('should render everything correctly', () => {
@@ -17,7 +17,7 @@ describe('Info Icon Component', () => {
 
     spectator.setInput({
       info: 'random info',
-      iconSize: IconSize.Large
+      iconSize: IconSize.Large,
     });
     expect(spectator.query(IconComponent)).toExist();
     expect(spectator.query(IconComponent)?.size).toBe(IconSize.Large);

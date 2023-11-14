@@ -8,6 +8,6 @@ import { FormFieldComponent } from './form-field.component';
 @NgModule({
   imports: [CommonModule, LabelModule, IconModule, TooltipModule],
   declarations: [FormFieldComponent],
-  exports: [FormFieldComponent]
+  exports: [FormFieldComponent],
 })
 export class FormFieldModule {}

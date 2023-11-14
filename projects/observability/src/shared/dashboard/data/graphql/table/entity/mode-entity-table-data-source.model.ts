@@ -7,24 +7,24 @@ import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/tab
 import { TableDataSourceModel } from '../table-data-source.model';
 
 @Model({
-  type: 'mode-entity-table-data-source'
+  type: 'mode-entity-table-data-source',
 })
 export class ModeEntityTableDataSourceModel extends TableDataSourceModel {
   @ModelProperty({
     key: 'flat',
-    type: ModelTemplatePropertyType.TYPE
+    type: ModelTemplatePropertyType.TYPE,
   })
   public flat!: ModelJson;
 
   @ModelProperty({
     key: 'tree',
-    type: ModelTemplatePropertyType.TYPE
+    type: ModelTemplatePropertyType.TYPE,
   })
   public tree!: ModelJson;
 
   @ModelProperty({
     key: 'detail',
-    type: ModelTemplatePropertyType.TYPE
+    type: ModelTemplatePropertyType.TYPE,
   })
   public detail!: ModelJson;
 
@@ -44,7 +44,7 @@ export class ModeEntityTableDataSourceModel extends TableDataSourceModel {
   public buildGraphQlRequest(
     inheritedFilters: GraphQlFilter[],
     request: TableDataRequest<SpecificationBackedTableColumnDef>,
-    mode: TableMode
+    mode: TableMode,
   ): unknown {
     return this.getChildModel(mode).buildGraphQlRequest(inheritedFilters, request);
   }
@@ -52,7 +52,7 @@ export class ModeEntityTableDataSourceModel extends TableDataSourceModel {
   public buildTableResponse(
     response: unknown,
     request: TableDataRequest<SpecificationBackedTableColumnDef>,
-    mode: TableMode
+    mode: TableMode,
   ): TableDataResponse<TableRow> {
     return this.getChildModel(mode).buildTableResponse(response, request);
   }

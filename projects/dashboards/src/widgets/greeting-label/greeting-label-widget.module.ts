@@ -11,9 +11,9 @@ import { GreetingLabelWidgetModel } from './greeting-label-widget.model';
     CommonModule,
     DashboardCoreModule.with({
       models: [GreetingLabelWidgetModel],
-      renderers: [GreetingLabelWidgetRendererComponent]
+      renderers: [GreetingLabelWidgetRendererComponent],
     }),
-    GreetingLabelModule
-  ]
+    GreetingLabelModule,
+  ],
 })
 export class GreetingLabelWidgetModule {}

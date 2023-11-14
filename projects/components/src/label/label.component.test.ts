@@ -10,14 +10,14 @@ describe('Label component', () => {
     declareComponent: false,
     component: LabelComponent,
     imports: [LabelModule],
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService)],
   });
 
   test('should show label in DOM when provided', () => {
     spectator = createHost(`<ht-label [label]="label"></ht-label>`, {
       hostProps: {
-        label: 'test'
-      }
+        label: 'test',
+      },
     });
     expect(spectator.element).toHaveText('test');
     expect(spectator.query('.no-label')).not.toExist();
@@ -26,8 +26,8 @@ describe('Label component', () => {
   test('should keep label in DOM and apply "no-label" class when empty string', () => {
     spectator = createHost(`<ht-label [label]="label"></ht-label>`, {
       hostProps: {
-        label: ''
-      }
+        label: '',
+      },
     });
     spectator.component.label = '';
     expect(spectator.element).toHaveText('no-label');

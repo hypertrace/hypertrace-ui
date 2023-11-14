@@ -10,7 +10,7 @@ describe('Span List Page Component', () => {
     declareComponent: false,
     component: SpanListPageComponent,
     imports: [SpanListPageModule, IconLibraryTestingModule],
-    providers: mockDashboardProviders
+    providers: mockDashboardProviders,
   });
 
   test('should create a valid dashboard', () => {

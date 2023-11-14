@@ -14,30 +14,30 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
         {
           type: 'dimension-model',
           dimension: 1,
-          unit: 'FR'
-        }
+          unit: 'FR',
+        },
       ],
       'row-dimensions': [
         {
           type: 'dimension-model',
           dimension: 32,
-          unit: 'PX'
+          unit: 'PX',
         },
         {
           type: 'dimension-model',
           dimension: 320,
-          unit: 'PX'
+          unit: 'PX',
         },
         {
           type: 'dimension-model',
           dimension: 32,
-          unit: 'PX'
+          unit: 'PX',
         },
         {
           type: 'dimension-model',
           dimension: 320,
-          unit: 'PX'
-        }
+          unit: 'PX',
+        },
       ],
       'cell-spans': [
         {
@@ -45,58 +45,58 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
           'col-start': 0,
           'col-end': 1,
           'row-start': 0,
-          'row-end': 1
+          'row-end': 1,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 1,
           'row-start': 1,
-          'row-end': 2
+          'row-end': 2,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 1,
           'row-start': 2,
-          'row-end': 3
+          'row-end': 3,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 1,
           'row-start': 3,
-          'row-end': 4
+          'row-end': 4,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 1,
           'row-start': 4,
-          'row-end': 5
+          'row-end': 5,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 1,
           'row-start': 5,
-          'row-end': 6
+          'row-end': 6,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 1,
           'row-start': 6,
-          'row-end': 7
+          'row-end': 7,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 1,
           'row-start': 7,
-          'row-end': 8
-        }
-      ]
+          'row-end': 8,
+        },
+      ],
     },
     children: [
       {
@@ -108,21 +108,21 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
             {
               type: 'dimension-model',
               dimension: 1,
-              unit: 'FR'
+              unit: 'FR',
             },
             {
               type: 'dimension-model',
               dimension: 0.3,
               unit: 'FR',
-              'min-dimension': 300
-            }
+              'min-dimension': 300,
+            },
           ],
           'row-dimensions': [
             {
               type: 'dimension-model',
               dimension: 1,
-              unit: 'FR'
-            }
+              unit: 'FR',
+            },
           ],
           'cell-spans': [
             {
@@ -130,28 +130,28 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
               'col-start': 0,
               'col-end': 1,
               'row-start': 0,
-              'row-end': 1
+              'row-end': 1,
             },
             {
               type: 'cell-span-model',
               'col-start': 1,
               'col-end': 2,
               'row-start': 0,
-              'row-end': 1
-            }
-          ]
+              'row-end': 1,
+            },
+          ],
         },
         children: [
           {
             type: 'text-widget',
             text: 'Latency',
-            'secondary-text': 'in ms'
+            'secondary-text': 'in ms',
           },
           {
             type: 'text-widget',
-            text: 'Errors'
-          }
-        ]
+            text: 'Errors',
+          },
+        ],
       },
       {
         type: 'container-widget',
@@ -162,21 +162,21 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
             {
               type: 'dimension-model',
               dimension: 1,
-              unit: 'FR'
+              unit: 'FR',
             },
             {
               type: 'dimension-model',
               dimension: 0.3,
               unit: 'FR',
-              'min-dimension': 300
-            }
+              'min-dimension': 300,
+            },
           ],
           'row-dimensions': [
             {
               type: 'dimension-model',
               dimension: 1,
-              unit: 'FR'
-            }
+              unit: 'FR',
+            },
           ],
           'cell-spans': [
             {
@@ -184,16 +184,16 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
               'col-start': 0,
               'col-end': 1,
               'row-start': 0,
-              'row-end': 1
+              'row-end': 1,
             },
             {
               type: 'cell-span-model',
               'col-start': 1,
               'col-end': 2,
               'row-start': 0,
-              'row-end': 1
-            }
-          ]
+              'row-end': 1,
+            },
+          ],
         },
         children: [
           {
@@ -205,7 +205,7 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
             'y-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': true,
-              'min-upper-limit': 25
+              'min-upper-limit': 25,
             },
             series: [
               {
@@ -217,9 +217,9 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P50
-                  }
-                }
+                    aggregation: MetricAggregationType.P50,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -230,9 +230,9 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P95
-                  }
-                }
+                    aggregation: MetricAggregationType.P95,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -243,9 +243,9 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P99
-                  }
-                }
+                    aggregation: MetricAggregationType.P99,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -256,14 +256,14 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.Average
-                  }
-                }
-              }
+                    aggregation: MetricAggregationType.Average,
+                  },
+                },
+              },
             ],
             'selection-handler': {
-              type: 'cartesian-explorer-selection-handler'
-            }
+              type: 'cartesian-explorer-selection-handler',
+            },
           },
           {
             type: 'container-widget',
@@ -274,20 +274,20 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                 {
                   type: 'dimension-model',
                   dimension: 1,
-                  unit: 'FR'
-                }
+                  unit: 'FR',
+                },
               ],
               'row-dimensions': [
                 {
                   type: 'dimension-model',
                   dimension: 1,
-                  unit: 'FR'
+                  unit: 'FR',
                 },
                 {
                   type: 'dimension-model',
                   dimension: 1,
-                  unit: 'FR'
-                }
+                  unit: 'FR',
+                },
               ],
               'cell-spans': [
                 {
@@ -295,16 +295,16 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                   'col-start': 0,
                   'col-end': 1,
                   'row-start': 0,
-                  'row-end': 1
+                  'row-end': 1,
                 },
                 {
                   type: 'cell-span-model',
                   'col-start': 0,
                   'col-end': 1,
                   'row-start': 1,
-                  'row-end': 2
-                }
-              ]
+                  'row-end': 2,
+                },
+              ],
             },
             children: [
               {
@@ -320,14 +320,14 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                     color: '#de3618',
                     'visualization-type': 'area',
                     data: {
-                      type: 'entity-error-percentage-timeseries-data-source'
-                    }
-                  }
+                      type: 'entity-error-percentage-timeseries-data-source',
+                    },
+                  },
                 ],
                 'selection-handler': {
                   type: 'cartesian-explorer-selection-handler',
-                  'show-context-menu': true
-                }
+                  'show-context-menu': true,
+                },
               },
               {
                 type: 'cartesian-widget',
@@ -346,23 +346,23 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
                       metric: {
                         type: 'metric-timeseries',
                         metric: 'errorCount',
-                        aggregation: MetricAggregationType.AvgrateSecond
-                      }
-                    }
-                  }
+                        aggregation: MetricAggregationType.AvgrateSecond,
+                      },
+                    },
+                  },
                 ],
                 'selection-handler': {
                   type: 'cartesian-explorer-selection-handler',
-                  'show-context-menu': true
-                }
-              }
-            ]
-          }
-        ]
+                  'show-context-menu': true,
+                },
+              },
+            ],
+          },
+        ],
       },
       {
         type: 'text-widget',
-        text: 'Calls'
+        text: 'Calls',
       },
       {
         type: 'cartesian-widget',
@@ -372,7 +372,7 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
         'y-axis': {
           type: 'cartesian-axis',
           'show-grid-lines': true,
-          'min-upper-limit': 25
+          'min-upper-limit': 25,
         },
         series: [
           {
@@ -385,16 +385,16 @@ export const backendMetricsDashboard: DashboardDefaultConfiguration = {
               metric: {
                 type: 'metric-timeseries',
                 metric: 'numCalls',
-                aggregation: MetricAggregationType.Sum
-              }
-            }
-          }
+                aggregation: MetricAggregationType.Sum,
+              },
+            },
+          },
         ],
         'selection-handler': {
           type: 'cartesian-explorer-selection-handler',
-          'show-context-menu': true
-        }
-      }
-    ]
-  }
+          'show-context-menu': true,
+        },
+      },
+    ],
+  },
 };

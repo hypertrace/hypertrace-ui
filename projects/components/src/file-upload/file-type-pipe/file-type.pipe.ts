@@ -3,7 +3,7 @@ import { isNil } from 'lodash-es';
 import { SupportedFileType, SUPPORTED_FILE_TYPE_METADATA_MAP } from '../file-types';
 
 @Pipe({
-  name: 'htFilePipe'
+  name: 'htFilePipe',
 })
 export class FileTypePipe implements PipeTransform {
   public transform(value: SupportedFileType | SupportedFileType[]): string {

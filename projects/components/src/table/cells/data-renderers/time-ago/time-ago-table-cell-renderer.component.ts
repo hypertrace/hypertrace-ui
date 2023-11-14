@@ -6,7 +6,7 @@ import {
   TABLE_COLUMN_CONFIG,
   TABLE_COLUMN_INDEX,
   TABLE_DATA_PARSER,
-  TABLE_ROW_DATA
+  TABLE_ROW_DATA,
 } from '../../table-cell-injection';
 import { TableCellParserBase } from '../../table-cell-parser-base';
 import { TableCellRenderer } from '../../table-cell-renderer';
@@ -23,16 +23,16 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
     <div class="cell-value" [htTooltip]="this.value | htDisplayDate: this.dateFormat">
       {{ this.value | htDisplayTimeAgo }}
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: CoreTableCellRendererType.TimeAgo,
   alignment: TableCellAlignmentType.Right,
-  parser: CoreTableCellParserType.Timestamp
+  parser: CoreTableCellParserType.Timestamp,
 })
 export class TimeAgoTableCellRendererComponent extends TableCellRendererBase<Date | number> {
   public readonly dateFormat: DateFormatOptions = {
-    mode: DateFormatMode.DateAndTimeWithSeconds
+    mode: DateFormatMode.DateAndTimeWithSeconds,
   };
 
   // Extending constructor required with formatter declaration above
@@ -41,7 +41,7 @@ export class TimeAgoTableCellRendererComponent extends TableCellRendererBase<Dat
     @Inject(TABLE_COLUMN_INDEX) index: number,
     @Inject(TABLE_DATA_PARSER) parser: TableCellParserBase<CellData, CellData, unknown>,
     @Inject(TABLE_CELL_DATA) cellData: Date | number,
-    @Inject(TABLE_ROW_DATA) rowData: TableRow
+    @Inject(TABLE_ROW_DATA) rowData: TableRow,
   ) {
     super(columnConfig, index, parser, cellData, rowData);
   }

@@ -12,7 +12,7 @@ export abstract class BaseModel {
   @ModelProperty({
     key: 'id',
     displayName: 'Model ID',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public id?: string;
 

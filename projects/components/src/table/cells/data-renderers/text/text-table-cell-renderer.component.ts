@@ -17,11 +17,11 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
     >
       {{ this.value | htDisplayString }}
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: CoreTableCellRendererType.Text,
   alignment: TableCellAlignmentType.Left,
-  parser: CoreTableCellParserType.String
+  parser: CoreTableCellParserType.String,
 })
 export class TextTableCellRendererComponent extends TableCellRendererBase<string> {}

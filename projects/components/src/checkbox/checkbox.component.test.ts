@@ -12,7 +12,7 @@ describe('Checkbox component', () => {
     component: CheckboxComponent,
     imports: [CheckboxModule, RouterTestingModule, ReactiveFormsModule],
     providers: [],
-    declareComponent: false
+    declareComponent: false,
   });
 
   test('should apply disabled attribute when disabled', () => {
@@ -22,9 +22,9 @@ describe('Checkbox component', () => {
       {
         hostProps: {
           label: 'TEST',
-          disabled: true
-        }
-      }
+          disabled: true,
+        },
+      },
     );
 
     const selected: Element | null = spectator.query('mat-checkbox');
@@ -42,9 +42,9 @@ describe('Checkbox component', () => {
           label: 'TEST',
           checked: false,
           disabled: false,
-          onCheckboxChange: checkboxChangeSpy
-        }
-      }
+          onCheckboxChange: checkboxChangeSpy,
+        },
+      },
     );
 
     spectator.tick();
@@ -69,9 +69,9 @@ describe('Checkbox component', () => {
     </ht-checkbox>`,
       {
         hostProps: {
-          formControl: formControl
-        }
-      }
+          formControl: formControl,
+        },
+      },
     );
     expect(spectator.component.isChecked).toBe(false);
 

@@ -4,7 +4,7 @@ import { spanIdKey } from '../../../../graphql/model/schema/span';
 import { traceIdKey, traceTypeKey, TRACE_SCOPE } from '../../../../graphql/model/schema/trace';
 import {
   TraceGraphQlQueryHandlerService,
-  TRACE_GQL_REQUEST
+  TRACE_GQL_REQUEST,
 } from '../../../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
 import { ObservedGraphQlRequest } from '../../../data/graphql/graphql-query-event.service';
 import { ApiTraceDetailDataSourceModel } from './api-trace-detail-data-source.model';
@@ -16,12 +16,12 @@ describe('API Trace detail data source model', () => {
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     model = new ApiTraceDetailDataSourceModel();
     model.trace = {
       [traceIdKey]: 'test',
-      [traceTypeKey]: TRACE_SCOPE
+      [traceTypeKey]: TRACE_SCOPE,
     };
     model.api = mockApi as ModelApi;
     model.query$.subscribe((query: ObservedGraphQlRequest<TraceGraphQlQueryHandlerService>) => {
@@ -40,9 +40,9 @@ describe('API Trace detail data source model', () => {
           spans: [
             {
               test: 'test',
-              [spanIdKey]: 'test'
-            }
-          ]
+              [spanIdKey]: 'test',
+            },
+          ],
         });
 
         responseObserver.complete();
@@ -57,9 +57,9 @@ describe('API Trace detail data source model', () => {
           spans: [
             {
               test: 'test',
-              [spanIdKey]: 'test'
-            }
-          ]
+              [spanIdKey]: 'test',
+            },
+          ],
         });
 
         responseObserver.complete();
@@ -70,7 +70,7 @@ describe('API Trace detail data source model', () => {
   test('builds expected request for API_TRACE', () => {
     model.trace = {
       [traceIdKey]: 'test',
-      [traceTypeKey]: ObservabilityTraceType.Api
+      [traceTypeKey]: ObservabilityTraceType.Api,
     };
     const data$ = model.getData();
     data$.subscribe();
@@ -85,9 +85,9 @@ describe('API Trace detail data source model', () => {
           expect.objectContaining({ name: 'tags' }),
           expect.objectContaining({ name: 'traceId' }),
           expect.objectContaining({ name: 'statusCode' }),
-          expect.objectContaining({ name: 'apiCalleeNameCount' })
-        ])
-      })
+          expect.objectContaining({ name: 'apiCalleeNameCount' }),
+        ]),
+      }),
     );
   });
 
@@ -104,9 +104,9 @@ describe('API Trace detail data source model', () => {
         traceProperties: expect.arrayContaining([
           expect.objectContaining({ name: 'tags' }),
           expect.objectContaining({ name: 'traceId' }),
-          expect.objectContaining({ name: 'statusCode' })
-        ])
-      })
+          expect.objectContaining({ name: 'statusCode' }),
+        ]),
+      }),
     );
   });
 
@@ -124,9 +124,9 @@ describe('API Trace detail data source model', () => {
         traceProperties: expect.arrayContaining([
           expect.objectContaining({ name: 'tags' }),
           expect.objectContaining({ name: 'traceId' }),
-          expect.objectContaining({ name: 'statusCode' })
-        ])
-      })
+          expect.objectContaining({ name: 'statusCode' }),
+        ]),
+      }),
     );
   });
 });

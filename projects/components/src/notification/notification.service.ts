@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   MatLegacySnackBar as MatSnackBar,
   MatLegacySnackBarConfig as MatSnackBarConfig,
-  MatLegacySnackBarRef as MatSnackBarRef
+  MatLegacySnackBarRef as MatSnackBarRef,
 } from '@angular/material/legacy-snack-bar';
 import { EMPTY, Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -15,7 +15,7 @@ export class NotificationService {
     horizontalPosition: 'center',
     verticalPosition: 'top',
     politeness: 'polite',
-    duration: 5000 // Auto dismiss duration. 5 seconds in ms
+    duration: 5000, // Auto dismiss duration. 5 seconds in ms
   };
 
   private snackbarRef?: MatSnackBarRef<unknown>;
@@ -33,8 +33,8 @@ export class NotificationService {
       data: {
         message: message,
         mode: NotificationMode.Success,
-        closedObserver: this.closedObserver$
-      }
+        closedObserver: this.closedObserver$,
+      },
     });
   }
 
@@ -43,7 +43,7 @@ export class NotificationService {
       ...this.snackBarDefaultConfig,
       politeness: 'assertive', // Set politeness level for errors to assertive
       duration: 0, // Keep the notification open indefinitely in case of error
-      data: { message: message, mode: NotificationMode.Failure, closedObserver: this.closedObserver$ }
+      data: { message: message, mode: NotificationMode.Failure, closedObserver: this.closedObserver$ },
     });
 
     return EMPTY;
@@ -53,14 +53,14 @@ export class NotificationService {
     this.snackbarRef = this.snackbar.openFromComponent(NotificationComponent, {
       ...this.snackBarDefaultConfig,
       ...configOverride,
-      data: { message: message, mode: NotificationMode.Info, closedObserver: this.closedObserver$ }
+      data: { message: message, mode: NotificationMode.Info, closedObserver: this.closedObserver$ },
     });
   }
 
   public wrapWithNotification<T>(
     source: Observable<T>,
     successMessage: NotificationContent,
-    failureMessage: NotificationContent
+    failureMessage: NotificationContent,
   ): Observable<T> {
     let emitted = false;
 
@@ -68,14 +68,14 @@ export class NotificationService {
       tap(
         () => (emitted = true),
         () => this.createFailureToast(failureMessage),
-        () => emitted && this.createSuccessToast(successMessage)
-      )
+        () => emitted && this.createSuccessToast(successMessage),
+      ),
     );
   }
 
   public withNotification<T>(
     successMessage: NotificationContent,
-    failureMessage: NotificationContent
+    failureMessage: NotificationContent,
   ): (source: Observable<T>) => Observable<T> {
     return (source: Observable<T>) => this.wrapWithNotification(source, successMessage, failureMessage);
   }

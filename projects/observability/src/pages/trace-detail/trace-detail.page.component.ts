@@ -72,7 +72,7 @@ import { TraceDetails, TraceDetailService } from './trace-detail.service';
         <router-outlet></router-outlet>
       </div>
     </div>
-  `
+  `,
 })
 export class TraceDetailPageComponent {
   public static readonly TRACE_ID_PARAM_NAME: string = 'id';
@@ -84,7 +84,7 @@ export class TraceDetailPageComponent {
   public constructor(
     private readonly navigationService: NavigationService,
     private readonly traceDetailService: TraceDetailService,
-    private readonly explorerService: ExplorerService
+    private readonly explorerService: ExplorerService,
   ) {
     this.traceDetails$ = this.traceDetailService.fetchTraceDetails();
     this.exportSpans$ = this.traceDetailService.fetchExportSpans();
@@ -93,7 +93,7 @@ export class TraceDetailPageComponent {
 
   public getDownloadTraceDetailsJsonMetadata = (traceId: string): DownloadFileMetadata => ({
     dataSource: this.exportSpans$,
-    fileName: `${traceId}.json`
+    fileName: `${traceId}.json`,
   });
 
   public onClickBack(): void {
@@ -102,6 +102,6 @@ export class TraceDetailPageComponent {
 
   public getExplorerNavigationParams = (traceDetails: ApiTraceDetails): Observable<NavigationParams> =>
     this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-      { field: 'traceId', operator: FilterOperator.Equals, value: traceDetails.id }
+      { field: 'traceId', operator: FilterOperator.Equals, value: traceDetails.id },
     ]);
 }

@@ -10,7 +10,7 @@ import {
   ExploreRequestContext,
   ExploreSeries,
   ExploreVisualizationBuilder,
-  ExploreVisualizationRequest
+  ExploreVisualizationRequest,
 } from './explore-visualization-builder';
 
 @Component({
@@ -67,7 +67,7 @@ import {
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class ExploreQueryEditorComponent implements OnChanges, OnInit {
   private static readonly DEFAULT_GROUP_LIMIT: number = 5;
@@ -141,7 +141,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
       this.visualizationBuilder.groupBy(
         groupBy
           ? { ...groupBy, keyExpressions: [keyExpression] }
-          : { keyExpressions: [keyExpression], limit: ExploreQueryEditorComponent.DEFAULT_GROUP_LIMIT }
+          : { keyExpressions: [keyExpression], limit: ExploreQueryEditorComponent.DEFAULT_GROUP_LIMIT },
       );
     }
   }

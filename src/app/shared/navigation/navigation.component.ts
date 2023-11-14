@@ -19,7 +19,7 @@ import { Observable } from 'rxjs';
         (collapsedChange)="this.onViewToggle($event)"
       ></ht-navigation-list>
     </div>
-  `
+  `,
 })
 export class NavigationComponent {
   private static readonly COLLAPSED_PREFERENCE: string = 'app-navigation.collapsed';
@@ -33,55 +33,55 @@ export class NavigationComponent {
       type: NavItemType.Link,
       label: 'Dashboard',
       icon: IconType.Dashboard,
-      matchPaths: ['home']
+      matchPaths: ['home'],
     },
     {
       type: NavItemType.Header,
-      label: 'Monitor'
+      label: 'Monitor',
     },
     {
       type: NavItemType.Link,
       label: 'Application Flow',
       icon: ObservabilityIconType.ApplicationFlow,
-      matchPaths: ['application-flow']
+      matchPaths: ['application-flow'],
     },
     {
       type: NavItemType.Link,
       label: 'API Endpoints',
       icon: ObservabilityIconType.Api,
-      matchPaths: ['endpoints']
+      matchPaths: ['endpoints'],
     },
     {
       type: NavItemType.Link,
       label: 'Services',
       icon: ObservabilityIconType.Service,
-      matchPaths: ['services']
+      matchPaths: ['services'],
     },
     {
       type: NavItemType.Link,
       label: 'Backends',
       icon: ObservabilityIconType.Backend,
-      matchPaths: ['backends']
+      matchPaths: ['backends'],
     },
     {
       type: NavItemType.Header,
-      label: 'Investigate'
+      label: 'Investigate',
     },
     {
       type: NavItemType.Link,
       label: 'Explorer',
       icon: IconType.Search,
-      matchPaths: ['explorer']
-    }
+      matchPaths: ['explorer'],
+    },
   ];
 
   public constructor(
     private readonly navigationListService: NavigationListService,
     private readonly preferenceService: PreferenceService,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute,
   ) {
     this.navItems = this.navItemDefinitions.map(definition =>
-      this.navigationListService.decorateNavItem(definition, this.activatedRoute)
+      this.navigationListService.decorateNavItem(definition, this.activatedRoute),
     );
 
     this.isCollapsed$ = this.preferenceService.get(NavigationComponent.COLLAPSED_PREFERENCE, false);

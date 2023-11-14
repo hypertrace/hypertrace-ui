@@ -14,7 +14,7 @@ describe('Gauge widget renderer component', () => {
     component: GaugeWidgetRendererComponent,
     shallow: true,
     imports: [FormattingModule, LoadAsyncModule],
-    declarations: [MockComponent(GaugeComponent), MockComponent(TitledContentComponent)]
+    declarations: [MockComponent(GaugeComponent), MockComponent(TitledContentComponent)],
   });
 
   test('should render provided data with title', () => {
@@ -29,15 +29,15 @@ describe('Gauge widget renderer component', () => {
               start: 0,
               end: 6,
               label: 'Medium',
-              color: Color.Brown1
-            }
-          ]
-        })
-      )
+              color: Color.Brown1,
+            },
+          ],
+        }),
+      ),
     };
 
     const spectator = componentFactory({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
     expect(spectator.query(TitledContentComponent)!.title).toBe('TEST TITLE');
 
@@ -50,8 +50,8 @@ describe('Gauge widget renderer component', () => {
         start: 0,
         end: 6,
         label: 'Medium',
-        color: Color.Brown1
-      }
+        color: Color.Brown1,
+      },
     ]);
   });
 });

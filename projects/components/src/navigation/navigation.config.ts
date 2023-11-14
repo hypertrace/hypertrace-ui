@@ -44,7 +44,7 @@ export const enum NavItemType {
   Header = 'header',
   Link = 'link',
   Divider = 'divider',
-  Footer = 'footer'
+  Footer = 'footer',
 }
 
 export interface NavItemGroup {
@@ -56,5 +56,5 @@ export interface NavItemGroup {
 }
 
 export const enum NavViewStyle {
-  DarkViewStyleClass = 'navigation-dark'
+  DarkViewStyleClass = 'navigation-dark',
 }

@@ -75,13 +75,13 @@ export const enum SeriesSymbol {
   Circle,
   Square,
   Triangle,
-  Cross
+  Cross,
 }
 
 export const enum RenderingStrategy {
   Svg,
   Canvas,
-  Auto
+  Auto,
 }
 
 export const enum CartesianSeriesVisualizationType {
@@ -89,19 +89,19 @@ export const enum CartesianSeriesVisualizationType {
   Line = 'line',
   DashedLine = 'dashed-line',
   Scatter = 'scatter',
-  Area = 'area'
+  Area = 'area',
 }
 
 export const enum AxisType {
   X,
-  Y
+  Y,
 }
 
 export const enum AxisLocation {
   Left,
   Right,
   Top,
-  Bottom
+  Bottom,
 }
 
 export interface Axis {
@@ -171,10 +171,10 @@ export interface AxisCrosshair {
 export enum ScaleType {
   Linear = 'linear',
   Time = 'time',
-  Band = 'band'
+  Band = 'band',
 }
 
 export enum LabelOverflow {
   Wrap = 'wrap',
-  Rotate = 'rotate'
+  Rotate = 'rotate',
 }

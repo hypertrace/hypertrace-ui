@@ -7,9 +7,9 @@ import { TotalErrorsLabelDataSourceModel } from './total-errors-label-data-sourc
 @NgModule({
   imports: [
     DashboardCoreModule.with({
-      models: [TotalErrorsLabelDataSourceModel]
+      models: [TotalErrorsLabelDataSourceModel],
     }),
-    GraphQlModule.withHandlerProviders([ExploreGraphQlQueryHandlerService])
-  ]
+    GraphQlModule.withHandlerProviders([ExploreGraphQlQueryHandlerService]),
+  ],
 })
 export class TotalErrorsLabelDataSourceModule {}

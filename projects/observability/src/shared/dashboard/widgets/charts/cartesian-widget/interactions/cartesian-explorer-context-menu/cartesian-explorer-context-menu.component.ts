@@ -19,20 +19,20 @@ import { CartesainExplorerNavigationService } from '../cartesian-explorer-naviga
         <ht-divider></ht-divider>
       </div>
     </div>
-  `
+  `,
 })
 export class CartesianExplorerContextMenuComponent<TData> {
   public menus?: ContextMenu[] = [
     {
       name: 'Set Time Range',
       icon: IconType.Alarm,
-      onClick: () => this.setTimeRangeHandler()
+      onClick: () => this.setTimeRangeHandler(),
     },
     {
       name: 'Explore',
       icon: IconType.ArrowUpRight,
-      onClick: () => this.explorerNavigationHandler()
-    }
+      onClick: () => this.explorerNavigationHandler(),
+    },
   ];
 
   public display: string = ButtonStyle.PlainText;
@@ -41,7 +41,7 @@ export class CartesianExplorerContextMenuComponent<TData> {
   public constructor(
     @Inject(POPOVER_DATA) data: CartesianSelectedData<TData>,
     private readonly cartesainExplorerNavigationService: CartesainExplorerNavigationService,
-    private readonly timeRangeService: TimeRangeService
+    private readonly timeRangeService: TimeRangeService,
   ) {
     this.selectionData = data;
   }
@@ -49,7 +49,7 @@ export class CartesianExplorerContextMenuComponent<TData> {
   public readonly explorerNavigationHandler = () => {
     this.cartesainExplorerNavigationService.navigateToExplorer(
       this.selectionData.timeRange.startTime,
-      this.selectionData.timeRange.endTime
+      this.selectionData.timeRange.endTime,
     );
   };
 

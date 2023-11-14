@@ -7,6 +7,6 @@ import { InputComponent } from './input.component';
 @NgModule({
   imports: [CommonModule, FormsModule, MatInputModule],
   declarations: [InputComponent],
-  exports: [InputComponent]
+  exports: [InputComponent],
 })
 export class InputModule {}

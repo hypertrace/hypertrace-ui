@@ -6,7 +6,7 @@ import {
   TABLE_COLUMN_CONFIG,
   TABLE_COLUMN_INDEX,
   TABLE_DATA_PARSER,
-  TABLE_ROW_DATA
+  TABLE_ROW_DATA,
 } from '../../table-cell-injection';
 import { TableCellParserBase } from '../../table-cell-parser-base';
 import { TableCellRenderer } from '../../table-cell-renderer';
@@ -36,12 +36,12 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
 
       <ng-template #emptyValueTemplate>-</ng-template>
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: CoreTableCellRendererType.StringArray,
   alignment: TableCellAlignmentType.Left,
-  parser: CoreTableCellParserType.NoOp
+  parser: CoreTableCellParserType.NoOp,
 })
 export class StringArrayTableCellRendererComponent extends TableCellRendererBase<string[]> implements OnInit {
   public maxItemsInTooltip: number = 50;
@@ -51,7 +51,7 @@ export class StringArrayTableCellRendererComponent extends TableCellRendererBase
     @Inject(TABLE_COLUMN_INDEX) index: number,
     @Inject(TABLE_DATA_PARSER) parser: TableCellParserBase<string[], string[], boolean>,
     @Inject(TABLE_CELL_DATA) cellData: string[],
-    @Inject(TABLE_ROW_DATA) rowData: TableRow
+    @Inject(TABLE_ROW_DATA) rowData: TableRow,
   ) {
     super(columnConfig, index, parser, cellData, rowData);
   }

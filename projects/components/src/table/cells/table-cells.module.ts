@@ -58,12 +58,12 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     CopyToClipboardModule,
     LabelModule,
     XMoreModule,
-    MemoizeModule
+    MemoizeModule,
   ],
   exports: [
     TableHeaderCellRendererComponent,
     TableDataCellRendererComponent,
-    TableExpandedDetailRowCellRendererComponent
+    TableExpandedDetailRowCellRendererComponent,
   ],
   declarations: [
     IconTableCellRendererComponent,
@@ -81,7 +81,7 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
     StringEnumTableCellRendererComponent,
     TextWithCopyActionTableCellRendererComponent,
     RelativeTimestampTableCellRendererComponent,
-    DurationTableCellRendererComponent
+    DurationTableCellRendererComponent,
   ],
   providers: [
     {
@@ -99,9 +99,9 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         StringEnumTableCellRendererComponent,
         TextWithCopyActionTableCellRendererComponent,
         RelativeTimestampTableCellRendererComponent,
-        DurationTableCellRendererComponent
+        DurationTableCellRendererComponent,
       ],
-      multi: true
+      multi: true,
     },
     {
       provide: TABLE_CELL_PARSERS,
@@ -112,18 +112,18 @@ export const TABLE_CELL_PARSERS = new InjectionToken<unknown[][]>('TABLE_CELL_PA
         TableCellNumberParser,
         TableCellStringParser,
         TableCellTimestampParser,
-        TableCellNoOpParser
+        TableCellNoOpParser,
       ],
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class TableCellsModule {
   public constructor(
     private readonly tableCellParserLookupService: TableCellParserLookupService,
     private readonly tableCellRendererLookupService: TableCellRendererLookupService,
     @Inject(TABLE_CELL_PARSERS) cellParsers: TableCellParserConstructor<unknown, unknown, unknown>[][],
-    @Inject(TABLE_CELL_RENDERERS) cellRenderers: TableCellRendererConstructor[][]
+    @Inject(TABLE_CELL_RENDERERS) cellRenderers: TableCellRendererConstructor[][],
   ) {
     this.registerAllParsers(cellParsers.flat());
     this.registerAllRenderers(cellRenderers.flat());

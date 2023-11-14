@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { SeriesVisualizationType } from './series-visualization/series-visualization-type';
 
 @Model({
-  type: 'series'
+  type: 'series',
 })
 export class SeriesModel<TInterval> {
   public static readonly DEFAULT_COLOR: string = Color.Blue5;
@@ -14,28 +14,28 @@ export class SeriesModel<TInterval> {
   @ModelProperty({
     key: 'name',
     displayName: 'Name',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public name: string = 'New Series';
 
   @ModelProperty({
     key: 'color',
     displayName: 'Color',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public color: string = SeriesModel.DEFAULT_COLOR;
 
   @ModelProperty({
     key: 'stacking',
     displayName: 'Stacking',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public stacking: boolean = false;
 
   @ModelProperty({
     key: 'hide',
     displayName: 'hide',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public hide: boolean = false;
 
@@ -49,9 +49,9 @@ export class SeriesModel<TInterval> {
         SeriesVisualizationType.Line,
         SeriesVisualizationType.DashedLine,
         SeriesVisualizationType.Scatter,
-        SeriesVisualizationType.Column
-      ]
-    } as EnumPropertyTypeInstance
+        SeriesVisualizationType.Column,
+      ],
+    } as EnumPropertyTypeInstance,
   })
   public visualizationType: SeriesVisualizationType = SeriesVisualizationType.Area;
 

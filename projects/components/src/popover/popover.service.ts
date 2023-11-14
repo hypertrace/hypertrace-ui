@@ -5,7 +5,7 @@ import { NavigationService } from '@hypertrace/common';
 import {
   PopoverContainerComponent,
   PopoverContainerData,
-  POPOVER_CONTAINER_DATA
+  POPOVER_CONTAINER_DATA,
 } from './container/popover-container.component';
 import { PopoverBackdrop, PopoverOptions, POPOVER_DATA } from './popover';
 import { PopoverPositionBuilder } from './popover-position-builder';
@@ -17,7 +17,7 @@ export class PopoverService {
     private readonly overlay: Overlay,
     private readonly defaultInjector: Injector,
     private readonly positionBuilder: PopoverPositionBuilder,
-    private readonly navigationService: NavigationService
+    private readonly navigationService: NavigationService,
   ) {}
 
   public drawPopover<TData = unknown>(options: PopoverOptions<TData>): PopoverRef {
@@ -25,7 +25,7 @@ export class PopoverService {
     const overlayRef = this.overlay.create({
       positionStrategy: initialPositionStrategy,
       hasBackdrop: this.hasBackdrop(options.backdrop),
-      backdropClass: this.getBackdropClass(options.backdrop)
+      backdropClass: this.getBackdropClass(options.backdrop),
     });
 
     const popoverRef = new PopoverRef(overlayRef, this.positionBuilder, this.navigationService);
@@ -41,12 +41,12 @@ export class PopoverService {
 
   private convertToPortal(
     options: PopoverOptions<unknown>,
-    popoverRef: PopoverRef
+    popoverRef: PopoverRef,
   ): ComponentPortal<unknown> & { injector: Injector } {
     return new ComponentPortal<unknown>(
       PopoverContainerComponent,
       undefined,
-      this.buildContainerInjector(options, popoverRef)
+      this.buildContainerInjector(options, popoverRef),
     ) as ComponentPortal<unknown> & { injector: Injector };
   }
 
@@ -57,17 +57,17 @@ export class PopoverService {
       providers: [
         {
           provide: POPOVER_CONTAINER_DATA,
-          useValue: this.buildContainerData(options, popoverRef)
-        }
+          useValue: this.buildContainerData(options, popoverRef),
+        },
       ],
-      parent: parentInjector
+      parent: parentInjector,
     });
   }
 
   private buildContainerData(options: PopoverOptions<unknown>, popoverRef: PopoverRef): PopoverContainerData {
     return {
       popoverRenderer: options.componentOrTemplate,
-      popoverInjector: this.buildPopoverInjector(options, popoverRef)
+      popoverInjector: this.buildPopoverInjector(options, popoverRef),
     };
   }
 
@@ -79,14 +79,14 @@ export class PopoverService {
       providers: [
         {
           provide: POPOVER_DATA,
-          useValue: options.data
+          useValue: options.data,
         },
         {
           provide: PopoverRef,
-          useValue: popoverRef
-        }
+          useValue: popoverRef,
+        },
       ],
-      parent: parentInjector
+      parent: parentInjector,
     });
   }
 

@@ -14,9 +14,9 @@ import { ApplicationFrameComponent } from './application-frame.component';
     PageHeaderModule,
     HttpClientModule,
     RouterModule,
-    IconModule
+    IconModule,
   ],
   declarations: [ApplicationFrameComponent],
-  exports: [ApplicationFrameComponent]
+  exports: [ApplicationFrameComponent],
 })
 export class ApplicationFrameModule {}

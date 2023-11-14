@@ -6,7 +6,7 @@ import {
   FilterBuilderLookupService,
   TableMode,
   TableSortDirection,
-  TableStyle
+  TableStyle,
 } from '@hypertrace/components';
 import { Dashboard, JsonPrimitive, ModelJson } from '@hypertrace/hyperdash';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
@@ -20,7 +20,7 @@ import { GraphQlFilterDataSourceModel } from '../../shared/dashboard/data/graphq
 import {
   AttributeMetadata,
   AttributeMetadataType,
-  toFilterAttributeType
+  toFilterAttributeType,
 } from '../../shared/graphql/model/metadata/attribute-metadata';
 import { GraphQlFilter } from '../../shared/graphql/model/schema/filter/graphql-filter';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
@@ -39,20 +39,20 @@ export class ExplorerDashboardBuilder {
 
   public constructor(
     private readonly metadataService: MetadataService,
-    private readonly filterBuilderLookupService: FilterBuilderLookupService
+    private readonly filterBuilderLookupService: FilterBuilderLookupService,
   ) {
     // We only want to rebuild a dashboard if we actually have a meaningful request change
     const uniqueRequests$ = this.requestSubject.pipe(distinctUntilChanged(isEqualIgnoreFunctions));
 
     this.visualizationDashboard$ = uniqueRequests$.pipe(
-      switchMap(request => this.buildVisualizationDashboard(request))
+      switchMap(request => this.buildVisualizationDashboard(request)),
     );
 
     // Two step process so we can see if the trace request will ultimately be any different
     this.resultsDashboard$ = uniqueRequests$.pipe(
       switchMap(request => this.buildDashboardData(request)),
       distinctUntilChanged(isEqualIgnoreFunctions),
-      map(data => this.buildResultsDashboard(data))
+      map(data => this.buildResultsDashboard(data)),
     );
   }
 
@@ -69,15 +69,15 @@ export class ExplorerDashboardBuilder {
         'legend-position': LegendPosition.Bottom,
         'selection-handler': {
           type: 'cartesian-explorer-selection-handler',
-          'show-context-menu': false
+          'show-context-menu': false,
         },
-        ...this.buildXAxis(request)
+        ...this.buildXAxis(request),
       },
       onReady: dashboard => {
         dashboard.createAndSetRootDataFromModelClass(ExplorerVisualizationCartesianDataSourceModel);
         const dataSource = dashboard.getRootDataSource<ExplorerVisualizationCartesianDataSourceModel>()!;
         dataSource.request = request;
-      }
+      },
     });
   }
 
@@ -88,7 +88,7 @@ export class ExplorerDashboardBuilder {
       onReady: dashboard => {
         const rootDataSource = dashboard.getRootDataSource<GraphQlFilterDataSourceModel>();
         rootDataSource && rootDataSource.clearFilters().addFilters(...dashboardData.filters);
-      }
+      },
     };
   }
 
@@ -102,17 +102,17 @@ export class ExplorerDashboardBuilder {
             ...this.getGeneratedTableColumns(
               attributes,
               request.context as ExplorerGeneratedDashboardContext,
-              resultsQuery.properties
-            )
+              resultsQuery.properties,
+            ),
           ]),
           map(columnsMetadata => this.removeDuplicatedColumns(columnsMetadata)),
           map(columnsMetadata => this.buildColumnModelJson(request.context, columnsMetadata)),
           map(json => ({
             json: json,
-            filters: resultsQuery.filters || []
-          }))
-        )
-      )
+            filters: resultsQuery.filters || [],
+          })),
+        ),
+      ),
     );
   }
 
@@ -129,13 +129,13 @@ export class ExplorerDashboardBuilder {
           data: {
             type: 'span-detail-data-source',
 
-            span: '${row}'
-          }
+            span: '${row}',
+          },
         },
         data: {
           type: 'spans-table-data-source',
-          trace: context
-        }
+          trace: context,
+        },
       };
     }
 
@@ -151,13 +151,13 @@ export class ExplorerDashboardBuilder {
           type: 'api-trace-detail-data-source',
 
           trace: '${row}',
-          attributes: ['requestUrl']
-        }
+          attributes: ['requestUrl'],
+        },
       },
       data: {
         type: 'traces-table-data-source',
-        trace: context
-      }
+        trace: context,
+      },
     };
   }
 
@@ -167,7 +167,7 @@ export class ExplorerDashboardBuilder {
         'x-axis': {
           type: 'cartesian-axis',
           'scale-type': ScaleType.Band,
-          'show-tick-labels': false
+          'show-tick-labels': false,
         }
       };
     }
@@ -199,11 +199,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'protocol'
+              attribute: 'protocol',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -212,11 +212,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'serviceName'
+              attribute: 'serviceName',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -225,11 +225,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'apiName'
+              attribute: 'apiName',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -241,18 +241,18 @@ export class ExplorerDashboardBuilder {
               specifications: [
                 {
                   type: ValueSpecificationType.Attribute,
-                  attribute: 'apiExitCalls'
+                  attribute: 'apiExitCalls',
                 },
                 {
                   type: ValueSpecificationType.Attribute,
-                  attribute: 'apiCalleeNameCount'
-                }
+                  attribute: 'apiCalleeNameCount',
+                },
               ],
-              'order-by': 'apiExitCalls'
+              'order-by': 'apiExitCalls',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -261,11 +261,11 @@ export class ExplorerDashboardBuilder {
             display: TracingTableCellType.TraceStatus,
             filterable: true,
             value: {
-              type: ValueSpecificationType.Status
+              type: ValueSpecificationType.Status,
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -274,11 +274,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'apiTraceErrorSpanCount'
+              attribute: 'apiTraceErrorSpanCount',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -288,11 +288,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'duration'
+              attribute: 'duration',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -301,12 +301,12 @@ export class ExplorerDashboardBuilder {
             display: CoreTableCellRendererType.Timestamp,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'startTime'
+              attribute: 'startTime',
             },
             sort: TableSortDirection.Descending,
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -316,11 +316,11 @@ export class ExplorerDashboardBuilder {
             visible: false,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'endTime'
+              attribute: 'endTime',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -330,11 +330,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'apiBoundaryType'
+              attribute: 'apiBoundaryType',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -344,11 +344,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'apiDiscoveryState'
+              attribute: 'apiDiscoveryState',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -358,11 +358,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'apiId'
+              attribute: 'apiId',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -372,11 +372,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'apiTraceId'
+              attribute: 'apiTraceId',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -386,11 +386,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'serviceId'
+              attribute: 'serviceId',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -400,11 +400,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'traceId'
+              attribute: 'traceId',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -414,12 +414,12 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'requestUrl'
+              attribute: 'requestUrl',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
-          }
+              type: 'api-trace-navigation-handler',
+            },
+          },
         ];
       case SPAN_SCOPE:
         return [
@@ -430,11 +430,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'protocolName'
+              attribute: 'protocolName',
             },
             'click-handler': {
-              type: 'span-trace-navigation-handler'
-            }
+              type: 'span-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -443,11 +443,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'serviceName'
+              attribute: 'serviceName',
             },
             'click-handler': {
-              type: 'span-trace-navigation-handler'
-            }
+              type: 'span-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -456,11 +456,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'displaySpanName'
+              attribute: 'displaySpanName',
             },
             'click-handler': {
-              type: 'span-trace-navigation-handler'
-            }
+              type: 'span-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -469,11 +469,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'statusCode'
+              attribute: 'statusCode',
             },
             'click-handler': {
-              type: 'span-trace-navigation-handler'
-            }
+              type: 'span-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -482,11 +482,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'errorCount'
+              attribute: 'errorCount',
             },
             'click-handler': {
-              type: 'api-trace-navigation-handler'
-            }
+              type: 'api-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -496,11 +496,11 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'duration'
+              attribute: 'duration',
             },
             'click-handler': {
-              type: 'span-trace-navigation-handler'
-            }
+              type: 'span-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -509,12 +509,12 @@ export class ExplorerDashboardBuilder {
             display: CoreTableCellRendererType.Timestamp,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'startTime'
+              attribute: 'startTime',
             },
             sort: TableSortDirection.Descending,
             'click-handler': {
-              type: 'span-trace-navigation-handler'
-            }
+              type: 'span-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -524,11 +524,11 @@ export class ExplorerDashboardBuilder {
             visible: false,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'endTime'
+              attribute: 'endTime',
             },
             'click-handler': {
-              type: 'span-trace-navigation-handler'
-            }
+              type: 'span-trace-navigation-handler',
+            },
           },
           {
             type: 'table-widget-column',
@@ -536,12 +536,12 @@ export class ExplorerDashboardBuilder {
             filterable: true,
             value: {
               type: ValueSpecificationType.Attribute,
-              attribute: 'traceId'
+              attribute: 'traceId',
             },
             'click-handler': {
-              type: 'span-trace-navigation-handler'
-            }
-          }
+              type: 'span-trace-navigation-handler',
+            },
+          },
         ];
 
       default:
@@ -560,7 +560,7 @@ export class ExplorerDashboardBuilder {
           'apiTraceErrorSpanCount',
           'duration',
           'startTime',
-          'calls'
+          'calls',
         ]);
       case SPAN_SCOPE:
         return new Set([
@@ -570,7 +570,7 @@ export class ExplorerDashboardBuilder {
           'statusCode',
           'errorCount',
           'duration',
-          'startTime'
+          'startTime',
         ]);
       default:
         return assertUnreachable(context);
@@ -579,14 +579,14 @@ export class ExplorerDashboardBuilder {
 
   private removeDuplicatedColumns(columns: SpecificationBackedColumnModelJson[]): ModelJson[] {
     return uniqBy(columns, column =>
-      column.value?.type === ValueSpecificationType.Attribute ? column.value.attribute : column
+      column.value?.type === ValueSpecificationType.Attribute ? column.value.attribute : column,
     );
   }
 
   private getGeneratedTableColumns(
     attributes: AttributeMetadata[],
     context: ExplorerGeneratedDashboardContext,
-    selectedProperties: Specification[]
+    selectedProperties: Specification[],
   ): SpecificationBackedColumnModelJson[] {
     const attributesToExclude = this.getAttributesToExcludeFromUserDisplay(context);
 
@@ -600,12 +600,12 @@ export class ExplorerDashboardBuilder {
         filterable: this.filterBuilderLookupService.isBuildableType(toFilterAttributeType(attribute.type)),
         value: {
           type: ValueSpecificationType.Attribute,
-          attribute: attribute.name
+          attribute: attribute.name,
         },
         visible: selectedProperties.find(selectedProperty => selectedProperty.name === attribute.name) ? true : false,
         'click-handler': {
-          type: context === SPAN_SCOPE ? 'span-trace-navigation-handler' : 'api-trace-navigation-handler'
-        }
+          type: context === SPAN_SCOPE ? 'span-trace-navigation-handler' : 'api-trace-navigation-handler',
+        },
       }));
   }
 }
@@ -633,7 +633,7 @@ export interface SpecificationBackedColumnModelJson extends ModelJson {
 export const enum ValueSpecificationType {
   Attribute = 'attribute-specification',
   Composite = 'composite-specification',
-  Status = 'trace-status-specification'
+  Status = 'trace-status-specification',
 }
 
 export type ExplorerGeneratedDashboardContext = ObservabilityTraceType.Api | 'SPAN';
@@ -647,5 +647,5 @@ export interface ExplorerDashboardBuilderFactory {
 }
 
 export const EXPLORER_DASHBOARD_BUILDER_FACTORY = new InjectionToken<ExplorerDashboardBuilderFactory>(
-  'EXPLORER_DASHBOARD_BUILDER_FACTORY'
+  'EXPLORER_DASHBOARD_BUILDER_FACTORY',
 );

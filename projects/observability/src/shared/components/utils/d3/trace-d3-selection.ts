@@ -7,7 +7,7 @@ import {
   namespace,
   Selection,
   selection as selectionFunction,
-  ValueFn
+  ValueFn,
 } from 'd3-selection';
 import { Transition } from 'd3-transition';
 import { D3UtilService } from './d3-util.service';
@@ -21,25 +21,25 @@ export class TraceD3Selection<
   public constructor(
     private readonly renderer: Renderer2,
     private readonly d3Utils: D3UtilService,
-    private readonly d3Selection: Selection<TElement, TData, PElement, PData>
+    private readonly d3Selection: Selection<TElement, TData, PElement, PData>,
   ) {}
 
   public select(selectorSelect: null): Selection<null, undefined, PElement, PData>;
   public select<DescElement extends BaseType>(
-    selectorSelect: string | ValueFn<TElement, TData, DescElement>
+    selectorSelect: string | ValueFn<TElement, TData, DescElement>,
   ): Selection<DescElement, TData, PElement, PData>;
   public select<DescElement extends BaseType>(
-    selectorSelect: string | null | ValueFn<TElement, TData, DescElement>
+    selectorSelect: string | null | ValueFn<TElement, TData, DescElement>,
   ): Selection<DescElement, TData, PElement, PData> | Selection<null, undefined, PElement, PData> {
     return this.valueOrWrappedSelection(this.d3Selection.select<DescElement>(selectorSelect as string));
   }
 
   public selectAll(selectorSelectAll?: null): Selection<null, undefined, TElement, TData>;
   public selectAll<DescElement extends BaseType, OldDatum>(
-    selectorSelectAll: string | ValueFn<TElement, TData, ArrayLike<DescElement>>
+    selectorSelectAll: string | ValueFn<TElement, TData, ArrayLike<DescElement>>,
   ): Selection<DescElement, OldDatum, TElement, TData>;
   public selectAll<DescElement extends BaseType, OldDatum>(
-    selectorSelectAll?: null | string | ValueFn<TElement, TData, ArrayLike<DescElement>>
+    selectorSelectAll?: null | string | ValueFn<TElement, TData, ArrayLike<DescElement>>,
   ): Selection<DescElement, OldDatum, TElement, TData> | Selection<null, undefined, TElement, TData> {
     return this.valueOrWrappedSelection(this.d3Selection.selectAll<DescElement, OldDatum>(selectorSelectAll as string));
   }
@@ -47,11 +47,11 @@ export class TraceD3Selection<
   public attr(name: string): string;
   public attr(
     name: string,
-    value: null | string | number | boolean | ValueFn<TElement, TData, string | number | boolean | null>
+    value: null | string | number | boolean | ValueFn<TElement, TData, string | number | boolean | null>,
   ): this;
   public attr(
     name: string,
-    value?: null | string | number | boolean | ValueFn<TElement, TData, string | number | boolean | null>
+    value?: null | string | number | boolean | ValueFn<TElement, TData, string | number | boolean | null>,
   ): this | string {
     if (value === undefined) {
       return this.d3Selection.attr(name);
@@ -75,12 +75,12 @@ export class TraceD3Selection<
   public style(
     name: string,
     value: string | number | boolean | ValueFn<TElement, TData, string | number | boolean | null>,
-    priority?: 'important' | null
+    priority?: 'important' | null,
   ): this;
   public style(
     name: string,
     value?: null | string | number | boolean | ValueFn<TElement, TData, string | number | boolean | null>,
-    priority?: 'important' | null
+    priority?: 'important' | null,
   ): string | this {
     if (value === undefined) {
       return this.d3Selection.style(name);
@@ -95,7 +95,7 @@ export class TraceD3Selection<
   public property<T>(name: Local<T>, value: T | ValueFn<TElement, TData, T>): this;
   public property(
     name: string | Local<unknown>,
-    value?: null | unknown | ValueFn<TElement, TData, unknown>
+    value?: null | unknown | ValueFn<TElement, TData, unknown>,
   ): this | unknown {
     if (value === undefined) {
       return this.d3Selection.property(name as string);
@@ -106,10 +106,10 @@ export class TraceD3Selection<
 
   public text(): string;
   public text(
-    value: null | string | number | boolean | ValueFn<TElement, TData, string | number | boolean | null>
+    value: null | string | number | boolean | ValueFn<TElement, TData, string | number | boolean | null>,
   ): this;
   public text(
-    value?: null | string | number | boolean | ValueFn<TElement, TData, string | number | boolean | null>
+    value?: null | string | number | boolean | ValueFn<TElement, TData, string | number | boolean | null>,
   ): string | this {
     if (value === undefined) {
       return this.d3Selection.text();
@@ -129,7 +129,7 @@ export class TraceD3Selection<
   }
 
   public append<ChildElement extends BaseType>(
-    type: string | ValueFn<TElement, TData, ChildElement>
+    type: string | ValueFn<TElement, TData, ChildElement>,
   ): Selection<ChildElement, TData, PElement, PData> {
     return this.select((datum, index, group) => {
       const currElement = group[index];
@@ -142,7 +142,7 @@ export class TraceD3Selection<
 
   public insert<ChildElement extends BaseType>(
     type: string | ValueFn<TElement, TData, ChildElement>,
-    before?: string | ValueFn<TElement, TData, BaseType>
+    before?: string | ValueFn<TElement, TData, BaseType>,
   ): Selection<ChildElement, TData, PElement, PData> {
     return this.select((datum, index, group) => {
       const currElement = group[index];
@@ -167,7 +167,7 @@ export class TraceD3Selection<
   }
 
   public filter<FilteredElement extends BaseType = TElement>(
-    selectorFilter: string | ValueFn<TElement, TData, boolean>
+    selectorFilter: string | ValueFn<TElement, TData, boolean>,
   ): Selection<FilteredElement, TData, PElement, PData> {
     return this.valueOrWrappedSelection(this.d3Selection.filter<FilteredElement>(selectorFilter as string));
   }
@@ -191,10 +191,10 @@ export class TraceD3Selection<
   public datum(): TData;
   public datum(value: null): Selection<TElement, undefined, PElement, PData>;
   public datum<NewDatum>(
-    value: NewDatum | ValueFn<TElement, TData, NewDatum>
+    value: NewDatum | ValueFn<TElement, TData, NewDatum>,
   ): Selection<TElement, NewDatum, PElement, PData>;
   public datum<NewDatum>(
-    value?: null | NewDatum | ValueFn<TElement, TData, NewDatum>
+    value?: null | NewDatum | ValueFn<TElement, TData, NewDatum>,
   ): Selection<TElement, NewDatum, PElement, PData> | TData {
     if (value === undefined) {
       return this.d3Selection.datum();
@@ -206,11 +206,11 @@ export class TraceD3Selection<
   public data(): TData[];
   public data<NewDatum>(
     data: NewDatum[] | ValueFn<PElement, PData, NewDatum[]>,
-    key?: ValueFn<TElement | PElement, TData | NewDatum, string> | undefined
+    key?: ValueFn<TElement | PElement, TData | NewDatum, string> | undefined,
   ): Selection<TElement, NewDatum, PElement, PData>;
   public data<NewDatum>(
     data?: NewDatum[] | ValueFn<PElement, PData, NewDatum[]>,
-    key?: ValueFn<TElement | PElement, TData | NewDatum, string> | undefined
+    key?: ValueFn<TElement | PElement, TData | NewDatum, string> | undefined,
   ): Selection<TElement, NewDatum, PElement, PData> | TData[] {
     return this.valueOrWrappedSelection(this.d3Selection.data<NewDatum>(data as NewDatum[], key));
   }
@@ -220,12 +220,12 @@ export class TraceD3Selection<
       | string
       | ((elem: Selection<EnterElement, TData, PElement, PData>) => Selection<ChildElement, TData, PElement, PData>),
     update?: (
-      elem: Selection<TElement, TData, PElement, PData>
+      elem: Selection<TElement, TData, PElement, PData>,
     ) => Selection<TElement, TData, PElement, PData> | undefined,
-    exit?: (elem: Selection<TElement, OldDatum, PElement, PData>) => void
+    exit?: (elem: Selection<TElement, OldDatum, PElement, PData>) => void,
   ): Selection<TElement | ChildElement, TData, PElement, PData> {
     type OnEnterFn = (
-      elem: Selection<EnterElement, TData, PElement, PData>
+      elem: Selection<EnterElement, TData, PElement, PData>,
     ) => Selection<ChildElement, TData, PElement, PData>;
 
     const enterAsFunction =
@@ -238,7 +238,7 @@ export class TraceD3Selection<
     const maybeWrappedExit = exit && this.wrapFunction(exit);
 
     return this.valueOrWrappedSelection(
-      this.d3Selection.join(wrappedEnter as OnEnterFn, maybeWrappedUpdate, maybeWrappedExit)
+      this.d3Selection.join(wrappedEnter as OnEnterFn, maybeWrappedUpdate, maybeWrappedExit),
     );
   }
 
@@ -255,7 +255,7 @@ export class TraceD3Selection<
   public on(
     typenames: string,
     listener?: null | ValueFn<TElement, TData, void>,
-    capture?: boolean
+    capture?: boolean,
   ): this | ValueFn<TElement, TData, void> | undefined {
     if (listener === undefined) {
       return this.d3Selection.on(typenames);
@@ -266,10 +266,10 @@ export class TraceD3Selection<
 
   public dispatch(
     type: string,
-    parameters?: CustomEventParameters | ValueFn<TElement, TData, CustomEventParameters>
+    parameters?: CustomEventParameters | ValueFn<TElement, TData, CustomEventParameters>,
   ): this {
     return this.valueOrThis(
-      this.d3Selection.dispatch(type, parameters as ValueFn<TElement, TData, CustomEventParameters>)
+      this.d3Selection.dispatch(type, parameters as ValueFn<TElement, TData, CustomEventParameters>),
     );
   }
 
@@ -302,7 +302,7 @@ export class TraceD3Selection<
   }
 
   public transition(
-    transitionOrName?: string | Transition<BaseType, unknown, BaseType, unknown>
+    transitionOrName?: string | Transition<BaseType, unknown, BaseType, unknown>,
   ): Transition<TElement, TData, PElement, PData> {
     return this.d3Selection.transition(transitionOrName as string);
   }
@@ -314,7 +314,7 @@ export class TraceD3Selection<
     QElement extends BaseType = null,
     QData = undefined
   >(
-    value: T | Selection<WElement, WData, QElement, QData>
+    value: T | Selection<WElement, WData, QElement, QData>,
   ): ValueOrSelection<typeof value, T, WElement, WData, QElement, QData> {
     if (this.isSelection<WElement, WData, QElement, QData>(value)) {
       return new TraceD3Selection(this.renderer, this.d3Utils, value);
@@ -330,7 +330,7 @@ export class TraceD3Selection<
     QElement extends BaseType = null,
     QData = undefined
   >(
-    value: T | Selection<WElement, WData, QElement, QData>
+    value: T | Selection<WElement, WData, QElement, QData>,
   ): ValueOrSelection<typeof value, T, WElement, WData, QElement, QData> {
     // Unwrap any returned value (which is going to d3) that are instances of trace selections
     if (value instanceof TraceD3Selection) {
@@ -341,7 +341,7 @@ export class TraceD3Selection<
   }
 
   private valueOrThis<T>(
-    value: T | Selection<TElement, TData, PElement, PData>
+    value: T | Selection<TElement, TData, PElement, PData>,
   ): ValueOrSelection<typeof value, T, TElement, TData, PElement, PData, this> {
     if (this.isSelection(value)) {
       return this;
@@ -365,13 +365,13 @@ export class TraceD3Selection<
       this.valueOrUnwrappedSelection(
         provided.apply(
           this.d3Selection,
-          args.map(arg => this.valueOrWrappedSelection(arg))
-        )
+          args.map(arg => this.valueOrWrappedSelection(arg)),
+        ),
       )) as TFunction;
   }
 
   private buildCreator<ChildElement extends BaseType>(
-    maybePrefixedTagOrValueFn: string | ValueFn<TElement, TData, ChildElement>
+    maybePrefixedTagOrValueFn: string | ValueFn<TElement, TData, ChildElement>,
   ): ValueFn<TElement, TData, ChildElement> {
     if (typeof maybePrefixedTagOrValueFn === 'function') {
       return maybePrefixedTagOrValueFn;

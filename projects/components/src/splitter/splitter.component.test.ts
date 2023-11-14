@@ -15,9 +15,9 @@ describe('Splitter component', () => {
     imports: [MemoizeModule],
     providers: [
       mockProvider(LayoutChangeService, {
-        publishLayoutChange: jest.fn()
-      })
-    ]
+        publishLayoutChange: jest.fn(),
+      }),
+    ],
   });
 
   test('should show all elements for horizontal direction', fakeAsync(() => {
@@ -33,11 +33,11 @@ describe('Splitter component', () => {
           direction: SplitterDirection.Horizontal,
           dimensions: [
             { value: 1, unit: 'FR' },
-            { value: 2, unit: 'FR' }
+            { value: 2, unit: 'FR' },
           ],
-          onLayoutChange: onLayoutChangeSpy
-        }
-      }
+          onLayoutChange: onLayoutChangeSpy,
+        },
+      },
     );
     spectator.tick();
 
@@ -56,10 +56,10 @@ describe('Splitter component', () => {
       undefined,
       Object.assign(
         new MouseEvent('mousedown', {
-          clientX: 0
+          clientX: 0,
         }),
-        { pageX: 0 }
-      ) as MouseEvent
+        { pageX: 0 },
+      ) as MouseEvent,
     );
 
     // Trigger Mouse Move
@@ -70,10 +70,10 @@ describe('Splitter component', () => {
       undefined,
       Object.assign(
         new MouseEvent('mousemove', {
-          clientX: 10
+          clientX: 10,
         }),
-        { pageX: 10 }
-      ) as MouseEvent
+        { pageX: 10 },
+      ) as MouseEvent,
     );
 
     // Trigger Mouse Up
@@ -96,11 +96,11 @@ describe('Splitter component', () => {
           direction: SplitterDirection.Vertical,
           dimensions: [
             { value: 1, unit: 'FR' },
-            { value: 2, unit: 'FR' }
+            { value: 2, unit: 'FR' },
           ],
-          onLayoutChange: onLayoutChangeSpy
-        }
-      }
+          onLayoutChange: onLayoutChangeSpy,
+        },
+      },
     );
     spectator.tick();
 
@@ -119,10 +119,10 @@ describe('Splitter component', () => {
       undefined,
       Object.assign(
         new MouseEvent('mousedown', {
-          clientX: 0
+          clientX: 0,
         }),
-        { pageX: 0 }
-      ) as MouseEvent
+        { pageX: 0 },
+      ) as MouseEvent,
     );
 
     // Trigger Mouse Move
@@ -133,10 +133,10 @@ describe('Splitter component', () => {
       undefined,
       Object.assign(
         new MouseEvent('mousemove', {
-          clientX: 10
+          clientX: 10,
         }),
-        { pageX: 10 }
-      ) as MouseEvent
+        { pageX: 10 },
+      ) as MouseEvent,
     );
 
     // Trigger Mouse Up

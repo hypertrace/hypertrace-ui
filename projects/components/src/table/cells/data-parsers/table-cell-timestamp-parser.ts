@@ -5,7 +5,7 @@ import { TableCellParserBase } from '../table-cell-parser-base';
 import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';
 
 @TableCellParser({
-  type: CoreTableCellParserType.Timestamp
+  type: CoreTableCellParserType.Timestamp,
 })
 export class TableCellTimestampParser extends TableCellParserBase<CellData, Value, Value> {
   private readonly dateCoercer: DateCoercer = new DateCoercer();

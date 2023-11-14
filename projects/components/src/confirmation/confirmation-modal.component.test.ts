@@ -15,19 +15,19 @@ describe('Confirmation modal', () => {
       {
         provide: ModalRef,
         useFactory: () => ({
-          close: jest.fn()
-        })
-      }
-    ]
+          close: jest.fn(),
+        }),
+      },
+    ],
   });
 
   const buildProviders = (data: ConfirmationModalData): { providers: StaticProvider[] } => ({
     providers: [
       {
         provide: MODAL_DATA,
-        useValue: data
-      }
-    ]
+        useValue: data,
+      },
+    ],
   });
 
   test('defaults correctly', () => {
@@ -49,8 +49,8 @@ describe('Confirmation modal', () => {
         content: 'confirmation description',
         cancelButtonLabel: 'boom',
         confirmButtonLabel: 'good',
-        confirmButtonUse: ButtonVariant.Destructive
-      })
+        confirmButtonUse: ButtonVariant.Destructive,
+      }),
     );
 
     const buttons = spectator.queryAll(ButtonComponent);
@@ -64,8 +64,8 @@ describe('Confirmation modal', () => {
   test('closes with true on confirm', () => {
     const spectator = createComponent(
       buildProviders({
-        content: 'confirmation description'
-      })
+        content: 'confirmation description',
+      }),
     );
 
     const confirmButton = spectator.queryAll('ht-button')[1];
@@ -78,8 +78,8 @@ describe('Confirmation modal', () => {
   test('closes with false on cancel', () => {
     const spectator = createComponent(
       buildProviders({
-        content: 'confirmation description'
-      })
+        content: 'confirmation description',
+      }),
     );
 
     const cancelButton = spectator.queryAll('ht-button')[0];

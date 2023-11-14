@@ -37,7 +37,7 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
       >
       </ht-cartesian-chart>
     </ht-titled-content>
-  `
+  `,
 })
 export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends InteractiveDataWidgetRenderer<
   CartesianWidgetModel<TSeriesInterval>,
@@ -46,7 +46,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<CartesianWidgetModel<TSeriesInterval>>,
     changeDetector: ChangeDetectorRef,
-    private readonly intervalDurationService: IntervalDurationService
+    private readonly intervalDurationService: IntervalDurationService,
   ) {
     super(api, changeDetector);
   }
@@ -82,7 +82,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
           this.selectedInterval = this.getBestIntervalMatch(intervalOptions, defaultInterval);
         }
       }),
-      switchMap(() => this.buildDataObservable())
+      switchMap(() => this.buildDataObservable()),
     );
   }
 
@@ -96,7 +96,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
 
   private fetchCartesianData(
     fetcher: CartesianDataFetcher<TSeriesInterval>,
-    interval?: IntervalValue
+    interval?: IntervalValue,
   ): Observable<CartesianResult<TSeriesInterval>> {
     return fetcher.getData(this.resolveInterval(interval));
   }
@@ -114,7 +114,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
   private buildIntervalOptions(): IntervalValue[] {
     return [
       'AUTO',
-      ...this.intervalDurationService.getAvailableIntervalsForTimeRange(this.timeRange, this.model.maxSeriesDataPoints)
+      ...this.intervalDurationService.getAvailableIntervalsForTimeRange(this.timeRange, this.model.maxSeriesDataPoints),
     ];
   }
 
@@ -123,7 +123,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
       request instanceof TimeDuration &&
       this.intervalDurationService.getExactMatch(
         request,
-        options.filter((option): option is TimeDuration => option instanceof TimeDuration)
+        options.filter((option): option is TimeDuration => option instanceof TimeDuration),
       );
 
     return match || 'AUTO';

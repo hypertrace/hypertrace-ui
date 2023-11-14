@@ -14,12 +14,12 @@ describe('Json Tree Component', () => {
     component: JsonViewerComponent,
     declarations: [JsonRecordsPipe],
     imports: [CommonModule, IconModule, HttpClientTestingModule, IconLibraryTestingModule],
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService)],
   });
 
   test('should display all properties', () => {
     const inputJson = JSON.parse(
-      '{"comment":"product comment","created":0,"modified":0,"productId":"5c92fccd6eba99ac466c178e","stars":4,"username":"Foo Bar"}'
+      '{"comment":"product comment","created":0,"modified":0,"productId":"5c92fccd6eba99ac466c178e","stars":4,"username":"Foo Bar"}',
     );
     const expectedKeyValues = [
       ['comment', 'product comment'],
@@ -27,11 +27,11 @@ describe('Json Tree Component', () => {
       ['modified', '0'],
       ['productId', '5c92fccd6eba99ac466c178e'],
       ['stars', '4'],
-      ['username', 'Foo Bar']
+      ['username', 'Foo Bar'],
     ];
     spectator = createHost(`<ht-json-viewer></ht-json-viewer>`);
     spectator.setInput({
-      json: inputJson
+      json: inputJson,
     });
 
     const propertiesElement = spectator.queryAll<HTMLElement>('.property');
@@ -53,7 +53,7 @@ describe('Json Tree Component', () => {
 
     spectator = createHost(`<ht-json-viewer></ht-json-viewer>`);
     spectator.setInput({
-      json: inputJson
+      json: inputJson,
     });
 
     const propertiesElement = spectator.queryAll<HTMLElement>('.property');
@@ -81,7 +81,7 @@ describe('Json Tree Component', () => {
 
     spectator = createHost(`<ht-json-viewer></ht-json-viewer>`);
     spectator.setInput({
-      json: inputJson
+      json: inputJson,
     });
 
     const propertiesElement = spectator.queryAll<HTMLElement>('.property');
@@ -109,7 +109,7 @@ describe('Json Tree Component', () => {
 
     spectator = createHost(`<ht-json-viewer></ht-json-viewer>`);
     spectator.setInput({
-      json: inputJson
+      json: inputJson,
     });
 
     const propertiesElement = spectator.queryAll<HTMLElement>('.property');
@@ -138,8 +138,8 @@ describe('Json Tree Component', () => {
     spectator = createHost(`<ht-json-viewer [json]="json" [showExpanded]="showExpanded"></ht-json-viewer>`, {
       hostProps: {
         json: inputJson,
-        showExpanded: false
-      }
+        showExpanded: false,
+      },
     });
 
     const propertiesElement = spectator.queryAll<HTMLElement>('.property');
@@ -182,8 +182,8 @@ describe('Json Tree Component', () => {
 
     spectator = createHost(`<ht-json-viewer [json]="json" ></ht-json-viewer>`, {
       hostProps: {
-        json: inputJson
-      }
+        json: inputJson,
+      },
     });
 
     const propertiesElement = spectator.queryAll<HTMLElement>('.property');
@@ -219,7 +219,7 @@ describe('Json Tree Component', () => {
 
     spectator = createHost(`<ht-json-viewer></ht-json-viewer>`);
     spectator.setInput({
-      json: inputJson
+      json: inputJson,
     });
 
     const propertiesElement = spectator.queryAll<HTMLElement>('.property');
@@ -271,8 +271,8 @@ describe('Json Tree Component', () => {
     spectator = createHost(`<ht-json-viewer [json]="json" [showExpanded]="showExpanded"></ht-json-viewer>`, {
       hostProps: {
         json: inputJson,
-        showExpanded: false
-      }
+        showExpanded: false,
+      },
     });
 
     const propertiesElement = spectator.queryAll<HTMLElement>('.property');

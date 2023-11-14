@@ -18,25 +18,25 @@ describe('Trace Waterfall data source model', () => {
       mockProvider(MetadataService, {
         getAttribute: jest.fn().mockReturnValue(
           of({
-            units: 'ms'
-          })
-        )
+            units: 'ms',
+          }),
+        ),
       }),
       mockProvider(GraphQlQueryEventService),
       mockProvider(LogEventsService, {
-        getLogEventsWithSpanStartTime: jest.fn().mockReturnValue([])
-      })
-    ]
+        getLogEventsWithSpanStartTime: jest.fn().mockReturnValue([]),
+      }),
+    ],
   });
 
   const mockTimeRange = {
     startTime: new Date(1),
-    endTime: new Date(2)
+    endTime: new Date(2),
   };
 
   const getDataForQueryResponse = (
     model: TraceWaterfallDataSourceModel,
-    response: Trace
+    response: Trace,
   ): Observable<WaterfallData[]> => {
     model.query$.pipe(take(1)).subscribe(query => {
       query.responseObserver.next(response);
@@ -50,11 +50,11 @@ describe('Trace Waterfall data source model', () => {
     const spectator = modelFactory(TraceWaterfallDataSourceModel, {
       properties: {
         traceId: 'test-id',
-        entrySpanId: 'span-id'
+        entrySpanId: 'span-id',
       },
       api: {
-        getTimeRange: jest.fn().mockReturnValue(mockTimeRange)
-      }
+        getTimeRange: jest.fn().mockReturnValue(mockTimeRange),
+      },
     });
 
     const receivedQueries = recordObservable(spectator.model.query$.pipe(map(query => query.buildRequest([]))));
@@ -71,48 +71,48 @@ describe('Trace Waterfall data source model', () => {
           traceProperties: [],
           spanProperties: [
             expect.objectContaining({
-              name: 'displaySpanName'
+              name: 'displaySpanName',
             }),
             expect.objectContaining({
-              name: 'duration'
+              name: 'duration',
             }),
             expect.objectContaining({
-              name: 'endTime'
+              name: 'endTime',
             }),
             expect.objectContaining({
-              name: 'parentSpanId'
+              name: 'parentSpanId',
             }),
             expect.objectContaining({
-              name: 'serviceName'
+              name: 'serviceName',
             }),
             expect.objectContaining({
-              name: 'spanTags'
+              name: 'spanTags',
             }),
             expect.objectContaining({
-              name: 'startTime'
+              name: 'startTime',
             }),
             expect.objectContaining({
-              name: 'type'
+              name: 'type',
             }),
             expect.objectContaining({
-              name: 'traceId'
+              name: 'traceId',
             }),
             expect.objectContaining({
-              name: 'errorCount'
-            })
+              name: 'errorCount',
+            }),
           ],
           logEventProperties: [
             expect.objectContaining({
-              name: 'attributes'
+              name: 'attributes',
             }),
             expect.objectContaining({
-              name: 'timestamp'
+              name: 'timestamp',
             }),
             expect.objectContaining({
-              name: 'summary'
-            })
-          ]
-        }
+              name: 'summary',
+            }),
+          ],
+        },
       });
     });
   });
@@ -121,11 +121,11 @@ describe('Trace Waterfall data source model', () => {
       properties: {
         traceId: 'test-id',
         entrySpanId: 'span-id',
-        startTime: 1576364117792
+        startTime: 1576364117792,
       },
       api: {
-        getTimeRange: jest.fn().mockReturnValue(mockTimeRange)
-      }
+        getTimeRange: jest.fn().mockReturnValue(mockTimeRange),
+      },
     });
 
     const receivedQueries = recordObservable(spectator.model.query$.pipe(map(query => query.buildRequest([]))));
@@ -142,48 +142,48 @@ describe('Trace Waterfall data source model', () => {
           traceProperties: [],
           spanProperties: [
             expect.objectContaining({
-              name: 'displaySpanName'
+              name: 'displaySpanName',
             }),
             expect.objectContaining({
-              name: 'duration'
+              name: 'duration',
             }),
             expect.objectContaining({
-              name: 'endTime'
+              name: 'endTime',
             }),
             expect.objectContaining({
-              name: 'parentSpanId'
+              name: 'parentSpanId',
             }),
             expect.objectContaining({
-              name: 'serviceName'
+              name: 'serviceName',
             }),
             expect.objectContaining({
-              name: 'spanTags'
+              name: 'spanTags',
             }),
             expect.objectContaining({
-              name: 'startTime'
+              name: 'startTime',
             }),
             expect.objectContaining({
-              name: 'type'
+              name: 'type',
             }),
             expect.objectContaining({
-              name: 'traceId'
+              name: 'traceId',
             }),
             expect.objectContaining({
-              name: 'errorCount'
-            })
+              name: 'errorCount',
+            }),
           ],
           logEventProperties: [
             expect.objectContaining({
-              name: 'attributes'
+              name: 'attributes',
             }),
             expect.objectContaining({
-              name: 'timestamp'
+              name: 'timestamp',
             }),
             expect.objectContaining({
-              name: 'summary'
-            })
-          ]
-        }
+              name: 'summary',
+            }),
+          ],
+        },
       });
     });
   });
@@ -192,11 +192,11 @@ describe('Trace Waterfall data source model', () => {
     const spectator = modelFactory(TraceWaterfallDataSourceModel, {
       properties: {
         traceId: 'test-id',
-        entrySpanId: 'first-id'
+        entrySpanId: 'first-id',
       },
       api: {
-        getTimeRange: jest.fn().mockReturnValue(mockTimeRange)
-      }
+        getTimeRange: jest.fn().mockReturnValue(mockTimeRange),
+      },
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -215,7 +215,7 @@ describe('Trace Waterfall data source model', () => {
               serviceName: 'Service Name 1',
               type: SpanType.Entry,
               spanTags: {},
-              logEvents: []
+              logEvents: [],
             },
             {
               [spanIdKey]: 'second-id',
@@ -227,10 +227,10 @@ describe('Trace Waterfall data source model', () => {
               serviceName: 'Service Name 2',
               type: SpanType.Exit,
               spanTags: {},
-              logEvents: []
-            }
-          ]
-        })
+              logEvents: [],
+            },
+          ],
+        }),
       ).toBe('(x|)', {
         x: [
           {
@@ -241,14 +241,14 @@ describe('Trace Waterfall data source model', () => {
             endTime: 1571339873680,
             duration: {
               value: 1,
-              units: 'ms'
+              units: 'ms',
             },
             apiName: 'Span Name 1',
             serviceName: 'Service Name 1',
             protocolName: undefined,
             spanType: SpanType.Entry,
             tags: {},
-            logEvents: []
+            logEvents: [],
           },
           {
             id: 'second-id',
@@ -258,16 +258,16 @@ describe('Trace Waterfall data source model', () => {
             endTime: 1571339873680,
             duration: {
               value: 2,
-              units: 'ms'
+              units: 'ms',
             },
             apiName: 'Span Name 2',
             serviceName: 'Service Name 2',
             protocolName: undefined,
             spanType: SpanType.Exit,
             tags: {},
-            logEvents: []
-          }
-        ]
+            logEvents: [],
+          },
+        ],
       });
     });
   });

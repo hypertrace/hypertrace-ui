@@ -19,13 +19,13 @@ describe('Time Picker Component', () => {
       mockProvider(PredefinedTimeService, {
         getPredefinedTimes: jest
           .fn()
-          .mockReturnValue([new Time(8), new Time(9), new Time(10), new Time(11), new Time(12)])
+          .mockReturnValue([new Time(8), new Time(9), new Time(10), new Time(11), new Time(12)]),
       }),
       mockProvider(NavigationService, {
-        navigation$: of(true)
-      })
+        navigation$: of(true),
+      }),
     ],
-    declarations: [MockComponent(LabelComponent)]
+    declarations: [MockComponent(LabelComponent)],
   });
 
   test('should render all trigger elements correctly', fakeAsync(() => {
@@ -37,9 +37,9 @@ describe('Time Picker Component', () => {
         hostProps: {
           time: time,
           showTimeTriggerIcon: false,
-          onTimeChange: onTimeChangeSpy
-        }
-      }
+          onTimeChange: onTimeChangeSpy,
+        },
+      },
     );
 
     spectator.tick();
@@ -49,7 +49,7 @@ describe('Time Picker Component', () => {
     expect(spectator.query('.trigger-caret')).toExist();
 
     spectator.setHostInput({
-      showTimeTriggerIcon: true
+      showTimeTriggerIcon: true,
     });
     expect(spectator.query('.trigger-icon')).toExist();
 

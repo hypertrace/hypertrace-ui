@@ -15,7 +15,7 @@ import { IconSize } from '../icon/icon-size';
         [label]="this.getTooltipText()"
       ></ht-icon>
     </div>
-  `
+  `,
 })
 export class ExpanderToggleComponent {
   public static readonly COLLAPSE: string = 'Collapse';

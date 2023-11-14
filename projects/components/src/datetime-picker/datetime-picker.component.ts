@@ -11,8 +11,8 @@ import { InputAppearance } from '../input/input-appearance';
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: DatetimePickerComponent
-    }
+      useExisting: DatetimePickerComponent,
+    },
   ],
   template: `
     <div class="datetime-picker">
@@ -39,7 +39,7 @@ import { InputAppearance } from '../input/input-appearance';
         ></ng-container>
       </div>
     </div>
-  `
+  `,
 })
 export class DatetimePickerComponent implements ControlValueAccessor, OnChanges {
   @Input()
@@ -71,7 +71,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnChanges 
   public getInputDate(): string {
     return this.date
       ? `${this.date.getFullYear()}-${this.padMonthOrDay(this.date.getMonth() + 1)}-${this.padMonthOrDay(
-          this.date.getDate()
+          this.date.getDate(),
         )}`
       : '';
   }

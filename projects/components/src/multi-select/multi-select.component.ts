@@ -9,7 +9,7 @@ import {
   OnChanges,
   Output,
   QueryList,
-  TemplateRef
+  TemplateRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
@@ -35,8 +35,8 @@ import { MultiSelectJustify } from './multi-select-justify';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: MultiSelectComponent,
-      multi: true
-    }
+      multi: true,
+    },
   ],
   template: `
     <div class="multi-select" [ngClass]="[this.size, this.disabled ? 'disabled' : '', this.popoverOpen ? 'open' : '']">
@@ -156,7 +156,7 @@ import { MultiSelectJustify } from './multi-select-justify';
         {{ values }}
       </div>
     </ng-template>
-  `
+  `,
 })
 export class MultiSelectComponent<V> implements ControlValueAccessor, AfterContentInit, OnChanges {
   @Input()
@@ -235,7 +235,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
     this.filteredOptions$ = combineLatest([this.allOptions$, this.reorderSelectedItemsSubject]).pipe(
       map(([options]) => this.reorderSelectedItemsFirst(options.toArray(), this.selected)),
-      switchMap(reorderedOptions => this.getFilteredOptions(reorderedOptions))
+      switchMap(reorderedOptions => this.getFilteredOptions(reorderedOptions)),
     );
     this.setTriggerLabel();
   }
@@ -327,7 +327,7 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
     if (this.triggerLabelDisplayMode === TriggerLabelDisplayMode.Placeholder) {
       this.triggerValues$ = of({
         label: this.placeholder,
-        overflowItemsCount: 0
+        overflowItemsCount: 0,
       });
 
       return;
@@ -346,9 +346,9 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
                 .slice(1)
                 .map(item => item.label)
                 .join(', ')
-            : undefined
+            : undefined,
         };
-      })
+      }),
     );
   }
 
@@ -367,13 +367,13 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
 
   private reorderSelectedItemsFirst(
     filteredOptions: SelectOptionComponent<V>[],
-    selected?: V[]
+    selected?: V[],
   ): SelectOptionComponent<V>[] {
     if (isEmpty(selected)) {
       return filteredOptions;
     }
     const filteredOptionsPartitions = partition(filteredOptions, filteredOption =>
-      selected?.includes(filteredOption.value)
+      selected?.includes(filteredOption.value),
     );
 
     return [...filteredOptionsPartitions[0], ...filteredOptionsPartitions[1]];
@@ -384,8 +384,8 @@ export class MultiSelectComponent<V> implements ControlValueAccessor, AfterConte
       map(([options, searchText]) =>
         isEmpty(searchText)
           ? options
-          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
-      )
+          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase())),
+      ),
     );
   }
 }
@@ -400,11 +400,11 @@ export const enum TriggerLabelDisplayMode {
   // These may be used as css classes
   Placeholder = 'placeholder-mode',
   Selection = 'selection-mode',
-  Icon = 'icon-mode'
+  Icon = 'icon-mode',
 }
 
 export const enum MultiSelectSearchMode {
   Disabled = 'disabled', // Search is not available
   CaseInsensitive = 'case-insensitive', // Current available values are filtered in a case insensitive way and an emit is triggered
-  EmitOnly = 'emit-only' // Current available values not filtered, but an emit still triggered
+  EmitOnly = 'emit-only', // Current available values not filtered, but an emit still triggered
 }

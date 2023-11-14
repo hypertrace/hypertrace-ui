@@ -10,6 +10,6 @@ import { IsEmptyPipeModule, MemoizeModule } from '@hypertrace/common';
 @NgModule({
   declarations: [ListViewComponent, ListViewValueRendererDirective, ListViewKeyRendererDirective],
   exports: [ListViewComponent, ListViewValueRendererDirective, ListViewKeyRendererDirective],
-  imports: [CommonModule, SummaryValuesModule, SummaryValueModule, MemoizeModule, IsEmptyPipeModule]
+  imports: [CommonModule, SummaryValuesModule, SummaryValueModule, MemoizeModule, IsEmptyPipeModule],
 })
 export class ListViewModule {}

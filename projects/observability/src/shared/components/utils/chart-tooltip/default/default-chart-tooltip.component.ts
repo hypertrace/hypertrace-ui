@@ -6,12 +6,12 @@ import { Observable } from 'rxjs';
   selector: 'ht-chart-tooltip',
   styleUrls: ['./default-chart-tooltip.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './default-chart-tooltip.component.html'
+  templateUrl: './default-chart-tooltip.component.html',
 })
 export class DefaultChartTooltipComponent {
   public constructor(
     @Inject(POPOVER_DATA)
-    public readonly data$: Observable<DefaultChartTooltipRenderData>
+    public readonly data$: Observable<DefaultChartTooltipRenderData>,
   ) {}
 }
 

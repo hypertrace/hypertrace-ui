@@ -6,7 +6,7 @@ export const traceSequenceDashboard: DashboardDefaultConfiguration = {
     type: 'container-widget',
     layout: {
       type: 'auto-container-layout',
-      'enable-style': false
+      'enable-style': false,
     },
     children: [
       {
@@ -18,9 +18,9 @@ export const traceSequenceDashboard: DashboardDefaultConfiguration = {
 
           'entry-span-id': '${spanId}',
 
-          'start-time': '${startTime}'
-        }
-      }
-    ]
-  }
+          'start-time': '${startTime}',
+        },
+      },
+    ],
+  },
 };

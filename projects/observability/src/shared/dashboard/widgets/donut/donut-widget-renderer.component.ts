@@ -25,7 +25,7 @@ import { DonutWidgetModel } from './donut-widget.model';
       >
       </ht-donut>
     </ht-titled-content>
-  `
+  `,
 })
 export class DonutWidgetRendererComponent extends WidgetRenderer<DonutWidgetModel, DonutResults> {
   protected fetchData(): Observable<DonutResults> {

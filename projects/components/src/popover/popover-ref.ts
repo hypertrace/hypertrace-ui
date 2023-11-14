@@ -33,7 +33,7 @@ export class PopoverRef {
   public constructor(
     private readonly overlayRef: OverlayRef,
     private readonly positionBuilder: PopoverPositionBuilder,
-    private readonly navigationService: NavigationService
+    private readonly navigationService: NavigationService,
   ) {
     this.backdropClick$ = overlayRef.backdropClick();
     this.shown$ = overlayRef.attachments();
@@ -85,13 +85,13 @@ export class PopoverRef {
 
   public height(height: string): void {
     this.overlayRef.updateSize({
-      height: height
+      height: height,
     });
   }
 
   public width(width: string): void {
     this.overlayRef.updateSize({
-      width: width
+      width: width,
     });
   }
 
@@ -130,7 +130,7 @@ export class PopoverRef {
   private assertHasBackdrop(): void {
     if (!this.hasBackdrop()) {
       throw Error(
-        'No backdrop associated with popover - make sure to create a popover with a backdrop to listen for a click'
+        'No backdrop associated with popover - make sure to create a popover with a backdrop to listen for a click',
       );
     }
   }

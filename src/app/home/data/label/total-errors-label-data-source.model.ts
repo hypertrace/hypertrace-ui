@@ -3,25 +3,25 @@ import {
   ExploreSpecification,
   ExploreSpecificationBuilder,
   MetricAggregationType,
-  TraceValueDataSourceModel
+  TraceValueDataSourceModel,
 } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Model({
-  type: 'total-errors-label-data-source'
+  type: 'total-errors-label-data-source',
 })
 export class TotalErrorsLabelDataSourceModel extends TraceValueDataSourceModel<TotalErrorsResult> {
   public specification: ExploreSpecification = new ExploreSpecificationBuilder().exploreSpecificationForKey(
     'errorCount',
-    MetricAggregationType.Sum
+    MetricAggregationType.Sum,
   );
 
   public getData(): Observable<TotalErrorsResult> {
     return this.fetchSpecificationData().pipe(
       map(result => ({
-        totalErrors: result.value as number
-      }))
+        totalErrors: result.value as number,
+      })),
     );
   }
 }

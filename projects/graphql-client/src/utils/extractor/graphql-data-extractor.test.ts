@@ -15,7 +15,7 @@ describe('GraphQL Data Extractor', () => {
         }
 
         return selection.path;
-      })
+      }),
     } as Pick<GraphQlRequestBuilder, 'getKeyForSelection'>) as GraphQlRequestBuilder;
     keyLookupMap.clear();
   });
@@ -23,16 +23,16 @@ describe('GraphQL Data Extractor', () => {
   test('can retrieve single values from response objects', () => {
     expect(
       extractor.extract<number>({ path: 'property' }, mockRequestBuilder, {
-        property: 15
-      })
+        property: 15,
+      }),
     ).toBe(15);
   });
 
   test('can retrieve arrays from response objects', () => {
     expect(
       extractor.extract<number[]>({ path: 'wrapper', children: [{ path: 'property' }] }, mockRequestBuilder, {
-        wrapper: [{ property: 5 }, { property: 10 }]
-      })
+        wrapper: [{ property: 5 }, { property: 10 }],
+      }),
     ).toEqual([{ property: 5 }, { property: 10 }]);
   });
 
@@ -40,7 +40,7 @@ describe('GraphQL Data Extractor', () => {
     const selection = { path: 'property' };
     keyLookupMap.set(selection, 'property1');
     expect(
-      extractor.extract<number>(selection, mockRequestBuilder, { property1: 15 })
+      extractor.extract<number>(selection, mockRequestBuilder, { property1: 15 }),
     ).toBe(15);
   });
 
@@ -49,36 +49,36 @@ describe('GraphQL Data Extractor', () => {
     keyLookupMap.set(selection.children[0], 'child1');
     expect(
       extractor.extract<object>(selection, mockRequestBuilder, {
-        property: { child1: 15 }
-      })
+        property: { child1: 15 },
+      }),
     ).toEqual({ child: 15 });
   });
 
   test('result uses alias even if replaced with injected key', () => {
     const selection = {
       path: 'property',
-      children: [{ path: 'child', alias: 'childAlias' }]
+      children: [{ path: 'child', alias: 'childAlias' }],
     };
     keyLookupMap.set(selection.children[0], 'child1');
     expect(
       extractor.extract<object>(selection, mockRequestBuilder, {
-        property: { child1: 15 }
-      })
+        property: { child1: 15 },
+      }),
     ).toEqual({
-      childAlias: 15
+      childAlias: 15,
     });
   });
 
   test('supports removing injected keys inside array', () => {
     const selection = {
       path: 'property',
-      children: [{ path: 'child', alias: 'childAlias' }]
+      children: [{ path: 'child', alias: 'childAlias' }],
     };
     keyLookupMap.set(selection.children[0], 'child1');
     expect(
       extractor.extract<object>(selection, mockRequestBuilder, {
-        property: [{ child1: 15 }, { child1: 20 }]
-      })
+        property: [{ child1: 15 }, { child1: 20 }],
+      }),
     ).toEqual([{ childAlias: 15 }, { childAlias: 20 }]);
   });
 
@@ -87,19 +87,19 @@ describe('GraphQL Data Extractor', () => {
       path: 'property',
       children: [
         { path: 'child', alias: 'firstchild' },
-        { path: 'child', alias: 'secondchild' }
-      ]
+        { path: 'child', alias: 'secondchild' },
+      ],
     };
     keyLookupMap.set(selection.children[0], 'child1');
     keyLookupMap.set(selection.children[1], 'child2');
 
     expect(
       extractor.extract<object>(selection, mockRequestBuilder, {
-        property: { child1: 15, child2: 20 }
-      })
+        property: { child1: 15, child2: 20 },
+      }),
     ).toEqual({
       firstchild: 15,
-      secondchild: 20
+      secondchild: 20,
     });
   });
 });

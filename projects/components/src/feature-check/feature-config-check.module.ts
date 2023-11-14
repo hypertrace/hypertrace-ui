@@ -5,6 +5,6 @@ import { IsFeatureStateEnabledPipe } from './is-feature-state-enabled.pipe';
 
 @NgModule({
   declarations: [IfFeatureDirective, FeaturePipe, IsFeatureStateEnabledPipe],
-  exports: [IfFeatureDirective, FeaturePipe, IsFeatureStateEnabledPipe]
+  exports: [IfFeatureDirective, FeaturePipe, IsFeatureStateEnabledPipe],
 })
 export class FeatureConfigCheckModule {}

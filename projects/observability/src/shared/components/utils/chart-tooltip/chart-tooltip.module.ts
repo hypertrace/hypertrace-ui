@@ -9,6 +9,6 @@ import { DefaultChartTooltipComponent } from './default/default-chart-tooltip.co
   declarations: [DefaultChartTooltipComponent],
   exports: [DefaultChartTooltipComponent],
   providers: [ChartTooltipBuilderService],
-  imports: [PopoverModule, CommonModule, FormattingModule, LabelModule]
+  imports: [PopoverModule, CommonModule, FormattingModule, LabelModule],
 })
 export class ChartTooltipModule {}

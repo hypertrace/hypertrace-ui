@@ -46,7 +46,7 @@ import { TraceDetailWidgetModel } from './trace-detail-widget.model';
         </ht-span-detail>
       </div>
     </div>
-  `
+  `,
 })
 export class TraceDetailWidgetRendererComponent
   extends WidgetRenderer<TraceDetailWidgetModel, TraceDetailData>

@@ -12,7 +12,7 @@ export class LoadAsyncService {
       map(data => this.buildStateForEmittedData<T>(data)),
       defaultIfEmpty(this.buildNoDataState<T>()),
       catchError(error => of(this.buildStateForEmittedError<T>(error))),
-      startWith({ type: LoadAsyncStateType.Loading })
+      startWith({ type: LoadAsyncStateType.Loading }),
     );
   }
 
@@ -25,8 +25,8 @@ export class LoadAsyncService {
       type: LoadAsyncStateType.Success,
       context: {
         $implicit: data,
-        htLoadAsync: data
-      }
+        htLoadAsync: data,
+      },
     };
   }
 
@@ -41,7 +41,7 @@ export class LoadAsyncService {
 
   private buildNoDataState<T>(): AsyncState<T> {
     return {
-      type: LoadAsyncStateType.NoData
+      type: LoadAsyncStateType.NoData,
     };
   }
 }
@@ -69,7 +69,7 @@ export const enum LoaderType {
   Circle = 'circle',
   TableRow = 'table-row',
   ListItem = 'list-item',
-  Donut = 'donut'
+  Donut = 'donut',
 }
 
 interface LoadingAsyncState {

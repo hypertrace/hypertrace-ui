@@ -10,25 +10,25 @@ export class SvgUtilService {
       dx: 0,
       dy: 1,
       blurStdDeviation: 3,
-      opacity: 0.5
+      opacity: 0.5,
     },
     {
       dx: 0,
       dy: 3,
       blurStdDeviation: 2,
-      opacity: 0.36
+      opacity: 0.36,
     },
     {
       dx: 0,
       dy: 2,
       blurStdDeviation: 2,
-      opacity: 0.32
-    }
+      opacity: 0.32,
+    },
   ];
 
   public constructor(
     private readonly domElementMeasurerService: DomElementMeasurerService,
-    private readonly d3UtilService: D3UtilService
+    private readonly d3UtilService: D3UtilService,
   ) {}
 
   public addDefinitionDeclarationToSvgIfNotExists(element: SVGGraphicsElement, domRenderer: Renderer2): SVGDefsElement {
@@ -44,7 +44,7 @@ export class SvgUtilService {
     element: SVGGraphicsElement,
     filterId: string,
     domRenderer: Renderer2,
-    color: string = 'black'
+    color: string = 'black',
   ): SVGFilterElement {
     const filter = this.d3UtilService
       .select(this.addDefinitionDeclarationToSvgIfNotExists(element, domRenderer), domRenderer)

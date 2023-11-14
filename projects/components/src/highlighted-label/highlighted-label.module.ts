@@ -5,6 +5,6 @@ import { HighlightedLabelComponent } from './highlighted-label.component';
 @NgModule({
   declarations: [HighlightedLabelComponent],
   imports: [CommonModule],
-  exports: [HighlightedLabelComponent]
+  exports: [HighlightedLabelComponent],
 })
 export class HighlightedLabelModule {}

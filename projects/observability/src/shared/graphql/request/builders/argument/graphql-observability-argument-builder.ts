@@ -17,7 +17,7 @@ export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder 
   public forNeighborType(type: EntityType): GraphQlArgument {
     return {
       name: 'neighborType',
-      value: new GraphQlEnumArgument(type)
+      value: new GraphQlEnumArgument(type),
     };
   }
 
@@ -26,40 +26,40 @@ export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder 
       case MetricAggregationType.AvgrateMinute:
         return [
           { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
-          { name: 'size', value: 1 }
+          { name: 'size', value: 1 },
         ];
       case MetricAggregationType.AvgrateSecond:
         return [
           { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Seconds) },
-          { name: 'size', value: 1 }
+          { name: 'size', value: 1 },
         ];
       case MetricAggregationType.P99:
         return [
           {
             name: 'size',
-            value: 99
-          }
+            value: 99,
+          },
         ];
       case MetricAggregationType.P95:
         return [
           {
             name: 'size',
-            value: 95
-          }
+            value: 95,
+          },
         ];
       case MetricAggregationType.P90:
         return [
           {
             name: 'size',
-            value: 90
-          }
+            value: 90,
+          },
         ];
       case MetricAggregationType.P50:
         return [
           {
             name: 'size',
-            value: 50
-          }
+            value: 50,
+          },
         ];
       default:
         return [];
@@ -74,9 +74,9 @@ export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder 
             name: 'interval',
             value: {
               size: interval.value,
-              units: new GraphQlEnumArgument(convertToGraphQlIntervalUnit(interval.unit))
-            }
-          }
+              units: new GraphQlEnumArgument(convertToGraphQlIntervalUnit(interval.unit)),
+            },
+          },
         ];
   }
 
@@ -86,12 +86,12 @@ export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder 
       : [
           {
             name: 'size',
-            value: interval.value
+            value: interval.value,
           },
           {
             name: 'units',
-            value: new GraphQlEnumArgument(convertToGraphQlIntervalUnit(interval.unit))
-          }
+            value: new GraphQlEnumArgument(convertToGraphQlIntervalUnit(interval.unit)),
+          },
         ];
   }
 
@@ -112,16 +112,16 @@ export class GraphQlObservabilityArgumentBuilder extends GraphQlArgumentBuilder 
         value: {
           expressions: groupBy.keyExpressions.map(expression => this.buildAttributeExpression(expression)),
           groupLimit: groupBy.limit,
-          ...(isNil(groupBy.includeRest) ? {} : { includeRest: groupBy.includeRest })
-        }
-      }
+          ...(isNil(groupBy.includeRest) ? {} : { includeRest: groupBy.includeRest }),
+        },
+      },
     ];
   }
 
   public forTraceType(type: TraceType): GraphQlArgument {
     return {
       name: 'type',
-      value: new GraphQlEnumArgument(type)
+      value: new GraphQlEnumArgument(type),
     };
   }
 }

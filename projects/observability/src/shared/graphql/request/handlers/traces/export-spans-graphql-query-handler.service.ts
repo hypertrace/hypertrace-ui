@@ -16,7 +16,7 @@ export class ExportSpansGraphQlQueryHandlerService
 
   public constructor(
     private readonly timeRangeService: TimeRangeService,
-    private readonly globalGraphQlFilterService: GlobalGraphQlFilterService
+    private readonly globalGraphQlFilterService: GlobalGraphQlFilterService,
   ) {}
 
   public matchesRequest(request: unknown): request is GraphQlExportSpansRequest {
@@ -37,15 +37,15 @@ export class ExportSpansGraphQlQueryHandlerService
         this.argBuilder.forTimeRange(timeRange),
         ...this.argBuilder.forFilters(
           this.globalGraphQlFilterService.mergeGlobalFilters(resolveTraceType(request.traceType), [
-            this.buildTraceIdFilter(request)
-          ])
-        )
+            this.buildTraceIdFilter(request),
+          ]),
+        ),
       ],
       children: [
         {
-          path: 'result'
-        }
-      ]
+          path: 'result',
+        },
+      ],
     };
   }
 

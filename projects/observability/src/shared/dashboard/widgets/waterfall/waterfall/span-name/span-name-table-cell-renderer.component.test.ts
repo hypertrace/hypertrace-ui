@@ -8,7 +8,7 @@ describe('Span name table cell renderer component', () => {
   const spanNameData = {
     serviceName: 'test-entity',
     protocolName: 'test-protocol',
-    apiName: 'test-span-name'
+    apiName: 'test-span-name',
   };
 
   const buildComponent = createComponentFactory({
@@ -17,14 +17,14 @@ describe('Span name table cell renderer component', () => {
     providers: [
       tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
         new SpanNameTableCellParser(undefined!),
         0,
-        spanNameData
-      )
+        spanNameData,
+      ),
     ],
-    shallow: true
+    shallow: true,
   });
 
   test('should render span name without color and error icon and build tooltip ', () => {
@@ -45,10 +45,10 @@ describe('Span name table cell renderer component', () => {
     const spanNameDataWithColor = {
       ...spanNameData,
       color: 'blue',
-      hasError: true
+      hasError: true,
     };
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(spanNameDataWithColor)]
+      providers: [tableCellDataProvider(spanNameDataWithColor)],
     });
 
     const tooltip = `${spanNameData.serviceName} ${spanNameData.protocolName} ${spanNameData.apiName}`;
@@ -65,10 +65,10 @@ describe('Span name table cell renderer component', () => {
   test('should render log icon ', () => {
     const spanNameDataWithColor = {
       ...spanNameData,
-      hasLogs: true
+      hasLogs: true,
     };
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(spanNameDataWithColor)]
+      providers: [tableCellDataProvider(spanNameDataWithColor)],
     });
     expect(spectator.query('.log-icon')).toExist();
   });

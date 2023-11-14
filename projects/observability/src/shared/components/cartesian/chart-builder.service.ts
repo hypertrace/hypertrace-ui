@@ -9,14 +9,14 @@ export class ChartBuilderService {
   public constructor(
     private readonly injector: Injector,
     private readonly svgUtilService: SvgUtilService,
-    protected readonly d3Utils: D3UtilService
+    protected readonly d3Utils: D3UtilService,
   ) {}
 
   public build<TData>(
     strategy: RenderingStrategy,
     element: Element,
     renderer: Renderer2,
-    groupId?: string
+    groupId?: string,
   ): CartesianChart<TData> {
     return new DefaultCartesianChart(
       element,
@@ -25,7 +25,7 @@ export class ChartBuilderService {
       this.svgUtilService,
       this.d3Utils,
       renderer,
-      groupId
+      groupId,
     );
   }
 }

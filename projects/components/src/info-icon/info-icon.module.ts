@@ -7,6 +7,6 @@ import { InfoIconComponent } from './info-icon.component';
 @NgModule({
   imports: [CommonModule, IconModule, TooltipModule],
   declarations: [InfoIconComponent],
-  exports: [InfoIconComponent]
+  exports: [InfoIconComponent],
 })
 export class InfoIconModule {}

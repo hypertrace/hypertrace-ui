@@ -7,6 +7,6 @@ import { MemoizeModule } from '@hypertrace/common';
 @NgModule({
   imports: [CommonModule, MemoizeModule],
   declarations: [SplitterComponent, SplitterContentDirective],
-  exports: [SplitterComponent, SplitterContentDirective]
+  exports: [SplitterComponent, SplitterContentDirective],
 })
 export class SplitterModule {}

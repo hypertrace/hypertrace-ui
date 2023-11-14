@@ -5,16 +5,16 @@ import { AttributeSpecificationModel } from '../../specifiers/attribute-specific
 import { EntityValueDataSourceModel } from '../entity-value-data-source.model';
 
 @Model({
-  type: 'entity-attribute-data-source'
+  type: 'entity-attribute-data-source',
 })
 export class EntityAttributeDataSourceModel extends EntityValueDataSourceModel<string | number> {
   @ModelProperty({
     key: 'attribute',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: AttributeSpecificationModel
+      defaultModelClass: AttributeSpecificationModel,
     } as ModelModelPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public specification!: Specification;
 

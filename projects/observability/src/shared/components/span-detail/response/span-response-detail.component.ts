@@ -34,7 +34,7 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
         <ht-span-detail-call-body [body]="this.responseBody"></ht-span-detail-call-body>
       </div>
     </div>
-  `
+  `,
 })
 export class SpanResponseDetailComponent {
   @Input()
@@ -61,5 +61,5 @@ export class SpanResponseDetailComponent {
 
 const enum ResponseFieldName {
   Headers = 'responseHeaders',
-  Cookies = 'responseCookies'
+  Cookies = 'responseCookies',
 }

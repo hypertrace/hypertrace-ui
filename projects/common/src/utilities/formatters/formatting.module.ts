@@ -21,7 +21,7 @@ import { DisplayTimeAgo } from './time/display-time-ago.pipe';
     DisplayTitlePipe,
     OrdinalPipe,
     DisplayStringEnumPipe,
-    DisplayFileSizePipe
+    DisplayFileSizePipe,
   ],
   exports: [
     DisplayNumberPipe,
@@ -33,7 +33,7 @@ import { DisplayTimeAgo } from './time/display-time-ago.pipe';
     DisplayTitlePipe,
     OrdinalPipe,
     DisplayStringEnumPipe,
-    DisplayFileSizePipe
-  ]
+    DisplayFileSizePipe,
+  ],
 })
 export class FormattingModule {}

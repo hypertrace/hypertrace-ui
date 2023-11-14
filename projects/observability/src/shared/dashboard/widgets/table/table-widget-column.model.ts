@@ -4,7 +4,7 @@ import {
   TableColumnConfig,
   TableColumnWidth,
   TableRow,
-  TableSortDirection
+  TableSortDirection,
 } from '@hypertrace/components';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import {
@@ -13,7 +13,7 @@ import {
   ModelProperty,
   ModelPropertyType,
   STRING_PROPERTY,
-  UNKNOWN_PROPERTY
+  UNKNOWN_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
@@ -24,70 +24,70 @@ import { InteractionHandler } from '../../interaction/interaction-handler';
 
 @Model({
   type: 'table-widget-column',
-  displayName: 'Column'
+  displayName: 'Column',
 })
 export class TableWidgetColumnModel {
   @ModelProperty({
     key: 'value',
     displayName: 'Value',
     required: true,
-    type: ModelPropertyType.TYPE
+    type: ModelPropertyType.TYPE,
   })
   public value!: Specification;
 
   @ModelProperty({
     key: 'title',
     displayName: 'Title',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public title?: string;
 
   @ModelProperty({
     key: 'titleTooltip',
     displayName: 'Title Tooltip',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public titleTooltip?: string;
 
   @ModelProperty({
     key: 'width',
     displayName: 'Width',
-    type: UNKNOWN_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type,
   })
   public width?: TableColumnWidth;
 
   @ModelProperty({
     key: 'alignment',
     displayName: 'Alignment',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public alignment?: TableCellAlignmentType;
 
   @ModelProperty({
     key: 'visible',
     displayName: 'Visible',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public visible: boolean = true;
 
   @ModelProperty({
     key: 'filterable',
     displayName: 'Filterable',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public filterable?: boolean = false;
 
   @ModelProperty({
     key: 'display',
     displayName: 'Display',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public display: string = CoreTableCellRendererType.Text;
 
   @ModelProperty({
     key: 'click-handler',
     displayName: 'Click Handler',
-    type: ModelPropertyType.TYPE
+    type: ModelPropertyType.TYPE,
   })
   public clickHandler?: InteractionHandler;
 
@@ -96,20 +96,20 @@ export class TableWidgetColumnModel {
     displayName: 'Sort',
     type: {
       key: ENUM_TYPE.type,
-      values: [TableSortDirection.Ascending, TableSortDirection.Descending]
-    } as EnumPropertyTypeInstance
+      values: [TableSortDirection.Ascending, TableSortDirection.Descending],
+    } as EnumPropertyTypeInstance,
   })
   public sort?: TableSortDirection;
 
   @ModelProperty({
     key: 'sortable',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public sortable: boolean = true;
 
   @ModelProperty({
     key: 'editable',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public editable: boolean = true;
 
@@ -139,7 +139,7 @@ export class TableWidgetColumnModel {
       sort: this.sort,
       sortable: this.sortable,
       onClick: this.buildClickHandlerIfDefined(),
-      specification: this.value
+      specification: this.value,
     };
   }
 

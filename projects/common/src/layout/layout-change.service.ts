@@ -12,12 +12,12 @@ export class LayoutChangeService implements OnDestroy {
 
   public layout$: Observable<void> = this.layoutChangeSubject.pipe(
     map(_ => undefined),
-    share()
+    share(),
   );
 
   public constructor(
     hostElementRef: ElementRef,
-    @SkipSelf() @Optional() private readonly parentLayoutChange?: LayoutChangeService
+    @SkipSelf() @Optional() private readonly parentLayoutChange?: LayoutChangeService,
   ) {
     this.boundingElement = hostElementRef.nativeElement;
 
@@ -74,7 +74,7 @@ export class LayoutChangeService implements OnDestroy {
   private getWindowResizeEvents(): Observable<LayoutChangeEvent> {
     return fromEvent(window, 'resize').pipe(
       debounceTime(80),
-      map(() => ({}))
+      map(() => ({})),
     );
   }
 

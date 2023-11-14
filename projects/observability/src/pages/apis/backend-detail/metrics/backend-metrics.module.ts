@@ -11,9 +11,9 @@ import { backendMetricsDashboard } from './backend-metrics.dashboard';
     ObservabilityDashboardModule,
     CommonModule,
     LoadAsyncModule,
-    NavigableDashboardModule.withDefaultDashboards(backendMetricsDashboard)
+    NavigableDashboardModule.withDefaultDashboards(backendMetricsDashboard),
   ],
   declarations: [BackendMetricsComponent],
-  exports: [BackendMetricsComponent]
+  exports: [BackendMetricsComponent],
 })
 export class BackendMetricsModule {}

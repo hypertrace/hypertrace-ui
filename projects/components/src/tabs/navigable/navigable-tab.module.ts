@@ -23,7 +23,7 @@ import { NavigableTabComponent } from './navigable-tab.component';
     MemoizeModule,
     LinkModule,
     LabelTagModule,
-    InfoIconModule
-  ]
+    InfoIconModule,
+  ],
 })
 export class NavigableTabModule {}

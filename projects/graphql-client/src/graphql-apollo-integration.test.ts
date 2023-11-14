@@ -18,10 +18,10 @@ describe('GraphQl Apollo Integration Service', () => {
         provide: GRAPHQL_OPTIONS,
         useValue: {
           uri: graphQlUri,
-          batchSize: graphQlBatchSize
-        }
-      }
-    ]
+          batchSize: graphQlBatchSize,
+        },
+      },
+    ],
   });
 
   const buildRequestString = (rootPath: string = 'test', params: string[] = [], fields: string[] = []): string =>
@@ -29,7 +29,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .withSelects({
         path: rootPath,
         arguments: params.map(param => ({ name: param, value: param })),
-        children: [{ path: 'id' }, { path: 'value' }, ...fields.map(field => ({ path: field }))]
+        children: [{ path: 'id' }, { path: 'value' }, ...fields.map(field => ({ path: field }))],
       })
       .build();
 
@@ -44,9 +44,9 @@ describe('GraphQl Apollo Integration Service', () => {
         ...fields
           .map(field => ({ [field]: field }))
           .reduce((combinedObject, currentValue) => ({ ...combinedObject, ...currentValue }), {}),
-        __typename: 'test-type'
-      }
-    }
+        __typename: 'test-type',
+      },
+    },
   });
 
   const buildServerArrayResponse = (rootPath: string = 'test') => ({
@@ -55,10 +55,10 @@ describe('GraphQl Apollo Integration Service', () => {
         [rootPath]: {
           id: 'foo',
           value: 'bar',
-          __typename: 'test-type'
-        }
-      }
-    ]
+          __typename: 'test-type',
+        },
+      },
+    ],
   });
 
   test('fires queries in batches', fakeAsync(() => {
@@ -68,17 +68,17 @@ describe('GraphQl Apollo Integration Service', () => {
           provide: GRAPHQL_OPTIONS,
           useValue: {
             uri: graphQlUri,
-            batchSize: 2
-          }
-        }
-      ]
+            batchSize: 2,
+          },
+        },
+      ],
     });
 
     spectator.service
       .query({
         query: gql(buildRequestString()),
         errorPolicy: 'all',
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-first',
       })
       .subscribe();
 
@@ -87,7 +87,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .query({
         query: gql(buildRequestString('test2')),
         errorPolicy: 'all',
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-first',
       })
       .subscribe();
 
@@ -98,12 +98,12 @@ describe('GraphQl Apollo Integration Service', () => {
     expect(httpRequest.body).toEqual([
       {
         variables: {},
-        query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n'
+        query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n',
       },
       {
         variables: {},
-        query: '{\n  test2 {\n    id\n    value\n    __typename\n  }\n}\n'
-      }
+        query: '{\n  test2 {\n    id\n    value\n    __typename\n  }\n}\n',
+      },
     ]);
 
     // Make third request
@@ -111,7 +111,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .query({
         query: gql(buildRequestString('test3')),
         errorPolicy: 'all',
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-first',
       })
       .subscribe();
     tick();
@@ -121,8 +121,8 @@ describe('GraphQl Apollo Integration Service', () => {
     expect(httpRequest.body).toEqual([
       {
         variables: {},
-        query: '{\n  test3 {\n    id\n    value\n    __typename\n  }\n}\n'
-      }
+        query: '{\n  test3 {\n    id\n    value\n    __typename\n  }\n}\n',
+      },
     ]);
 
     spectator.controller.verify();
@@ -134,7 +134,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .query({
         query: gql(buildRequestString()),
         errorPolicy: 'all',
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-first',
       })
       .subscribe();
     // Flush first request out, otherwise apollo deduping will always reuse an identical in flight query
@@ -145,7 +145,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .query({
         query: gql(buildRequestString()),
         errorPolicy: 'all',
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-first',
       })
       .subscribe();
     spectator.controller.verify();
@@ -158,7 +158,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .query({
         query: gql(buildRequestString()),
         errorPolicy: 'all',
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-first',
       })
       .subscribe();
     // Flush first request out, otherwise apollo deduping will always reuse an identical in flight query
@@ -169,7 +169,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .query({
         query: gql(buildRequestString()),
         errorPolicy: 'all',
-        fetchPolicy: 'no-cache'
+        fetchPolicy: 'no-cache',
       })
       .subscribe();
     spectator.expectOne(graphQlUri, HttpMethod.POST).flush(buildServerResponse());
@@ -182,7 +182,7 @@ describe('GraphQl Apollo Integration Service', () => {
     const query$ = spectator.service.query({
       query: gql(buildRequestString()),
       errorPolicy: 'all',
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'cache-first',
     });
     tick();
     spectator.controller.expectNone(graphQlUri);
@@ -199,7 +199,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .query({
         query: gql(buildRequestString()),
         errorPolicy: 'all',
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-first',
       })
       .subscribe();
     tick();
@@ -212,7 +212,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .query({
         query: gql(modifiedRequest),
         errorPolicy: 'all',
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-first',
       })
       .subscribe();
     tick();
@@ -227,7 +227,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .query({
         query: gql(buildRequestString()),
         errorPolicy: 'all',
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-first',
       })
       .subscribe(result => {
         expect((result.data as { test: { value: string } }[])[0].test.value).toEqual('bar');
@@ -244,7 +244,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .query({
         query: gql(buildRequestIdString('test')),
         errorPolicy: 'all',
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-first',
       })
       .subscribe();
     tick();
@@ -257,7 +257,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .query({
         query: gql(modifiedRequest),
         errorPolicy: 'all',
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-first',
       })
       .subscribe();
     tick();
@@ -272,7 +272,7 @@ describe('GraphQl Apollo Integration Service', () => {
       .query({
         query: gql(buildRequestIdString()),
         errorPolicy: 'all',
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-first',
       })
       .subscribe(result => {
         expect((result.data as { test: { value: string } }).test.value).toEqual('baz'); // Should not be bar
@@ -289,7 +289,7 @@ describe('GraphQl Apollo Integration Service', () => {
     const query$ = spectator.service.query({
       query: gql(buildRequestString()),
       errorPolicy: 'all',
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'no-cache',
     });
     tick();
     spectator.controller.expectNone(graphQlUri);
@@ -301,8 +301,8 @@ describe('GraphQl Apollo Integration Service', () => {
     expect(spectator.expectOne(graphQlUri, HttpMethod.POST).request.body).toEqual([
       {
         variables: {},
-        query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n'
-      }
+        query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n',
+      },
     ]);
     flush();
   }));
@@ -312,7 +312,7 @@ describe('GraphQl Apollo Integration Service', () => {
     const query$ = spectator.service.query({
       query: gql(buildRequestString()),
       errorPolicy: 'all',
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'no-cache',
     });
     query$.subscribe();
     tick();
@@ -322,8 +322,8 @@ describe('GraphQl Apollo Integration Service', () => {
     expect(testRequest.request.body).toEqual([
       {
         variables: {},
-        query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n'
-      }
+        query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n',
+      },
     ]);
 
     query$.subscribe();
@@ -334,8 +334,8 @@ describe('GraphQl Apollo Integration Service', () => {
     expect(testRequest.request.body).toEqual([
       {
         variables: {},
-        query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n'
-      }
+        query: '{\n  test {\n    id\n    value\n    __typename\n  }\n}\n',
+      },
     ]);
     flush();
   }));

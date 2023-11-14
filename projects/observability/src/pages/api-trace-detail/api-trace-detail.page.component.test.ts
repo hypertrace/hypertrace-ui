@@ -15,7 +15,7 @@ describe('Api Trace Details Page Component', () => {
     type: 'trace-type',
     timeString: 'test-time-string',
     titleString: 'test-title',
-    startTime: 'test-start-time'
+    startTime: 'test-start-time',
   };
 
   const createComponent = createComponentFactory({
@@ -24,16 +24,16 @@ describe('Api Trace Details Page Component', () => {
     providers: [
       mockProvider(NavigationService),
       mockProvider(ExplorerService, {
-        buildNavParamsWithFilters: jest.fn().mockReturnValue(of('traceId_eq_test-123'))
-      })
+        buildNavParamsWithFilters: jest.fn().mockReturnValue(of('traceId_eq_test-123')),
+      }),
     ],
     imports: [LoadAsyncModule, MemoizeModule],
     componentProviders: [
       mockProvider(ApiTraceDetailService, {
-        fetchTraceDetails: jest.fn().mockReturnValue(of(mockTraceDetails))
-      })
+        fetchTraceDetails: jest.fn().mockReturnValue(of(mockTraceDetails)),
+      }),
     ],
-    declarations: [MockComponent(ExploreFilterLinkComponent)]
+    declarations: [MockComponent(ExploreFilterLinkComponent)],
   });
 
   test('should render content correctly', fakeAsync(() => {
@@ -48,7 +48,7 @@ describe('Api Trace Details Page Component', () => {
     expect(spectator.inject(NavigationService).navigateWithinApp).toHaveBeenCalledWith([
       '/trace',
       mockTraceDetails.traceId,
-      { startTime: mockTraceDetails.startTime }
+      { startTime: mockTraceDetails.startTime },
     ]);
   }));
 

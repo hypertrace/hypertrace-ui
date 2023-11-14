@@ -18,7 +18,7 @@ import { JsonWidgetModel } from './json-widget.model';
         <pre style="overflow-x: auto">{{ data | json }}</pre>
       </div>
     </ht-titled-content>
-  `
+  `,
 })
 export class JsonWidgetRendererComponent extends WidgetRenderer<JsonWidgetModel, string> {
   protected fetchData(): Observable<string> {

@@ -10,16 +10,16 @@ describe('Textarea Component', () => {
   const createHost = createHostFactory({
     component: TextareaComponent,
     imports: [TraceTextareaModule, NoopAnimationsModule],
-    declareComponent: false
+    declareComponent: false,
   });
 
   test('should warn when placeholder is not provided', () => {
     spectator = createHost(`<ht-textarea></ht-textarea>`, {
       providers: [
         mockProvider(LoggerService, {
-          warn: jest.fn()
-        })
-      ]
+          warn: jest.fn(),
+        }),
+      ],
     });
 
     expect(spectator.inject(LoggerService).warn).toHaveBeenCalled();
@@ -28,13 +28,13 @@ describe('Textarea Component', () => {
   test('should not warn when placeholder is provided', () => {
     spectator = createHost(`<ht-textarea [placeholder]="placeholder"></ht-textarea>`, {
       hostProps: {
-        placeholder: 'TEST'
+        placeholder: 'TEST',
       },
       providers: [
         mockProvider(LoggerService, {
-          warn: jest.fn()
-        })
-      ]
+          warn: jest.fn(),
+        }),
+      ],
     });
 
     expect(spectator.inject(LoggerService).warn).not.toHaveBeenCalled();
@@ -44,8 +44,8 @@ describe('Textarea Component', () => {
     spectator = createHost(`<ht-textarea [placeholder]="placeholder" [disabled]="disabled"></ht-textarea>`, {
       hostProps: {
         placeholder: 'TEST',
-        disabled: true
-      }
+        disabled: true,
+      },
     });
 
     const disabled = spectator.query('textarea')!.getAttribute('ng-reflect-disabled');
@@ -59,8 +59,8 @@ describe('Textarea Component', () => {
     spectator = createHost(`<ht-textarea [placeholder]="placeholder" [rows]="rows"></ht-textarea>`, {
       hostProps: {
         placeholder: 'TEST',
-        rows: rows
-      }
+        rows: rows,
+      },
     });
 
     expect((spectator.query('.textarea') as HTMLTextAreaElement).rows).toBe(rows);

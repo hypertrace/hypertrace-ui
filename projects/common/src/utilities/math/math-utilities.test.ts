@@ -5,7 +5,7 @@ import {
   getPercentage,
   getVectorAngleRad,
   isAngleBetweenRadians,
-  normalizeAngleRadians
+  normalizeAngleRadians,
 } from './math-utilities';
 
 describe('getVectorAngleRad', () => {

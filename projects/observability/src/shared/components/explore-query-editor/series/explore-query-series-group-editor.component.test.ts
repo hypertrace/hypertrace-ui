@@ -19,7 +19,7 @@ describe('Explore Query Series Group Editor component', () => {
   const attributeMetadata = [
     { name: 'first', allowedAggregations: [MetricAggregationType.Average] },
     { name: 'second', allowedAggregations: [MetricAggregationType.Average] },
-    { name: 'modified first', allowedAggregations: [MetricAggregationType.Average] }
+    { name: 'modified first', allowedAggregations: [MetricAggregationType.Average] },
   ];
 
   const hostBuilder = createHostFactory({
@@ -30,23 +30,23 @@ describe('Explore Query Series Group Editor component', () => {
       mockProvider(LoggerService, {
         warn: jest.fn(() => {
           throw Error();
-        })
+        }),
       }),
       mockProvider(MetadataService, {
         getAttributeDisplayName: (attribute: AttributeMetadata) => attribute.name,
-        getSelectionAttributes: () => of(attributeMetadata)
+        getSelectionAttributes: () => of(attributeMetadata),
       }),
       mockProvider(NavigationService, {
-        navigation$: EMPTY
-      })
+        navigation$: EMPTY,
+      }),
     ],
-    shallow: true
+    shallow: true,
   });
   const buildSeries = (key: string, aggregation?: MetricAggregationType) => ({
     specification: new ExploreSpecificationBuilder().exploreSpecificationForKey(key, aggregation),
     visualizationOptions: {
-      type: CartesianSeriesVisualizationType.Column
-    }
+      type: CartesianSeriesVisualizationType.Column,
+    },
   });
 
   const matchSeriesWithName = (name: string) =>
@@ -60,9 +60,9 @@ describe('Explore Query Series Group Editor component', () => {
     </ht-explore-query-series-group-editor>`,
       {
         hostProps: {
-          series: [buildSeries('first'), buildSeries('second')]
-        }
-      }
+          series: [buildSeries('first'), buildSeries('second')],
+        },
+      },
     );
     spectator.tick();
 
@@ -82,9 +82,9 @@ describe('Explore Query Series Group Editor component', () => {
       {
         hostProps: {
           series: [buildSeries('first')],
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     spectator.click('.add-series-button');
@@ -100,9 +100,9 @@ describe('Explore Query Series Group Editor component', () => {
       {
         hostProps: {
           series: [buildSeries('first'), buildSeries('second')],
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     spectator.queryAll(ExploreQuerySeriesEditorComponent)[1].onRemove();
@@ -119,9 +119,9 @@ describe('Explore Query Series Group Editor component', () => {
       {
         hostProps: {
           series: [buildSeries('first'), buildSeries('second')],
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     spectator.queryAll(ExploreQuerySeriesEditorComponent)[0].seriesChange.emit(buildSeries('modified first'));

@@ -9,6 +9,6 @@ import { ColorPickerComponent } from './color-picker.component';
 @NgModule({
   imports: [CommonModule, FormsModule, IconModule, ColorSketchModule, PopoverModule],
   declarations: [ColorPickerComponent],
-  exports: [ColorPickerComponent]
+  exports: [ColorPickerComponent],
 })
 export class ColorPickerModule {}

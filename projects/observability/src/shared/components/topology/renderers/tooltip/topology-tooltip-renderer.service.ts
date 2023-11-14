@@ -6,7 +6,7 @@ import {
   TopologyNode,
   TopologyTooltip,
   TopologyTooltipOptions,
-  TopologyTooltipRenderer
+  TopologyTooltipRenderer,
 } from '../../topology';
 import { TopologyTooltipPopover } from './topology-tooltip-popover';
 
@@ -43,7 +43,7 @@ export class TopologyTooltipRendererService implements TopologyTooltipRenderer {
       destroy: () => {
         /*NOOP*/
       },
-      hidden$: EMPTY
+      hidden$: EMPTY,
     };
   }
 }

@@ -14,7 +14,7 @@ export class StringArrayFilterBuilder extends AbstractFilterBuilder<string> {
       FilterOperator.In,
       FilterOperator.NotIn,
       FilterOperator.Like,
-      FilterOperator.Contains
+      FilterOperator.Contains,
     ];
   }
 

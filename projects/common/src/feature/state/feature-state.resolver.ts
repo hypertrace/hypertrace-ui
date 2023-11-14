@@ -9,7 +9,7 @@ export abstract class FeatureStateResolver {
 
   public getFeatureState(feature: string): Observable<FeatureState> {
     return this.getFeatureFlagValue(feature).pipe(
-      map(featureFlagValue => this.convertFlagValueToFeatureState(featureFlagValue))
+      map(featureFlagValue => this.convertFlagValueToFeatureState(featureFlagValue)),
     );
   }
 
@@ -20,7 +20,7 @@ export abstract class FeatureStateResolver {
   public getCombinedFeatureState(features: string[]): Observable<FeatureState> {
     return forkJoinSafeEmpty(features.map(feature => this.getFeatureState(feature))).pipe(
       map(values => this.reduceFeatureState(values)),
-      defaultIfEmpty<FeatureState>(FeatureState.Enabled)
+      defaultIfEmpty<FeatureState>(FeatureState.Enabled),
     );
   }
 

@@ -11,30 +11,30 @@ describe('List View Component', () => {
     selector: 'ht-test-host-component',
     template: `
       <ht-list-view [records]="this.records" [metadata]="this.metadata" [header]="this.header"></ht-list-view>
-    `
+    `,
   })
   class TestHostComponent {
     public records: ListViewRecord[] = [
       {
         key: 'Http status 1',
-        value: 'Response 1'
+        value: 'Response 1',
       },
       {
         key: 'Http status 2',
-        value: 'Response 2'
-      }
+        value: 'Response 2',
+      },
     ];
 
     public header: ListViewHeader = {
       keyLabel: 'key',
-      valueLabel: 'value'
+      valueLabel: 'value',
     };
 
     public metadata: Dictionary<Dictionary<unknown>> = {
       'Http status 1': {
         key1: 'value1',
-        key2: 'value2'
-      }
+        key2: 'value2',
+      },
     };
   }
 
@@ -45,7 +45,7 @@ describe('List View Component', () => {
     TestBed.configureTestingModule({
       declarations: [TestHostComponent, ListViewComponent],
       imports: [CommonModule, IsEmptyPipeModule, MemoizeModule],
-      providers: [mockProvider(NavigationService)]
+      providers: [mockProvider(NavigationService)],
     });
 
     fixture = TestBed.createComponent(TestHostComponent);

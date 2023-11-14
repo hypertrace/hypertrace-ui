@@ -14,15 +14,15 @@ import { apiMetricsDashboard } from './api-metrics.dashboard';
       [filterConfig]="filterConfig"
     >
     </ht-navigable-dashboard>
-  `
+  `,
 })
 export class ApiMetricsComponent {
   public readonly filterConfig$: ReplayObservable<NavigableDashboardFilterConfig>;
   public constructor(apiDetailService: ApiDetailService) {
     this.filterConfig$ = apiDetailService.entityFilter$.pipe(
       map(filter => ({
-        implicitFilters: [filter]
-      }))
+        implicitFilters: [filter],
+      })),
     );
   }
 }

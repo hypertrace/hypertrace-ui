@@ -16,16 +16,16 @@ describe('Combo Box component', () => {
     providers: [
       mockProvider(NavigationService, {
         navigation$: EMPTY,
-        navigateWithinApp: jest.fn()
+        navigateWithinApp: jest.fn(),
       }),
-      mockProvider(DomElementScrollIntoViewService)
-    ]
+      mockProvider(DomElementScrollIntoViewService),
+    ],
   });
 
   const comboBoxOptions: ComboBoxOption[] = [
     { text: 'First-text', value: 'first-value' },
     { text: 'Second-Text', value: 'second-value' },
-    { text: 'Third-TEXT', value: 'third-value' }
+    { text: 'Third-TEXT', value: 'third-value' },
   ];
 
   test('should display and not notify for initial value', fakeAsync(() => {
@@ -36,9 +36,9 @@ describe('Combo Box component', () => {
       {
         hostProps: {
           options: comboBoxOptions,
-          text: 'test-text'
-        }
-      }
+          text: 'test-text',
+        },
+      },
     );
     spectator.tick();
 
@@ -57,9 +57,9 @@ describe('Combo Box component', () => {
       {
         hostProps: {
           options: comboBoxOptions,
-          text: 'test-text'
-        }
-      }
+          text: 'test-text',
+        },
+      },
     );
     spectator.tick();
 
@@ -84,9 +84,9 @@ describe('Combo Box component', () => {
       {
         hostProps: {
           options: comboBoxOptions,
-          text: 'test-text'
-        }
-      }
+          text: 'test-text',
+        },
+      },
     );
     spectator.tick();
 
@@ -114,9 +114,9 @@ describe('Combo Box component', () => {
       {
         hostProps: {
           options: comboBoxOptions,
-          text: 'test-text'
-        }
-      }
+          text: 'test-text',
+        },
+      },
     );
     spectator.tick();
 
@@ -144,9 +144,9 @@ describe('Combo Box component', () => {
         hostProps: {
           options: comboBoxOptions,
           text: 'test-text',
-          provideCreateOption: true
-        }
-      }
+          provideCreateOption: true,
+        },
+      },
     );
     spectator.tick();
 
@@ -174,9 +174,9 @@ describe('Combo Box component', () => {
         hostProps: {
           options: comboBoxOptions,
           text: 'test-text',
-          provideCreateOption: false
-        }
-      }
+          provideCreateOption: false,
+        },
+      },
     );
 
     jest.spyOn(spectator.component.textChange, 'emit');
@@ -198,7 +198,7 @@ describe('Combo Box component', () => {
     expect(spectator.component.textChange.emit).toHaveBeenCalledWith('Second-Text');
     expect(spectator.component.enter.emit).toHaveBeenCalledWith({
       text: 'Second-Text',
-      option: { text: 'Second-Text', value: 'second-value' }
+      option: { text: 'Second-Text', value: 'second-value' },
     });
 
     flush();
@@ -213,9 +213,9 @@ describe('Combo Box component', () => {
         hostProps: {
           options: comboBoxOptions,
           text: 'test-text',
-          provideCreateOption: true
-        }
-      }
+          provideCreateOption: true,
+        },
+      },
     );
 
     jest.spyOn(spectator.component.textChange, 'emit');
@@ -237,7 +237,7 @@ describe('Combo Box component', () => {
     expect(spectator.component.textChange.emit).toHaveBeenCalledWith('First-text');
     expect(spectator.component.enter.emit).toHaveBeenCalledWith({
       text: 'First-text',
-      option: { text: 'First-text', value: 'first-value' }
+      option: { text: 'First-text', value: 'first-value' },
     });
 
     flush();
@@ -252,9 +252,9 @@ describe('Combo Box component', () => {
         hostProps: {
           options: comboBoxOptions,
           text: 'test-text',
-          provideCreateOption: true
-        }
-      }
+          provideCreateOption: true,
+        },
+      },
     );
 
     jest.spyOn(spectator.component.textChange, 'emit');
@@ -271,7 +271,7 @@ describe('Combo Box component', () => {
     expect(spectator.component.textChange.emit).toHaveBeenCalledWith('Third-TEXT');
     expect(spectator.component.selection.emit).toHaveBeenCalledWith({
       text: 'Third-TEXT',
-      option: { text: 'Third-TEXT', value: 'third-value' }
+      option: { text: 'Third-TEXT', value: 'third-value' },
     });
 
     flush();

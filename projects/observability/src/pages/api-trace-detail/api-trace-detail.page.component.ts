@@ -74,7 +74,7 @@ import { ApiTraceDetails, ApiTraceDetailService } from './api-trace-detail.servi
         <router-outlet></router-outlet>
       </div>
     </div>
-  `
+  `,
 })
 export class ApiTraceDetailPageComponent {
   public static readonly TRACE_ID_PARAM_NAME: string = 'id';
@@ -85,7 +85,7 @@ export class ApiTraceDetailPageComponent {
   public constructor(
     protected readonly navigationService: NavigationService,
     private readonly apiTraceDetailService: ApiTraceDetailService,
-    private readonly explorerService: ExplorerService
+    private readonly explorerService: ExplorerService,
   ) {
     this.traceDetails$ = this.apiTraceDetailService.fetchTraceDetails();
     this.logEvents$ = this.apiTraceDetailService.fetchLogEvents();
@@ -101,6 +101,6 @@ export class ApiTraceDetailPageComponent {
 
   public getExplorerNavigationParams = (traceDetails: ApiTraceDetails): Observable<NavigationParams> =>
     this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.EndpointTraces, [
-      { field: 'traceId', operator: FilterOperator.Equals, value: traceDetails.traceId }
+      { field: 'traceId', operator: FilterOperator.Equals, value: traceDetails.traceId },
     ]);
 }

@@ -1,4 +1,4 @@
 export const enum ToggleSwitchSize {
   Small = 'small',
-  Medium = 'medium'
+  Medium = 'medium',
 }

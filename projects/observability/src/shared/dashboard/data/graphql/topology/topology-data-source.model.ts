@@ -6,7 +6,7 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
-  PLAIN_OBJECT_PROPERTY
+  PLAIN_OBJECT_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { uniq } from 'lodash-es';
 import { Observable } from 'rxjs';
@@ -19,7 +19,7 @@ import {
   EntityTopologyGraphQlQueryHandlerService,
   ENTITY_TOPOLOGY_GQL_REQUEST,
   TopologyEdgeSpecification,
-  TopologyNodeSpecification
+  TopologyNodeSpecification,
 } from '../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 import { TopologyMetricsData, TopologyMetricsModel } from './metrics/topology-metrics.model';
@@ -28,16 +28,16 @@ import { AttributeExpression } from '../../../../graphql/model/attribute/attribu
 import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
 
 @Model({
-  type: 'topology-data-source'
+  type: 'topology-data-source',
 })
 export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData> {
   @ModelProperty({
     key: 'entity',
     type: {
       key: ENUM_TYPE.type,
-      values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api, ObservabilityEntityType.Backend]
+      values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api, ObservabilityEntityType.Backend],
     } as EnumPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public entityType!: ObservabilityEntityType;
 
@@ -47,9 +47,9 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
       key: ARRAY_PROPERTY.type,
       subtype: {
         key: ENUM_TYPE.type,
-        values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api]
-      }
-    } as ArrayPropertyTypeInstance
+        values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api],
+      },
+    } as ArrayPropertyTypeInstance,
   })
   public upstreamEntityTypes?: ObservabilityEntityType[];
 
@@ -59,9 +59,9 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
       key: ARRAY_PROPERTY.type,
       subtype: {
         key: ENUM_TYPE.type,
-        values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api, ObservabilityEntityType.Backend]
-      }
-    } as ArrayPropertyTypeInstance
+        values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api, ObservabilityEntityType.Backend],
+      },
+    } as ArrayPropertyTypeInstance,
   })
   public downstreamEntityTypes?: ObservabilityEntityType[];
 
@@ -69,8 +69,8 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     key: 'node-metrics',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: TopologyMetricsModel
-    } as ModelModelPropertyTypeInstance
+      defaultModelClass: TopologyMetricsModel,
+    } as ModelModelPropertyTypeInstance,
   })
   public nodeMetricsModel!: TopologyMetricsModel;
 
@@ -78,28 +78,28 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     key: 'edge-metrics',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: TopologyMetricsModel
-    } as ModelModelPropertyTypeInstance
+      defaultModelClass: TopologyMetricsModel,
+    } as ModelModelPropertyTypeInstance,
   })
   public edgeMetricsModel!: TopologyMetricsModel;
 
   @ModelProperty({
     key: 'edge-filter-config',
     type: {
-      key: PLAIN_OBJECT_PROPERTY.type
-    }
+      key: PLAIN_OBJECT_PROPERTY.type,
+    },
   })
   public edgeFilterConfig?: TopologyEdgeFilterConfig;
 
   private readonly specBuilder: SpecificationBuilder = new SpecificationBuilder();
   public readonly requestOptions: GraphQlRequestOptions = {
     cacheability: GraphQlRequestCacheability.Cacheable,
-    isolated: true
+    isolated: true,
   };
   public getData(): Observable<TopologyData> {
     const rootEntitySpec = this.buildEntitySpec();
     const edgeSpec = {
-      metricSpecifications: this.getAllMetricSpecifications(this.edgeMetricsModel)
+      metricSpecifications: this.getAllMetricSpecifications(this.edgeMetricsModel),
     };
 
     return this.query<EntityTopologyGraphQlQueryHandlerService>(filters => {
@@ -118,7 +118,7 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
         edgeFilters: topologyFilters.edges,
         upstreamNodeSpecifications: this.buildUpstreamSpecifications(requiredEdgeEntityTypes),
         downstreamNodeSpecifications: this.buildDownstreamSpecifications(requiredEdgeEntityTypes),
-        timeRange: this.getTimeRangeOrThrow()
+        timeRange: this.getTimeRangeOrThrow(),
       };
     }, this.requestOptions).pipe(
       map(nodes => ({
@@ -128,11 +128,11 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
         nodeTypes: uniq([
           this.entityType,
           ...this.defaultedEntityTypeArray(this.upstreamEntityTypes),
-          ...this.defaultedEntityTypeArray(this.downstreamEntityTypes)
+          ...this.defaultedEntityTypeArray(this.downstreamEntityTypes),
         ]),
         nodeMetrics: this.nodeMetricsModel,
-        edgeMetrics: this.edgeMetricsModel
-      }))
+        edgeMetrics: this.edgeMetricsModel,
+      })),
     );
   }
 
@@ -158,7 +158,7 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
 
     return {
       nodes: nodeFilters,
-      edges: edgeFilters
+      edges: edgeFilters,
     };
   }
 
@@ -170,12 +170,12 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
    * @param requiredEntityTypes If given, the function will return all the specs only for given required types
    */
   private buildDownstreamSpecifications(
-    requiredEntityTypes?: string[]
+    requiredEntityTypes?: string[],
   ): Map<ObservabilityEntityType, TopologyNodeSpecification> {
     return new Map(
       this.defaultedEntityTypeArray(this.downstreamEntityTypes)
         .filter(entityType => (requiredEntityTypes === undefined ? true : requiredEntityTypes.includes(entityType)))
-        .map(type => [type, this.buildEntitySpec()])
+        .map(type => [type, this.buildEntitySpec()]),
     );
   }
 
@@ -183,12 +183,12 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
    * @param requiredEntityTypes If given, the function will return all the specs only for given required types
    */
   private buildUpstreamSpecifications(
-    requiredEntityTypes?: string[]
+    requiredEntityTypes?: string[],
   ): Map<ObservabilityEntityType, TopologyNodeSpecification> {
     return new Map(
       this.defaultedEntityTypeArray(this.upstreamEntityTypes)
         .filter(entityType => (requiredEntityTypes === undefined ? true : requiredEntityTypes.includes(entityType)))
-        .map(type => [type, this.buildEntitySpec()])
+        .map(type => [type, this.buildEntitySpec()]),
     );
   }
 
@@ -196,12 +196,12 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     // TODO support different specs for different node types
     return {
       metricSpecifications: this.getAllMetricSpecifications(this.nodeMetricsModel),
-      titleSpecification: this.specBuilder.attributeSpecificationForKey('name')
+      titleSpecification: this.specBuilder.attributeSpecificationForKey('name'),
     };
   }
 
   private defaultedEntityTypeArray(
-    typeArray: ObservabilityEntityType[] = [this.entityType]
+    typeArray: ObservabilityEntityType[] = [this.entityType],
   ): ObservabilityEntityType[] {
     return typeArray;
   }
@@ -210,7 +210,7 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     return [
       metrics.primary.specification,
       ...(metrics.secondary ? [metrics.secondary.specification] : []),
-      ...(metrics.others ? metrics.others.map(_ => _.specification) : [])
+      ...(metrics.others ? metrics.others.map(_ => _.specification) : []),
     ];
   }
 }

@@ -12,18 +12,18 @@ describe('Color service', () => {
         provide: DEFAULT_COLOR_PALETTE,
         useValue: {
           key: 'default',
-          colors: defaultColors
-        }
+          colors: defaultColors,
+        },
       },
       {
         provide: ALTERNATE_COLOR_PALETTES,
         multi: true,
         useValue: {
           key: 'alternate',
-          colors: alternateColors
-        }
-      }
-    ]
+          colors: alternateColors,
+        },
+      },
+    ],
   });
   test('should support a default palette if no palette is requested', () => {
     const spectator = createService();

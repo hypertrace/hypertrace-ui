@@ -8,11 +8,11 @@ export const enum ChartEvent {
   RightClick,
   Hover,
   Select,
-  MouseLeave
+  MouseLeave,
 }
 
 export type ChartEventListener<TData> = (
-  data?: MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>
+  data?: MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>,
 ) => void;
 
 export interface ChartTooltipTrackingOptions {

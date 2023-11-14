@@ -15,8 +15,8 @@ import { TracingDashboardWidgetsModule } from './widgets/tracing-dashboard-widge
     GraphQlDataSourceModule,
     TracingDashboardPropertyEditorsModule,
     TracingIconLibraryModule,
-    TracingDashboardInteractionsModule
+    TracingDashboardInteractionsModule,
   ],
-  exports: [NavigableDashboardModule]
+  exports: [NavigableDashboardModule],
 })
 export class TracingDashboardModule {}

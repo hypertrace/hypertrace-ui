@@ -3,13 +3,13 @@ import { Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { EnumPropertyTypeInstance, ENUM_TYPE } from '../../properties/enums/enum-property-type';
 
 @Model({
-  type: 'time-duration'
+  type: 'time-duration',
 })
 export class TimeDurationModel {
   @ModelProperty({
     key: 'value',
     required: true,
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public value!: number;
 
@@ -25,9 +25,9 @@ export class TimeDurationModel {
         TimeUnit.Hour,
         TimeUnit.Day,
         TimeUnit.Week,
-        TimeUnit.Month
-      ]
-    } as EnumPropertyTypeInstance
+        TimeUnit.Month,
+      ],
+    } as EnumPropertyTypeInstance,
   })
   public unit!: TimeUnit;
 

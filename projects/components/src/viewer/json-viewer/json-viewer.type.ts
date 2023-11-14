@@ -15,5 +15,5 @@ export const enum JsonElementType {
   Boolean = 'boolean',
   Object = 'object',
   Array = 'array',
-  Null = 'null'
+  Null = 'null',
 }

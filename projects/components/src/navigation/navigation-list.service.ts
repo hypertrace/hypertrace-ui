@@ -20,7 +20,7 @@ export class NavigationListService {
 
     return {
       ...navItem,
-      features: uniq(features)
+      features: uniq(features),
     };
   }
 

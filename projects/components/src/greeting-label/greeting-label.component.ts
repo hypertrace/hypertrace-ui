@@ -5,7 +5,7 @@ import { TypedSimpleChanges } from '@hypertrace/common';
   selector: 'ht-greeting-label',
   styleUrls: ['./greeting-label.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <div class="greeting-label">{{ this.greetingMessage }}</div>`
+  template: ` <div class="greeting-label">{{ this.greetingMessage }}</div>`,
 })
 export class GreetingLabelComponent implements OnChanges {
   @Input()

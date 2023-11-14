@@ -34,7 +34,7 @@ import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-fil
       >
       </ht-application-aware-dashboard>
     </div>
-  `
+  `,
 })
 export class NavigableDashboardComponent implements OnChanges {
   @Input()
@@ -67,7 +67,7 @@ export class NavigableDashboardComponent implements OnChanges {
   public constructor(
     private readonly metadataService: MetadataService,
     private readonly dashboardPersistenceService: DashboardPersistenceService,
-    private readonly graphQlFilterBuilderService: GraphQlFilterBuilderService
+    private readonly graphQlFilterBuilderService: GraphQlFilterBuilderService,
   ) {}
 
   public ngOnChanges(changeObject: TypedSimpleChanges<this>): void {
@@ -80,7 +80,7 @@ export class NavigableDashboardComponent implements OnChanges {
       this.dashboardJson$ = persistedDashboard$.pipe(
         map(dashboard => dashboard.content),
         catchError(() => EMPTY),
-        defaultIfEmpty(this.defaultJson)
+        defaultIfEmpty(this.defaultJson),
       );
     }
 
@@ -112,7 +112,7 @@ export class NavigableDashboardComponent implements OnChanges {
       ?.clearFilters()
       .addFilters(
         ...this.implicitFilters,
-        ...this.graphQlFilterBuilderService.buildGraphQlFieldFilters(explicitFilters)
+        ...this.graphQlFilterBuilderService.buildGraphQlFieldFilters(explicitFilters),
       );
     dashboard.refresh();
   }

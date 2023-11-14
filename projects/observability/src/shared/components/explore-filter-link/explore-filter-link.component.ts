@@ -16,7 +16,7 @@ import { IconSize } from '@hypertrace/components';
       <ng-content></ng-content>
       <ht-icon class="filter-icon" size="${IconSize.ExtraSmall}" icon="${IconType.Filter}"></ht-icon>
     </ht-link>
-  `
+  `,
 })
 export class ExploreFilterLinkComponent {
   @Input()

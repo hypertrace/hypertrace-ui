@@ -2,7 +2,7 @@ import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import {
   GlobalCsvDownloadDataType,
   GlobalCsvDownloadService,
-  GlobalCsvDownloadTableDataSource
+  GlobalCsvDownloadTableDataSource,
 } from './global-csv-download.service';
 import { of } from 'rxjs';
 import { FileDownloadService, TableColumnConfig } from '@hypertrace/components';
@@ -12,31 +12,31 @@ describe('Global Csv Download Service', () => {
     {
       id: 'test_1',
       title: 'Test_1',
-      display: 'Test 1'
+      display: 'Test 1',
     },
     {
       id: 'test_2',
       title: 'Test_2',
-      display: 'Test 2'
-    }
+      display: 'Test 2',
+    },
   ];
 
   const mockModel = {
     getData: jest.fn(() =>
       of({
         data: [],
-        totalCount: 0
-      })
-    )
+        totalCount: 0,
+      }),
+    ),
   };
 
   const serviceFactory = createServiceFactory({
     service: GlobalCsvDownloadService,
     providers: [
       mockProvider(FileDownloadService, {
-        downloadAsCsv: jest.fn().mockReturnValue(of(undefined))
-      })
-    ]
+        downloadAsCsv: jest.fn().mockReturnValue(of(undefined)),
+      }),
+    ],
   });
 
   test('Register, get, check, delete and clean data source should work as expected', () => {
@@ -44,10 +44,10 @@ describe('Global Csv Download Service', () => {
     spectator.service.registerDataSource('test', {
       type: GlobalCsvDownloadDataType.Table,
       columns: mockColumnConfigs,
-      data: of(mockModel)
+      data: of(mockModel),
     });
     expect((spectator.service.getRegisteredDataSource('test') as GlobalCsvDownloadTableDataSource).columns).toEqual(
-      mockColumnConfigs
+      mockColumnConfigs,
     );
 
     expect(spectator.service.hasRegisteredDataSource('test')).toBe(true);
@@ -58,7 +58,7 @@ describe('Global Csv Download Service', () => {
     spectator.service.registerDataSource('test', {
       type: GlobalCsvDownloadDataType.Table,
       columns: mockColumnConfigs,
-      data: of(mockModel)
+      data: of(mockModel),
     });
     spectator.service.clearAllDataSource();
     expect(spectator.service.hasRegisteredDataSource('test')).toBe(false);

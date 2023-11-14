@@ -10,7 +10,7 @@ describe('Search box Component', () => {
   const testPopoverRef = {
     closeOnBackdropClick: jest.fn(),
     closeOnPopoverContentClick: jest.fn(),
-    close: jest.fn()
+    close: jest.fn(),
   };
 
   let spectator: Spectator<SearchBoxComponent>;
@@ -20,20 +20,20 @@ describe('Search box Component', () => {
     shallow: true,
     providers: [
       mockProvider(FeatureStateResolver, {
-        getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
+        getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled)),
       }),
       mockProvider(PopoverService, {
-        drawPopover: jest.fn().mockReturnValue(testPopoverRef)
-      })
+        drawPopover: jest.fn().mockReturnValue(testPopoverRef),
+      }),
     ],
-    imports: [IsEmptyPipeModule]
+    imports: [IsEmptyPipeModule],
   });
 
   test('should work with default values', fakeAsync(() => {
     spectator = createHost(`<ht-search-box [placeholder]="placeholder"></ht-search-box>`, {
       hostProps: {
-        placeholder: 'Test Placeholder'
-      }
+        placeholder: 'Test Placeholder',
+      },
     });
 
     const inputElement = spectator.query('input');
@@ -42,7 +42,7 @@ describe('Search box Component', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.valueChange).toBe('x', {
-        x: 'Test'
+        x: 'Test',
       });
 
       spectator.triggerEventHandler('input', 'input', spectator.component.value);
@@ -53,8 +53,8 @@ describe('Search box Component', () => {
   test('should apply no-border class correctly', () => {
     spectator = createHost(`<ht-search-box [displayMode]="displayMode"></ht-search-box>`, {
       hostProps: {
-        displayMode: SearchBoxDisplayMode.NoBorder
-      }
+        displayMode: SearchBoxDisplayMode.NoBorder,
+      },
     });
 
     expect(spectator.query('.ht-search-box')?.classList).toContain('no-border');
@@ -74,9 +74,9 @@ describe('Search box Component', () => {
       {
         hostProps: {
           placeholder: 'Test Placeholder',
-          debounceTime: 200
-        }
-      }
+          debounceTime: 200,
+        },
+      },
     );
 
     const inputElement = spectator.query('input');
@@ -85,7 +85,7 @@ describe('Search box Component', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.valueChange).toBe('200ms x', {
-        x: 'Test2'
+        x: 'Test2',
       });
 
       spectator.triggerEventHandler('input', 'input', spectator.component.value);
@@ -100,9 +100,9 @@ describe('Search box Component', () => {
         hostProps: {
           placeholder: 'Test Placeholder',
           debounceTime: 200,
-          searchMode: SearchBoxEmitMode.OnSubmit
-        }
-      }
+          searchMode: SearchBoxEmitMode.OnSubmit,
+        },
+      },
     );
 
     const inputElement = spectator.query('input');
@@ -111,7 +111,7 @@ describe('Search box Component', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.component.valueChange).toBe('5000ms x', {
-        x: 'Test2'
+        x: 'Test2',
       });
 
       spectator.triggerEventHandler('input', 'input', spectator.component.value);
@@ -127,9 +127,9 @@ describe('Search box Component', () => {
           placeholder: 'Test Placeholder',
           debounceTime: 200,
           searchMode: SearchBoxEmitMode.Incremental,
-          enableSearchHistory: true
-        }
-      }
+          enableSearchHistory: true,
+        },
+      },
     );
 
     const searchBoxELement = spectator.query('.ht-search-box')!;

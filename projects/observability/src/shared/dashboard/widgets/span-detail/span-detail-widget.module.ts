@@ -12,13 +12,13 @@ import { SpanDetailWidgetModel } from './span-detail-widget.model';
   imports: [
     DashboardCoreModule.with({
       models: [SpanDetailWidgetModel, SpanDetailDataSourceModel],
-      renderers: [SpanDetailWidgetRendererComponent]
+      renderers: [SpanDetailWidgetRendererComponent],
     }),
     CommonModule,
     SpanDetailModule,
     TitledContentModule,
     LoadAsyncModule,
-    SummaryValueModule
-  ]
+    SummaryValueModule,
+  ],
 })
 export class SpanDetailWidgetModule {}

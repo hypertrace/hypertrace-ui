@@ -10,7 +10,7 @@ describe('X-More Component', () => {
   const createHost = createHostFactory({
     component: XMoreComponent,
     shallow: true,
-    declarations: [MockDirective(TooltipDirective)]
+    declarations: [MockDirective(TooltipDirective)],
   });
 
   test('should not display if count is 0', () => {
@@ -21,9 +21,9 @@ describe('X-More Component', () => {
         hostProps: {
           count: 0,
           value: 'tooltip value',
-          displayStyle: XMoreDisplay.Plain
-        }
-      }
+          displayStyle: XMoreDisplay.Plain,
+        },
+      },
     );
 
     expect(spectator.query('.summary-text')).not.toExist();
@@ -38,9 +38,9 @@ describe('X-More Component', () => {
         hostProps: {
           count: 1,
           value: 'tooltip value',
-          displayStyle: XMoreDisplay.Plain
-        }
-      }
+          displayStyle: XMoreDisplay.Plain,
+        },
+      },
     );
 
     expect(spectator.query('.summary-text')).toExist();
@@ -57,9 +57,9 @@ describe('X-More Component', () => {
           count: 1,
           value: 'tooltip value',
           displayStyle: XMoreDisplay.Plain,
-          suffix: 'more'
-        }
-      }
+          suffix: 'more',
+        },
+      },
     );
 
     expect(spectator.query('.summary-text')).toExist();

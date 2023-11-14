@@ -7,7 +7,7 @@ import {
   InputModule,
   LetAsyncModule,
   SelectModule,
-  TooltipModule
+  TooltipModule,
 } from '@hypertrace/components';
 import { IntervalSelectModule } from '../interval-select/interval-select.module';
 import { ExploreQueryEditorComponent } from './explore-query-editor.component';
@@ -26,7 +26,7 @@ import { ExploreQuerySeriesGroupEditorComponent } from './series/explore-query-s
     ExploreQueryGroupByEditorComponent,
     ExploreQueryLimitEditorComponent,
     ExploreQueryIntervalEditorComponent,
-    ExploreQueryOrderByEditorComponent
+    ExploreQueryOrderByEditorComponent,
   ],
   exports: [ExploreQueryEditorComponent],
   imports: [
@@ -38,7 +38,7 @@ import { ExploreQuerySeriesGroupEditorComponent } from './series/explore-query-s
     IntervalSelectModule,
     CheckboxModule,
     LetAsyncModule,
-    FormFieldModule
-  ]
+    FormFieldModule,
+  ],
 })
 export class ExploreQueryEditorModule {}

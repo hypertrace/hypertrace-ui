@@ -4,44 +4,44 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
-  STRING_PROPERTY
+  STRING_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { ContainerStylesPropertiesModel } from './container-style/container-style-properties.model';
 import { AutoContainerLayoutModel } from './layout/auto/auto-container-layout.model';
 import { ContainerLayout } from './layout/container-layout';
 
 @Model({
-  type: 'container-widget'
+  type: 'container-widget',
 })
 export class ContainerWidgetModel<TChild = object> {
   @ModelProperty({
     type: STRING_PROPERTY.type,
     key: 'title',
-    required: false
+    required: false,
   })
   public title?: string;
 
   @ModelProperty({
     type: ARRAY_PROPERTY.type,
-    key: 'children'
+    key: 'children',
   })
   public children: TChild[] = [];
 
   @ModelProperty({
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: AutoContainerLayoutModel
+      defaultModelClass: AutoContainerLayoutModel,
     } as ModelModelPropertyTypeInstance,
-    key: 'layout'
+    key: 'layout',
   })
   public layout!: ContainerLayout;
 
   @ModelProperty({
     type: {
-      key: ModelPropertyType.TYPE
+      key: ModelPropertyType.TYPE,
     },
     key: 'style-properties',
-    required: false
+    required: false,
   })
   public styleProperties?: ContainerStylesPropertiesModel;
 }

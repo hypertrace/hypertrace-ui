@@ -12,7 +12,7 @@ describe('Loader component', () => {
   const createHost = createHostFactory({
     component: LoaderComponent,
     declarations: [MockComponent(SkeletonComponent)],
-    imports: [CommonModule]
+    imports: [CommonModule],
   });
 
   test('Loader component when loader type is page', () => {

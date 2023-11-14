@@ -4,38 +4,38 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
-  STRING_PROPERTY
+  STRING_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
 import { ExploreSpecification } from '../../../../graphql/model/schema/specifications/explore-specification';
 import { ExploreSelectionSpecificationModel } from '../../../data/graphql/specifiers/explore-selection-specification.model';
 
 @Model({
-  type: 'top-n-explore-selection'
+  type: 'top-n-explore-selection',
 })
 export class TopNExploreSelectionSpecificationModel {
   @ModelProperty({
     key: 'name-key',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public nameKey: string = 'name';
 
   @ModelProperty({
     key: 'id-key',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public idKey: string = 'id';
 
   @ModelProperty({
     key: 'context',
     type: STRING_PROPERTY.type,
-    required: true
+    required: true,
   })
   public context!: string;
 
   @ModelProperty({
     key: 'filters',
-    type: ARRAY_PROPERTY.type
+    type: ARRAY_PROPERTY.type,
   })
   public filters: GraphQlFilter[] = [];
 
@@ -43,9 +43,9 @@ export class TopNExploreSelectionSpecificationModel {
     key: 'metric',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: ExploreSelectionSpecificationModel
+      defaultModelClass: ExploreSelectionSpecificationModel,
     } as ModelModelPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public metric!: ExploreSpecification;
 }

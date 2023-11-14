@@ -4,7 +4,7 @@ import {
   ModelJson,
   ModelModelPropertyTypeInstance,
   ModelProperty,
-  ModelPropertyType
+  ModelPropertyType,
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
@@ -15,23 +15,23 @@ import { AutoContainerLayoutModel } from '../container/layout/auto/auto-containe
 import { ContainerLayout } from '../container/layout/container-layout';
 
 @Model({
-  type: 'repeat'
+  type: 'repeat',
 })
 export class RepeatModel {
   private children?: object[];
 
   @ModelProperty({
     key: 'template',
-    type: ModelTemplatePropertyType.TYPE
+    type: ModelTemplatePropertyType.TYPE,
   })
   public template!: ModelJson;
 
   @ModelProperty({
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: AutoContainerLayoutModel
+      defaultModelClass: AutoContainerLayoutModel,
     } as ModelModelPropertyTypeInstance,
-    key: 'layout'
+    key: 'layout',
   })
   public layout!: ContainerLayout;
 
@@ -59,7 +59,7 @@ export class RepeatModel {
 
         return [];
       }),
-      tap(children => (this.children = children))
+      tap(children => (this.children = children)),
     );
   }
 

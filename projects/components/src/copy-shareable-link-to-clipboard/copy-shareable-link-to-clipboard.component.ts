@@ -18,7 +18,7 @@ import { ButtonSize } from '../button/button';
         tooltip="Copy shareable url link to clipboard"
       ></ht-copy-to-clipboard>
     </div>
-  `
+  `,
 })
 export class CopyShareableLinkToClipboardComponent implements OnInit {
   @Input()
@@ -28,12 +28,12 @@ export class CopyShareableLinkToClipboardComponent implements OnInit {
 
   public constructor(
     private readonly navigationService: NavigationService,
-    private readonly timeRangeService: TimeRangeService
+    private readonly timeRangeService: TimeRangeService,
   ) {}
 
   public ngOnInit(): void {
     this.shareableUrl$ = merge(this.navigationService.navigation$, this.timeRangeService.getTimeRangeAndChanges()).pipe(
-      map(() => this.timeRangeService.getShareableCurrentUrl())
+      map(() => this.timeRangeService.getShareableCurrentUrl()),
     );
   }
 }

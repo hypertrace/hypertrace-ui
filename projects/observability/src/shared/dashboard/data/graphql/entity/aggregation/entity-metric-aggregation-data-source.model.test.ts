@@ -16,7 +16,7 @@ describe('Entity metric aggregation data source model', () => {
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     model = new EntityMetricAggregationDataSourceModel();
     model.specification = specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average);
@@ -36,7 +36,7 @@ describe('Entity metric aggregation data source model', () => {
       properties: [model.specification],
       timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
       entityType: ObservabilityEntityType.Service,
-      id: 'test'
+      id: 'test',
     });
   });
 });

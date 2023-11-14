@@ -1,7 +1,7 @@
 export const enum SelectorType {
   Class,
   Element,
-  Attribute
+  Attribute,
 }
 
 /**
@@ -32,12 +32,12 @@ export const unionOfClientRects = (...rects: ClientRectBounds[]): ClientRectBoun
     left: Math.min(currentUnion.left, domRect.left),
     right: Math.max(currentUnion.right, domRect.right),
     top: Math.min(currentUnion.top, domRect.top),
-    bottom: Math.max(currentUnion.bottom, domRect.bottom)
+    bottom: Math.max(currentUnion.bottom, domRect.bottom),
   }));
 
   return {
     ...bounds,
     width: bounds.right - bounds.left,
-    height: bounds.bottom - bounds.top
+    height: bounds.bottom - bounds.top,
   };
 };

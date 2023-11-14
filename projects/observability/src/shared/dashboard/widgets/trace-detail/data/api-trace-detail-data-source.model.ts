@@ -5,7 +5,7 @@ import { Trace, traceIdKey, traceTypeKey } from '../../../../graphql/model/schem
 import { TraceDetailData, TraceDetailDataSourceModel } from './trace-detail-data-source.model';
 
 @Model({
-  type: 'api-trace-detail-data-source'
+  type: 'api-trace-detail-data-source',
 })
 export class ApiTraceDetailDataSourceModel extends TraceDetailDataSourceModel {
   protected getTraceAttributes(): string[] {
@@ -22,7 +22,7 @@ export class ApiTraceDetailDataSourceModel extends TraceDetailDataSourceModel {
       ...super.constructTraceDetailData(trace),
       traceId: trace.traceId as string, // For API Trace traceId is real Trace ID. NOT Symbol('traceId').
       entrySpanId: trace[traceIdKey], // API Trace Symbol('traceId') same as apiTraceId which is actually Entry Span ID,
-      exitCallsBreakup: trace.apiCalleeNameCount as Dictionary<string>
+      exitCallsBreakup: trace.apiCalleeNameCount as Dictionary<string>,
     };
   }
 }

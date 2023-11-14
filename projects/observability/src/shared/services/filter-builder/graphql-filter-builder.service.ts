@@ -17,7 +17,7 @@ export class GraphQlFilterBuilderService {
       subpath: typeof filter.keyOrExpression === 'string' ? undefined : filter.keyOrExpression.subpath,
       operator: toFilterOperator(filter.operator),
       value: filter.value as FilterValue,
-      urlString: ''
+      urlString: '',
     }));
   }
 
@@ -27,8 +27,8 @@ export class GraphQlFilterBuilderService {
         new GraphQlFieldFilter(
           { key: filter.field, subpath: filter.subpath },
           toGraphQlOperator(filter.operator!), // Todo : Very weird
-          this.extractGraphQlFilterValue(filter)
-        )
+          this.extractGraphQlFilterValue(filter),
+        ),
     );
   }
 
@@ -38,8 +38,8 @@ export class GraphQlFilterBuilderService {
         new GraphQlFieldFilter(
           { key: filter.field, subpath: filter.subpath },
           toGraphQlOperator(filter.operator),
-          this.extractGraphQlFilterValue(filter)
-        )
+          this.extractGraphQlFilterValue(filter),
+        ),
     );
   }
 

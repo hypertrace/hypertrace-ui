@@ -26,7 +26,7 @@ describe('Number coercer', () => {
 
   test('coerces property in object', () => {
     const objectCoercer = new NumberCoercer({
-      extractObjectKeys: ['test', 'second']
+      extractObjectKeys: ['test', 'second'],
     });
 
     expect(objectCoercer.coerce({ test: 10 })).toBe(10);
@@ -39,7 +39,7 @@ describe('Number coercer', () => {
 
   test('coerces index in array', () => {
     const arrayCoercer = new NumberCoercer({
-      extractArrayIndices: [0, 1]
+      extractArrayIndices: [0, 1],
     });
 
     expect(arrayCoercer.coerce([])).toBeUndefined();
@@ -56,7 +56,7 @@ describe('Number coercer', () => {
 
   test('returns default value if no coercion and default value provided', () => {
     const defaultingCoercer = new NumberCoercer({
-      defaultValue: 0
+      defaultValue: 0,
     });
     expect(defaultingCoercer.coerce({})).toBe(0);
   });
@@ -70,7 +70,7 @@ describe('Number coercer', () => {
   test('disregards array if too many values', () => {
     const maxArrayLengthCoercer = new NumberCoercer({
       maxArrayLength: 2,
-      extractArrayIndices: [0]
+      extractArrayIndices: [0],
     });
     expect(maxArrayLengthCoercer.coerce([1, 2, 3])).toBeUndefined();
     expect(maxArrayLengthCoercer.coerce([1, 2])).toBe(1);
@@ -79,7 +79,7 @@ describe('Number coercer', () => {
   test('ignores self if configured', () => {
     const nonSelfCoercer = new NumberCoercer({
       useSelf: false,
-      extractArrayIndices: [0]
+      extractArrayIndices: [0],
     });
 
     expect(nonSelfCoercer.coerce(1)).toBeUndefined();

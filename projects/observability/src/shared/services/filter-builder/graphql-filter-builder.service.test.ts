@@ -12,18 +12,18 @@ describe('Graphql filter builder service', () => {
     operator: operator,
     value: value,
     userString: '',
-    urlString: ''
+    urlString: '',
   });
   const attribute1: FilterAttribute = {
     name: 'attr1',
     displayName: 'Attribute 1',
-    type: FilterAttributeType.Number
+    type: FilterAttributeType.Number,
   };
 
   const attribute2: FilterAttribute = {
     name: 'attr2',
     displayName: 'Attribute 2',
-    type: FilterAttributeType.String
+    type: FilterAttributeType.String,
   };
 
   test('can build graphql filters', () => {
@@ -36,15 +36,15 @@ describe('Graphql filter builder service', () => {
         buildFilter(attribute1, FilterOperator.GreaterThan, 5),
         buildFilter(attribute1, FilterOperator.GreaterThanOrEqualTo, 10),
         buildFilter(attribute1, FilterOperator.LessThan, 15),
-        buildFilter(attribute1, FilterOperator.LessThanOrEqualTo, 20)
-      ])
+        buildFilter(attribute1, FilterOperator.LessThanOrEqualTo, 20),
+      ]),
     ).toEqual([
       new GraphQlFieldFilter({ key: attribute2.name }, GraphQlOperatorType.Equals, 'foo'),
       new GraphQlFieldFilter({ key: attribute2.name }, GraphQlOperatorType.NotEquals, 'bar'),
       new GraphQlFieldFilter({ key: attribute1.name }, GraphQlOperatorType.GreaterThan, 5),
       new GraphQlFieldFilter({ key: attribute1.name }, GraphQlOperatorType.GreaterThanOrEqualTo, 10),
       new GraphQlFieldFilter({ key: attribute1.name }, GraphQlOperatorType.LessThan, 15),
-      new GraphQlFieldFilter({ key: attribute1.name }, GraphQlOperatorType.LessThanOrEqualTo, 20)
+      new GraphQlFieldFilter({ key: attribute1.name }, GraphQlOperatorType.LessThanOrEqualTo, 20),
     ]);
   });
 });

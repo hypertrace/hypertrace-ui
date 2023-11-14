@@ -26,9 +26,9 @@ import { IsEmptyPipeModule } from '@hypertrace/common';
     CheckboxModule,
     TooltipModule,
     XMoreModule,
-    IsEmptyPipeModule
+    IsEmptyPipeModule,
   ],
   declarations: [MultiSelectComponent],
-  exports: [MultiSelectComponent]
+  exports: [MultiSelectComponent],
 })
 export class MultiSelectModule {}

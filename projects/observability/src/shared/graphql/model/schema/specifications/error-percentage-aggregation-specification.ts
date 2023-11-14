@@ -14,5 +14,5 @@ export interface ErrorPercentageMetricAggregation extends MetricAggregation {
 export const enum ErrorPercentageMetricValueCategory {
   LessThan5 = 'less-than-5',
   GreaterThanOrEqualTo5 = 'greater-than-or-equal-to-5',
-  NotSpecified = 'not-specified'
+  NotSpecified = 'not-specified',
 }

@@ -16,76 +16,76 @@ describe('Radar Widget renderer', () => {
   const comparisonDurations = [
     ComparisonDuration.PriorHour,
     ComparisonDuration.PriorDay,
-    ComparisonDuration.PriorMonth
+    ComparisonDuration.PriorMonth,
   ];
   let title = '';
   const dataHour = {
     current: [
       {
         axis: 'metric-1',
-        value: 20
+        value: 20,
       },
       {
         axis: 'metric-2',
-        value: 40
-      }
+        value: 40,
+      },
     ],
     previous: [
       {
         axis: 'metric-1',
-        value: 30
+        value: 30,
       },
       {
         axis: 'metric-2',
-        value: 50
-      }
-    ]
+        value: 50,
+      },
+    ],
   };
 
   const dataDay = {
     current: [
       {
         axis: 'metric-1',
-        value: 20
+        value: 20,
       },
       {
         axis: 'metric-2',
-        value: 40
-      }
+        value: 40,
+      },
     ],
     previous: [
       {
         axis: 'metric-1',
-        value: 50
+        value: 50,
       },
       {
         axis: 'metric-2',
-        value: 90
-      }
-    ]
+        value: 90,
+      },
+    ],
   };
 
   const dataMonth = {
     current: [
       {
         axis: 'metric-1',
-        value: 20
+        value: 20,
       },
       {
         axis: 'metric-2',
-        value: 40
-      }
+        value: 40,
+      },
     ],
     previous: [
       {
         axis: 'metric-1',
-        value: 90
+        value: 90,
       },
       {
         axis: 'metric-2',
-        value: 100
-      }
-    ]
+        value: 100,
+      },
+    ],
   };
 
   const mockResponse: RadarWidgetDataFetcher = {
@@ -99,7 +99,7 @@ describe('Radar Widget renderer', () => {
         case TimeUnit.Month:
           return of(dataMonth);
       }
-    }
+    },
   };
 
   const model = {
@@ -108,8 +108,8 @@ describe('Radar Widget renderer', () => {
     comparisonDurations: comparisonDurations,
     currentSeries: {
       name: 'latency',
-      color: 'blue'
-    }
+      color: 'blue',
+    },
   };
 
   const createComponent = createComponentFactory<RadarWidgetRendererComponent>({
@@ -122,15 +122,15 @@ describe('Radar Widget renderer', () => {
           x: 0,
           y: 0,
           width: 0,
-          height: 0
+          height: 0,
         }),
-        getComputedTextLength: () => 0
-      })
+        getComputedTextLength: () => 0,
+      }),
     ],
     mocks: [NavigationService],
     declareComponent: false,
     shallow: true,
-    imports: [RadarWidgetModule, HttpClientTestingModule, IconLibraryTestingModule]
+    imports: [RadarWidgetModule, HttpClientTestingModule, IconLibraryTestingModule],
   });
 
   test('renders the widget for default duration selection', fakeAsync(() => {
@@ -145,11 +145,11 @@ describe('Radar Widget renderer', () => {
         x: {
           axes: [
             {
-              name: 'metric-1'
+              name: 'metric-1',
             },
             {
-              name: 'metric-2'
-            }
+              name: 'metric-2',
+            },
           ],
           series: [
             {
@@ -157,33 +157,33 @@ describe('Radar Widget renderer', () => {
               data: [
                 {
                   axis: 'metric-1',
-                  value: 30
+                  value: 30,
                 },
                 {
                   axis: 'metric-2',
-                  value: 50
-                }
+                  value: 50,
+                },
               ],
               name: 'Prior Hour',
-              showPoints: false
+              showPoints: false,
             },
             {
               color: 'blue',
               data: [
                 {
                   axis: 'metric-1',
-                  value: 20
+                  value: 20,
                 },
                 {
                   axis: 'metric-2',
-                  value: 40
-                }
+                  value: 40,
+                },
               ],
               name: 'latency',
-              showPoints: true
-            }
-          ]
-        }
+              showPoints: true,
+            },
+          ],
+        },
       });
     });
 
@@ -203,11 +203,11 @@ describe('Radar Widget renderer', () => {
         x: {
           axes: [
             {
-              name: 'metric-1'
+              name: 'metric-1',
             },
             {
-              name: 'metric-2'
-            }
+              name: 'metric-2',
+            },
           ],
           series: [
             {
@@ -215,33 +215,33 @@ describe('Radar Widget renderer', () => {
               data: [
                 {
                   axis: 'metric-1',
-                  value: 50
+                  value: 50,
                 },
                 {
                   axis: 'metric-2',
-                  value: 90
-                }
+                  value: 90,
+                },
               ],
               name: 'Prior Day',
-              showPoints: false
+              showPoints: false,
             },
             {
               color: 'blue',
               data: [
                 {
                   axis: 'metric-1',
-                  value: 20
+                  value: 20,
                 },
                 {
                   axis: 'metric-2',
-                  value: 40
-                }
+                  value: 40,
+                },
               ],
               name: 'latency',
-              showPoints: true
-            }
-          ]
-        }
+              showPoints: true,
+            },
+          ],
+        },
       });
     });
   }));
@@ -258,11 +258,11 @@ describe('Radar Widget renderer', () => {
         x: {
           axes: [
             {
-              name: 'metric-1'
+              name: 'metric-1',
             },
             {
-              name: 'metric-2'
-            }
+              name: 'metric-2',
+            },
           ],
           series: [
             {
@@ -270,33 +270,33 @@ describe('Radar Widget renderer', () => {
               data: [
                 {
                   axis: 'metric-1',
-                  value: 90
+                  value: 90,
                 },
                 {
                   axis: 'metric-2',
-                  value: 100
-                }
+                  value: 100,
+                },
               ],
               name: 'Prior Month',
-              showPoints: false
+              showPoints: false,
             },
             {
               color: 'blue',
               data: [
                 {
                   axis: 'metric-1',
-                  value: 20
+                  value: 20,
                 },
                 {
                   axis: 'metric-2',
-                  value: 40
-                }
+                  value: 40,
+                },
               ],
               name: 'latency',
-              showPoints: true
-            }
-          ]
-        }
+              showPoints: true,
+            },
+          ],
+        },
       });
     });
   }));

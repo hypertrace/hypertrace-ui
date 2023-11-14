@@ -6,7 +6,7 @@ import {
   Entity,
   EntityType,
   entityTypeKey,
-  ObservabilityEntityType
+  ObservabilityEntityType,
 } from '../../graphql/model/schema/entity';
 import { ObservabilityIconType } from '../../icons/observability-icon-type';
 

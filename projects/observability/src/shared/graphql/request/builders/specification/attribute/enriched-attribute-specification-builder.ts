@@ -13,8 +13,8 @@ export class EnrichedAttributeSpecificationBuilder {
       asGraphQlSelections: () => this.buildGraphQlSelections(attributeKey),
       extractFromServerData: serverData => this.extractFromServerData(attributeKey, units, serverData),
       asGraphQlOrderByFragment: () => ({
-        expression: { key: attributeKey }
-      })
+        expression: { key: attributeKey },
+      }),
     };
   }
 
@@ -22,18 +22,18 @@ export class EnrichedAttributeSpecificationBuilder {
     return {
       path: 'attribute',
       alias: attributeKey,
-      arguments: [this.argBuilder.forAttributeKey(attributeKey)]
+      arguments: [this.argBuilder.forAttributeKey(attributeKey)],
     };
   }
 
   private extractFromServerData<T = unknown>(
     attributeKey: string,
     units: string,
-    serverData: Dictionary<unknown>
+    serverData: Dictionary<unknown>,
   ): EnrichedAttribute<T> {
     return {
       value: serverData[attributeKey] as T,
-      units: units
+      units: units,
     };
   }
 }

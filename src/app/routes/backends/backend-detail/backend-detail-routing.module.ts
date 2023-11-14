@@ -7,7 +7,7 @@ import {
   BackendDetailModule,
   BackendMetricsComponent,
   BackendOverviewComponent,
-  BackendTraceListComponent
+  BackendTraceListComponent,
 } from '@hypertrace/observability';
 
 const ROUTE_CONFIG: HtRoute[] = [
@@ -18,25 +18,25 @@ const ROUTE_CONFIG: HtRoute[] = [
       {
         path: '',
         redirectTo: 'overview',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'overview',
-        component: BackendOverviewComponent
+        component: BackendOverviewComponent,
       },
       {
         path: 'traces',
-        component: BackendTraceListComponent
+        component: BackendTraceListComponent,
       },
       {
         path: 'metrics',
-        component: BackendMetricsComponent
-      }
-    ]
-  }
+        component: BackendMetricsComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(ROUTE_CONFIG), BackendDetailModule]
+  imports: [RouterModule.forChild(ROUTE_CONFIG), BackendDetailModule],
 })
 export class BackendDetailRoutingModule {}

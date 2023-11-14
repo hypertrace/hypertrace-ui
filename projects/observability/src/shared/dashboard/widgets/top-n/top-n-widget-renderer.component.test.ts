@@ -21,19 +21,19 @@ describe('Top N Widget renderer', () => {
     component: TopNWidgetRendererComponent,
     providers: [
       mockProvider(EntityNavigationService, {
-        navigateToEntity: jest.fn()
-      })
+        navigateToEntity: jest.fn(),
+      }),
     ],
     mocks: [NavigationService],
     imports: [FormattingModule, LoadAsyncModule],
     declarations: [MockComponent(TitledContentComponent)],
-    shallow: true
+    shallow: true,
   });
 
   const buildMetricSpecification = (
     displayName: string,
     metricName: string,
-    aggregationType: MetricAggregationType
+    aggregationType: MetricAggregationType,
   ) => {
     const exploreSpecBuilder = new ExploreSpecificationBuilder();
     const topNOptionSpec = new TopNExploreSelectionSpecificationModel();
@@ -53,17 +53,17 @@ describe('Top N Widget renderer', () => {
         value: 50,
         entity: {
           [entityIdKey]: 'test-id - 1',
-          [entityTypeKey]: ObservabilityEntityType.Api
-        }
+          [entityTypeKey]: ObservabilityEntityType.Api,
+        },
       },
       {
         label: 'Api 2',
         value: 100,
         entity: {
           [entityIdKey]: 'test-id - 2',
-          [entityTypeKey]: ObservabilityEntityType.Api
-        }
-      }
+          [entityTypeKey]: ObservabilityEntityType.Api,
+        },
+      },
     ];
     const requestMetricSpec = buildMetricSpecification('Request', 'numCalls', MetricAggregationType.Sum);
     const errorMetricSpec = buildMetricSpecification('Errors', 'errorCount', MetricAggregationType.Sum);
@@ -72,18 +72,18 @@ describe('Top N Widget renderer', () => {
     optionMetricSpecifications = [requestMetricSpec, errorMetricSpec];
     mockResponse = {
       getData: () => of(data),
-      getOptions: () => optionMetricSpecifications
+      getOptions: () => optionMetricSpecifications,
     };
 
     const mockModel = {
       getData: jest.fn(() => of(mockResponse)),
       header: {
-        title: 'Top Apis'
-      }
+        title: 'Top Apis',
+      },
     };
 
     const spectator = createComponent({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
 
     expect(spectator.query(TitledContentComponent)!.title).toEqual('TOP APIS');
@@ -96,30 +96,30 @@ describe('Top N Widget renderer', () => {
             value: 100,
             entity: {
               [entityIdKey]: 'test-id - 2',
-              [entityTypeKey]: ObservabilityEntityType.Api
-            }
+              [entityTypeKey]: ObservabilityEntityType.Api,
+            },
           },
           {
             label: 'Api 1',
             value: 50,
             entity: {
               [entityIdKey]: 'test-id - 1',
-              [entityTypeKey]: ObservabilityEntityType.Api
-            }
-          }
-        ]
+              [entityTypeKey]: ObservabilityEntityType.Api,
+            },
+          },
+        ],
       });
       expectObservable(spectator.component.options$).toBe('(x|)', {
         x: [
           {
             label: 'Request',
-            value: requestMetricSpec
+            value: requestMetricSpec,
           },
           {
             label: 'Errors',
-            value: errorMetricSpec
-          }
-        ]
+            value: errorMetricSpec,
+          },
+        ],
       });
     });
   });
@@ -131,40 +131,40 @@ describe('Top N Widget renderer', () => {
         value: 50,
         entity: {
           [entityIdKey]: 'test-id - 1',
-          [entityTypeKey]: ObservabilityEntityType.Api
-        }
+          [entityTypeKey]: ObservabilityEntityType.Api,
+        },
       },
       {
         label: 'Api 2',
         value: 100,
         entity: {
           [entityIdKey]: 'test-id - 2',
-          [entityTypeKey]: ObservabilityEntityType.Api
-        }
-      }
+          [entityTypeKey]: ObservabilityEntityType.Api,
+        },
+      },
     ];
 
     mockResponse = {
       getData: () => of(data),
-      getOptions: () => optionMetricSpecifications
+      getOptions: () => optionMetricSpecifications,
     };
 
     const mockModel = {
       getData: jest.fn(() => of(mockResponse)),
       header: {
-        title: ''
-      }
+        title: '',
+      },
     };
 
     const spectator = createComponent({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
     spectator.component.data$?.subscribe();
     spectator.component.onItemClicked(data[0]);
 
     expect(spectator.inject(EntityNavigationService).navigateToEntity).toHaveBeenCalledWith({
       [entityIdKey]: 'test-id - 2',
-      [entityTypeKey]: ObservabilityEntityType.Api
+      [entityTypeKey]: ObservabilityEntityType.Api,
     });
   });
 });

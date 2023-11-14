@@ -9,7 +9,7 @@ import {
   OnInit,
   Output,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import {
@@ -18,7 +18,7 @@ import {
   FeatureState,
   FeatureStateResolver,
   SubscriptionLifecycle,
-  TypedSimpleChanges
+  TypedSimpleChanges,
 } from '@hypertrace/common';
 import { combineLatest, Observable, Subject, timer } from 'rxjs';
 import { debounce, map } from 'rxjs/operators';
@@ -92,7 +92,7 @@ import { isEmpty, uniq } from 'lodash-es';
         </div>
       </ng-template>
     </div>
-  `
+  `,
 })
 export class SearchBoxComponent implements OnInit, OnChanges {
   @Input()
@@ -139,7 +139,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     private readonly host: ElementRef,
     private readonly popoverService: PopoverService,
     private readonly subscriptionLifecycle: SubscriptionLifecycle,
-    private readonly featureStateResolver: FeatureStateResolver
+    private readonly featureStateResolver: FeatureStateResolver,
   ) {
     this.enableSearchOnTrigger$ = this.featureStateResolver
       .getFeatureState(ApplicationFeature.TriggerBasedSearch)
@@ -220,7 +220,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     this.subscriptionLifecycle.add(
       combineLatest([this.debouncedValueSubject, this.getDebounceTime()])
         .pipe(debounce(([_, debounceTime]) => timer(debounceTime)))
-        .subscribe(([value, _]) => this.valueChange.emit(value))
+        .subscribe(([value, _]) => this.valueChange.emit(value)),
     );
   }
 
@@ -236,7 +236,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
         // If on-submit search mode is enabled via the FF and the input, then use the overridden debounce time.
         // Doing 'and' here to ensure the default behaviour continues until overridden by an FF.
         return searchOnTriggerEnabled && this.searchMode === SearchBoxEmitMode.OnSubmit ? 5000 : defaultDebounceTime;
-      })
+      }),
     );
   }
 
@@ -244,7 +244,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     this.subscriptionLifecycle.add(
       this.debouncedValueSubject.asObservable().subscribe(value => {
         this.filteredSearchHistory = this.searchHistory.filter(text =>
-          text.toLowerCase().includes(value.toLowerCase())
+          text.toLowerCase().includes(value.toLowerCase()),
         );
 
         if (this.filteredSearchHistory.length === 0 && this.popover !== undefined) {
@@ -254,7 +254,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
         }
 
         this.cdr.detectChanges();
-      })
+      }),
     );
 
     this.subscriptionLifecycle.add(
@@ -262,7 +262,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
         if (!isEmpty(emittedValue)) {
           this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
         }
-      })
+      }),
     );
   }
 
@@ -277,11 +277,11 @@ export class SearchBoxComponent implements OnInit, OnChanges {
           PopoverRelativePositionLocation.BelowLeftAligned,
           PopoverRelativePositionLocation.BelowRightAligned,
           PopoverRelativePositionLocation.AboveLeftAligned,
-          PopoverRelativePositionLocation.AboveRightAligned
-        ]
+          PopoverRelativePositionLocation.AboveRightAligned,
+        ],
       },
       componentOrTemplate: this.searchHistoryTemplate,
-      backdrop: PopoverBackdrop.Transparent
+      backdrop: PopoverBackdrop.Transparent,
     });
     this.popover.closeOnBackdropClick();
     this.popover.closeOnPopoverContentClick();
@@ -301,12 +301,12 @@ export class SearchBoxComponent implements OnInit, OnChanges {
 
 export const enum SearchBoxDisplayMode {
   Border = 'border',
-  NoBorder = 'no-border'
+  NoBorder = 'no-border',
 }
 
 export const enum SearchBoxEmitMode {
   // Use incremental search mode for client side filtering and light load server side filtering.
   Incremental = 'incremental',
   // Use on-submit search mode for heavy load server side filtering.
-  OnSubmit = 'on-submit'
+  OnSubmit = 'on-submit',
 }

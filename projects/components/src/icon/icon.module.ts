@@ -8,6 +8,6 @@ import { IconComponent } from './icon.component';
 @NgModule({
   imports: [MatIconModule, CommonModule, TooltipModule, IconLibraryModule],
   declarations: [IconComponent],
-  exports: [IconComponent]
+  exports: [IconComponent],
 })
 export class IconModule {}

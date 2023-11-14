@@ -19,10 +19,10 @@ export class CustomForceBuilder<TNode extends D3ProxyNode, TEdge extends D3Proxy
     if (requiredTargetDx > 0) {
       // Target should be to the right, if it needs to move let's update both source and target velocity
       this.changeNodeVelocity(edge.source, {
-        deltaVx: -strength * this.getRelativeEdgeImportanceForSource(edge) * requiredTargetDx
+        deltaVx: -strength * this.getRelativeEdgeImportanceForSource(edge) * requiredTargetDx,
       });
       this.changeNodeVelocity(edge.target, {
-        deltaVx: strength * this.getRelativeEdgeImportanceForTarget(edge) * requiredTargetDx
+        deltaVx: strength * this.getRelativeEdgeImportanceForTarget(edge) * requiredTargetDx,
       });
     }
   }
@@ -30,10 +30,10 @@ export class CustomForceBuilder<TNode extends D3ProxyNode, TEdge extends D3Proxy
   private applyFlatteningForceToEdge(edge: TEdge, strength: number): void {
     const requiredSourceDy = edge.target.y - edge.source.y;
     this.changeNodeVelocity(edge.source, {
-      deltaVy: strength * this.getRelativeEdgeImportanceForSource(edge) * requiredSourceDy
+      deltaVy: strength * this.getRelativeEdgeImportanceForSource(edge) * requiredSourceDy,
     });
     this.changeNodeVelocity(edge.target, {
-      deltaVy: -strength * this.getRelativeEdgeImportanceForTarget(edge) * requiredSourceDy
+      deltaVy: -strength * this.getRelativeEdgeImportanceForTarget(edge) * requiredSourceDy,
     });
   }
 

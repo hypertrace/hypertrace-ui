@@ -10,8 +10,8 @@ import { BackendIconTableCellRendererComponent } from './backend-icon-table-cell
 describe('Backend Icon table cell renderer component', () => {
   const mockInjector = {
     get: () => ({
-      forBackendType: () => 'svg:cassandra'
-    })
+      forBackendType: () => 'svg:cassandra',
+    }),
   };
 
   const buildComponent = createComponentFactory({
@@ -19,18 +19,18 @@ describe('Backend Icon table cell renderer component', () => {
     providers: [
       mockProvider(NavigationService),
       mockProvider(EntityIconLookupService, {
-        forBackendType: jest.fn().mockReturnValue(ObservabilityIconType.Cassandra)
+        forBackendType: jest.fn().mockReturnValue(ObservabilityIconType.Cassandra),
       }),
       ...tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
         new BackendIconTableCellParser(mockInjector),
         0,
-        BackendType.Cassandra
-      )
+        BackendType.Cassandra,
+      ),
     ],
-    shallow: true
+    shallow: true,
   });
 
   test('should render an icon', () => {
@@ -56,9 +56,9 @@ describe('Backend Icon table cell renderer component', () => {
           id: 'test',
           onClick: () => {
             /* NOOP */
-          }
-        })
-      ]
+          },
+        }),
+      ],
     });
 
     const element = spectator.query('.clickable');

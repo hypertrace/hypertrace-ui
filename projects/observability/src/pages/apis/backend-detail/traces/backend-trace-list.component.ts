@@ -15,7 +15,7 @@ import { backendTraceListDashboard } from './backend-trace-list.dashboard';
       [filterConfig]="filterConfig"
     >
     </ht-navigable-dashboard>
-  `
+  `,
 })
 export class BackendTraceListComponent {
   public readonly filterConfig$: ReplayObservable<NavigableDashboardFilterConfig>;
@@ -23,10 +23,10 @@ export class BackendTraceListComponent {
     this.filterConfig$ = backendDetailService.entityFilter$.pipe(
       map(filter => ({
         filterBar: {
-          scope: ObservabilityTraceType.Backend
+          scope: ObservabilityTraceType.Backend,
         },
-        implicitFilters: [filter]
-      }))
+        implicitFilters: [filter],
+      })),
     );
   }
 }

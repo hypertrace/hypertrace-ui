@@ -12,7 +12,7 @@ describe('Form Field Component', () => {
     component: FormFieldComponent,
     imports: [MockModule(CommonModule)],
     declarations: [MockComponents(LabelComponent, IconComponent), MockDirective(TooltipDirective)],
-    shallow: true
+    shallow: true,
   });
 
   test('should show mandatory form field data', () => {
@@ -25,9 +25,9 @@ describe('Form Field Component', () => {
           label: 'Label',
           icon: IconType.Info,
           iconTooltip: 'Add or update a text',
-          errorLabel: 'Error message'
-        }
-      }
+          errorLabel: 'Error message',
+        },
+      },
     );
 
     expect(spectator.query('.content')).not.toHaveClass(['show-border', 'error-border']);
@@ -51,9 +51,9 @@ describe('Form Field Component', () => {
           label: 'Label',
           icon: IconType.Info,
           iconTooltip: 'Add or update a text',
-          isOptional: true
-        }
-      }
+          isOptional: true,
+        },
+      },
     );
     const labels = spectator.queryAll(LabelComponent);
     expect(labels[0].label).toEqual('Label');
@@ -70,9 +70,9 @@ describe('Form Field Component', () => {
           label: 'Label',
           errorLabel: 'Invalid Form element',
           showFormError: true,
-          showBorder: true
-        }
-      }
+          showBorder: true,
+        },
+      },
     );
     expect(spectator.query('.content')).toHaveClass(['content', 'show-border', 'error-border']);
 
@@ -84,7 +84,7 @@ describe('Form Field Component', () => {
     expect(labels[1].label).toEqual('Invalid Form element');
 
     spectator.setHostInput({
-      showFormError: false
+      showFormError: false,
     });
 
     expect(spectator.query('.error')).not.toExist();

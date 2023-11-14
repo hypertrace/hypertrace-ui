@@ -6,13 +6,13 @@ import {
   IconModule,
   LabelModule,
   PopoverModule,
-  TooltipModule
+  TooltipModule,
 } from '@hypertrace/components';
 import { LabelDetailComponent } from './label-detail.component';
 
 @NgModule({
   declarations: [LabelDetailComponent],
   exports: [LabelDetailComponent],
-  imports: [CommonModule, EventBlockerModule, IconModule, ButtonModule, PopoverModule, LabelModule, TooltipModule]
+  imports: [CommonModule, EventBlockerModule, IconModule, ButtonModule, PopoverModule, LabelModule, TooltipModule],
 })
 export class LabelDetailModule {}

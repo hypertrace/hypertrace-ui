@@ -14,7 +14,7 @@ import { serviceMetricsDashboard } from './service-metrics.dashboard';
       [filterConfig]="filterConfig"
     >
     </ht-navigable-dashboard>
-  `
+  `,
 })
 export class ServiceMetricsComponent {
   public readonly filterConfig$: ReplayObservable<NavigableDashboardFilterConfig>;
@@ -22,8 +22,8 @@ export class ServiceMetricsComponent {
   public constructor(private readonly serviceDetailService: ServiceDetailService) {
     this.filterConfig$ = this.serviceDetailService.entityFilter$.pipe(
       map(filter => ({
-        implicitFilters: [filter]
-      }))
+        implicitFilters: [filter],
+      })),
     );
   }
 }

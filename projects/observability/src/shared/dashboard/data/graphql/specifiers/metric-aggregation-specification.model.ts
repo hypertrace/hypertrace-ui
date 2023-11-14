@@ -8,7 +8,7 @@ import { MetricSpecificationModel } from './metric-specification.model';
 
 @Model({
   type: 'metric-aggregation',
-  displayName: 'Metric'
+  displayName: 'Metric',
 })
 export class MetricAggregationSpecificationModel
   extends MetricSpecificationModel<MetricAggregationSpecification>

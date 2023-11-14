@@ -9,8 +9,8 @@ describe('Legend component', () => {
       layout: LegendLayout.Column,
       position: LegendPosition.Right,
       fontSize: LegendFontSize.ExtraSmall,
-      series: []
-    })
+      series: [],
+    }),
   });
 
   test('should render each value', () => {
@@ -23,15 +23,15 @@ describe('Legend component', () => {
           {
             name: 'alpha',
             color: 'blue',
-            data: {}
+            data: {},
           },
           {
             name: 'beta',
             color: 'red',
-            data: {}
-          }
-        ]
-      })
+            data: {},
+          },
+        ],
+      }),
     });
     const entries = spectator.queryAll('.legend-entry');
     expect(entries.length).toBe(2);
@@ -54,15 +54,15 @@ describe('Legend component', () => {
           {
             name: 'alpha',
             color: 'blue',
-            data: {}
+            data: {},
           },
           {
             name: 'beta',
             color: 'red',
-            data: {}
-          }
-        ]
-      })
+            data: {},
+          },
+        ],
+      }),
     });
     expect(spectator.query('.legend-entries')).toHaveClass('legend-row');
   });

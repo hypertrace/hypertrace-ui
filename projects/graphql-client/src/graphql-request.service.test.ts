@@ -10,7 +10,7 @@ import {
   GraphQlQueryHandler,
   GraphQlRequestCacheability,
   GraphQlRequestOptions,
-  GRAPHQL_OPTIONS
+  GRAPHQL_OPTIONS,
 } from './graphql-config';
 import { GraphQlRequestService } from './graphql-request.service';
 import { GraphQlSelection } from './model/graphql-selection';
@@ -41,9 +41,9 @@ describe('GraphQl Request Service', () => {
       test: {
         id: 'foo',
         value: 'bar',
-        __typename: 'test-type'
-      }
-    }
+        __typename: 'test-type',
+      },
+    },
   });
 
   const createService = createServiceFactory({
@@ -54,8 +54,8 @@ describe('GraphQl Request Service', () => {
         useValue: {
           uri: graphQlUri,
           batchSize: graphQlBatchSize,
-          batchDebounceTimeMs: debounceTimeMs
-        }
+          batchDebounceTimeMs: debounceTimeMs,
+        },
       },
       {
         provide: Apollo,
@@ -65,36 +65,36 @@ describe('GraphQl Request Service', () => {
               ...buildServerResponse(),
               networkStatus: NetworkStatus.ready,
               stale: false,
-              loading: false
-            })
+              loading: false,
+            }),
           ),
           mutate: jest.fn().mockReturnValueOnce(
             of({
               ...buildServerResponse(),
               networkStatus: NetworkStatus.ready,
               stale: false,
-              loading: false
-            })
-          )
-        }
+              loading: false,
+            }),
+          ),
+        },
       },
       {
         provide: Injector,
         useValue: {
-          get: () => []
-        }
-      }
-    ]
+          get: () => [],
+        },
+      },
+    ],
   });
 
   const buildRequestOne = (valuePathName: string = 'value'): TestRequestOne => ({
     requestType: TEST_REQUEST_ONE,
-    select: { path: 'testone', children: [{ path: 'id' }, { path: valuePathName }] }
+    select: { path: 'testone', children: [{ path: 'id' }, { path: valuePathName }] },
   });
 
   const buildRequestTwo = (valuePathName: string = 'value'): TestRequestTwo => ({
     requestType: TEST_REQUEST_TWO,
-    select: { path: 'testtwo', children: [{ path: 'id' }, { path: valuePathName }] }
+    select: { path: 'testtwo', children: [{ path: 'id' }, { path: valuePathName }] },
   });
 
   const mockQueryMethod = (): jest.SpyInstance => {
@@ -103,8 +103,8 @@ describe('GraphQl Request Service', () => {
         ...buildServerResponse(),
         networkStatus: NetworkStatus.ready,
         stale: false,
-        loading: false
-      })
+        loading: false,
+      }),
     );
     queryMock.mockClear();
 
@@ -116,8 +116,8 @@ describe('GraphQl Request Service', () => {
         ...buildServerResponse(),
         networkStatus: NetworkStatus.ready,
         stale: false,
-        loading: false
-      })
+        loading: false,
+      }),
     );
 
   const buildQueryHandlerOne = (requestOptions?: GraphQlRequestOptions): GraphQlQueryHandler<unknown, unknown> => ({
@@ -126,7 +126,7 @@ describe('GraphQl Request Service', () => {
     matchesRequest: jest.fn(request => (request as { requestType: unknown }).requestType === TEST_REQUEST_ONE) as any,
     convertRequest: jest.fn((request: TestRequestOne) => request.select),
     convertResponse: jest.fn(response => response),
-    getRequestOptions: requestOptions && jest.fn().mockReturnValue(requestOptions)
+    getRequestOptions: requestOptions && jest.fn().mockReturnValue(requestOptions),
   });
 
   const buildQueryHandlerTwo = (requestOptions?: GraphQlRequestOptions): GraphQlQueryHandler<unknown, unknown> => ({
@@ -135,18 +135,18 @@ describe('GraphQl Request Service', () => {
     matchesRequest: jest.fn(request => (request as { requestType: unknown }).requestType === TEST_REQUEST_TWO) as any,
     convertRequest: jest.fn((request: TestRequestOne) => request.select),
     convertResponse: jest.fn(response => response),
-    getRequestOptions: requestOptions && jest.fn().mockReturnValue(requestOptions)
+    getRequestOptions: requestOptions && jest.fn().mockReturnValue(requestOptions),
   });
 
   const buildMutationHandlerOne = (
-    requestOptions?: GraphQlRequestOptions
+    requestOptions?: GraphQlRequestOptions,
   ): GraphQlMutationHandler<unknown, unknown> => ({
     type: GraphQlHandlerType.Mutation,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     matchesRequest: jest.fn(request => (request as { requestType: unknown }).requestType === TEST_REQUEST_ONE) as any,
     convertRequest: jest.fn((request: TestRequestOne) => request.select),
     convertResponse: jest.fn(response => response),
-    getRequestOptions: requestOptions && jest.fn().mockReturnValue(requestOptions)
+    getRequestOptions: requestOptions && jest.fn().mockReturnValue(requestOptions),
   });
 
   //
@@ -181,20 +181,20 @@ describe('GraphQl Request Service', () => {
       query: gql(
         new GraphQlRequestBuilder()
           .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }] })
-          .build()
+          .build(),
       ),
       errorPolicy: 'all',
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'cache-first',
     });
 
     expect(queryFnMock).toHaveBeenNthCalledWith(2, {
       query: gql(
         new GraphQlRequestBuilder()
           .withSelects({ path: 'testtwo', children: [{ path: 'id' }, { path: 'value' }] })
-          .build()
+          .build(),
       ),
       errorPolicy: 'all',
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'cache-first',
     });
   }));
 
@@ -210,10 +210,10 @@ describe('GraphQl Request Service', () => {
       query: gql(
         new GraphQlRequestBuilder()
           .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }] })
-          .build()
+          .build(),
       ),
       errorPolicy: 'all',
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'cache-first',
     });
   }));
 
@@ -229,10 +229,10 @@ describe('GraphQl Request Service', () => {
       query: gql(
         new GraphQlRequestBuilder()
           .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }, { path: 'value2' }] })
-          .build()
+          .build(),
       ),
       errorPolicy: 'all',
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'cache-first',
     });
   }));
 
@@ -246,10 +246,10 @@ describe('GraphQl Request Service', () => {
       query: gql(
         new GraphQlRequestBuilder()
           .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }] })
-          .build()
+          .build(),
       ),
       errorPolicy: 'all',
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'no-cache',
     });
     expect(handler.getRequestOptions).toHaveBeenCalledTimes(1);
   }));
@@ -264,8 +264,8 @@ describe('GraphQl Request Service', () => {
       mutation: gql(
         `mutation ${new GraphQlRequestBuilder()
           .withSelects({ path: 'testone', children: [{ path: 'id' }, { path: 'value' }] })
-          .build()}`
-      )
+          .build()}`,
+      ),
     });
     expect(handler.getRequestOptions).toHaveBeenCalledTimes(1);
   }));
@@ -282,7 +282,7 @@ describe('GraphQl Request Service', () => {
     expect(queryFnMock).toHaveBeenNthCalledWith(1, {
       query: gql(requestString),
       errorPolicy: 'all',
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'cache-first',
     });
 
     spectator.service.query(buildRequestOne()).subscribe();
@@ -291,7 +291,7 @@ describe('GraphQl Request Service', () => {
     expect(queryFnMock).toHaveBeenNthCalledWith(2, {
       query: gql(requestString),
       errorPolicy: 'all',
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'no-cache',
     });
   }));
 
@@ -310,7 +310,7 @@ describe('GraphQl Request Service', () => {
     expect(queryFnMock).toHaveBeenNthCalledWith(1, {
       query: gql(requestString),
       errorPolicy: 'all',
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'no-cache',
     });
     flushMicrotasks();
 
@@ -322,7 +322,7 @@ describe('GraphQl Request Service', () => {
     expect(queryFnMock).toHaveBeenNthCalledWith(2, {
       query: gql(requestString),
       errorPolicy: 'all',
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'no-cache',
     });
     flushMicrotasks();
     // Now one last one, one more request
@@ -333,7 +333,7 @@ describe('GraphQl Request Service', () => {
     expect(queryFnMock).toHaveBeenNthCalledWith(3, {
       query: gql(requestString),
       errorPolicy: 'all',
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'no-cache',
     });
   }));
 });

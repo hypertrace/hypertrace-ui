@@ -16,7 +16,7 @@ export class IconRegistryService {
     this.registeredIcons.add(iconInfo.key);
     this.matIconRegistry.addSvgIcon(
       this.getIconNameWithoutPrefix(iconInfo.key),
-      this.sanitizer.bypassSecurityTrustResourceUrl(iconInfo.url)
+      this.sanitizer.bypassSecurityTrustResourceUrl(iconInfo.url),
     );
   }
 
@@ -29,7 +29,7 @@ export class IconRegistryService {
         iconRenderType: 'svg',
         svgIcon: iconName,
         label: labelOrDefault,
-        getSvgElement: () => this.matIconRegistry.getNamedSvgIcon(iconName)
+        getSvgElement: () => this.matIconRegistry.getNamedSvgIcon(iconName),
       };
     }
 
@@ -37,7 +37,7 @@ export class IconRegistryService {
       iconRenderType: 'ligature',
       ligatureText: iconName,
       label: labelOrDefault,
-      fontSet: 'material-icons-outlined'
+      fontSet: 'material-icons-outlined',
     };
   }
 

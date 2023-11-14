@@ -7,6 +7,6 @@ import { CardContainerComponent } from './container/card-container.component';
 @NgModule({
   imports: [CommonModule, CheckboxModule],
   declarations: [CardListComponent, CardContainerComponent],
-  exports: [CardListComponent, CardContainerComponent]
+  exports: [CardListComponent, CardContainerComponent],
 })
 export class CardListModule {}

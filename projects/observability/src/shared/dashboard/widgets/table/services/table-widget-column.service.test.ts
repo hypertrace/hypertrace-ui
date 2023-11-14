@@ -13,18 +13,18 @@ describe('Table Widget Column service', () => {
     {
       id: 'stringAttribute',
       name: 'stringAttribute',
-      specification: new SpecificationBuilder().attributeSpecificationForKey('stringAttribute')
-    }
+      specification: new SpecificationBuilder().attributeSpecificationForKey('stringAttribute'),
+    },
   ];
 
   const createService = createServiceFactory({
     service: TableWidgetColumnsService,
     providers: [
       mockProvider(MetadataService, {
-        getSelectionAttributes: () => of(getAllTestFilterAttributes())
+        getSelectionAttributes: () => of(getAllTestFilterAttributes()),
       }),
-      FilterBuilderLookupService
-    ]
+      FilterBuilderLookupService,
+    ],
   });
 
   test('should fetch attributes and map supported attributes to columns', fakeAsync(() => {
@@ -38,8 +38,8 @@ describe('Table Widget Column service', () => {
             id: 'stringAttribute',
             name: 'stringAttribute',
             specification: expect.objectContaining({
-              name: 'stringAttribute'
-            })
+              name: 'stringAttribute',
+            }),
           },
           {
             // Fetched columns
@@ -50,12 +50,12 @@ describe('Table Widget Column service', () => {
             id: 'booleanAttribute',
             name: 'booleanAttribute',
             specification: expect.objectContaining({
-              name: 'booleanAttribute'
+              name: 'booleanAttribute',
             }),
             title: 'Boolean Attribute',
             titleTooltip: 'Boolean Attribute',
             visible: false,
-            width: 1
+            width: 1,
           },
           {
             alignment: 'left',
@@ -65,12 +65,12 @@ describe('Table Widget Column service', () => {
             id: 'stringArrayAttribute',
             name: 'stringArrayAttribute',
             specification: expect.objectContaining({
-              name: 'stringArrayAttribute'
+              name: 'stringArrayAttribute',
             }),
             title: 'String Array Attribute',
             titleTooltip: 'String Array Attribute',
             visible: false,
-            width: 1
+            width: 1,
           },
           {
             alignment: 'left',
@@ -80,12 +80,12 @@ describe('Table Widget Column service', () => {
             id: 'stringMapAttribute',
             name: 'stringMapAttribute',
             specification: expect.objectContaining({
-              name: 'stringMapAttribute'
+              name: 'stringMapAttribute',
             }),
             title: 'String Map Attribute',
             titleTooltip: 'String Map Attribute',
             visible: false,
-            width: 1
+            width: 1,
           },
           {
             alignment: 'right',
@@ -95,14 +95,14 @@ describe('Table Widget Column service', () => {
             id: 'timestampAttribute',
             name: 'timestampAttribute',
             specification: expect.objectContaining({
-              name: 'timestampAttribute'
+              name: 'timestampAttribute',
             }),
             title: 'Timestamp Attribute',
             titleTooltip: 'Timestamp Attribute',
             visible: false,
-            width: 1
-          }
-        ]
+            width: 1,
+          },
+        ],
       });
     });
   }));
