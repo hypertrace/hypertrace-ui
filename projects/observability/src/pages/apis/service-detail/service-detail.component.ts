@@ -13,25 +13,25 @@ import { ServiceDetailService } from './service-detail.service';
         <router-outlet></router-outlet>
       </div>
     </div>
-  `
+  `,
 })
 export class ServiceDetailComponent {
   public readonly tabs: NavigableTab[] = [
     {
       path: 'overview',
-      label: 'Overview'
+      label: 'Overview',
     },
     {
       path: 'endpoints',
-      label: 'Endpoints'
+      label: 'Endpoints',
     },
     {
       path: 'traces',
-      label: 'Traces'
+      label: 'Traces',
     },
     {
       path: 'metrics',
-      label: 'Metrics'
-    }
+      label: 'Metrics',
+    },
   ];
 }

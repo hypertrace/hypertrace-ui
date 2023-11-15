@@ -40,8 +40,8 @@ const iconsRootPath = 'assets/icons';
       { key: ObservabilityIconType.Service, url: `${iconsRootPath}/service.svg` },
       { key: ObservabilityIconType.ServicesList, url: `${iconsRootPath}/services_list.svg` },
       { key: ObservabilityIconType.SQS, url: `${iconsRootPath}/amazon-sqs.svg` },
-      { key: ObservabilityIconType.Tyk, url: `${iconsRootPath}/tyk.svg` }
-    ])
-  ]
+      { key: ObservabilityIconType.Tyk, url: `${iconsRootPath}/tyk.svg` },
+    ]),
+  ],
 })
 export class ObservabilityIconLibraryModule {}

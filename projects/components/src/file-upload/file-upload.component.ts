@@ -62,7 +62,7 @@ import { FileTypeUtil, SupportedFileType } from './file-types';
         </li>
       </ul>
     </ng-template>
-  `
+  `,
 })
 export class FileUploadComponent {
   @Input()
@@ -75,7 +75,7 @@ export class FileUploadComponent {
   public config: UploaderConfig = {
     maxNumberOfFiles: 10,
     maxFileSizeInBytes: 20 * 1024 * 1024, // 20 MB
-    supportedFileTypes: Object.values(SupportedFileType)
+    supportedFileTypes: Object.values(SupportedFileType),
   };
 
   @Output()
@@ -166,7 +166,7 @@ export class FileUploadComponent {
 
   private areFileTypesValid(fileList: FileList | null): boolean {
     return this.getFilesFromFileList(fileList).every(file =>
-      FileTypeUtil.supportedFileMimeTypesSet(this.config.supportedFileTypes).has(file.type)
+      FileTypeUtil.supportedFileMimeTypesSet(this.config.supportedFileTypes).has(file.type),
     );
   }
   private areFilesEmpty(fileList: FileList | null): boolean {
@@ -175,7 +175,7 @@ export class FileUploadComponent {
 
   private showFileSizeErrorToast(): void {
     this.notificationService.createFailureToast(
-      `File size should not be more than ${this.fileDisplayPipe.transform(this.config.maxFileSizeInBytes)}`
+      `File size should not be more than ${this.fileDisplayPipe.transform(this.config.maxFileSizeInBytes)}`,
     );
   }
 
@@ -185,7 +185,7 @@ export class FileUploadComponent {
 
   private showFileTypeInfoToast(): void {
     this.notificationService.createInfoToast(
-      `Make sure to choose file of type ${this.config.supportedFileTypes.join(', ')}`
+      `Make sure to choose file of type ${this.config.supportedFileTypes.join(', ')}`,
     );
   }
 

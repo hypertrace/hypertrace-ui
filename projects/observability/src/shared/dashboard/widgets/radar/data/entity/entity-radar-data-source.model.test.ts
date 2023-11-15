@@ -9,7 +9,7 @@ import { GraphQlTimeRange } from '../../../../../graphql/model/schema/timerange/
 import { ObservabilitySpecificationBuilder } from '../../../../../graphql/request/builders/selections/observability-specification-builder';
 import {
   ENTITY_GQL_REQUEST,
-  GraphQlEntityRequest
+  GraphQlEntityRequest,
 } from '../../../../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { EntityRadarDataSourceModel } from './entity-radar-data-source.model';
 
@@ -21,21 +21,21 @@ describe('Entity radar data source model', () => {
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
 
     model = new EntityRadarDataSourceModel();
     model.metricSpecifications = [
       metricSpecBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Sum),
-      metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum)
+      metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum),
     ];
 
     model.api = mockApi as ModelApi;
     emittedQueries = [];
     model.query$.subscribe(query =>
       emittedQueries.push(
-        query.buildRequest([new GraphQlEntityFilter('test-id', ObservabilityEntityType.Api)]) as GraphQlEntityRequest
-      )
+        query.buildRequest([new GraphQlEntityFilter('test-id', ObservabilityEntityType.Api)]) as GraphQlEntityRequest,
+      ),
     );
   });
 
@@ -56,8 +56,8 @@ describe('Entity radar data source model', () => {
         timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
         properties: [
           metricSpecBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Sum),
-          metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum)
-        ]
+          metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum),
+        ],
       },
       {
         requestType: ENTITY_GQL_REQUEST,
@@ -65,13 +65,13 @@ describe('Entity radar data source model', () => {
         id: 'test-id',
         timeRange: new GraphQlTimeRange(
           new Date(testTimeRange.startTime.valueOf() - new TimeDuration(1, TimeUnit.Hour).toMillis()),
-          new Date(testTimeRange.endTime.valueOf() - new TimeDuration(1, TimeUnit.Hour).toMillis())
+          new Date(testTimeRange.endTime.valueOf() - new TimeDuration(1, TimeUnit.Hour).toMillis()),
         ),
         properties: [
           metricSpecBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Sum),
-          metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum)
-        ]
-      }
+          metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum),
+        ],
+      },
     ];
 
     expect(isEqualIgnoreFunctions(emittedQueries, expectedQueries)).toBe(true);
@@ -94,8 +94,8 @@ describe('Entity radar data source model', () => {
         timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
         properties: [
           metricSpecBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Sum),
-          metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum)
-        ]
+          metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum),
+        ],
       },
       {
         requestType: ENTITY_GQL_REQUEST,
@@ -103,13 +103,13 @@ describe('Entity radar data source model', () => {
         id: 'test-id',
         timeRange: new GraphQlTimeRange(
           new Date(testTimeRange.startTime.valueOf() - new TimeDuration(1, TimeUnit.Day).toMillis()),
-          new Date(testTimeRange.endTime.valueOf() - new TimeDuration(1, TimeUnit.Day).toMillis())
+          new Date(testTimeRange.endTime.valueOf() - new TimeDuration(1, TimeUnit.Day).toMillis()),
         ),
         properties: [
           metricSpecBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Sum),
-          metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum)
-        ]
-      }
+          metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum),
+        ],
+      },
     ];
 
     expect(isEqualIgnoreFunctions(emittedQueries, expectedQueries)).toBe(true);
@@ -132,8 +132,8 @@ describe('Entity radar data source model', () => {
         timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
         properties: [
           metricSpecBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Sum),
-          metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum)
-        ]
+          metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum),
+        ],
       },
       {
         requestType: ENTITY_GQL_REQUEST,
@@ -141,13 +141,13 @@ describe('Entity radar data source model', () => {
         id: 'test-id',
         timeRange: new GraphQlTimeRange(
           new Date(testTimeRange.startTime.valueOf() - new TimeDuration(1, TimeUnit.Month).toMillis()),
-          new Date(testTimeRange.endTime.valueOf() - new TimeDuration(1, TimeUnit.Month).toMillis())
+          new Date(testTimeRange.endTime.valueOf() - new TimeDuration(1, TimeUnit.Month).toMillis()),
         ),
         properties: [
           metricSpecBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Sum),
-          metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum)
-        ]
-      }
+          metricSpecBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.Sum),
+        ],
+      },
     ];
 
     expect(isEqualIgnoreFunctions(emittedQueries, expectedQueries)).toBe(true);

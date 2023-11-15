@@ -3,7 +3,7 @@ import { TableCellBooleanCsvGenerator } from './table-cell-boolean-csv-generator
 
 describe('TableCellBooleanCsvGenerator', () => {
   const createService = createServiceFactory({
-    service: TableCellBooleanCsvGenerator
+    service: TableCellBooleanCsvGenerator,
   });
 
   test('should return data as expected', () => {

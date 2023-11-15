@@ -32,17 +32,17 @@ import { SeriesModel } from './series.model';
         SeriesModel,
         BandModel,
         CartesianAxisModel,
-        CartesianExplorerSelectionHandlerModel
+        CartesianExplorerSelectionHandlerModel,
       ],
       renderers: [CartesianWidgetRendererComponent],
       editors: [SeriesArrayEditorComponent],
-      propertyTypes: [SERIES_ARRAY_TYPE, BAND_ARRAY_TYPE]
+      propertyTypes: [SERIES_ARRAY_TYPE, BAND_ARRAY_TYPE],
     }),
     TitledContentModule,
     LoadAsyncModule,
     FormattingModule,
     CartesianExplorerContextMenuModule,
-    MemoizeModule
-  ]
+    MemoizeModule,
+  ],
 })
 export class CartesianWidgetModule {}

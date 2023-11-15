@@ -2,7 +2,7 @@ import { Dictionary } from '@hypertrace/common';
 import {
   GraphQlMetricAggregation,
   GraphQlMetricAggregationContainer,
-  GraphQlMetricBandAggregation
+  GraphQlMetricBandAggregation,
 } from './graphql-metric-aggregation';
 
 export type GraphQlMetricTimeseriesContainer = Dictionary<GraphQlMetricInterval[]>;

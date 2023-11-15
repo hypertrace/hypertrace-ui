@@ -3,7 +3,7 @@ import { ModelJson, ModelPropertyTypeRegistrationInformation } from '@hypertrace
 import { ModelPropertyTypeService } from '@hypertrace/hyperdash-angular';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ModelTemplatePropertyType implements ModelPropertyTypeRegistrationInformation<ModelJson, ModelJson> {
   public static readonly TYPE: string = 'model-template';

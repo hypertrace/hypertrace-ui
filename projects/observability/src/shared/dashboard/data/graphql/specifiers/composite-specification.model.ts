@@ -7,13 +7,13 @@ import { SpecificationModel } from './specification.model';
 
 @Model({
   type: 'composite-specification',
-  displayName: 'Composite'
+  displayName: 'Composite',
 })
 export class CompositeSpecificationModel extends SpecificationModel<CompositeSpecification> {
   @ModelProperty({
     key: 'specifications',
     displayName: 'Specifications',
-    type: UNKNOWN_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type,
   })
   public specifications: Specification[] | Dictionary<Specification> = [];
 
@@ -21,7 +21,7 @@ export class CompositeSpecificationModel extends SpecificationModel<CompositeSpe
     key: 'order-by',
     displayName: 'Order By',
     type: STRING_PROPERTY.type, // TODO make this its own property
-    required: true
+    required: true,
   })
   public orderByKey!: string;
 

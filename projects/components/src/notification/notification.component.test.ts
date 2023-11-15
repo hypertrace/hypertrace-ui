@@ -14,7 +14,7 @@ describe('NotificationComponent', () => {
   const createHost = createHostFactory({
     component: NotificationComponent,
     shallow: true,
-    declarations: [MockComponents(IconComponent)]
+    declarations: [MockComponents(IconComponent)],
   });
 
   test('should create text success notification correctly', fakeAsync(() => {
@@ -27,10 +27,10 @@ describe('NotificationComponent', () => {
           useValue: {
             mode: NotificationMode.Success,
             message: 'Success!',
-            closedObserver: closedObserver
-          }
-        }
-      ]
+            closedObserver: closedObserver,
+          },
+        },
+      ],
     });
 
     expect(spectator.query(IconComponent)?.icon).toEqual(IconType.CheckCircle);
@@ -52,10 +52,10 @@ describe('NotificationComponent', () => {
           useValue: {
             mode: NotificationMode.Failure,
             message: 'Failure!',
-            closedObserver: closedObserver
-          }
-        }
-      ]
+            closedObserver: closedObserver,
+          },
+        },
+      ],
     });
 
     expect(spectator.query(IconComponent)?.icon).toEqual(IconType.Alert);
@@ -77,10 +77,10 @@ describe('NotificationComponent', () => {
           useValue: {
             mode: NotificationMode.Info,
             message: 'Information',
-            closedObserver: closedObserver
-          }
-        }
-      ]
+            closedObserver: closedObserver,
+          },
+        },
+      ],
     });
 
     expect(spectator.query(IconComponent)?.icon).toEqual(IconType.Info);

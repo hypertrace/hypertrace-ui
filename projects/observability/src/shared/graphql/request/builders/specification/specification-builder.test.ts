@@ -5,8 +5,8 @@ describe('Specification Builder', () => {
   test("attribute specs replace 'null' strings with undefined", () => {
     expect(
       specBuilder.attributeSpecificationForKey('test').extractFromServerData({
-        test: 'null'
-      })
+        test: 'null',
+      }),
     ).toBeUndefined();
   });
 
@@ -14,11 +14,11 @@ describe('Specification Builder', () => {
     expect(
       specBuilder.attributeSpecificationForKey('test-non-word-character-attributes').extractFromServerData({
         test_non_word_character_attributes: {
-          prop1: 'prop1'
-        }
-      })
+          prop1: 'prop1',
+        },
+      }),
     ).toEqual({
-      prop1: 'prop1'
+      prop1: 'prop1',
     });
   });
 
@@ -29,14 +29,14 @@ describe('Specification Builder', () => {
 
     // For Specification Array
     expect(
-      specBuilder.buildCompositeSpecification([idSpec, nameSpec], 'test').extractFromServerData(serverData)
+      specBuilder.buildCompositeSpecification([idSpec, nameSpec], 'test').extractFromServerData(serverData),
     ).toMatchObject(['test-id', 'test-name']);
 
     // For Specifications Object
     expect(
       specBuilder
         .buildCompositeSpecification({ id1: idSpec, name1: nameSpec }, 'test')
-        .extractFromServerData(serverData)
+        .extractFromServerData(serverData),
     ).toMatchObject({ id1: 'test-id', name1: 'test-name' });
   });
 });

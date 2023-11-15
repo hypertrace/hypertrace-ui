@@ -13,7 +13,7 @@ import { ModalContainerComponent } from './modal-container.component';
   template: `
     <div class="test-modal-content">Test Component Content Data: {{ this.data }}</div>
     <button class="test-close-button" role="button" (click)="this.modalRef.close('clicked')">Close</button>
-  `
+  `,
 })
 class TestComponent {
   public constructor(@Inject(MODAL_DATA) public readonly data: string, public readonly modalRef: ModalRef<string>) {}
@@ -38,17 +38,17 @@ describe('Modal Container component', () => {
         provide: PopoverRef,
         useValue: {
           height: jest.fn(),
-          close: jest.fn()
-        }
+          close: jest.fn(),
+        },
       },
-      mockProvider(LayoutChangeService)
-    ]
+      mockProvider(LayoutChangeService),
+    ],
   });
 
   const createConfiguredHost = (
     config: ModalConfig,
     modalData: string = '',
-    modalRefMock: Partial<ModalRef<unknown>> = {}
+    modalRefMock: Partial<ModalRef<unknown>> = {},
   ) =>
     createHost(undefined, {
       providers: [
@@ -61,15 +61,15 @@ describe('Modal Container component', () => {
               providers: [
                 {
                   provide: MODAL_DATA,
-                  useValue: modalData
+                  useValue: modalData,
                 },
-                mockProvider(ModalRef, modalRefMock)
+                mockProvider(ModalRef, modalRefMock),
               ],
-              parent: injector
-            })
-          })
-        }
-      ]
+              parent: injector,
+            }),
+          }),
+        },
+      ],
     });
 
   test('should display the title', () => {
@@ -77,7 +77,7 @@ describe('Modal Container component', () => {
       showControls: true,
       title: 'Create User',
       content: TestComponent,
-      size: ModalSize.Small
+      size: ModalSize.Small,
     });
 
     expect(spectator.query('.header')).toHaveText('Create User');
@@ -88,7 +88,7 @@ describe('Modal Container component', () => {
       showControls: true,
       title: 'Create User',
       content: TestComponent,
-      size: ModalSize.Small
+      size: ModalSize.Small,
     });
     checkSyles('420px', '365px');
   });
@@ -98,7 +98,7 @@ describe('Modal Container component', () => {
       showControls: true,
       title: 'Create User',
       content: TestComponent,
-      size: ModalSize.Medium
+      size: ModalSize.Medium,
     });
     checkSyles('456px', '530px');
   });
@@ -108,7 +108,7 @@ describe('Modal Container component', () => {
       showControls: true,
       title: 'Create User',
       content: TestComponent,
-      size: ModalSize.LargeShort
+      size: ModalSize.LargeShort,
     });
     checkSyles('640px', '540px');
   });
@@ -118,7 +118,7 @@ describe('Modal Container component', () => {
       showControls: true,
       title: 'Create User',
       content: TestComponent,
-      size: ModalSize.Large
+      size: ModalSize.Large,
     });
     checkSyles('640px', '720px');
   });
@@ -128,7 +128,7 @@ describe('Modal Container component', () => {
       showControls: true,
       title: 'Create User',
       content: TestComponent,
-      size: ModalSize.LargeTall
+      size: ModalSize.LargeTall,
     });
     checkSyles('840px', '90vh');
   });
@@ -138,7 +138,7 @@ describe('Modal Container component', () => {
       showControls: true,
       title: 'Create User',
       content: TestComponent,
-      size: ModalSize.LargeWide
+      size: ModalSize.LargeWide,
     });
     checkSyles('95em', '90vh');
   });
@@ -148,7 +148,7 @@ describe('Modal Container component', () => {
       showControls: true,
       title: 'Create User',
       content: TestComponent,
-      size: ModalSize.MediumWide
+      size: ModalSize.MediumWide,
     });
     checkSyles('840px', '600px');
   });
@@ -160,8 +160,8 @@ describe('Modal Container component', () => {
       content: TestComponent,
       size: {
         width: 100,
-        height: 100
-      }
+        height: 100,
+      },
     });
     checkSyles('100px', '100px');
   });
@@ -173,10 +173,10 @@ describe('Modal Container component', () => {
         showControls: true,
         title: 'Create User',
         content: TestComponent,
-        size: ModalSize.Small
+        size: ModalSize.Small,
       },
       'text',
-      { close: closeFn }
+      { close: closeFn },
     );
 
     spectator.click('.test-close-button');
@@ -189,9 +189,9 @@ describe('Modal Container component', () => {
         showControls: true,
         title: 'Create User',
         content: TestComponent,
-        size: ModalSize.Small
+        size: ModalSize.Small,
       },
-      'custom data'
+      'custom data',
     );
 
     expect(spectator.query('.content')).toHaveText('Test Component Content Data: custom data');

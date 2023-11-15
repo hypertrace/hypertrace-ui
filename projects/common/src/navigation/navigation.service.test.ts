@@ -10,7 +10,7 @@ import {
   ExternalNavigationWindowHandling,
   NavigationParams,
   NavigationParamsType,
-  NavigationService
+  NavigationService,
 } from './navigation.service';
 
 describe('Navigation Service', () => {
@@ -18,28 +18,28 @@ describe('Navigation Service', () => {
     path: 'child',
     children: [],
     data: {
-      title: 'child1'
-    }
+      title: 'child1',
+    },
   };
   const defaultChildRouteConfig = {
     path: '**',
-    children: []
+    children: [],
   };
   const secondFirstChildRouteConfig = {
     path: 'second-first',
-    children: [defaultChildRouteConfig]
+    children: [defaultChildRouteConfig],
   };
   const passThroughRouteConfig = {
     path: '',
-    children: [secondFirstChildRouteConfig]
+    children: [secondFirstChildRouteConfig],
   };
   const secondSecondChildRouteConfig = {
     path: 'second-second/:id',
-    children: []
+    children: [],
   };
   const secondChildRouteConfig = {
     path: 'second',
-    children: [passThroughRouteConfig, secondSecondChildRouteConfig]
+    children: [passThroughRouteConfig, secondSecondChildRouteConfig],
   };
 
   let spectator: SpectatorService<NavigationService>;
@@ -51,17 +51,17 @@ describe('Navigation Service', () => {
       mockProvider(Location),
       mockProvider(Title, { setTitle: jest.fn().mockReturnValue(undefined) }),
       { provide: APP_TITLE, useValue: 'defaultAppTitle' },
-      mockProvider(PlatformLocation, { href: 'https://test.hypertrace.org' })
+      mockProvider(PlatformLocation, { href: 'https://test.hypertrace.org' }),
     ],
     imports: [
       RouterTestingModule.withRoutes([
         {
           path: 'root',
           data: { features: ['test-feature'] },
-          children: [firstChildRouteConfig, secondChildRouteConfig]
-        }
-      ])
-    ]
+          children: [firstChildRouteConfig, secondChildRouteConfig],
+        },
+      ]),
+    ],
   });
 
   beforeEach(() => {
@@ -76,7 +76,7 @@ describe('Navigation Service', () => {
 
   test('can retrieve a route config relative to the root route', () => {
     expect(spectator.service.getRouteConfig(['root', 'child'], spectator.service.rootRoute())).toEqual(
-      firstChildRouteConfig
+      firstChildRouteConfig,
     );
   });
 
@@ -105,7 +105,7 @@ describe('Navigation Service', () => {
     const path = [new UrlSegment('first', { m1: 'm1v', m2: 'm2v' }), new UrlSegment('second', {})];
 
     expect(spectator.service.getUrlTree(path, { q1: 'q1v', q2: 'q2v' }).toString()).toBe(
-      `/first${encodeURIComponent(';m1=m1v;m2=m2v')}/second?q1=q1v&q2=q2v`
+      `/first${encodeURIComponent(';m1=m1v;m2=m2v')}/second?q1=q1v&q2=q2v`,
     );
 
     expect(spectator.service.getUrlTree(path).toString()).toBe(`/first${encodeURIComponent(';m1=m1v;m2=m2v')}/second`);
@@ -114,7 +114,7 @@ describe('Navigation Service', () => {
   test('can build a url tree from activated route snapshot', () => {
     router.navigate(['root', 'child'], { queryParams: { q1: 'q1v' } });
     expect(
-      spectator.service.getUrlTreeForRouteSnapshot(spectator.service.getCurrentActivatedRoute().snapshot).toString()
+      spectator.service.getUrlTreeForRouteSnapshot(spectator.service.getCurrentActivatedRoute().snapshot).toString(),
     ).toBe(`/root/child?q1=q1v`);
   });
 
@@ -164,8 +164,8 @@ describe('Navigation Service', () => {
     expect(router.navigate).toHaveBeenCalledWith(
       ['root', 'child'],
       expect.objectContaining({
-        relativeTo: undefined
-      })
+        relativeTo: undefined,
+      }),
     );
   });
 
@@ -176,8 +176,8 @@ describe('Navigation Service', () => {
     expect(router.navigate).toHaveBeenLastCalledWith(
       ['child'],
       expect.objectContaining({
-        relativeTo: spectator.service.getCurrentActivatedRoute()
-      })
+        relativeTo: spectator.service.getCurrentActivatedRoute(),
+      }),
     );
   });
 
@@ -196,10 +196,10 @@ describe('Navigation Service', () => {
         '/external',
         {
           url: 'https://www.google.com',
-          windowHandling: 'same_window'
-        }
+          windowHandling: 'same_window',
+        },
       ],
-      expect.objectContaining({ skipLocationChange: true })
+      expect.objectContaining({ skipLocationChange: true }),
     );
   });
 
@@ -209,17 +209,17 @@ describe('Navigation Service', () => {
         '/external',
         {
           url: 'https://www.google.com',
-          windowHandling: 'same_window'
-        }
+          windowHandling: 'same_window',
+        },
       ],
-      extras: { skipLocationChange: true }
+      extras: { skipLocationChange: true },
     });
 
     expect(spectator.service.buildNavigationParams('/services')).toEqual({
       path: '/services',
       extras: expect.objectContaining({
-        relativeTo: undefined
-      })
+        relativeTo: undefined,
+      }),
     });
   });
 
@@ -228,13 +228,13 @@ describe('Navigation Service', () => {
     spectator.service.navigate({
       navType: NavigationParamsType.InApp,
       path: ['root', 'child'],
-      replaceCurrentHistory: true
+      replaceCurrentHistory: true,
     });
     expect(router.navigate).toHaveBeenCalledWith(
       ['root', 'child'],
       expect.objectContaining({
-        replaceUrl: true
-      })
+        replaceUrl: true,
+      }),
     );
   });
 
@@ -244,8 +244,8 @@ describe('Navigation Service', () => {
       path: 'root',
       queryParams: {
         global: 'foo',
-        other: 'bar'
-      }
+        other: 'bar',
+      },
     });
 
     spectator.service.registerGlobalQueryParamKey('global');
@@ -253,7 +253,7 @@ describe('Navigation Service', () => {
     spectator.service.navigate('root/child');
 
     expect(spectator.service.getCurrentActivatedRoute().snapshot.url).toEqual([
-      expect.objectContaining({ path: 'child' })
+      expect.objectContaining({ path: 'child' }),
     ]);
     expect(spectator.service.getCurrentActivatedRoute().snapshot.queryParams).toEqual({ global: 'foo' });
   });
@@ -263,7 +263,7 @@ describe('Navigation Service', () => {
       navType: NavigationParamsType.External,
       useGlobalParams: true,
       url: '/some/internal/path/of/app',
-      windowHandling: ExternalNavigationWindowHandling.NewWindow
+      windowHandling: ExternalNavigationWindowHandling.NewWindow,
     };
 
     spectator.service.addQueryParametersToUrl({ time: '1h', environment: 'development' });
@@ -274,7 +274,7 @@ describe('Navigation Service', () => {
 
     expect(Array.isArray(spectator.service.buildNavigationParams(externalNavigationParams).path)).toBe(true);
     expect(spectator.service.buildNavigationParams(externalNavigationParams).path[1]).toHaveProperty(
-      ExternalNavigationPathParams.Url
+      ExternalNavigationPathParams.Url,
     );
 
     let pathParam = spectator.service.buildNavigationParams(externalNavigationParams).path[1];
@@ -282,7 +282,7 @@ describe('Navigation Service', () => {
 
     if (typeof pathParam !== 'string') {
       expect(pathParam[ExternalNavigationPathParams.Url]).toBe(
-        `${externalNavigationParams.url}?time=1h&environment=development`
+        `${externalNavigationParams.url}?time=1h&environment=development`,
       );
     }
 
@@ -290,7 +290,7 @@ describe('Navigation Service', () => {
 
     expect(Array.isArray(spectator.service.buildNavigationParams(externalNavigationParams).path)).toBe(true);
     expect(spectator.service.buildNavigationParams(externalNavigationParams).path[1]).toHaveProperty(
-      ExternalNavigationPathParams.Url
+      ExternalNavigationPathParams.Url,
     );
 
     pathParam = spectator.service.buildNavigationParams(externalNavigationParams).path[1];
@@ -298,7 +298,7 @@ describe('Navigation Service', () => {
 
     if (typeof pathParam !== 'string') {
       expect(pathParam[ExternalNavigationPathParams.Url]).toBe(
-        `/some/internal/path/of/app?type=json&time=1h&environment=development`
+        `/some/internal/path/of/app?type=json&time=1h&environment=development`,
       );
     }
   });
@@ -316,22 +316,22 @@ describe('Navigation Service', () => {
       spectator.service.getShareableUrl({
         navType: NavigationParamsType.External,
         url: 'http://test-url',
-        windowHandling: ExternalNavigationWindowHandling.SameWindow
-      })
+        windowHandling: ExternalNavigationWindowHandling.SameWindow,
+      }),
     ).toEqual('http://test-url');
     expect(
       spectator.service.getShareableUrl({
         navType: NavigationParamsType.InApp,
         path: ['root', 'child'],
-        queryParams: { env: 'test' }
-      })
+        queryParams: { env: 'test' },
+      }),
     ).toEqual('https://test.hypertrace.org/root/child?env=test');
     expect(
       spectator.service.getShareableUrl({
         navType: NavigationParamsType.InApp,
         path: 'url',
-        queryParams: { env: 'test' }
-      })
+        queryParams: { env: 'test' },
+      }),
     ).toEqual('https://test.hypertrace.org/url?env=test');
   });
 });

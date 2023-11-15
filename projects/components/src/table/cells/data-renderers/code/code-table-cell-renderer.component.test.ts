@@ -13,18 +13,18 @@ describe('Code table cell renderer component', () => {
     providers: [
       tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
-        new TableCellStringParser(undefined!)
-      )
+        new TableCellStringParser(undefined!),
+      ),
     ],
     declarations: [MockDirective(TooltipDirective)],
-    shallow: true
+    shallow: true,
   });
 
   test('should render a plain string', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider('test text')]
+      providers: [tableCellDataProvider('test text')],
     });
 
     expect(spectator.element).toHaveText('test text');

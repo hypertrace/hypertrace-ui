@@ -31,7 +31,7 @@ import { IconSize } from './icon-size';
         >{{ this.ligatureText }}</mat-icon
       >
     </ng-template>
-  `
+  `,
 })
 export class IconComponent implements OnChanges {
   @Input()
@@ -103,7 +103,7 @@ export class IconComponent implements OnChanges {
       color: this.color ?? '',
       borderColor: this.borderType !== IconBorder.InsetBorder ? this.borderColor ?? '' : '',
       background: this.borderType === IconBorder.InsetBorder ? this.borderColor ?? '' : '',
-      borderRadius: this.borderRadius ?? ''
+      borderRadius: this.borderRadius ?? '',
     };
   }
 

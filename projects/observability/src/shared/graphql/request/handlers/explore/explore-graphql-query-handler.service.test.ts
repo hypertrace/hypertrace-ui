@@ -31,15 +31,15 @@ describe('Explore graphql query handler', () => {
               scope: 'API_TRACE',
               onlySupportsAggregation: false,
               onlySupportsGrouping: false,
-              allowedAggregations: [MetricAggregationType.Average]
-            }
-          ])
-      })
-    ]
+              allowedAggregations: [MetricAggregationType.Average],
+            },
+          ]),
+      }),
+    ],
   });
 
   const testTimeRange = GraphQlTimeRange.fromTimeRange(
-    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
+    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)),
   );
   const specBuilder = new ExploreSpecificationBuilder();
   const buildRequest = (): GraphQlExploreRequest => ({
@@ -51,24 +51,24 @@ describe('Explore graphql query handler', () => {
     includeTotal: true,
     selections: [
       specBuilder.exploreSpecificationForKey('duration', MetricAggregationType.Average),
-      specBuilder.exploreSpecificationForKey('duration', MetricAggregationType.AvgrateMinute)
+      specBuilder.exploreSpecificationForKey('duration', MetricAggregationType.AvgrateMinute),
     ],
     interval: new TimeDuration(1, TimeUnit.Minute),
     groupBy: {
       limit: 2,
       includeRest: true,
-      keyExpressions: [{ key: 'serviceName' }]
+      keyExpressions: [{ key: 'serviceName' }],
     },
     orderBy: [
       {
         direction: 'ASC',
-        key: specBuilder.exploreSpecificationForKey('duration', MetricAggregationType.Average)
-      }
+        key: specBuilder.exploreSpecificationForKey('duration', MetricAggregationType.Average),
+      },
     ],
     filters: [
       new GraphQlFieldFilter('duration', GraphQlOperatorType.GreaterThan, 0),
-      new GraphQlFieldFilter('duration', GraphQlOperatorType.LessThan, 100)
-    ]
+      new GraphQlFieldFilter('duration', GraphQlOperatorType.LessThan, 100),
+    ],
   });
 
   test('matches explore request', () => {
@@ -89,13 +89,13 @@ describe('Explore graphql query handler', () => {
           name: 'between',
           value: {
             startTime: new Date(testTimeRange.from),
-            endTime: new Date(testTimeRange.to)
-          }
+            endTime: new Date(testTimeRange.to),
+          },
         },
         { name: 'offset', value: 0 },
         {
           name: 'interval',
-          value: { size: 1, units: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) }
+          value: { size: 1, units: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
         },
         {
           name: 'filterBy',
@@ -104,23 +104,23 @@ describe('Explore graphql query handler', () => {
               keyExpression: { key: 'duration' },
               operator: new GraphQlEnumArgument(GraphQlOperatorType.GreaterThan),
               value: 0,
-              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
+              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute),
             },
             {
               keyExpression: { key: 'duration' },
               operator: new GraphQlEnumArgument(GraphQlOperatorType.LessThan),
               value: 100,
-              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
-            }
-          ]
+              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute),
+            },
+          ],
         },
         {
           name: 'groupBy',
           value: {
             includeRest: true,
             expressions: [{ key: 'serviceName' }],
-            groupLimit: 2
-          }
+            groupLimit: 2,
+          },
         },
         {
           name: 'orderBy',
@@ -128,10 +128,10 @@ describe('Explore graphql query handler', () => {
             {
               direction: new GraphQlEnumArgument('ASC'),
               keyExpression: { key: 'duration' },
-              aggregation: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average)
-            }
-          ]
-        }
+              aggregation: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average),
+            },
+          ],
+        },
       ],
       children: [
         {
@@ -142,7 +142,7 @@ describe('Explore graphql query handler', () => {
               path: 'selection',
               alias: 'serviceName',
               arguments: [{ name: 'expression', value: { key: 'serviceName' } }],
-              children: [{ path: 'value' }, { path: 'type' }]
+              children: [{ path: 'value' }, { path: 'type' }],
             },
             {
               path: 'selection',
@@ -151,10 +151,10 @@ describe('Explore graphql query handler', () => {
                 { name: 'expression', value: { key: 'duration' } },
                 {
                   name: 'aggregation',
-                  value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average)
-                }
+                  value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average),
+                },
               ],
-              children: [{ path: 'value' }, { path: 'type' }]
+              children: [{ path: 'value' }, { path: 'type' }],
             },
             {
               path: 'selection',
@@ -163,19 +163,19 @@ describe('Explore graphql query handler', () => {
                 { name: 'expression', value: { key: 'duration' } },
                 {
                   name: 'aggregation',
-                  value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Avgrate)
+                  value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Avgrate),
                 },
                 { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
-                { name: 'size', value: 1 }
+                { name: 'size', value: 1 },
               ],
-              children: [{ path: 'value' }, { path: 'type' }]
-            }
-          ]
+              children: [{ path: 'value' }, { path: 'type' }],
+            },
+          ],
         },
         {
-          path: 'total'
-        }
-      ]
+          path: 'total',
+        },
+      ],
     });
   });
 
@@ -193,13 +193,13 @@ describe('Explore graphql query handler', () => {
           name: 'between',
           value: {
             startTime: new Date(testTimeRange.from),
-            endTime: new Date(testTimeRange.to)
-          }
+            endTime: new Date(testTimeRange.to),
+          },
         },
         { name: 'offset', value: 0 },
         {
           name: 'interval',
-          value: { size: 1, units: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) }
+          value: { size: 1, units: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
         },
         {
           name: 'filterBy',
@@ -208,23 +208,23 @@ describe('Explore graphql query handler', () => {
               keyExpression: { key: 'duration' },
               operator: new GraphQlEnumArgument(GraphQlOperatorType.GreaterThan),
               value: 0,
-              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
+              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute),
             },
             {
               keyExpression: { key: 'duration' },
               operator: new GraphQlEnumArgument(GraphQlOperatorType.LessThan),
               value: 100,
-              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
-            }
-          ]
+              type: new GraphQlEnumArgument(GraphQlFilterType.Attribute),
+            },
+          ],
         },
         {
           name: 'groupBy',
           value: {
             includeRest: true,
             expressions: [{ key: 'serviceName' }],
-            groupLimit: 2
-          }
+            groupLimit: 2,
+          },
         },
         {
           name: 'orderBy',
@@ -232,10 +232,10 @@ describe('Explore graphql query handler', () => {
             {
               direction: new GraphQlEnumArgument('ASC'),
               keyExpression: { key: 'duration' },
-              aggregation: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average)
-            }
-          ]
-        }
+              aggregation: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average),
+            },
+          ],
+        },
       ],
       children: [
         {
@@ -246,7 +246,7 @@ describe('Explore graphql query handler', () => {
               path: 'selection',
               alias: 'serviceName',
               arguments: [{ name: 'expression', value: { key: 'serviceName' } }],
-              children: [{ path: 'value' }, { path: 'type' }]
+              children: [{ path: 'value' }, { path: 'type' }],
             },
             {
               path: 'selection',
@@ -255,10 +255,10 @@ describe('Explore graphql query handler', () => {
                 { name: 'expression', value: { key: 'duration' } },
                 {
                   name: 'aggregation',
-                  value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average)
-                }
+                  value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Average),
+                },
               ],
-              children: [{ path: 'value' }, { path: 'type' }]
+              children: [{ path: 'value' }, { path: 'type' }],
             },
             {
               path: 'selection',
@@ -267,19 +267,19 @@ describe('Explore graphql query handler', () => {
                 { name: 'expression', value: { key: 'duration' } },
                 {
                   name: 'aggregation',
-                  value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Avgrate)
+                  value: new GraphQlEnumArgument(GraphQlMetricAggregationType.Avgrate),
                 },
                 { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
-                { name: 'size', value: 1 }
+                { name: 'size', value: 1 },
               ],
-              children: [{ path: 'value' }, { path: 'type' }]
-            }
-          ]
+              children: [{ path: 'value' }, { path: 'type' }],
+            },
+          ],
         },
         {
-          path: 'total'
-        }
-      ]
+          path: 'total',
+        },
+      ],
     });
   });
 
@@ -291,94 +291,94 @@ describe('Explore graphql query handler', () => {
           __intervalStart: '2019-11-06T19:26:53.196Z',
           serviceName: {
             value: 'First Service',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
           avg_duration: {
             value: 15,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           avgrate_min_duration: {
             value: 55,
-            type: AttributeMetadataType.Long
-          }
+            type: AttributeMetadataType.Long,
+          },
         },
         {
           __intervalStart: '2019-11-06T19:27:53.196Z',
           serviceName: {
             value: 'First Service',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
           avg_duration: {
             value: 20,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           avgrate_min_duration: {
             value: 65,
-            type: AttributeMetadataType.Long
-          }
+            type: AttributeMetadataType.Long,
+          },
         },
         {
           __intervalStart: '2019-11-06T19:26:53.196Z',
           serviceName: {
             value: 'Second Service',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
           avg_duration: {
             value: 25,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           avgrate_min_duration: {
             value: 70,
-            type: AttributeMetadataType.Long
-          }
+            type: AttributeMetadataType.Long,
+          },
         },
         {
           __intervalStart: '2019-11-06T19:27:53.196Z',
           serviceName: {
             value: 'Second Service',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
           avg_duration: {
             value: 30,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           avgrate_min_duration: {
             value: 75,
-            type: AttributeMetadataType.Long
-          }
+            type: AttributeMetadataType.Long,
+          },
         },
         {
           __intervalStart: '2019-11-06T19:26:53.196Z',
           serviceName: {
             value: '__remainder',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
           avg_duration: {
             value: 35,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           avgrate_min_duration: {
             value: 80,
-            type: AttributeMetadataType.Long
-          }
+            type: AttributeMetadataType.Long,
+          },
         },
         {
           __intervalStart: '2019-11-06T19:27:53.196Z',
           serviceName: {
             value: '__remainder',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
           avg_duration: {
             value: 40,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           avgrate_min_duration: {
             value: 85,
-            type: AttributeMetadataType.Long
-          }
-        }
+            type: AttributeMetadataType.Long,
+          },
+        },
       ],
-      total: 6
+      total: 6,
     };
 
     expect(spectator.service.convertResponse(serverResponse, buildRequest())).toEqual({
@@ -387,94 +387,94 @@ describe('Explore graphql query handler', () => {
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date('2019-11-06T19:26:53.196Z'),
           serviceName: {
             value: 'First Service',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
           'avg(duration)': {
             value: 15,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           'avgrate_min(duration)': {
             value: 55,
-            type: AttributeMetadataType.Long
-          }
+            type: AttributeMetadataType.Long,
+          },
         },
         {
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date('2019-11-06T19:27:53.196Z'),
           serviceName: {
             value: 'First Service',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
           'avg(duration)': {
             value: 20,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           'avgrate_min(duration)': {
             value: 65,
-            type: AttributeMetadataType.Long
-          }
+            type: AttributeMetadataType.Long,
+          },
         },
         {
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date('2019-11-06T19:26:53.196Z'),
           serviceName: {
             value: 'Second Service',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
           'avg(duration)': {
             value: 25,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           'avgrate_min(duration)': {
             value: 70,
-            type: AttributeMetadataType.Long
-          }
+            type: AttributeMetadataType.Long,
+          },
         },
         {
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date('2019-11-06T19:27:53.196Z'),
           serviceName: {
             value: 'Second Service',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
           'avg(duration)': {
             value: 30,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           'avgrate_min(duration)': {
             value: 75,
-            type: AttributeMetadataType.Long
-          }
+            type: AttributeMetadataType.Long,
+          },
         },
         {
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date('2019-11-06T19:26:53.196Z'),
           serviceName: {
             value: '__remainder',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
           'avg(duration)': {
             value: 35,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           'avgrate_min(duration)': {
             value: 80,
-            type: AttributeMetadataType.Long
-          }
+            type: AttributeMetadataType.Long,
+          },
         },
         {
           [GQL_EXPLORE_RESULT_INTERVAL_KEY]: new Date('2019-11-06T19:27:53.196Z'),
           serviceName: {
             value: '__remainder',
-            type: AttributeMetadataType.String
+            type: AttributeMetadataType.String,
           },
           'avg(duration)': {
             value: 40,
-            type: AttributeMetadataType.Long
+            type: AttributeMetadataType.Long,
           },
           'avgrate_min(duration)': {
             value: 85,
-            type: AttributeMetadataType.Long
-          }
-        }
+            type: AttributeMetadataType.Long,
+          },
+        },
       ],
-      total: 6
+      total: 6,
     });
   });
 });

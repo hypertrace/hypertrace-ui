@@ -8,7 +8,7 @@ import { ConditionalModel } from './conditional.model';
 @Component({
   selector: 'ht-conditional-widget',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <ng-container [hdaDashboardModel]="this.data$ | async"> </ng-container> `
+  template: ` <ng-container [hdaDashboardModel]="this.data$ | async"> </ng-container> `,
 })
 export class ConditionalWidgetRendererComponent extends WidgetRenderer<ConditionalModel> {
   protected fetchData(): Observable<object> {

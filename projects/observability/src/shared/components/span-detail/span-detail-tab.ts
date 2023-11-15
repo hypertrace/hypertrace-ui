@@ -3,5 +3,5 @@ export enum SpanDetailTab {
   Response = 'Response',
   Attributes = 'Attributes',
   ExitCalls = 'Exit Calls',
-  Logs = 'Logs'
+  Logs = 'Logs',
 }

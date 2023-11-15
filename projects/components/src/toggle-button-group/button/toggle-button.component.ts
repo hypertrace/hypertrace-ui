@@ -5,7 +5,7 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  Output
+  Output,
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { IconSize } from '../../icon/icon-size';
@@ -49,7 +49,7 @@ import { ToggleButtonState, ToggleViewMode } from '../toggle-button';
         <ng-content></ng-content>
       </button>
     </div>
-  `
+  `,
 })
 export class ToggleButtonComponent implements OnInit {
   @Input()
@@ -78,7 +78,7 @@ export class ToggleButtonComponent implements OnInit {
     isLast: false,
     isDisabled: false,
     selectedLabel: '',
-    viewMode: ToggleViewMode.Button
+    viewMode: ToggleViewMode.Button,
   };
 
   public constructor(private readonly changeDetector: ChangeDetectorRef) {}

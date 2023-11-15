@@ -21,8 +21,8 @@ export class RadarChartLayoutService {
       height: plotHeight,
       position: {
         x: 0,
-        y: -(chartHeight - plotHeight) / 2
-      }
+        y: -(chartHeight - plotHeight) / 2,
+      },
     };
 
     const plotSelection = this.addSection(chartSelection, plotDimension, RadarLayoutStyleClass.Plot);
@@ -39,8 +39,8 @@ export class RadarChartLayoutService {
       height: plotHeight,
       position: {
         x: 0,
-        y: 0
-      }
+        y: 0,
+      },
     };
 
     this.addSection(plotSelection, axisDimension, RadarLayoutStyleClass.Axis);
@@ -56,8 +56,8 @@ export class RadarChartLayoutService {
       height: legendHeight,
       position: {
         x: 0,
-        y: chartHeight / 2 - legendHeight
-      }
+        y: chartHeight / 2 - legendHeight,
+      },
     };
 
     this.addSection(chartSelection, axisDimension, RadarLayoutStyleClass.Legend);

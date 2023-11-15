@@ -9,7 +9,7 @@ import {
   RelativeTimeRange,
   TimeDuration,
   TimeRangeService,
-  TimeUnit
+  TimeUnit,
 } from '@hypertrace/common';
 import { NotificationService } from '@hypertrace/components';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
@@ -22,7 +22,7 @@ import { EMPTY, Observable, of } from 'rxjs';
 
 export const isValidModelJson = (
   spectator: Spectator<unknown>,
-  definition: ModelJson | { json: ModelJson }
+  definition: ModelJson | { json: ModelJson },
 ): boolean => {
   const json = 'json' in definition ? definition.json : definition;
   try {
@@ -39,22 +39,22 @@ export const mockDashboardProviders = [
   mockProvider(GraphQlQueryEventService),
   mockProvider(ColorService),
   mockProvider(FeatureStateResolver, {
-    getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Disabled))
+    getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Disabled)),
   }),
   mockProvider(LayoutChangeService, {
-    layout$: of()
+    layout$: of(),
   }),
   mockProvider(TimeRangeService, {
     getTimeRangeAndChanges: () => EMPTY,
-    getCurrentTimeRange: jest.fn().mockReturnValue(new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute)))
+    getCurrentTimeRange: jest.fn().mockReturnValue(new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute))),
   }),
   mockProvider(NavigationService, {
     navigation$: EMPTY,
-    getAllValuesForQueryParameter: () => []
+    getAllValuesForQueryParameter: () => [],
   }),
   mockProvider(MetadataService, {
     getFilterAttributes: () => of([]),
-    getAttributeKeyDisplayName: (_: string, attributeKey: string) => of(attributeKey)
+    getAttributeKeyDisplayName: (_: string, attributeKey: string) => of(attributeKey),
   }),
   mockProvider(NotificationService, { withNotification: jest.fn().mockReturnValue((x: Observable<unknown>) => x) }),
   // https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/55803#discussioncomment-1341954
@@ -67,12 +67,12 @@ export const mockDashboardProviders = [
     }),
     error: jest.fn().mockReturnValue(() => {
       throw new Error();
-    })
+    }),
   }),
   mockProvider(ActivatedRoute, {
-    queryParamMap: EMPTY
+    queryParamMap: EMPTY,
   }),
-  ...getMockFlexLayoutProviders()
+  ...getMockFlexLayoutProviders(),
 ];
 
 export const rendererApiFactoryBuilder = <TModel extends object>(model: TModel) => () => ({
@@ -80,25 +80,25 @@ export const rendererApiFactoryBuilder = <TModel extends object>(model: TModel) 
   model: model,
   change$: EMPTY,
   dataRefresh$: EMPTY,
-  timeRangeChanged$: EMPTY
+  timeRangeChanged$: EMPTY,
 });
 
 export const mockDashboardWidgetProviders: <T extends object>(model: T) => StaticProvider[] = model => [
   {
     provide: RENDERER_API,
-    useFactory: rendererApiFactoryBuilder(model)
+    useFactory: rendererApiFactoryBuilder(model),
   },
   mockProvider(GraphQlRequestService, {
-    query: jest.fn(() => EMPTY)
+    query: jest.fn(() => EMPTY),
   }),
   mockProvider(ColorService),
   mockProvider(LayoutChangeService, {
     getLayoutChangeEventObservable: jest.fn().mockReturnValue(of({})),
-    layout$: of()
+    layout$: of(),
   }),
   mockProvider(NavigationService, {
     navigation$: EMPTY,
-    getAllValuesForQueryParameter: () => []
+    getAllValuesForQueryParameter: () => [],
   }),
-  ...getMockFlexLayoutProviders()
+  ...getMockFlexLayoutProviders(),
 ];

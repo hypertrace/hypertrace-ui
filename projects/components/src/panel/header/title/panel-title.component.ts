@@ -25,7 +25,7 @@ import { ButtonVariant, ButtonStyle } from '../../../button/button';
         </ht-event-blocker>
       </section>
     </section>
-  `
+  `,
 })
 export class PanelTitleComponent {
   @Input()

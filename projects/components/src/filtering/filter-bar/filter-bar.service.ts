@@ -3,7 +3,7 @@ import { isEqual } from 'lodash-es';
 import { areCompatibleFilters, Filter } from '../filter/filter';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FilterBarService {
   public addFilter(filters: Filter[], filter: Filter): Filter[] {

@@ -5,12 +5,12 @@ import { SpanDetailData, SpanDetailDataSourceModel } from './data/span-detail-da
 
 @Model({
   type: 'span-detail-widget',
-  supportedDataSourceTypes: [SpanDetailDataSourceModel]
+  supportedDataSourceTypes: [SpanDetailDataSourceModel],
 })
 export class SpanDetailWidgetModel {
   @ModelProperty({
     key: 'title',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public title: string = '';
 

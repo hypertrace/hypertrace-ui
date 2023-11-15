@@ -13,13 +13,13 @@ import { GaugeThresholdModel } from './thresholds/gauge-threshold.model';
   imports: [
     DashboardCoreModule.with({
       models: [GaugeWidgetModel, GaugeThresholdModel],
-      renderers: [GaugeWidgetRendererComponent]
+      renderers: [GaugeWidgetRendererComponent],
     }),
     GaugeModule,
     CommonModule,
     TitledContentModule,
     LoadAsyncModule,
-    FormattingModule
-  ]
+    FormattingModule,
+  ],
 })
 export class GaugeWidgetModule {}

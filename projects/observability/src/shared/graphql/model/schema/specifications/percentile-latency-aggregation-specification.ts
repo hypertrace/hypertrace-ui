@@ -5,7 +5,7 @@ import { MetricAggregationSpecification } from './metric-aggregation-specificati
 
 export interface PercentileLatencyMetricAggregationSpecification extends MetricAggregationSpecification {
   extractFromServerData(
-    resultContainer: Dictionary<Dictionary<GraphQlMetricAggregation>>
+    resultContainer: Dictionary<Dictionary<GraphQlMetricAggregation>>,
   ): PercentileLatencyMetricAggregation;
 }
 
@@ -20,5 +20,5 @@ export const enum PercentileLatencyMetricValueCategory {
   From100To500 = 'from-100-to-500',
   From500To1000 = 'from-500-to-1000',
   GreaterThanOrEqualTo1000 = 'greater-than-or-equal-to-1000',
-  NotSpecified = 'not-specified'
+  NotSpecified = 'not-specified',
 }

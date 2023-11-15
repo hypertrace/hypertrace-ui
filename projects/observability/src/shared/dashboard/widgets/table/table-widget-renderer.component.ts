@@ -7,7 +7,7 @@ import {
   isEqualIgnoreFunctions,
   isNonEmptyString,
   PreferenceService,
-  StorageType
+  StorageType,
 } from '@hypertrace/common';
 import {
   FilterAttribute,
@@ -29,7 +29,7 @@ import {
   TableSelectControlOption,
   TableStyle,
   ToggleItem,
-  toInFilter
+  toInFilter,
 } from '@hypertrace/components';
 import { WidgetRenderer } from '@hypertrace/dashboards';
 import { Renderer } from '@hypertrace/hyperdash';
@@ -47,12 +47,12 @@ import {
   switchMap,
   take,
   tap,
-  withLatestFrom
+  withLatestFrom,
 } from 'rxjs/operators';
 import { AttributeMetadata, toFilterAttributeType } from '../../../graphql/model/metadata/attribute-metadata';
 import {
   GlobalCsvDownloadDataType,
-  GlobalCsvDownloadService
+  GlobalCsvDownloadService,
 } from '../../../services/global-csv-download/global-csv-download.service';
 import { MetadataService } from '../../../services/metadata/metadata.service';
 import { InteractionHandler } from '../../interaction/interaction-handler';
@@ -126,7 +126,7 @@ import { TableWidgetModel } from './table-widget.model';
     <ng-template #customControlDetail let-selectedRows="selectedRows">
       <ng-container [hdaDashboardModel]="this.getCustomControlWidgetModel | htMemoize: selectedRows"></ng-container>
     </ng-template>
-  `
+  `,
 })
 export class TableWidgetRendererComponent
   extends WidgetRenderer<TableWidgetBaseModel, TableDataSource<TableRow> | undefined>
@@ -159,7 +159,7 @@ export class TableWidgetRendererComponent
     changeDetectorRef: ChangeDetectorRef,
     private readonly metadataService: MetadataService,
     private readonly preferenceService: PreferenceService,
-    private readonly globalCsvDownloadService: GlobalCsvDownloadService
+    private readonly globalCsvDownloadService: GlobalCsvDownloadService,
   ) {
     super(api, changeDetectorRef);
   }
@@ -178,9 +178,9 @@ export class TableWidgetRendererComponent
     this.combinedFilters$ = combineLatest([
       this.toggleFilterSubject,
       this.searchFilterSubject,
-      this.selectFilterSubject
+      this.selectFilterSubject,
     ]).pipe(
-      map(([toggleFilters, searchFilters, selectFilters]) => [...toggleFilters, ...searchFilters, ...selectFilters])
+      map(([toggleFilters, searchFilters, selectFilters]) => [...toggleFilters, ...searchFilters, ...selectFilters]),
     );
   }
 
@@ -194,7 +194,7 @@ export class TableWidgetRendererComponent
   protected fetchData(): Observable<TableDataSource<TableRow> | undefined> {
     return this.model.getData().pipe(
       startWith(undefined),
-      tap(() => this.fetchAndPopulateControlFilters())
+      tap(() => this.fetchAndPopulateControlFilters()),
     );
   }
 
@@ -211,10 +211,10 @@ export class TableWidgetRendererComponent
             selectControl.options.length > 0 &&
             this.publishSelectValuesChange(
               selectControl.options[0].metaValue.field,
-              selectControl.options.filter(o => o.applied)
-            )
+              selectControl.options.filter(o => o.applied),
+            ),
         );
-      })
+      }),
     );
   }
 
@@ -223,10 +223,10 @@ export class TableWidgetRendererComponent
       tap((checkboxControls: TableCheckboxControl[]) => {
         checkboxControls.forEach(checkboxControl =>
           this.publishCheckboxOptionChange(
-            checkboxControl.value ? checkboxControl.options[0] : checkboxControl.options[1]
-          )
+            checkboxControl.value ? checkboxControl.options[0] : checkboxControl.options[1],
+          ),
         );
-      })
+      }),
     );
   }
 
@@ -246,21 +246,21 @@ export class TableWidgetRendererComponent
               const foundPreferences = preferences.selections
                 ? preferences.selections.find(
                     preferencesSelectionControl =>
-                      selectControlModel.placeholder === preferencesSelectionControl.placeholder
+                      selectControlModel.placeholder === preferencesSelectionControl.placeholder,
                   )
                 : undefined;
 
               // Fetch the values for the selectFilter dropdown
               return this.buildTableSelectControl(selectControlModel, foundPreferences);
-            })
-        )
-      )
+            }),
+        ),
+      ),
     );
   }
 
   private buildTableSelectControl(
     model: TableWidgetControlSelectOptionModel,
-    override?: TableSelectControl
+    override?: TableSelectControl,
   ): Observable<TableSelectControl> {
     return model.getOptions().pipe(
       take(1),
@@ -271,7 +271,7 @@ export class TableWidgetRendererComponent
 
           return {
             ...option,
-            applied: option.applied || found?.applied || this.isFilterApplied(option.metaValue, filters)
+            applied: option.applied || found?.applied || this.isFilterApplied(option.metaValue, filters),
           };
         });
 
@@ -279,9 +279,9 @@ export class TableWidgetRendererComponent
           placeholder: model.placeholder,
           prefix: `${model.placeholder}: `,
           isMultiSelect: model.isMultiselect,
-          options: mergedOptions
+          options: mergedOptions,
         };
-      })
+      }),
     );
   }
 
@@ -310,7 +310,7 @@ export class TableWidgetRendererComponent
 
   private getActiveViewItem(): Observable<ToggleItem<string>> {
     return this.getViewPreferences().pipe(
-      map(preferences => this.hydratePersistedActiveView(this.viewItems, preferences.activeView))
+      map(preferences => this.hydratePersistedActiveView(this.viewItems, preferences.activeView)),
     );
   }
 
@@ -322,7 +322,7 @@ export class TableWidgetRendererComponent
       filter(([previous, current]) => !isEqualIgnoreFunctions(previous, current)),
       map(([_, current]) => current),
       share(),
-      tap(() => this.onDashboardRefresh())
+      tap(() => this.onDashboardRefresh()),
     );
   }
 
@@ -338,9 +338,9 @@ export class TableWidgetRendererComponent
       map((attributes: AttributeMetadata[]) =>
         attributes.map(attribute => ({
           ...attribute,
-          type: toFilterAttributeType(attribute.type)
-        }))
-      )
+          type: toFilterAttributeType(attribute.type),
+        })),
+      ),
     );
   }
 
@@ -351,12 +351,12 @@ export class TableWidgetRendererComponent
      */
     changed.select.options.forEach(
       option =>
-        (option.applied = changed.values.find(changedOption => changedOption.label === option.label) !== undefined)
+        (option.applied = changed.values.find(changedOption => changedOption.label === option.label) !== undefined),
     );
     this.publishSelectValuesChange(changed.select.options[0].metaValue.field, changed.values);
 
     this.getSelectControls(changed.select).subscribe(tableSelectControls =>
-      this.updateSelectionPreferences(tableSelectControls)
+      this.updateSelectionPreferences(tableSelectControls),
     );
   }
 
@@ -377,8 +377,8 @@ export class TableWidgetRendererComponent
       this.getSessionPreferences().subscribe(preferences =>
         this.setSessionPreferences({
           ...preferences,
-          selections: tableSelectControls
-        })
+          selections: tableSelectControls,
+        }),
       );
     }
   }
@@ -403,7 +403,7 @@ export class TableWidgetRendererComponent
     this.publishCheckboxOptionChange(changed.option);
 
     this.checkboxControls$ = this.getCheckboxControls(changed).pipe(
-      tap(tableCheckboxControls => this.updateCheckboxPreferences(tableCheckboxControls))
+      tap(tableCheckboxControls => this.updateCheckboxPreferences(tableCheckboxControls)),
     );
   }
 
@@ -412,8 +412,8 @@ export class TableWidgetRendererComponent
       this.getSessionPreferences().subscribe(preferences =>
         this.setSessionPreferences({
           ...preferences,
-          checkboxes: tableCheckboxControls
-        })
+          checkboxes: tableCheckboxControls,
+        }),
       );
     }
   }
@@ -439,13 +439,13 @@ export class TableWidgetRendererComponent
                     return {
                       label: checkboxControlModel.checked ? options[0].label : options[1].label,
                       value: checkboxControlModel.checked,
-                      options: options
+                      options: options,
                     };
                   }
 
                   const found = preferences.checkboxes
                     ? preferences.checkboxes.find(preferencesCheckboxControl =>
-                        options.some(option => option.label === preferencesCheckboxControl.label)
+                        options.some(option => option.label === preferencesCheckboxControl.label),
                       )
                     : undefined;
 
@@ -453,14 +453,14 @@ export class TableWidgetRendererComponent
                     found ?? {
                       label: checkboxControlModel.checked ? options[0].label : options[1].label,
                       value: checkboxControlModel.checked,
-                      options: options
+                      options: options,
                     }
                   );
-                })
-              )
-            )
-        )
-      )
+                }),
+              ),
+            ),
+        ),
+      ),
     );
   }
 
@@ -476,8 +476,8 @@ export class TableWidgetRendererComponent
         {
           field: this.api.model.getSearchAttribute()!,
           operator: FilterOperator.Contains,
-          value: text
-        }
+          value: text,
+        },
       ];
     }
     this.searchFilterSubject.next(searchFilters);
@@ -489,8 +489,8 @@ export class TableWidgetRendererComponent
       this.getViewPreferences().subscribe(preferences =>
         this.setViewPreferences({
           ...preferences,
-          activeView: view
-        })
+          activeView: view,
+        }),
       );
     }
     this.columnConfigs$ = this.getColumnConfigs();
@@ -500,7 +500,7 @@ export class TableWidgetRendererComponent
     this.globalCsvDownloadService.registerDataSource(`table-widget-renderer-${this.model.id}`, {
       type: GlobalCsvDownloadDataType.Table,
       columns: columns,
-      data: this.model.getData()
+      data: this.model.getData(),
     });
   }
 
@@ -521,7 +521,7 @@ export class TableWidgetRendererComponent
 
   private getInteractionHandler(
     row: StatefulTableRow,
-    rowHandlers: TableWidgetRowInteractionModel[] = []
+    rowHandlers: TableWidgetRowInteractionModel[] = [],
   ): InteractionHandler | undefined {
     const matchedHandlers = rowHandlers
       .filter(interactionModel => interactionModel.appliesToCurrentRowDepth(row.$$state.depth))
@@ -532,7 +532,7 @@ export class TableWidgetRendererComponent
 
   private hydratePersistedActiveView(
     viewItems: ToggleItem<string>[],
-    persistedActiveView?: string
+    persistedActiveView?: string,
   ): ToggleItem<string> {
     return persistedActiveView !== undefined
       ? this.buildViewItem(persistedActiveView)
@@ -568,7 +568,7 @@ export class TableWidgetRendererComponent
   private buildViewItem(viewOption: string): ToggleItem<string> {
     return {
       label: capitalize(viewOption),
-      value: viewOption
+      value: viewOption,
     };
   }
 
@@ -585,7 +585,7 @@ export class TableWidgetRendererComponent
   private mergeQueryProperties(properties: Dictionary<unknown>): Dictionary<unknown> {
     return {
       ...this.queryPropertiesSubject.getValue(),
-      ...properties
+      ...properties,
     };
   }
 }

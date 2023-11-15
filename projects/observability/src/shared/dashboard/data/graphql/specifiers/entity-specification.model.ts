@@ -7,26 +7,26 @@ import { SpecificationModel } from './specification.model';
 
 @Model({
   type: 'entity-specification',
-  displayName: 'Entity'
+  displayName: 'Entity',
 })
 export class EntitySpecificationModel extends SpecificationModel<EntitySpecification> {
   @ModelProperty({
     key: 'id-attribute',
     displayName: 'ID Attribute',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public idAttribute: string = 'id';
 
   @ModelProperty({
     key: 'name-attribute',
     displayName: 'Name Attribute',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public nameAttribute: string = 'name';
 
   @ModelProperty({
     key: 'entity-type',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public entityType?: EntityType;
 
@@ -34,7 +34,7 @@ export class EntitySpecificationModel extends SpecificationModel<EntitySpecifica
     return new ObservabilitySpecificationBuilder().buildEntitySpecification(
       this.idAttribute,
       this.nameAttribute,
-      this.entityType
+      this.entityType,
     );
   }
 

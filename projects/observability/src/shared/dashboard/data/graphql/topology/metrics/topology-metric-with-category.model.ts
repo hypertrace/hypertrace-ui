@@ -4,7 +4,7 @@ import {
   Model,
   ModelModelPropertyTypeInstance,
   ModelProperty,
-  ModelPropertyType
+  ModelPropertyType,
 } from '@hypertrace/hyperdash';
 import { MetricAggregation } from '../../../../../graphql/model/metrics/metric-aggregation';
 import { MetricAggregationSpecificationModel } from '../../specifiers/metric-aggregation-specification.model';
@@ -12,7 +12,7 @@ import { MetricAggregationSpecification } from './../../../../../graphql/model/s
 import { TopologyMetricCategoryData, TopologyMetricCategoryModel } from './topology-metric-category.model';
 
 @Model({
-  type: 'topology-metric-with-category'
+  type: 'topology-metric-with-category',
 })
 export class TopologyMetricWithCategoryModel implements TopologyMetricWithCategoryData {
   @ModelProperty({
@@ -20,15 +20,15 @@ export class TopologyMetricWithCategoryModel implements TopologyMetricWithCatego
     required: true,
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: MetricAggregationSpecificationModel
-    } as ModelModelPropertyTypeInstance
+      defaultModelClass: MetricAggregationSpecificationModel,
+    } as ModelModelPropertyTypeInstance,
   })
   public specification!: MetricAggregationSpecificationModel;
 
   @ModelProperty({
     key: 'categories',
     required: false,
-    type: ARRAY_PROPERTY.type
+    type: ARRAY_PROPERTY.type,
   })
   public categories: TopologyMetricCategoryModel[] = [];
 
@@ -44,7 +44,7 @@ export class TopologyMetricWithCategoryModel implements TopologyMetricWithCatego
 
   private getDataCategoryForMetric(value: number): TopologyMetricCategoryData | undefined {
     return this.categories.find(
-      category => value >= category.minValue && (category.maxValue !== undefined ? value < category.maxValue : true)
+      category => value >= category.minValue && (category.maxValue !== undefined ? value < category.maxValue : true),
     );
   }
 }

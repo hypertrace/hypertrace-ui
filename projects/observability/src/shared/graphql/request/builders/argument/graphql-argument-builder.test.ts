@@ -16,7 +16,7 @@ describe('Graphql Argument Builder', () => {
 
   test('construct arguments for attribute key correctly', () => {
     expect(argBuilder.forAttributeKey('test-key')).toEqual(
-      expect.objectContaining({ name: 'expression', value: { key: 'test-key' } })
+      expect.objectContaining({ name: 'expression', value: { key: 'test-key' } }),
     );
   });
 
@@ -27,11 +27,11 @@ describe('Graphql Argument Builder', () => {
   test('construct arguments for orderBy correctly', () => {
     expect(argBuilder.forOrderBy(undefined)).toEqual(expect.arrayContaining([]));
     expect(
-      argBuilder.forOrderBy({ direction: 'ASC', key: specBuilder.attributeSpecificationForKey('test-key') })
+      argBuilder.forOrderBy({ direction: 'ASC', key: specBuilder.attributeSpecificationForKey('test-key') }),
     ).toEqual(
       expect.arrayContaining([
-        { name: 'orderBy', value: [{ direction: { value: 'ASC' }, keyExpression: { key: 'test-key' } }] }
-      ])
+        { name: 'orderBy', value: [{ direction: { value: 'ASC' }, keyExpression: { key: 'test-key' } }] },
+      ]),
     );
   });
 
@@ -40,18 +40,18 @@ describe('Graphql Argument Builder', () => {
     expect(
       argBuilder.forOrderBys([
         { direction: 'ASC', key: specBuilder.attributeSpecificationForKey('test-key') },
-        { direction: 'ASC', key: specBuilder.attributeSpecificationForKey('test-key2') }
-      ])
+        { direction: 'ASC', key: specBuilder.attributeSpecificationForKey('test-key2') },
+      ]),
     ).toEqual(
       expect.arrayContaining([
         {
           name: 'orderBy',
           value: [
             { direction: { value: 'ASC' }, keyExpression: { key: 'test-key' } },
-            { direction: { value: 'ASC' }, keyExpression: { key: 'test-key2' } }
-          ]
-        }
-      ])
+            { direction: { value: 'ASC' }, keyExpression: { key: 'test-key2' } },
+          ],
+        },
+      ]),
     );
   });
 
@@ -59,8 +59,8 @@ describe('Graphql Argument Builder', () => {
     expect(argBuilder.forTimeRange(new GraphQlTimeRange(16000000, 16000000))).toEqual(
       expect.objectContaining({
         name: 'between',
-        value: { endTime: new Date(16000000), startTime: new Date(16000000) }
-      })
+        value: { endTime: new Date(16000000), startTime: new Date(16000000) },
+      }),
     );
   });
 
@@ -70,13 +70,13 @@ describe('Graphql Argument Builder', () => {
 
   test('construct arguments for trace type correctly', () => {
     expect(argBuilder.forTraceType('trace-type')).toEqual(
-      expect.objectContaining({ name: 'type', value: new GraphQlEnumArgument('trace-type') })
+      expect.objectContaining({ name: 'type', value: new GraphQlEnumArgument('trace-type') }),
     );
   });
 
   test('construct arguments for entity scope correctly', () => {
     expect(argBuilder.forScope('entity-type')).toEqual(
-      expect.objectContaining({ name: 'scope', value: 'entity-type' })
+      expect.objectContaining({ name: 'scope', value: 'entity-type' }),
     );
   });
 
@@ -92,11 +92,11 @@ describe('Graphql Argument Builder', () => {
               keyExpression: { key: 'filter-key' },
               operator: { value: 'EQUALS' },
               type: { value: 'ATTRIBUTE' },
-              value: 'filter-value'
-            }
-          ]
-        }
-      ])
+              value: 'filter-value',
+            },
+          ],
+        },
+      ]),
     );
   });
 });

@@ -5,7 +5,7 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  Output
+  Output,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LoggerService } from '@hypertrace/common';
@@ -18,8 +18,8 @@ import { LoggerService } from '@hypertrace/common';
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: TextareaComponent
-    }
+      useExisting: TextareaComponent,
+    },
   ],
   template: `
     <mat-form-field class="fill-container" [ngClass]="{ disabled: this.disabled }" floatLabel="never">
@@ -35,7 +35,7 @@ import { LoggerService } from '@hypertrace/common';
       >
       </textarea>
     </mat-form-field>
-  `
+  `,
 })
 export class TextareaComponent implements ControlValueAccessor, OnInit {
   @Input()

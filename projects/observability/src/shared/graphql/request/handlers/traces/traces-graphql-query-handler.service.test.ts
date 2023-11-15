@@ -11,7 +11,7 @@ import { SpecificationBuilder } from '../../builders/specification/specification
 import {
   GraphQlTracesRequest,
   TracesGraphQlQueryHandlerService,
-  TRACES_GQL_REQUEST
+  TRACES_GQL_REQUEST,
 } from './traces-graphql-query-handler.service';
 
 describe('TracesGraphQlQueryHandlerService', () => {
@@ -21,22 +21,22 @@ describe('TracesGraphQlQueryHandlerService', () => {
       mockProvider(MetadataService, {
         getAttribute: jest.fn().mockReturnValue(
           of({
-            units: 'ms'
-          })
-        )
-      })
-    ]
+            units: 'ms',
+          }),
+        ),
+      }),
+    ],
   });
 
   const testTimeRange = GraphQlTimeRange.fromTimeRange(
-    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
+    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)),
   );
   const specBuilder = new SpecificationBuilder();
   const buildAttributeRequest = (): GraphQlTracesRequest => ({
     requestType: TRACES_GQL_REQUEST,
     timeRange: testTimeRange,
     properties: [specBuilder.attributeSpecificationForKey('name')],
-    limit: 10
+    limit: 10,
   });
 
   test('matches traces request', () => {
@@ -52,19 +52,19 @@ describe('TracesGraphQlQueryHandlerService', () => {
       arguments: [
         {
           name: 'type',
-          value: new GraphQlEnumArgument(TRACE_SCOPE)
+          value: new GraphQlEnumArgument(TRACE_SCOPE),
         },
         {
           name: 'limit',
-          value: 10
+          value: 10,
         },
         {
           name: 'between',
           value: {
             startTime: new Date(testTimeRange.from),
-            endTime: new Date(testTimeRange.to)
-          }
-        }
+            endTime: new Date(testTimeRange.to),
+          },
+        },
       ],
       children: [
         {
@@ -74,14 +74,14 @@ describe('TracesGraphQlQueryHandlerService', () => {
             {
               alias: 'name',
               path: 'attribute',
-              arguments: [{ name: 'expression', value: { key: 'name' } }]
-            }
-          ]
+              arguments: [{ name: 'expression', value: { key: 'name' } }],
+            },
+          ],
         },
         {
-          path: 'total'
-        }
-      ]
+          path: 'total',
+        },
+      ],
     });
   });
 
@@ -91,10 +91,10 @@ describe('TracesGraphQlQueryHandlerService', () => {
       results: [
         {
           id: 'first-trace-id',
-          name: 'first-trace-name'
-        }
+          name: 'first-trace-name',
+        },
       ],
-      total: 1
+      total: 1,
     };
 
     runFakeRxjs(({ expectObservable }) => {
@@ -106,12 +106,12 @@ describe('TracesGraphQlQueryHandlerService', () => {
               [traceTypeKey]: TRACE_SCOPE,
               name: {
                 units: 'ms',
-                value: 'first-trace-name'
-              }
-            }
+                value: 'first-trace-name',
+              },
+            },
           ],
-          total: 1
-        }
+          total: 1,
+        },
       });
     });
   }));

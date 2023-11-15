@@ -7,7 +7,7 @@ export class GraphQlFieldFilter implements GraphQlFilter {
   public constructor(
     public readonly keyOrExpression: string | AttributeExpression,
     public readonly operator: GraphQlOperatorType,
-    public readonly value: GraphQlArgumentValue
+    public readonly value: GraphQlArgumentValue,
   ) {}
 
   public asArgumentObjects(): FieldFilter[] {
@@ -16,23 +16,23 @@ export class GraphQlFieldFilter implements GraphQlFilter {
         keyExpression: this.normalizeExpression(this.keyOrExpression),
         operator: new GraphQlEnumArgument(this.operator),
         value: this.value,
-        type: new GraphQlEnumArgument(GraphQlFilterType.Attribute)
-      }
+        type: new GraphQlEnumArgument(GraphQlFilterType.Attribute),
+      },
     ];
   }
 
   private normalizeExpression(
-    keyOrExpression: string | AttributeExpression
+    keyOrExpression: string | AttributeExpression,
   ): AttributeExpression & GraphQlArgumentObject {
     if (typeof keyOrExpression === 'string') {
       return {
-        key: keyOrExpression
+        key: keyOrExpression,
       };
     }
 
     return {
       key: keyOrExpression.key,
-      ...(!isEmpty(keyOrExpression.subpath) ? { subpath: keyOrExpression.subpath } : {})
+      ...(!isEmpty(keyOrExpression.subpath) ? { subpath: keyOrExpression.subpath } : {}),
     };
   }
 }

@@ -9,11 +9,11 @@ import { Trace, traceIdKey, TraceType, traceTypeKey } from '../../shared/graphql
 import { SpecificationBuilder } from '../../shared/graphql/request/builders/specification/specification-builder';
 import {
   ExportSpansGraphQlQueryHandlerService,
-  EXPORT_SPANS_GQL_REQUEST
+  EXPORT_SPANS_GQL_REQUEST,
 } from '../../shared/graphql/request/handlers/traces/export-spans-graphql-query-handler.service';
 import {
   TraceGraphQlQueryHandlerService,
-  TRACE_GQL_REQUEST
+  TRACE_GQL_REQUEST,
 } from '../../shared/graphql/request/handlers/traces/trace-graphql-query-handler.service';
 import { LogEventsService } from '../../shared/services/log-events/log-events.service';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
@@ -34,16 +34,16 @@ export class TraceDetailService implements OnDestroy {
     route: ActivatedRoute,
     private readonly metadataService: MetadataService,
     private readonly graphQlQueryService: GraphQlRequestService,
-    private readonly logEventsService: LogEventsService
+    private readonly logEventsService: LogEventsService,
   ) {
     this.routeIds$ = route.paramMap.pipe(
       map(paramMap => ({
         traceId: paramMap.get(this.getTraceIdParamName())!,
         spanId: paramMap.get(this.getSpanIdParamName()) as string | undefined,
-        startTime: paramMap.get(this.getStartTimeParamName()) ?? undefined
+        startTime: paramMap.get(this.getStartTimeParamName()) ?? undefined,
       })),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 
@@ -68,8 +68,8 @@ export class TraceDetailService implements OnDestroy {
     return this.routeIds$.pipe(
       switchMap(routeIds =>
         this.fetchTrace(routeIds.traceId, routeIds.spanId, routeIds.startTime).pipe(
-          map(trace => [trace, routeIds] as [Trace, TraceDetailRouteIdParams])
-        )
+          map(trace => [trace, routeIds] as [Trace, TraceDetailRouteIdParams]),
+        ),
       ),
       switchMap(([trace, routeIds]) =>
         this.metadataService.getAttribute(trace[traceTypeKey], 'duration').pipe(
@@ -79,12 +79,12 @@ export class TraceDetailService implements OnDestroy {
             startTime: routeIds.startTime,
             type: trace[traceTypeKey],
             timeString: this.buildTimeString(trace, durationAttribute.units),
-            titleString: this.buildTitleString(trace)
-          }))
-        )
+            titleString: this.buildTitleString(trace),
+          })),
+        ),
       ),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 
@@ -95,22 +95,22 @@ export class TraceDetailService implements OnDestroy {
           requestType: EXPORT_SPANS_GQL_REQUEST,
           traceId: routeIds.traceId,
           timestamp: this.dateCoercer.coerce(routeIds.startTime),
-          limit: 1000
-        })
+          limit: 1000,
+        }),
       ),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 
   public fetchLogEvents(): Observable<LogEvent[]> {
     return this.routeIds$.pipe(
       switchMap(routeIds =>
-        this.logEventsService.getLogEventsGqlResponseForTrace(routeIds.traceId, routeIds.startTime)
+        this.logEventsService.getLogEventsGqlResponseForTrace(routeIds.traceId, routeIds.startTime),
       ),
       map(trace => this.logEventsService.mapLogEvents(trace)),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 
@@ -121,20 +121,20 @@ export class TraceDetailService implements OnDestroy {
       timestamp: this.dateCoercer.coerce(startTime),
       traceProperties: [
         this.specificationBuilder.attributeSpecificationForKey('startTime'),
-        this.specificationBuilder.attributeSpecificationForKey('duration')
+        this.specificationBuilder.attributeSpecificationForKey('duration'),
       ],
       spanId: spanId,
       spanProperties: [
         this.specificationBuilder.attributeSpecificationForKey('serviceName'),
-        this.specificationBuilder.attributeSpecificationForKey('displaySpanName')
+        this.specificationBuilder.attributeSpecificationForKey('displaySpanName'),
       ],
-      spanLimit: 1
+      spanLimit: 1,
     });
   }
 
   private buildTimeString(trace: Trace, units: string): string {
     return `${new DateFormatter({ mode: DateFormatMode.DateAndTimeWithSeconds }).format(
-      trace.startTime as number
+      trace.startTime as number,
     )} for ${trace.duration as string} ${units ?? ''}`.trim();
   }
 

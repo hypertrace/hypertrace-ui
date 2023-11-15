@@ -10,18 +10,18 @@ describe('Marker Tooltip Component', () => {
   const createHost = createHostFactory({
     component: MarkerTooltipComponent,
     imports: [MarkerTooltipModule, RouterTestingModule],
-    shallow: true
+    shallow: true,
   });
 
   test('should have single time with summary', () => {
     const data: Observable<MarkerTooltipData> = of({
       relativeTimes: [2],
-      summary: 'test-summary'
+      summary: 'test-summary',
     });
     spectator = createHost(`<ht-marker-tooltip [data]="data"></ht-marker-tooltip>`, {
       hostProps: {
-        data: data
-      }
+        data: data,
+      },
     });
 
     expect(spectator.query('.marker-tooltip-container')).toExist();
@@ -35,15 +35,15 @@ describe('Marker Tooltip Component', () => {
   test('should have time range', () => {
     const data: Observable<MarkerTooltipData> = of({
       relativeTimes: [2, 3],
-      summary: 'test-summary'
+      summary: 'test-summary',
     });
     spectator = createHost(`<ht-marker-tooltip [data]="data" (viewAll)="viewAll"></ht-marker-tooltip>`, {
       hostProps: {
         data: data,
         viewAll: {
-          emit: jest.fn()
-        }
-      }
+          emit: jest.fn(),
+        },
+      },
     });
 
     expect(spectator.query('.time-range')).toHaveText('2ms - 3ms');

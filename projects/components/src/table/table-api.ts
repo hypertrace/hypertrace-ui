@@ -89,27 +89,27 @@ export interface TableFilter extends FieldFilter {
 export const enum TableSortDirection {
   // These values are used in css
   Ascending = 'ASC',
-  Descending = 'DESC'
+  Descending = 'DESC',
 }
 
 export const enum TableMode {
   // These values are used in css
   Flat = 'flat',
   Detail = 'detail',
-  Tree = 'tree'
+  Tree = 'tree',
 }
 
 export const enum TableStyle {
   // These values are used in css
   FullPage = 'full-page',
   Embedded = 'embedded',
-  List = 'list'
+  List = 'list',
 }
 
 export const enum TableSelectionMode {
   None = 'none',
   Single = 'single',
-  Multiple = 'multiple'
+  Multiple = 'multiple',
 }
 
 export type TableColumnWidth = TableColumnFlexWidth | TableColumnFixedWidth;

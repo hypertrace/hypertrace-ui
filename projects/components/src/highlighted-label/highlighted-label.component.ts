@@ -9,7 +9,7 @@ import { Dictionary, TypedSimpleChanges } from '@hypertrace/common';
     <div class="tokens">
       <span *ngFor="let token of this.tokens" [ngClass]="{ highlight: token.highlight }">{{ token.value }}</span>
     </div>
-  </div>`
+  </div>`,
 })
 export class HighlightedLabelComponent implements OnChanges {
   @Input()
@@ -40,7 +40,7 @@ export class HighlightedLabelComponent implements OnChanges {
     return (this.templateString.match(regex) ?? []).map(token =>
       token[0] === '{'
         ? { value: String(this.data?.[token.substr(1, token.length - 2)]), highlight: true }
-        : { value: token, highlight: false }
+        : { value: token, highlight: false },
     );
   }
 }

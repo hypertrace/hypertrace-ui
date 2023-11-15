@@ -11,7 +11,7 @@ import {
   Chart,
   ChartConfig,
   ChartDimensions,
-  D3VisualizationBuilderService
+  D3VisualizationBuilderService,
 } from '../utils/d3/d3-visualization-builder.service';
 import { MouseLocationData } from '../utils/mouse-tracking/mouse-tracking';
 import { BubbleChart, BubbleChartConfiguration, BubbleChartData } from './bubble-chart';
@@ -41,7 +41,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
   private static readonly MAX_CHECKMARK_ICON_SIZE: number = 20;
   private static readonly BUBBLE_CHART_PADDING: BubbleChartPadding = {
     right: 2,
-    bottom: 2
+    bottom: 2,
   };
 
   public constructor(
@@ -49,14 +49,14 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
     measurer: DomElementMeasurerService,
     dynamicComponent: DynamicComponentService,
     private readonly colorService: ColorService,
-    chartTooltipBuilderService: ChartTooltipBuilderService
+    chartTooltipBuilderService: ChartTooltipBuilderService,
   ) {
     super(d3, measurer, dynamicComponent, chartTooltipBuilderService);
   }
 
   protected drawVisualization(
     visualizationContainer: BubbleChartContainer,
-    config: InternalConfiguration<TData>
+    config: InternalConfiguration<TData>,
   ): void {
     const bubbleGroupsSelection = visualizationContainer
       .append('svg')
@@ -88,7 +88,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
     this.addCheckmarkIcon(
       checkmarkSvgsSelection,
       config.domRenderer,
-      this.d3.buildIcon(BubbleChartBuilderService.CHECKMARK_ICON_TYPE, config.domRenderer)
+      this.d3.buildIcon(BubbleChartBuilderService.CHECKMARK_ICON_TYPE, config.domRenderer),
     );
 
     this.addClickHandler(bubbleGroupsSelection, config);
@@ -98,7 +98,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
     visualizationContainer: BubbleChartContainer,
     dimensions: ChartDimensions,
     config: InternalConfiguration<TData>,
-    renderer: Renderer2
+    renderer: Renderer2,
   ): void {
     const scaledLayout = this.getScaledLayout(config, dimensions);
 
@@ -106,13 +106,13 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
       config.data,
       scaledLayout,
       config.constraint.xMin,
-      config.constraint.xMax
+      config.constraint.xMax,
     );
     const yScale = this.bubbleScaleBuilder.getYScale(
       config.data,
       scaledLayout,
       config.constraint.yMin,
-      config.constraint.yMax
+      config.constraint.yMax,
     );
     const rScale = this.bubbleScaleBuilder.getRScale(scaledLayout, xScale, yScale);
 
@@ -134,11 +134,11 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
       config,
       renderer,
       this.buildLookupStrategy(config.data, xScale, yScale),
-      data => this.buildTooltipRenderableData(data)
+      data => this.buildTooltipRenderableData(data),
     );
 
     const checkmarkGroupsSelection = bubbleGroupsSelection.selectAll<SVGGElement, DefaultedBubbleChartData<TData>>(
-      selector(BubbleChartBuilderService.CHECKMARK_GROUP_CLASS)
+      selector(BubbleChartBuilderService.CHECKMARK_GROUP_CLASS),
     );
 
     this.updateCheckmarkIconAttributes(checkmarkGroupsSelection, rScale, xScale, yScale);
@@ -146,7 +146,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
 
   protected fillConfigurationDefaults(
     provided: BubbleChartConfiguration<TData>,
-    renderer: Renderer2
+    renderer: Renderer2,
   ): InternalConfiguration<TData> {
     const colorMap = this.buildColorLookupForData(provided);
     const data = provided.data
@@ -155,7 +155,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
         y: providedData.y,
         r: providedData.r,
         color: colorMap.get(providedData.colorKey)!,
-        original: providedData
+        original: providedData,
       }))
       .sort((first, second) => second.r - first.r); // Sort larger r values earlier so they render beneath smaller values
 
@@ -163,7 +163,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
       xMin: provided.xMin,
       xMax: provided.xMax,
       yMin: provided.yMin,
-      yMax: provided.yMax
+      yMax: provided.yMax,
     };
 
     const maxAllowedSelectionsCount = provided.maxAllowedSelectionsCount ?? data.length;
@@ -180,20 +180,20 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
         ? new Set(provided.selections.slice(0, maxAllowedSelectionsCount))
         : new Set(),
       maxAllowedSelectionsCount: maxAllowedSelectionsCount,
-      domRenderer: renderer
+      domRenderer: renderer,
     };
   }
 
   private buildLookupStrategy(
     data: DefaultedBubbleChartData<TData>[],
     xScale: NumericScale,
-    yScale: NumericScale
+    yScale: NumericScale,
   ): BubbleDataLookupStrategy<DefaultedBubbleChartData<TData>> {
     return new BubbleDataLookupStrategy<DefaultedBubbleChartData<TData>>(data, xScale, yScale);
   }
 
   private buildTooltipRenderableData(
-    data: MouseLocationData<DefaultedBubbleChartData<TData>, undefined>[]
+    data: MouseLocationData<DefaultedBubbleChartData<TData>, undefined>[],
   ): TData[] | undefined {
     return data.map(mouseLocationData => mouseLocationData.dataPoint.original);
   }
@@ -202,7 +202,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
     return Array.from(config.colorMap.entries()).map(([key, color]) => ({
       name: key,
       color: color,
-      data: key
+      data: key,
     }));
   }
 
@@ -219,7 +219,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
       updateSelections: (selections: TData[]): void => {
         config.currentSelections = new Set(selections.slice(0, config.maxAllowedSelectionsCount));
         this.updateBubblesUsingCurrentSelections(config);
-      }
+      },
     };
   }
 
@@ -235,7 +235,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
 
   private addClickHandler(
     bubbleGroupsSelection: BubbleGroupsSelection<TData>,
-    config: InternalConfiguration<TData>
+    config: InternalConfiguration<TData>,
   ): void {
     bubbleGroupsSelection.on('click', (data, index, bubbleGroupElements) => {
       if (config.currentSelections.has(data.original)) {
@@ -262,7 +262,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
   private getScaledLayout(config: InternalConfiguration<TData>, dimensions: ChartDimensions): ScaledLayout {
     const dimensionsRect: EasyRect = {
       width: dimensions.visualizationWidth - BubbleChartBuilderService.BUBBLE_CHART_PADDING.right,
-      height: dimensions.visualizationHeight - BubbleChartBuilderService.BUBBLE_CHART_PADDING.bottom
+      height: dimensions.visualizationHeight - BubbleChartBuilderService.BUBBLE_CHART_PADDING.bottom,
     };
 
     return this.containLayout.getLayout(
@@ -271,14 +271,14 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
       config.constraint.xMin,
       config.constraint.xMax,
       config.constraint.yMin,
-      config.constraint.yMax
+      config.constraint.yMax,
     );
   }
 
   private addCheckmarkIcon(
     checkmarkSvgsSelection: CheckmarkSvgsSelection<TData>,
     renderer: Renderer2,
-    iconContent$: Observable<SVGElement>
+    iconContent$: Observable<SVGElement>,
   ): void {
     checkmarkSvgsSelection.each((_, index, checkmarkSvgElements) => {
       iconContent$.subscribe(iconContent => {
@@ -291,7 +291,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
     checkmarkGroupsSelection: CheckmarkGroupsSelection<TData>,
     rScale: ScaleContinuousNumeric<number, number>,
     xScale: ScaleContinuousNumeric<number, number>,
-    yScale: ScaleContinuousNumeric<number, number>
+    yScale: ScaleContinuousNumeric<number, number>,
   ): void {
     checkmarkGroupsSelection
       .attr(
@@ -300,7 +300,7 @@ export class BubbleChartBuilderService<TData extends BubbleChartData> extends D3
           `translate(
             -${this.getCheckmarkIconSize(rScale(data.r)!) / 2},
             -${this.getCheckmarkIconSize(rScale(data.r)!) / 2}
-          )`
+          )`,
       )
       .select(selector(BubbleChartBuilderService.CHECKMARK_SVG_CONTAINER_CLASS))
       .attr('x', data => xScale(data.x)!)

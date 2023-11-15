@@ -8,6 +8,6 @@ import { serviceListDashboard } from './service-list.dashboard';
       <ht-page-header></ht-page-header>
       <ht-navigable-dashboard navLocation="${serviceListDashboard.location}"></ht-navigable-dashboard>
     </div>
-  `
+  `,
 })
 export class ServiceListComponent {}

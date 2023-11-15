@@ -32,5 +32,5 @@ export const enum ObservabilityIconType {
   Service = 'svg:service',
   ServicesList = 'svg:services-list',
   SQS = 'svg:amazon-sqs',
-  Tyk = 'svg:tyk'
+  Tyk = 'svg:tyk',
 }

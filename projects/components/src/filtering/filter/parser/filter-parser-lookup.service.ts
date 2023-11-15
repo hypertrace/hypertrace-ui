@@ -9,7 +9,7 @@ import { ContainsFilterParser } from './types/contains-filter-parser';
 import { InNotInFilterParser } from './types/in-not-in-filter-parser';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FilterParserLookupService {
   // TODO remove the separate parsers entirely.

@@ -8,7 +8,7 @@ const VALID_DOMAINS = [
   'hypertrace.co.uk',
   'HYPERTRACE.ORG',
   'HYPER.TRACE.ORG',
-  'hyper.trace.org'
+  'hyper.trace.org',
 ];
 const INVALID_DOMAINS = ['.hypertrace.org.', 'hypertrace.42', 'hyper.$trace', 'hyper-trac.e'];
 describe('Domain validator', () => {

@@ -10,7 +10,7 @@ export class GraphQlRequestOptionResolver {
       .map(request => this.resolveOptions(request))
       .reduce((resolvedMap, request) => {
         const entryToUpdate = Array.from(resolvedMap).find(([options]) =>
-          this.areOptionsCompatible(options, request.options)
+          this.areOptionsCompatible(options, request.options),
         ) || [request.options, []];
 
         entryToUpdate[1].push(request.request);
@@ -30,8 +30,8 @@ export class GraphQlRequestOptionResolver {
       options: {
         ...this.defaultOptions,
         ...(request.handlerOptions || {}),
-        ...(request.requestOptions || {})
-      }
+        ...(request.requestOptions || {}),
+      },
     };
   }
 }

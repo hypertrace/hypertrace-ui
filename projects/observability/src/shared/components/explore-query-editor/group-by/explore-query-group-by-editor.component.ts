@@ -53,7 +53,7 @@ import { MetadataService } from '../../../services/metadata/metadata.service';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class ExploreQueryGroupByEditorComponent implements OnChanges {
   @Input()
@@ -74,19 +74,19 @@ export class ExploreQueryGroupByEditorComponent implements OnChanges {
 
   public constructor(private readonly metadataService: MetadataService) {
     this.groupByAttributeOptions$ = this.contextSubject.pipe(
-      switchMap(context => this.getGroupByOptionsForContext(context))
+      switchMap(context => this.getGroupByOptionsForContext(context)),
     );
 
     this.currentGroupByExpression$ = combineLatest([
       this.groupByAttributeOptions$,
-      merge(this.incomingGroupByExpressionSubject, this.groupByExpressionsToEmit)
+      merge(this.incomingGroupByExpressionSubject, this.groupByExpressionsToEmit),
     ]).pipe(map(optionsAndKey => this.resolveAttributeFromOptions(...optionsAndKey)));
 
     this.groupByExpressionsToEmit
       .pipe(
         filter(expression => this.isValidExpressionToEmit(expression)),
         debounceTime(500),
-        map(expression => (isEmpty(expression) ? undefined : omit(expression, 'metadata')))
+        map(expression => (isEmpty(expression) ? undefined : omit(expression, 'metadata'))),
       )
       .subscribe(this.groupByExpressionChange);
   }
@@ -115,7 +115,7 @@ export class ExploreQueryGroupByEditorComponent implements OnChanges {
 
   private resolveAttributeFromOptions(
     options: SelectOption<AttributeMetadata | undefined>[],
-    expression?: AttributeExpression
+    expression?: AttributeExpression,
   ): AttributeExpressionWithMetadata | undefined {
     if (isNil(expression)) {
       return undefined;
@@ -135,17 +135,17 @@ export class ExploreQueryGroupByEditorComponent implements OnChanges {
       map(attributes =>
         attributes.map(attribute => ({
           value: attribute,
-          label: this.metadataService.getAttributeDisplayName(attribute)
-        }))
+          label: this.metadataService.getAttributeDisplayName(attribute),
+        })),
       ),
-      map(attributeOptions => [this.getEmptyGroupByOption(), ...attributeOptions])
+      map(attributeOptions => [this.getEmptyGroupByOption(), ...attributeOptions]),
     );
   }
 
   private getEmptyGroupByOption(): SelectOption<AttributeMetadata | undefined> {
     return {
       value: undefined,
-      label: 'None'
+      label: 'None',
     };
   }
 

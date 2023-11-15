@@ -4,7 +4,7 @@ import { EnumPropertyTypeInstance, ENUM_TYPE } from '@hypertrace/dashboards';
 import { GraphQlRequestCacheability } from '@hypertrace/graphql-client';
 
 @Model({
-  type: 'request-options'
+  type: 'request-options',
 })
 export class GraphQlRequestOptionsModel {
   @ModelProperty({
@@ -15,15 +15,15 @@ export class GraphQlRequestOptionsModel {
       values: [
         GraphQlRequestCacheability.NotCacheable,
         GraphQlRequestCacheability.RefreshCache,
-        GraphQlRequestCacheability.Cacheable
-      ]
-    } as EnumPropertyTypeInstance
+        GraphQlRequestCacheability.Cacheable,
+      ],
+    } as EnumPropertyTypeInstance,
   })
   public cacheability?: GraphQlRequestCacheability;
 
   @ModelProperty({
     key: 'isolated',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public isolated?: boolean;
 }

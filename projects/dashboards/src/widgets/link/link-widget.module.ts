@@ -11,9 +11,9 @@ import { LinkWidgetModel } from './link-widget.model';
     CommonModule,
     DashboardCoreModule.with({
       models: [LinkWidgetModel],
-      renderers: [LinkWidgetRendererComponent]
+      renderers: [LinkWidgetRendererComponent],
     }),
-    LinkModule
-  ]
+    LinkModule,
+  ],
 })
 export class LinkWidgetModule {}

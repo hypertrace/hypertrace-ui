@@ -15,7 +15,7 @@ export class NavigationListComponentService {
     for (let i = updatedItems.length - 1; i >= 0; i--) {
       if (updatedItems[i].type === NavItemType.Header) {
         (updatedItems[i] as NavItemHeaderConfig).isVisible$ = this.updateHeaderNavItemsVisibility(
-          linkItemsForThisSection
+          linkItemsForThisSection,
         );
         linkItemsForThisSection = [];
       } else if (updatedItems[i].type === NavItemType.Link) {
@@ -30,7 +30,7 @@ export class NavigationListComponentService {
     return isEmpty(navItems)
       ? of(false)
       : combineLatest(navItems.map(navItem => navItem.featureState$!)).pipe(
-          map(states => states.some(state => state !== FeatureState.Disabled))
+          map(states => states.some(state => state !== FeatureState.Disabled)),
         );
   }
 
@@ -39,7 +39,7 @@ export class NavigationListComponentService {
       if (navItem.type === NavItemType.Link) {
         return {
           ...navItem,
-          featureState$: this.featureStateResolver.getCombinedFeatureState(navItem.features ?? [])
+          featureState$: this.featureStateResolver.getCombinedFeatureState(navItem.features ?? []),
         };
       }
 

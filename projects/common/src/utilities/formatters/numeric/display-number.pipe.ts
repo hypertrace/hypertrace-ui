@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { floatFormatter, integerFormatter, NumericFormatter } from './numeric-formatter';
 
 @Pipe({
-  name: 'htDisplayNumber'
+  name: 'htDisplayNumber',
 })
 export class DisplayNumberPipe implements PipeTransform {
   private static readonly INTEGER_FORMATTER: NumericFormatter = integerFormatter;
@@ -46,5 +46,5 @@ export const enum FormatterStyle {
   Float = 'float',
   Integer = 'int',
   Auto = 'auto',
-  None = 'none'
+  None = 'none',
 }

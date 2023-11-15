@@ -8,7 +8,7 @@ import { startWith } from 'rxjs/operators';
 @Pipe({
   name: 'htFeature',
   // eslint-disable-next-line  @angular-eslint/no-pipe-impure
-  pure: false
+  pure: false,
 })
 export class FeaturePipe implements PipeTransform {
   private lastReceived: unknown;
@@ -17,7 +17,7 @@ export class FeaturePipe implements PipeTransform {
 
   public constructor(
     private readonly featureStateResolver: FeatureStateResolver,
-    changeDetectorRef: ChangeDetectorRef
+    changeDetectorRef: ChangeDetectorRef,
   ) {
     this.asyncPipe = new AsyncPipe(changeDetectorRef);
   }

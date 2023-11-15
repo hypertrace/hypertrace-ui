@@ -15,14 +15,14 @@ describe('Code Viewer Component', () => {
       MockComponent(SearchBoxComponent),
       MockComponent(DownloadFileComponent),
       MockComponent(CopyToClipboardComponent),
-      MockComponent(MessageDisplayComponent)
+      MockComponent(MessageDisplayComponent),
     ],
     providers: [
       mockProvider(SyntaxHighlighterService, {
-        highlight: jest.fn().mockReturnValueOnce('{').mockReturnValueOnce(`"key": "value"`).mockReturnValueOnce('}')
-      })
+        highlight: jest.fn().mockReturnValueOnce('{').mockReturnValueOnce(`"key": "value"`).mockReturnValueOnce('}'),
+      }),
     ],
-    shallow: true
+    shallow: true,
   });
   const code = `{\n "key": "value" \n }`;
   const downloadFileName = 'code.json';
@@ -30,8 +30,8 @@ describe('Code Viewer Component', () => {
   test('should render everything correctly', () => {
     const spectator = createComponent({
       props: {
-        code: ''
-      }
+        code: '',
+      },
     });
     expect(spectator.query('.line-numbers')).not.toExist();
     expect(spectator.query('.code-lines')).not.toExist();
@@ -39,7 +39,7 @@ describe('Code Viewer Component', () => {
 
     // Set code
     spectator.setInput({
-      code: code
+      code: code,
     });
 
     expect(spectator.query('.code-viewer')).toExist();
@@ -54,7 +54,7 @@ describe('Code Viewer Component', () => {
 
     // Highlight text (with string input)
     spectator.setInput({
-      highlightText: 'key'
+      highlightText: 'key',
     });
 
     expect(spectator.queryAll('.code-line.line-highlight').length).toBe(1);
@@ -62,7 +62,7 @@ describe('Code Viewer Component', () => {
 
     // Highlight text (with string[] input)
     spectator.setInput({
-      highlightText: ['key']
+      highlightText: ['key'],
     });
 
     expect(spectator.queryAll('.code-line.line-highlight').length).toBe(1);
@@ -70,7 +70,7 @@ describe('Code Viewer Component', () => {
 
     // Highlight text (with RegExp input)
     spectator.setInput({
-      highlightText: new RegExp('key')
+      highlightText: new RegExp('key'),
     });
 
     expect(spectator.queryAll('.code-line.line-highlight').length).toBe(1);
@@ -78,7 +78,7 @@ describe('Code Viewer Component', () => {
 
     // Download
     spectator.setInput({
-      downloadFileName: downloadFileName
+      downloadFileName: downloadFileName,
     });
 
     expect(spectator.query(DownloadFileComponent)).toExist();
@@ -86,7 +86,7 @@ describe('Code Viewer Component', () => {
 
     // Copy to clipboard
     spectator.setInput({
-      enableCopy: true
+      enableCopy: true,
     });
 
     expect(spectator.query(CopyToClipboardComponent)).toExist();

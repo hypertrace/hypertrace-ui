@@ -4,13 +4,13 @@ import { select, Selection } from 'd3-selection';
 import { Link, linkHorizontal } from 'd3-shape';
 import {
   TopologyEdgePositionInformation,
-  TopologyEdgeRenderDelegate
+  TopologyEdgeRenderDelegate,
 } from '../../../../../components/topology/renderers/edge/topology-edge-renderer.service';
 import {
   TopologyCoordinates,
   TopologyEdge,
   TopologyEdgeState,
-  TopologyElementVisibility
+  TopologyElementVisibility,
 } from '../../../../../components/topology/topology';
 import { D3UtilService } from '../../../../../components/utils/d3/d3-util.service';
 import { SvgUtilService } from '../../../../../components/utils/svg/svg-util.service';
@@ -34,7 +34,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   public constructor(
     private readonly svgUtils: SvgUtilService,
     private readonly d3Utils: D3UtilService,
-    private readonly topologyDataSourceModelPropertiesService: TopologyDataSourceModelPropertiesService
+    private readonly topologyDataSourceModelPropertiesService: TopologyDataSourceModelPropertiesService,
   ) {}
 
   public matches(edge: TopologyEdge & Partial<EntityEdge>): edge is EntityEdge {
@@ -46,7 +46,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     edge: EntityEdge,
     position: TopologyEdgePositionInformation,
     state: TopologyEdgeState<MetricAggregationSpecification>,
-    domRenderer: Renderer2
+    domRenderer: Renderer2,
   ): void {
     this.defineArrowMarkersIfNeeded(element, domRenderer);
     this.d3Utils
@@ -65,7 +65,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     element: SVGGElement,
     edge: EntityEdge,
     position: TopologyEdgePositionInformation,
-    domRenderer: Renderer2
+    domRenderer: Renderer2,
   ): void {
     const edgeSelection = this.d3Utils.select(element, domRenderer);
     this.updateLinePosition(edgeSelection, position);
@@ -78,7 +78,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     edge: EntityEdge,
     state: TopologyEdgeState<MetricAggregationSpecification>,
     domRenderer: Renderer2,
-    position?: TopologyEdgePositionInformation
+    position?: TopologyEdgePositionInformation,
   ): void {
     const selection = this.d3Utils.select(element, domRenderer);
 
@@ -91,7 +91,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
       primaryMetric?.extractAndGetDataCategoryForMetric(edge.data),
       secondaryMetric?.extractAndGetDataCategoryForMetric(edge.data),
       primaryMetric?.extractDataForMetric(edge.data),
-      secondaryMetric?.extractDataForMetric(edge.data)
+      secondaryMetric?.extractDataForMetric(edge.data),
     );
     this.visibilityUpdater.updateVisibility(selection, state.visibility);
 
@@ -107,7 +107,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     primaryMetricCategory?: TopologyMetricCategoryData,
     secondaryMetricCategory?: TopologyMetricCategoryData,
     primaryMetricAggregation?: MetricAggregation,
-    secondaryMetricAggregation?: MetricAggregation
+    secondaryMetricAggregation?: MetricAggregation,
   ): void {
     const edgeFocusedCategory = this.isEmphasizedOrFocused(visibility)
       ? this.getEdgeFocusedCategory(primaryMetricCategory, secondaryMetricCategory)
@@ -130,8 +130,8 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
           primaryMetricAggregation,
           secondaryMetricAggregation,
           primaryMetricCategory,
-          secondaryMetricCategory
-        )
+          secondaryMetricCategory,
+        ),
       );
 
     selection
@@ -140,14 +140,14 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
         'marker-end',
         this.isEmphasizedOrFocused(visibility)
           ? `url(#${this.getMarkerIdForCategory(edgeFocusedCategory?.getCategoryClassName() ?? '')})`
-          : 'none'
+          : 'none',
       );
   }
 
   private generateLineCenterPoint(position: TopologyEdgePositionInformation): TopologyCoordinates {
     return {
       x: (position.source.x + position.target.x) / 2,
-      y: (position.source.y + position.target.y) / 2
+      y: (position.source.y + position.target.y) / 2,
     };
   }
 
@@ -178,7 +178,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
       .append('path')
       .classed(this.edgeArrowClass, true)
       .each((category, index, elements) =>
-        this.d3Utils.select(elements[index], domRenderer).classed(category.getCategoryClassName(), true)
+        this.d3Utils.select(elements[index], domRenderer).classed(category.getCategoryClassName(), true),
       )
       .attr('d', 'M2,2 L5,5 L2,8');
   }
@@ -193,7 +193,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
 
   private updateLinePosition(
     selection: Selection<SVGGElement, unknown, null, undefined>,
-    position: TopologyEdgePositionInformation
+    position: TopologyEdgePositionInformation,
   ): void {
     const pathSelections = select(selection.node())
       .select(selector(this.edgeLineClass))
@@ -214,7 +214,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
 
   private updateLabelPosition(
     selection: Selection<SVGGElement, unknown, null, undefined>,
-    position: TopologyEdgePositionInformation
+    position: TopologyEdgePositionInformation,
   ): void {
     const lineCenter = this.generateLineCenterPoint(position);
 
@@ -224,7 +224,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
   private updateLabelBubblePosition(
     selection: Selection<SVGGElement, unknown, null, undefined>,
     position: TopologyEdgePositionInformation,
-    edge: EntityEdge
+    edge: EntityEdge,
   ): void {
     const textLen = this.getMetricTextForEdge(edge).length;
     const lineCenter = this.generateLineCenterPoint(position);
@@ -258,7 +258,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
       primaryMetricAggregation,
       secondaryMetricAggregation,
       primaryMetricCategory,
-      secondaryMetricCategory
+      secondaryMetricCategory,
     );
   }
 
@@ -288,7 +288,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
 
   private getEdgeFocusedCategory(
     primaryMetricCategory?: TopologyMetricCategoryData,
-    secondaryMetricCategory?: TopologyMetricCategoryData
+    secondaryMetricCategory?: TopologyMetricCategoryData,
   ): TopologyMetricCategoryData | undefined {
     return secondaryMetricCategory?.highestPrecedence ? secondaryMetricCategory : primaryMetricCategory;
   }
@@ -297,7 +297,7 @@ export class EntityEdgeCurveRendererService implements TopologyEdgeRenderDelegat
     primaryMetricAggregation?: MetricAggregation,
     secondaryMetricAggregation?: MetricAggregation,
     primaryMetricCategory?: TopologyMetricCategoryData,
-    secondaryMetricCategory?: TopologyMetricCategoryData
+    secondaryMetricCategory?: TopologyMetricCategoryData,
   ): string {
     if (secondaryMetricAggregation && (secondaryMetricCategory?.highestPrecedence === true || !primaryMetricCategory)) {
       return this.formattedMetricValue(secondaryMetricAggregation.value, secondaryMetricAggregation?.units);

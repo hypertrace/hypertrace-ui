@@ -10,7 +10,7 @@ export interface GraphQlFilterable {
 
 export const enum GraphQlFilterType {
   Id = 'ID',
-  Attribute = 'ATTRIBUTE'
+  Attribute = 'ATTRIBUTE',
 }
 
 export const enum GraphQlOperatorType {
@@ -26,5 +26,5 @@ export const enum GraphQlOperatorType {
   ContainsKey = 'CONTAINS_KEY',
 
   NotContainsKey = 'NOT_CONTAINS_KEY',
-  ContainsKeyLike = 'CONTAINS_KEY_LIKE'
+  ContainsKeyLike = 'CONTAINS_KEY_LIKE',
 }

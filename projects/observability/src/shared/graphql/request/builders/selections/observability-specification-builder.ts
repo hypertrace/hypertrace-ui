@@ -7,20 +7,20 @@ import { EntityType, ObservabilityEntityType } from '../../../model/schema/entit
 import { GraphQlMetricBandInterval } from '../../../model/schema/metric/graphql-metric-timeseries';
 import {
   convertToGraphQlMetricAggregationType,
-  GraphQlMetricAggregationType
+  GraphQlMetricAggregationType,
 } from '../../../model/schema/metrics/graphql-metric-aggregation-type';
 import { DefinesNeighbor, NeighborDirection } from '../../../model/schema/neighbor';
 import { EntitySpecification } from '../../../model/schema/specifications/entity-specification';
 import {
   ErrorPercentageMetricAggregationSpecification,
-  ErrorPercentageMetricValueCategory
+  ErrorPercentageMetricValueCategory,
 } from '../../../model/schema/specifications/error-percentage-aggregation-specification';
 import { MetricAggregationSpecification } from '../../../model/schema/specifications/metric-aggregation-specification';
 import { MetricTimeseriesBandSpecification } from '../../../model/schema/specifications/metric-timeseries-band-specification';
 import { MetricTimeseriesSpecification } from '../../../model/schema/specifications/metric-timeseries-specification';
 import {
   PercentileLatencyMetricAggregationSpecification,
-  PercentileLatencyMetricValueCategory
+  PercentileLatencyMetricValueCategory,
 } from '../../../model/schema/specifications/percentile-latency-aggregation-specification';
 import { Specification } from '../../../model/schema/specifier/specification';
 import { MetricSpecification } from '../../../model/specifications/metric-specification';
@@ -39,7 +39,7 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
     entityType?: EntityType,
     additionalAttributes?: string[],
     additionalSpecifications: Specification[] = [],
-    aliasSuffix: string = ''
+    aliasSuffix: string = '',
   ): EntitySpecification {
     return this.entitySpecBuilder.build(
       idKey,
@@ -47,26 +47,26 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
       entityType,
       additionalAttributes,
       additionalSpecifications,
-      aliasSuffix
+      aliasSuffix,
     );
   }
 
   public neighborAttributeSpecificationForKey(
     attributeKey: string,
     neighborType: ObservabilityEntityType,
-    neighborDirection: NeighborDirection
+    neighborDirection: NeighborDirection,
   ): Specification & DefinesNeighbor {
     return {
       ...this.attributeSpecificationForKey(attributeKey),
       neighborType: neighborType,
-      neighborDirection: neighborDirection
+      neighborDirection: neighborDirection,
     };
   }
 
   public metricAggregationSpecForKey(
     metric: string,
     aggregation: MetricAggregationType,
-    displayName?: string
+    displayName?: string,
   ): MetricAggregationSpecification {
     const metricSelection = this.buildAggregationSelection(aggregation);
 
@@ -79,31 +79,31 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
         children: [
           {
             ...metricSelection,
-            children: [{ path: 'value' }]
-          }
-        ]
+            children: [{ path: 'value' }],
+          },
+        ],
       }),
       extractFromServerData: serverData => {
         const graphqlAggResult = serverData[metric][this.getQueriedKeyForSelection(metricSelection)];
 
         return {
           value: graphqlAggResult.value,
-          health: MetricHealth.NotSpecified // Not implemented for now
+          health: MetricHealth.NotSpecified, // Not implemented for now
         };
-      }
+      },
     };
   }
 
   public metricAggregationSpecForErrorPercentage(
     aggregation: MetricAggregationType,
-    displayName?: string
+    displayName?: string,
   ): ErrorPercentageMetricAggregationSpecification {
     const compositeSpecification = this.buildCompositeSpecification(
       [
         this.metricAggregationSpecForKey('errorCount', aggregation),
-        this.metricAggregationSpecForKey('numCalls', aggregation)
+        this.metricAggregationSpecForKey('numCalls', aggregation),
       ],
-      'errorCount'
+      'errorCount',
     );
 
     return {
@@ -114,7 +114,7 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
       asGraphQlSelections: () => compositeSpecification.asGraphQlSelections(),
       extractFromServerData: (resultContainer: Dictionary<unknown>) => {
         const [errorMetric, callsMetric] = compositeSpecification.extractFromServerData(
-          resultContainer
+          resultContainer,
         ) as MetricAggregation[];
 
         const value =
@@ -128,17 +128,17 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
           value: value,
           health: MetricHealth.NotSpecified,
           category: category,
-          units: '%'
+          units: '%',
         };
       },
-      asGraphQlOrderByFragment: () => compositeSpecification.asGraphQlOrderByFragment()
+      asGraphQlOrderByFragment: () => compositeSpecification.asGraphQlOrderByFragment(),
     };
   }
 
   public metricAggregationSpecForLatency(
     aggregation: MetricAggregationType,
     name: string,
-    displayName?: string
+    displayName?: string,
   ): PercentileLatencyMetricAggregationSpecification {
     const metricSpec = this.metricAggregationSpecForKey('duration', aggregation, displayName);
     const getLatencyCategory = (value?: number): PercentileLatencyMetricValueCategory => {
@@ -176,17 +176,17 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
 
         return assignIn(latencyMetric, {
           category: getLatencyCategory(latencyMetric.value),
-          units: 'ms'
+          units: 'ms',
         });
       },
-      asGraphQlOrderByFragment: () => metricSpec.asGraphQlOrderByFragment()
+      asGraphQlOrderByFragment: () => metricSpec.asGraphQlOrderByFragment(),
     };
   }
 
   public metricTimeseriesSpec(
     metric: string,
     aggregation: MetricAggregationType,
-    intervalDuration: TimeDuration
+    intervalDuration: TimeDuration,
   ): MetricTimeseriesSpecification {
     const dateCoercer: DateCoercer = new DateCoercer();
     const seriesAlias = `${aggregation}_series_${intervalDuration.toString()}`;
@@ -210,24 +210,24 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
               { path: 'startTime' },
               {
                 ...aggregationSelection,
-                children: [{ path: 'value' }]
-              }
-            ]
-          }
-        ]
+                children: [{ path: 'value' }],
+              },
+            ],
+          },
+        ],
       }),
       extractFromServerData: resultContainer =>
         resultContainer[metric][seriesAlias].map(interval => ({
           value: interval[convertToGraphQlMetricAggregationPath(aggregation)]!.value,
-          timestamp: dateCoercer.coerce(interval.startTime)!
-        }))
+          timestamp: dateCoercer.coerce(interval.startTime)!,
+        })),
     };
   }
 
   public metricTimeseriesBandSpec(
     metric: string,
     aggregation: MetricAggregationType,
-    intervalDuration: TimeDuration
+    intervalDuration: TimeDuration,
   ): MetricTimeseriesBandSpecification {
     const dateCoercer: DateCoercer = new DateCoercer();
     const baselineSeriesAlias = `${aggregation}_baselineSeries_${intervalDuration.toString()}`;
@@ -251,11 +251,11 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
               { path: 'startTime' },
               {
                 ...aggregationSelection,
-                children: [{ path: 'value' }, { path: 'upperBound' }, { path: 'lowerBound' }]
-              }
-            ]
-          }
-        ]
+                children: [{ path: 'value' }, { path: 'upperBound' }, { path: 'lowerBound' }],
+              },
+            ],
+          },
+        ],
       }),
       extractFromServerData: resultContainer => {
         const baselineSeries: GraphQlMetricBandInterval[] = resultContainer[metric][baselineSeriesAlias];
@@ -267,21 +267,21 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
             timestamp: dateCoercer.coerce(interval.startTime)!,
             value: baselineArgInterval.value,
             upperBound: baselineArgInterval.upperBound,
-            lowerBound: baselineArgInterval.lowerBound
+            lowerBound: baselineArgInterval.lowerBound,
           };
         });
-      }
+      },
     };
   }
 
   private buildAggregationSelection(
     aggregation: MetricAggregationType,
-    requireUnique: boolean = true
+    requireUnique: boolean = true,
   ): GraphQlSelection {
     return {
       path: convertToGraphQlMetricAggregationPath(aggregation),
       alias: requireUnique ? aggregation : undefined,
-      arguments: this.argBuilder.forAggregationArgs(aggregation)
+      arguments: this.argBuilder.forAggregationArgs(aggregation),
     };
   }
 
@@ -293,21 +293,21 @@ export class ObservabilitySpecificationBuilder extends SpecificationBuilder {
     return {
       alias: metric,
       path: 'metric',
-      arguments: [this.argBuilder.forAttributeKey(metric)]
+      arguments: [this.argBuilder.forAttributeKey(metric)],
     };
   }
 
   protected getMetricSpecificationBase(
     metric: string,
-    aggregation: MetricAggregationType
+    aggregation: MetricAggregationType,
   ): Pick<MetricSpecification, 'name' | 'aggregation' | 'asGraphQlOrderByFragment'> {
     return {
       name: metric,
       aggregation: aggregation,
       asGraphQlOrderByFragment: () => ({
         expression: { key: metric },
-        aggregation: this.aggregationAsEnum(aggregation)
-      })
+        aggregation: this.aggregationAsEnum(aggregation),
+      }),
     };
   }
 

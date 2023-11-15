@@ -9,8 +9,8 @@ import { applicationFlowDefaultJson } from './application-flow.dashboard';
   imports: [
     ObservabilityDashboardModule,
     PageHeaderModule,
-    NavigableDashboardModule.withDefaultDashboards(applicationFlowDefaultJson)
+    NavigableDashboardModule.withDefaultDashboards(applicationFlowDefaultJson),
   ],
-  declarations: [ApplicationFlowComponent]
+  declarations: [ApplicationFlowComponent],
 })
 export class ApplicationFlowModule {}

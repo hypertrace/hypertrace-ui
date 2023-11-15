@@ -8,10 +8,10 @@ import { spanListDashboard } from './span-list.page.dashboard';
   template: `
     <ht-navigable-dashboard navLocation="${spanListDashboard.location}" [filterConfig]="this.filterConfig">
     </ht-navigable-dashboard>
-  `
+  `,
 })
 export class SpanListPageComponent {
   public readonly filterConfig: NavigableDashboardFilterConfig = {
-    filterBar: { scope: SPAN_SCOPE }
+    filterBar: { scope: SPAN_SCOPE },
   };
 }

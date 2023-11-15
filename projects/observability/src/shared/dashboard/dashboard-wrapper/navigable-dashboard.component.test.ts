@@ -3,7 +3,7 @@ import {
   FilterAttributeType,
   FilterBarComponent,
   FilterOperator,
-  LoadAsyncModule
+  LoadAsyncModule,
 } from '@hypertrace/components';
 import { DashboardPersistenceService } from '@hypertrace/dashboards';
 import { Dashboard } from '@hypertrace/hyperdash';
@@ -24,8 +24,8 @@ describe('Navigable dashboard component', () => {
     declarations: [MockComponent(ApplicationAwareDashboardComponent), MockComponent(FilterBarComponent)],
     providers: [
       mockProvider(MetadataService, {
-        getFilterAttributes: () => of([])
-      })
+        getFilterAttributes: () => of([]),
+      }),
     ],
     template: `
       <ht-navigable-dashboard
@@ -33,7 +33,7 @@ describe('Navigable dashboard component', () => {
         [navLocation]="navLocation"
         [filterConfig]="filterConfig">
       </ht-navigable-dashboard>
-    `
+    `,
   });
 
   test('uses default JSON if no dashboard registered', () => {
@@ -41,8 +41,8 @@ describe('Navigable dashboard component', () => {
     const spectator = hostFactory(undefined, {
       hostProps: {
         defaultJson: defaultJson,
-        navLocation: 'my-location'
-      }
+        navLocation: 'my-location',
+      },
     });
 
     expect(spectator.query(ApplicationAwareDashboardComponent)!.json).toBe(defaultJson);
@@ -53,9 +53,9 @@ describe('Navigable dashboard component', () => {
     const registeredJson = { type: 'my-registered-model' };
     const spectator = hostFactory(undefined, {
       hostProps: {
-        navLocation: 'my-location'
+        navLocation: 'my-location',
       },
-      detectChanges: false
+      detectChanges: false,
     });
 
     spectator.inject(DashboardPersistenceService).setDefaultForLocation('my-location', { content: registeredJson });
@@ -70,9 +70,9 @@ describe('Navigable dashboard component', () => {
     const spectator = hostFactory(undefined, {
       hostProps: {
         navLocation: 'my-location',
-        defaultJson: defaultJson
+        defaultJson: defaultJson,
       },
-      detectChanges: false
+      detectChanges: false,
     });
 
     spectator.inject(DashboardPersistenceService).setDefaultForLocation('my-location', { content: registeredJson });
@@ -89,19 +89,19 @@ describe('Navigable dashboard component', () => {
         defaultJson: defaultJson,
         navLocation: 'my-location',
         filterConfig: {
-          implicitFilters: [implicitFilter]
-        }
-      }
+          implicitFilters: [implicitFilter],
+        },
+      },
     });
 
     const mockDataSource: Partial<GraphQlFilterDataSourceModel> = {
       clearFilters: jest.fn().mockReturnThis(),
-      addFilters: jest.fn()
+      addFilters: jest.fn(),
     };
 
     const mockDashboard: Partial<Dashboard> = {
       getRootDataSource: jest.fn().mockReturnValue(mockDataSource),
-      refresh: jest.fn()
+      refresh: jest.fn(),
     };
     spectator.component.onDashboardReady(mockDashboard as Dashboard);
     expect(mockDataSource.addFilters).toHaveBeenCalledWith(implicitFilter);
@@ -115,36 +115,36 @@ describe('Navigable dashboard component', () => {
         defaultJson: defaultJson,
         navLocation: 'my-location',
         filterConfig: {
-          filterBar: { scope: 'my-scope' }
-        }
-      }
+          filterBar: { scope: 'my-scope' },
+        },
+      },
     });
 
     const mockDataSource: Partial<GraphQlFilterDataSourceModel> = {
       clearFilters: jest.fn().mockReturnThis(),
-      addFilters: jest.fn()
+      addFilters: jest.fn(),
     };
 
     const mockDashboard: Partial<Dashboard> = {
       getRootDataSource: jest.fn().mockReturnValue(mockDataSource),
-      refresh: jest.fn()
+      refresh: jest.fn(),
     };
     spectator.component.onDashboardReady(mockDashboard as Dashboard);
     const explicitFilter: Filter = {
       metadata: {
         name: 'test',
         displayName: 'Test',
-        type: FilterAttributeType.String
+        type: FilterAttributeType.String,
       },
       field: 'foo',
       operator: FilterOperator.Equals,
       value: 'bar',
       userString: '',
-      urlString: ''
+      urlString: '',
     };
     spectator.query(FilterBarComponent)?.filtersChange.next([explicitFilter]);
     expect(mockDataSource.addFilters).toHaveBeenCalledWith(
-      expect.objectContaining({ keyOrExpression: { key: 'foo' }, operator: GraphQlOperatorType.Equals, value: 'bar' })
+      expect.objectContaining({ keyOrExpression: { key: 'foo' }, operator: GraphQlOperatorType.Equals, value: 'bar' }),
     );
   });
 
@@ -156,19 +156,19 @@ describe('Navigable dashboard component', () => {
         defaultJson: defaultJson,
         navLocation: 'my-location',
         filterConfig: {
-          implicitFilters: [implicitFilter]
-        }
-      }
+          implicitFilters: [implicitFilter],
+        },
+      },
     });
 
     const mockDataSource: Partial<GraphQlFilterDataSourceModel> = {
       clearFilters: jest.fn().mockReturnThis(),
-      addFilters: jest.fn()
+      addFilters: jest.fn(),
     };
 
     const mockDashboard: Partial<Dashboard> = {
       getRootDataSource: jest.fn().mockReturnValue(mockDataSource),
-      refresh: jest.fn()
+      refresh: jest.fn(),
     };
     spectator.component.onDashboardReady(mockDashboard as Dashboard);
     expect(mockDataSource.addFilters).toHaveBeenCalledWith(implicitFilter);

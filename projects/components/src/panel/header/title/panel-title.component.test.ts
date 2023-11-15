@@ -8,7 +8,7 @@ describe('Panel Title Component', () => {
   const createHost = createHostFactory({
     component: PanelTitleComponent,
     shallow: true,
-    declarations: [MockComponents(ExpanderToggleComponent, ButtonComponent)]
+    declarations: [MockComponents(ExpanderToggleComponent, ButtonComponent)],
   });
 
   test('should render the component correctly', () => {

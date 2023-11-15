@@ -13,24 +13,24 @@ describe('Download File Component', () => {
     component: DownloadFileComponent,
     declarations: [MockComponent(ButtonComponent), MockComponent(IconComponent)],
     providers: [mockProvider(FileDownloadService)],
-    shallow: true
+    shallow: true,
   });
 
   const metadata: DownloadFileMetadata = {
     dataSource: of(''),
-    fileName: 'download.txt'
+    fileName: 'download.txt',
   };
 
   test('should download file', fakeAsync(() => {
     const spectator = createComponent({
       props: {
-        metadata: metadata
+        metadata: metadata,
       },
       providers: [
         mockProvider(FileDownloadService, {
-          downloadAsText: jest.fn().mockReturnValue(timer(2000))
-        })
-      ]
+          downloadAsText: jest.fn().mockReturnValue(timer(2000)),
+        }),
+      ],
     });
 
     // Before data loading

@@ -37,7 +37,7 @@ import { FilterOperator } from '../filter/filter-operators';
         </ht-popover-content>
       </ht-popover>
     </div>
-  `
+  `,
 })
 export class FilterButtonComponent implements OnChanges {
   @Input()
@@ -60,7 +60,7 @@ export class FilterButtonComponent implements OnChanges {
 
   public constructor(
     private readonly filterUrlService: FilterUrlService,
-    private readonly filterBuilderLookupService: FilterBuilderLookupService
+    private readonly filterBuilderLookupService: FilterBuilderLookupService,
   ) {}
 
   public ngOnChanges(): void {
@@ -96,7 +96,7 @@ export class FilterButtonComponent implements OnChanges {
         .buildFilter(attribute, FilterOperator.In, FilterButtonComponent.NULL_VALUE),
       this.filterBuilderLookupService
         .lookup(attribute.type)
-        .buildFilter(attribute, FilterOperator.NotIn, FilterButtonComponent.NULL_VALUE)
+        .buildFilter(attribute, FilterOperator.NotIn, FilterButtonComponent.NULL_VALUE),
     ];
   }
 }

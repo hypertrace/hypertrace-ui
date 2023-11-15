@@ -34,7 +34,7 @@ export class PopoverHoverTriggerService implements OnDestroy {
         }
 
         this.popoverContentHovered = hovered;
-      })
+      }),
     );
 
     /**
@@ -46,7 +46,7 @@ export class PopoverHoverTriggerService implements OnDestroy {
         if (!this.popoverContentHovered) {
           this.close();
         }
-      })
+      }),
     );
   }
 
@@ -94,12 +94,12 @@ export class PopoverHoverTriggerService implements OnDestroy {
           PopoverRelativePositionLocation.AboveLeftAligned,
           PopoverRelativePositionLocation.LeftCentered,
           PopoverRelativePositionLocation.OverLeftAligned,
-          PopoverRelativePositionLocation.RightCentered
-        ]
+          PopoverRelativePositionLocation.RightCentered,
+        ],
       },
       data: config.options?.data,
       backdrop: PopoverBackdrop.None,
-      componentOrTemplate: config.componentOrTemplate
+      componentOrTemplate: config.componentOrTemplate,
     });
   }
 }

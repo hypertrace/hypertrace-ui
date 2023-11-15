@@ -22,7 +22,7 @@ describe('Interactions table data source model', () => {
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     model = new InteractionsTableDataSourceModel();
     model.api = mockApi as ModelApi;
@@ -34,22 +34,22 @@ describe('Interactions table data source model', () => {
     tableDataSource.getData({
       position: {
         startIndex: 0,
-        limit: 50
+        limit: 50,
       },
       columns: [
         {
           id: 'avg latency',
-          specification: specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)
+          specification: specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average),
         },
         {
           id: 'service name',
           specification: specBuilder.neighborAttributeSpecificationForKey(
             'name',
             ObservabilityEntityType.Service,
-            NeighborDirection.Upstream
-          )
-        }
-      ]
+            NeighborDirection.Upstream,
+          ),
+        },
+      ],
     });
     // Query is debounced, flush it out
     flush();
@@ -65,10 +65,10 @@ describe('Interactions table data source model', () => {
           specBuilder.neighborAttributeSpecificationForKey(
             'name',
             ObservabilityEntityType.Service,
-            NeighborDirection.Upstream
-          )
-        ]
-      })
+            NeighborDirection.Upstream,
+          ),
+        ],
+      }),
     ).toBe(true);
   }));
 });

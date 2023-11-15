@@ -20,11 +20,11 @@ describe('Highlighted label widget renderer component', () => {
           getTimeRange: jest.fn(),
           change$: EMPTY,
           dataRefresh$: EMPTY,
-          timeRangeChanged$: EMPTY
-        })
-      }
+          timeRangeChanged$: EMPTY,
+        }),
+      },
     ],
-    declareComponent: false
+    declareComponent: false,
   });
 
   beforeEach(() => {

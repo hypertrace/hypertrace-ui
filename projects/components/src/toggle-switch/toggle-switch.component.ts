@@ -25,9 +25,9 @@ import { ToggleSwitchSize } from './toggle-switch-size';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: ToggleSwitchComponent,
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class ToggleSwitchComponent implements ControlValueAccessor {
   @Input()

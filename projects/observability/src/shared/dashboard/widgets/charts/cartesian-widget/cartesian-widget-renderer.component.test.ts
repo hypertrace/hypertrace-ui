@@ -7,7 +7,7 @@ import {
   RecursivePartial,
   TimeDuration,
   TimeRangeService,
-  TimeUnit
+  TimeUnit,
 } from '@hypertrace/common';
 import { LoadAsyncModule } from '@hypertrace/components';
 import { TimeDurationModel } from '@hypertrace/dashboards';
@@ -26,7 +26,7 @@ describe('Cartesian widget renderer component', () => {
   const selectedData: CartesianSelectedData<unknown> = {
     timeRange: TimeRangeService.toFixedTimeRange(
       new Date('2021-11-02T05:33:19.288Z'),
-      new Date('2021-11-02T14:30:15.141Z')
+      new Date('2021-11-02T14:30:15.141Z'),
     ),
     selectedData: [
       {
@@ -35,16 +35,16 @@ describe('Cartesian widget renderer component', () => {
           data: [
             { timestamp: '2021-11-02T05:15:00.000Z', value: 774 },
             { timestamp: '2021-11-02T05:40:00.000Z', value: 1477.3599999999983 },
-            { timestamp: '2021-11-02T12:05:00.000Z', value: 1056.48 }
+            { timestamp: '2021-11-02T12:05:00.000Z', value: 1056.48 },
           ],
           units: 'ms',
           color: '#4b5f77',
           name: 'p99',
           type: CartesianSeriesVisualizationType.Column,
           stacking: false,
-          hide: false
+          hide: false,
         },
-        location: { x: 59, y: 31.023400000000215 }
+        location: { x: 59, y: 31.023400000000215 },
       },
       {
         dataPoint: { timestamp: '2021-11-02T12:05:00.000Z', value: 1056.48 },
@@ -52,19 +52,19 @@ describe('Cartesian widget renderer component', () => {
           data: [
             { timestamp: '2021-11-02T05:15:00.000Z', value: 774 },
             { timestamp: '2021-11-02T05:40:00.000Z', value: 1477.3599999999983 },
-            { timestamp: '2021-11-02T12:05:00.000Z', value: 1056.48 }
+            { timestamp: '2021-11-02T12:05:00.000Z', value: 1056.48 },
           ],
           units: 'ms',
           color: '#4b5f77',
           name: 'p99',
           type: CartesianSeriesVisualizationType.Column,
           stacking: false,
-          hide: false
+          hide: false,
         },
-        location: { x: 138, y: 82.58120000000001 }
-      }
+        location: { x: 138, y: 82.58120000000001 },
+      },
     ],
-    location: { x: 452, y: 763 }
+    location: { x: 452, y: 763 },
   };
 
   const buildComponent = createComponentFactory({
@@ -74,24 +74,24 @@ describe('Cartesian widget renderer component', () => {
         getAvailableIntervalsForTimeRange: () => [
           new TimeDuration(1, TimeUnit.Minute),
           new TimeDuration(3, TimeUnit.Minute),
-          new TimeDuration(1, TimeUnit.Hour)
+          new TimeDuration(1, TimeUnit.Hour),
         ],
         getExactMatch: (duration: TimeDuration, availableDurations: TimeDuration[]): TimeDuration | undefined =>
-          availableDurations.find(availableDuration => duration.equals(availableDuration))
-      })
+          availableDurations.find(availableDuration => duration.equals(availableDuration)),
+      }),
     ],
     imports: [LoadAsyncModule, HttpClientTestingModule, IconLibraryTestingModule, FormattingModule, MemoizeModule],
-    shallow: true
+    shallow: true,
   });
 
   const seriesFactory = (
     seriesPartial: Partial<SeriesModel<[number, number]>>,
-    fetcher: MetricSeriesDataFetcher<[number, number]>
+    fetcher: MetricSeriesDataFetcher<[number, number]>,
   ): SeriesModel<[number, number]> => {
     const series = new SeriesModel<[number, number]>();
     Object.assign(series, seriesPartial);
     const mockApi = {
-      getData: () => of(fetcher)
+      getData: () => of(fetcher),
     } as ModelApi;
     series.api = mockApi;
 
@@ -102,13 +102,13 @@ describe('Cartesian widget renderer component', () => {
     getData: jest.fn(() =>
       of({
         intervals: data,
-        units: 'ms'
-      })
-    )
+        units: 'ms',
+      }),
+    ),
   });
 
   const cartesianModelFactory = (
-    cartesianPartial: RecursivePartial<CartesianWidgetModel<[number, number]>>
+    cartesianPartial: RecursivePartial<CartesianWidgetModel<[number, number]>>,
   ): CartesianWidgetModel<[number, number]> =>
     Object.assign(new CartesianWidgetModel<[number, number]>(), cartesianPartial);
 
@@ -118,27 +118,27 @@ describe('Cartesian widget renderer component', () => {
         seriesFactory(
           {
             name: 'Series 1',
-            color: 'blue'
+            color: 'blue',
           },
           fetcherFactory([
             [1, 2],
-            [2, 4]
-          ])
+            [2, 4],
+          ]),
         ),
         seriesFactory(
           {
             name: 'Series 2',
-            color: 'red'
+            color: 'red',
           },
           fetcherFactory([
             [3, 5],
-            [4, 6]
-          ])
-        )
-      ]
+            [4, 6],
+          ]),
+        ),
+      ],
     });
     const spectator = buildComponent({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -154,8 +154,8 @@ describe('Cartesian widget renderer component', () => {
               units: 'ms',
               data: [
                 [1, 2],
-                [2, 4]
-              ]
+                [2, 4],
+              ],
             },
             {
               name: 'Series 2',
@@ -166,22 +166,22 @@ describe('Cartesian widget renderer component', () => {
               units: 'ms',
               data: [
                 [3, 5],
-                [4, 6]
-              ]
-            }
+                [4, 6],
+              ],
+            },
           ],
-          bands: []
-        }
+          bands: [],
+        },
       });
     });
   });
 
   test('calculates correct interval to use', () => {
     const mockModel = cartesianModelFactory({
-      series: [seriesFactory({}, fetcherFactory([])), seriesFactory({}, fetcherFactory([]))]
+      series: [seriesFactory({}, fetcherFactory([])), seriesFactory({}, fetcherFactory([]))],
     });
     const spectator = buildComponent({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
     expect(spectator.component.selectedInterval).toEqual('AUTO');
   });
@@ -193,10 +193,10 @@ describe('Cartesian widget renderer component', () => {
 
     const mockModel = cartesianModelFactory({
       defaultInterval: mockTimeDurationModel,
-      series: [seriesFactory({}, fetcherFactory([])), seriesFactory({}, fetcherFactory([]))]
+      series: [seriesFactory({}, fetcherFactory([])), seriesFactory({}, fetcherFactory([]))],
     });
     const spectator = buildComponent({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
 
     expect(spectator.component.selectedInterval).toEqual(expect.objectContaining({ value: 1, unit: TimeUnit.Hour }));
@@ -210,10 +210,10 @@ describe('Cartesian widget renderer component', () => {
     const mockModel = cartesianModelFactory({
       defaultInterval: mockTimeDurationModel,
       selectableInterval: false,
-      series: [seriesFactory({}, fetcherFactory([])), seriesFactory({}, fetcherFactory([]))]
+      series: [seriesFactory({}, fetcherFactory([])), seriesFactory({}, fetcherFactory([]))],
     });
     const spectator = buildComponent({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
 
     expect(spectator.component.selectedInterval).toEqual(expect.objectContaining({ value: 3, unit: TimeUnit.Minute }));
@@ -221,16 +221,16 @@ describe('Cartesian widget renderer component', () => {
 
   test('provides expected interval options', () => {
     const mockModel = cartesianModelFactory({
-      series: [seriesFactory({}, fetcherFactory([]))]
+      series: [seriesFactory({}, fetcherFactory([]))],
     });
     const spectator = buildComponent({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
     expect(spectator.component.intervalOptions).toEqual([
       'AUTO',
       new TimeDuration(1, TimeUnit.Minute),
       new TimeDuration(3, TimeUnit.Minute),
-      new TimeDuration(1, TimeUnit.Hour)
+      new TimeDuration(1, TimeUnit.Hour),
     ]);
   });
 
@@ -239,10 +239,10 @@ describe('Cartesian widget renderer component', () => {
     const series = seriesFactory({}, fetcher);
     const mockModel = cartesianModelFactory({
       series: [series],
-      maxSeriesDataPoints: 20
+      maxSeriesDataPoints: 20,
     });
     const spectator = buildComponent({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
     const originalDataObservable = spectator.component.data$;
 
@@ -261,11 +261,11 @@ describe('Cartesian widget renderer component', () => {
       series: [series],
       maxSeriesDataPoints: 20,
       selectionHandler: {
-        execute: jest.fn()
-      }
+        execute: jest.fn(),
+      },
     });
     const spectator = buildComponent({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
 
     spectator.component.onSelectionChange(selectedData);

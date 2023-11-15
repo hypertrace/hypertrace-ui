@@ -7,6 +7,6 @@ import { ToggleSwitchComponent } from './toggle-switch.component';
 @NgModule({
   imports: [FormsModule, MatSlideToggleModule, CommonModule],
   declarations: [ToggleSwitchComponent],
-  exports: [ToggleSwitchComponent]
+  exports: [ToggleSwitchComponent],
 })
 export class ToggleSwitchModule {}

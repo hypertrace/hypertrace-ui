@@ -9,8 +9,8 @@ import { endpointListDashboard } from './endpoint-list.dashboard';
   imports: [
     ObservabilityDashboardModule,
     PageHeaderModule,
-    NavigableDashboardModule.withDefaultDashboards(endpointListDashboard)
+    NavigableDashboardModule.withDefaultDashboards(endpointListDashboard),
   ],
-  declarations: [EndpointListComponent]
+  declarations: [EndpointListComponent],
 })
 export class EndpointListModule {}

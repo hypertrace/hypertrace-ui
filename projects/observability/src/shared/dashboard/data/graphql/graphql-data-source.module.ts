@@ -41,9 +41,9 @@ import { TraceWaterfallDataSourceModel } from './waterfall/trace-waterfall-data-
         AttributeSpecificationModel,
         TraceStatusSpecificationModel,
         EnrichedAttributeSpecificationModel,
-        MappedAttributeSpecificationModel
-      ]
-    })
-  ]
+        MappedAttributeSpecificationModel,
+      ],
+    }),
+  ],
 })
 export class GraphQlDataSourceModule {}

@@ -5,7 +5,7 @@ import { GraphQlMetricTimeseriesBandContainer } from '../metric/graphql-metric-t
 
 export interface MetricTimeseriesBandSpecification extends MetricSpecification {
   extractFromServerData(
-    resultContainer: Dictionary<GraphQlMetricTimeseriesBandContainer>
+    resultContainer: Dictionary<GraphQlMetricTimeseriesBandContainer>,
   ): MetricTimeseriesBandInterval[];
   getIntervalDuration(): TimeDuration | undefined;
   withNewIntervalDuration(intervalDuration: TimeDuration): MetricTimeseriesBandSpecification;

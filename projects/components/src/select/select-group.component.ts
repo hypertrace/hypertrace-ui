@@ -13,7 +13,7 @@ import { SelectComponent } from './select.component';
     <div class="select-group-container">
       <ng-content select="ht-select"></ng-content>
     </div>
-  `
+  `,
 })
 export class SelectGroupComponent implements AfterContentInit {
   @ContentChildren(SelectComponent)

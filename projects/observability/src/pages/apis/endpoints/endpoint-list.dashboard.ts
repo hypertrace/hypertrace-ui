@@ -11,7 +11,7 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
     type: 'container-widget',
     layout: {
       type: 'auto-container-layout',
-      'enable-style': false
+      'enable-style': false,
     },
     children: [
       {
@@ -31,10 +31,10 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
               entity: ObservabilityEntityType.Api,
               attribute: {
                 type: 'attribute-specification',
-                attribute: 'serviceName'
-              }
-            }
-          }
+                attribute: 'serviceName',
+              },
+            },
+          },
         ],
         columns: [
           {
@@ -43,8 +43,8 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             display: ObservabilityTableCellType.Entity,
             width: '20%',
             value: {
-              type: 'entity-specification'
-            }
+              type: 'entity-specification',
+            },
           },
           {
             type: 'table-widget-column',
@@ -55,8 +55,8 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
               type: 'entity-specification',
               'id-attribute': 'serviceId',
               'name-attribute': 'serviceName',
-              'entity-type': ObservabilityEntityType.Service
-            }
+              'entity-type': ObservabilityEntityType.Service,
+            },
           },
           {
             type: 'table-widget-column',
@@ -66,8 +66,8 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
-              aggregation: MetricAggregationType.P99
-            }
+              aggregation: MetricAggregationType.P99,
+            },
           },
           {
             type: 'table-widget-column',
@@ -76,8 +76,8 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
-              aggregation: MetricAggregationType.AvgrateSecond
-            }
+              aggregation: MetricAggregationType.AvgrateSecond,
+            },
           },
           {
             type: 'table-widget-column',
@@ -86,8 +86,8 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: MetricAggregationType.AvgrateSecond
-            }
+              aggregation: MetricAggregationType.AvgrateSecond,
+            },
           },
           {
             type: 'table-widget-column',
@@ -97,8 +97,8 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: MetricAggregationType.Sum
-            }
+              aggregation: MetricAggregationType.Sum,
+            },
           },
           {
             type: 'table-widget-column',
@@ -107,15 +107,15 @@ export const endpointListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'endTime',
-              aggregation: MetricAggregationType.Max
-            }
-          }
+              aggregation: MetricAggregationType.Max,
+            },
+          },
         ],
         data: {
           type: 'entity-table-data-source',
-          entity: 'API'
-        }
-      }
-    ]
-  }
+          entity: 'API',
+        },
+      },
+    ],
+  },
 };

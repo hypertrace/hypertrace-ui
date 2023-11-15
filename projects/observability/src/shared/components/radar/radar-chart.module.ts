@@ -18,9 +18,9 @@ import { RadarChartTooltipService } from './tooltip/radar-chart-tooltip.service'
     RadarChartLayoutService,
     RadarSeriesRendererService,
     RadarChartLegendService,
-    RadarChartTooltipService
+    RadarChartTooltipService,
   ],
   declarations: [RadarChartComponent],
-  exports: [RadarChartComponent]
+  exports: [RadarChartComponent],
 })
 export class RadarChartModule {}

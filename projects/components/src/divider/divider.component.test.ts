@@ -6,7 +6,7 @@ describe('Divider Component', () => {
 
   const createComponent = createComponentFactory<DividerComponent>({
     component: DividerComponent,
-    shallow: true
+    shallow: true,
   });
 
   test('should render the divider', () => {

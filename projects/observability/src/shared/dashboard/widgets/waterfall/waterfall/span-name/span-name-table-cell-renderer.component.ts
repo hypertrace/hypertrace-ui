@@ -36,11 +36,11 @@ import { WaterfallTableCellType } from './span-name-cell-type';
         color="${Color.Gray4}"
       ></ht-icon>
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: WaterfallTableCellType.SpanName,
   alignment: TableCellAlignmentType.Left,
-  parser: WaterfallTableCellType.SpanName
+  parser: WaterfallTableCellType.SpanName,
 })
 export class SpanNameTableCellRendererComponent extends TableCellRendererBase<SpanNameCellData> {}

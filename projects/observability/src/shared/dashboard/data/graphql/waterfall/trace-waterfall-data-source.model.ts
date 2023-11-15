@@ -10,7 +10,7 @@ import { Trace } from '../../../../graphql/model/schema/trace';
 import { SpecificationBuilder } from '../../../../graphql/request/builders/specification/specification-builder';
 import {
   TraceGraphQlQueryHandlerService,
-  TRACE_GQL_REQUEST
+  TRACE_GQL_REQUEST,
 } from '../../../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
 import { LogEventsService } from '../../../../services/log-events/log-events.service';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
@@ -18,27 +18,27 @@ import { LogEvent, WaterfallData } from '../../../widgets/waterfall/waterfall/wa
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
 @Model({
-  type: 'trace-waterfall-data-source'
+  type: 'trace-waterfall-data-source',
 })
 export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<WaterfallData[]> {
   @ModelProperty({
     key: 'trace-id',
     required: true,
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public traceId!: string;
 
   @ModelProperty({
     key: 'entry-span-id',
     required: false,
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public entrySpanId?: string;
 
   @ModelProperty({
     key: 'start-time',
     required: false,
-    type: UNKNOWN_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type,
   })
   public startTime?: unknown;
 
@@ -61,18 +61,18 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
     this.specificationBuilder.attributeSpecificationForKey('startTime'),
     this.specificationBuilder.attributeSpecificationForKey('type'),
     this.specificationBuilder.attributeSpecificationForKey('traceId'),
-    this.specificationBuilder.attributeSpecificationForKey('errorCount')
+    this.specificationBuilder.attributeSpecificationForKey('errorCount'),
   ];
 
   protected readonly logEventSpecifications: Specification[] = [
     this.specificationBuilder.attributeSpecificationForKey('attributes'),
     this.specificationBuilder.attributeSpecificationForKey('timestamp'),
-    this.specificationBuilder.attributeSpecificationForKey('summary')
+    this.specificationBuilder.attributeSpecificationForKey('summary'),
   ];
 
   public getData(): Observable<WaterfallData[]> {
     return combineLatest([this.getTraceData(), this.getDurationAttribute()]).pipe(
-      map(combinedData => this.mapResponseObject(combinedData[0], combinedData[1]))
+      map(combinedData => this.mapResponseObject(combinedData[0], combinedData[1])),
     );
   }
 
@@ -84,7 +84,7 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       timestamp: this.dateCoercer.coerce(this.startTime),
       traceProperties: [],
       spanProperties: this.spanSpecifications,
-      logEventProperties: this.logEventSpecifications
+      logEventProperties: this.logEventSpecifications,
     });
   }
 
@@ -106,7 +106,7 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       endTime: span.endTime as number,
       duration: {
         value: span.duration as number,
-        units: duration.units
+        units: duration.units,
       },
       serviceName: span.serviceName as string,
       protocolName: span.protocolName as string,
@@ -116,8 +116,8 @@ export class TraceWaterfallDataSourceModel extends GraphQlDataSourceModel<Waterf
       errorCount: span.errorCount as number,
       logEvents: this.logEventsService.getLogEventsWithSpanStartTime(
         span.logEvents as Dictionary<LogEvent[]>,
-        span.startTime as number
-      )
+        span.startTime as number,
+      ),
     }));
   }
 }

@@ -16,7 +16,7 @@ describe('Entity Navigation Service', () => {
     providers: [
       mockProvider(NavigationService, {
         navigate: jest.fn(),
-        isRelativePathActive: () => true
+        isRelativePathActive: () => true,
       }),
       {
         provide: ENTITY_METADATA,
@@ -27,8 +27,8 @@ describe('Entity Navigation Service', () => {
               entityType: ObservabilityEntityType.Api,
               icon: ObservabilityIconType.Api,
               detailPath: (id: string, sourceRoute?: string) => [sourceRoute ?? '', 'endpoint', id],
-              sourceRoutes: ['services']
-            }
+              sourceRoutes: ['services'],
+            },
           ],
           [
             ObservabilityEntityType.Service,
@@ -36,8 +36,8 @@ describe('Entity Navigation Service', () => {
               entityType: ObservabilityEntityType.Service,
               icon: ObservabilityIconType.Service,
               detailPath: (id: string) => ['services', 'service', id],
-              listPath: ['services']
-            }
+              listPath: ['services'],
+            },
           ],
           [
             ObservabilityEntityType.Backend,
@@ -45,13 +45,13 @@ describe('Entity Navigation Service', () => {
               entityType: ObservabilityEntityType.Backend,
               icon: ObservabilityIconType.Backend,
               detailPath: (id: string) => ['backends', 'backend', id],
-              listPath: ['backends']
-            }
-          ]
-        ])
-      }
+              listPath: ['backends'],
+            },
+          ],
+        ]),
+      },
     ],
-    imports: [RouterTestingModule]
+    imports: [RouterTestingModule],
   });
 
   beforeEach(() => {
@@ -63,12 +63,12 @@ describe('Entity Navigation Service', () => {
   test('can navigate correctly to service', () => {
     spectator.service.navigateToEntity({
       [entityIdKey]: 'test-id',
-      [entityTypeKey]: ObservabilityEntityType.Service
+      [entityTypeKey]: ObservabilityEntityType.Service,
     });
 
     expect(navigationService.navigate).toHaveBeenCalledWith({
       navType: NavigationParamsType.InApp,
-      path: ['/', 'services', 'service', 'test-id']
+      path: ['/', 'services', 'service', 'test-id'],
     });
   });
 
@@ -76,23 +76,23 @@ describe('Entity Navigation Service', () => {
     expect(
       spectator.service.buildEntityDetailNavigationParams({
         [entityIdKey]: 'test-id',
-        [entityTypeKey]: ObservabilityEntityType.Service
-      })
+        [entityTypeKey]: ObservabilityEntityType.Service,
+      }),
     ).toEqual({
       navType: NavigationParamsType.InApp,
-      path: ['/', 'services', 'service', 'test-id']
+      path: ['/', 'services', 'service', 'test-id'],
     });
   });
 
   test('can navigate correctly to api', () => {
     spectator.service.navigateToEntity({
       [entityIdKey]: 'test-id',
-      [entityTypeKey]: ObservabilityEntityType.Api
+      [entityTypeKey]: ObservabilityEntityType.Api,
     });
 
     expect(navigationService.navigate).toHaveBeenCalledWith({
       navType: NavigationParamsType.InApp,
-      path: ['/', 'services', 'endpoint', 'test-id']
+      path: ['/', 'services', 'endpoint', 'test-id'],
     });
   });
 
@@ -100,23 +100,23 @@ describe('Entity Navigation Service', () => {
     expect(
       spectator.service.buildEntityDetailNavigationParams({
         [entityIdKey]: 'test-id',
-        [entityTypeKey]: ObservabilityEntityType.Api
-      })
+        [entityTypeKey]: ObservabilityEntityType.Api,
+      }),
     ).toEqual({
       navType: NavigationParamsType.InApp,
-      path: ['/', 'services', 'endpoint', 'test-id']
+      path: ['/', 'services', 'endpoint', 'test-id'],
     });
   });
 
   test('can navigate correctly to backend', () => {
     spectator.service.navigateToEntity({
       [entityIdKey]: 'test-id',
-      [entityTypeKey]: ObservabilityEntityType.Backend
+      [entityTypeKey]: ObservabilityEntityType.Backend,
     });
 
     expect(navigationService.navigate).toHaveBeenCalledWith({
       navType: NavigationParamsType.InApp,
-      path: ['/', 'backends', 'backend', 'test-id']
+      path: ['/', 'backends', 'backend', 'test-id'],
     });
   });
 
@@ -124,11 +124,11 @@ describe('Entity Navigation Service', () => {
     expect(
       spectator.service.buildEntityDetailNavigationParams({
         [entityIdKey]: 'test-id',
-        [entityTypeKey]: ObservabilityEntityType.Backend
-      })
+        [entityTypeKey]: ObservabilityEntityType.Backend,
+      }),
     ).toEqual({
       navType: NavigationParamsType.InApp,
-      path: ['/', 'backends', 'backend', 'test-id']
+      path: ['/', 'backends', 'backend', 'test-id'],
     });
   });
 });

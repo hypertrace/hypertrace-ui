@@ -7,7 +7,7 @@ import {
   NavigationParamsType,
   NavigationPath,
   NavigationService,
-  assertUnreachable
+  assertUnreachable,
 } from '@hypertrace/common';
 import { isNil } from 'lodash-es';
 import { EMPTY, Observable } from 'rxjs';
@@ -51,7 +51,7 @@ import { EMPTY, Observable } from 'rxjs';
         </a>
       </ng-template>
     </ng-container>
-  `
+  `,
 })
 export class LinkComponent implements OnChanges {
   @Input()
@@ -99,7 +99,7 @@ export class LinkComponent implements OnChanges {
       return {
         navType: NavigationParamsType.External,
         url: this.paramsOrUrl,
-        windowHandling: ExternalNavigationWindowHandling.SameWindow
+        windowHandling: ExternalNavigationWindowHandling.SameWindow,
       };
     }
 
@@ -108,7 +108,7 @@ export class LinkComponent implements OnChanges {
         ...this.paramsOrUrl,
         url: this.paramsOrUrl.useGlobalParams
           ? this.navigationService.constructExternalUrl(this.paramsOrUrl.url)
-          : this.paramsOrUrl.url
+          : this.paramsOrUrl.url,
       };
     }
 

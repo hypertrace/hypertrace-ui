@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import {
   ExternalNavigationPathParams,
   ExternalNavigationWindowHandling,
-  NavigationService
+  NavigationService,
 } from '../navigation/navigation.service';
 import { assertUnreachable } from '../utilities/lang/lang-utils';
 
@@ -34,7 +34,7 @@ export class ExternalUrlNavigator implements CanActivate {
 
   private navigateToUrl(
     url: string,
-    windowHandling: ExternalNavigationWindowHandling = ExternalNavigationWindowHandling.SameWindow
+    windowHandling: ExternalNavigationWindowHandling = ExternalNavigationWindowHandling.SameWindow,
   ): void {
     window.open(url, this.asWindowName(windowHandling));
   }

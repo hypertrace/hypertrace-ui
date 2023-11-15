@@ -14,7 +14,7 @@ export class ServiceNodeBoxRendererService extends EntityNodeBoxRendererService 
   protected appendNodeFeatures(
     nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
     node: EntityNode,
-    domElementRenderer: Renderer2
+    domElementRenderer: Renderer2,
   ): void {
     this.addOuterBand(nodeSelection);
     this.addMetricCategory(nodeSelection);

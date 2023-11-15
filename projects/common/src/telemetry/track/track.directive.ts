@@ -5,7 +5,7 @@ import { TrackUserEventsType } from '../telemetry';
 import { UserTelemetryImplService } from '../user-telemetry-impl.service';
 
 @Directive({
-  selector: '[htTrack]'
+  selector: '[htTrack]',
 })
 export class TrackDirective implements OnInit, OnChanges, OnDestroy {
   @Input('htTrack')
@@ -19,7 +19,7 @@ export class TrackDirective implements OnInit, OnChanges, OnDestroy {
 
   public constructor(
     private readonly host: ElementRef,
-    private readonly userTelemetryImplService: UserTelemetryImplService
+    private readonly userTelemetryImplService: UserTelemetryImplService,
   ) {}
 
   public ngOnInit(): void {
@@ -47,9 +47,9 @@ export class TrackDirective implements OnInit, OnChanges, OnDestroy {
     this.activeSubscriptions.add(
       ...this.userEvents?.map(userEvent =>
         fromEvent<MouseEvent>(this.host.nativeElement, userEvent).subscribe(eventObj =>
-          this.trackUserEvent(userEvent, eventObj)
-        )
-      )
+          this.trackUserEvent(userEvent, eventObj),
+        ),
+      ),
     );
   }
 
@@ -62,7 +62,7 @@ export class TrackDirective implements OnInit, OnChanges, OnDestroy {
     this.userTelemetryImplService.trackEvent(`${userEvent}: ${this.trackedEventLabel}`, {
       tagName: targetElement.tagName,
       className: targetElement.className,
-      type: userEvent
+      type: userEvent,
     });
   }
 }

@@ -61,7 +61,7 @@ export class UserTelemetryImplService extends UserTelemetryService {
     this.initializedTelemetryProviders
       .filter(provider => provider.enableErrorTracking)
       .forEach(provider =>
-        provider.telemetryProvider.trackError?.(`Error: ${error}`, { ...data, eventCategory: 'error' })
+        provider.telemetryProvider.trackError?.(`Error: ${error}`, { ...data, eventCategory: 'error' }),
       );
   }
 
@@ -70,7 +70,7 @@ export class UserTelemetryImplService extends UserTelemetryService {
 
     return {
       ...config,
-      telemetryProvider: providerInstance
+      telemetryProvider: providerInstance,
     };
   }
 
@@ -78,7 +78,7 @@ export class UserTelemetryImplService extends UserTelemetryService {
     this.router?.events
       .pipe(
         filter((event): event is ActivationEnd => event instanceof ActivationEnd),
-        delay(50)
+        delay(50),
       )
       .subscribe(event => {
         const url = event.snapshot.pathFromRoot

@@ -80,7 +80,7 @@ export * from './shared/graphql/model/schema/filter/graphql-filter';
 export * from './shared/graphql/model/schema/filter/global-graphql-filter.service';
 export {
   GraphQlMetricAggregationType,
-  convertToGraphQlMetricAggregationType
+  convertToGraphQlMetricAggregationType,
 } from './shared/graphql/model/schema/metrics/graphql-metric-aggregation-type';
 export * from './shared/graphql/model/schema/sort/graphql-sort-argument';
 export * from './shared/graphql/model/schema/sort/graphql-sort-direction';
@@ -192,7 +192,7 @@ export * from './shared/components/explore-query-editor/explore-query-editor.mod
 export {
   ExploreSeries,
   ExploreRequestState,
-  ExploreVisualizationRequest
+  ExploreVisualizationRequest,
 } from './shared/components/explore-query-editor/explore-visualization-builder';
 export * from './shared/dashboard/data/graphql/explore/explore-cartesian-data-source.model';
 
@@ -283,7 +283,7 @@ export * from './shared/components/radar/radar-chart.module';
 export {
   RadarWidgetDataFetcher,
   RadarComparisonData,
-  RadarDataSourceModel
+  RadarDataSourceModel,
 } from './shared/dashboard/widgets/radar/data/radar-data-source.model';
 
 // Datasources
@@ -332,7 +332,7 @@ export * from './shared/components/cartesian/chart-interactivty';
 export { MetricSeries, MetricSeriesDataFetcher } from './shared/dashboard/widgets/charts/cartesian-widget/series.model';
 export {
   CartesianDataFetcher,
-  CartesianResult
+  CartesianResult,
 } from './shared/dashboard/widgets/charts/cartesian-widget/cartesian-widget.model';
 export * from './shared/dashboard/widgets/charts/cartesian-widget/series-visualization/series-visualization-type';
 

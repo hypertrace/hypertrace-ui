@@ -3,7 +3,7 @@ import { SpanNameCellData } from './span-name-cell-data';
 import { WaterfallTableCellType } from './span-name-cell-type';
 
 @TableCellParser({
-  type: WaterfallTableCellType.SpanName
+  type: WaterfallTableCellType.SpanName,
 })
 export class SpanNameTableCellParser extends TableCellParserBase<SpanNameCellData, SpanNameCellData, undefined> {
   public parseValue(cellData: SpanNameCellData): SpanNameCellData {

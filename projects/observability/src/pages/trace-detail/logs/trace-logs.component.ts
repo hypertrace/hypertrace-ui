@@ -13,7 +13,7 @@ import { TraceDetailService } from './../trace-detail.service';
         logEventsTableViewType="${LogEventsTableViewType.Detailed}"
       ></ht-log-events-table>
     </ng-container>
-  `
+  `,
 })
 export class TraceLogsComponent {
   public readonly logEvents$: Observable<LogEvent[]>;

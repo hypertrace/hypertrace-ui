@@ -6,6 +6,6 @@ import { SummaryCardComponent } from './summary-card.component';
 @NgModule({
   exports: [SummaryCardComponent],
   imports: [CommonModule, SummaryValueModule],
-  declarations: [SummaryCardComponent]
+  declarations: [SummaryCardComponent],
 })
 export class SummaryCardModule {}

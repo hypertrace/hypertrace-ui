@@ -20,7 +20,7 @@ export abstract class AbstractFilterParser<TValue> {
       field: splitFilter.attribute.name,
       subpath: splitFilter.subpath,
       operator: splitFilter.operator,
-      value: parsedValue
+      value: parsedValue,
     };
   }
 }

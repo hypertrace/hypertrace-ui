@@ -3,10 +3,10 @@ import { rgb } from 'd3-color';
 import { ColorPalette } from './color-palette';
 
 export const DEFAULT_COLOR_PALETTE: InjectionToken<ColorPaletteDefinition> = new InjectionToken(
-  'Default Color Palette'
+  'Default Color Palette',
 );
 export const ALTERNATE_COLOR_PALETTES: InjectionToken<ColorPaletteDefinition[]> = new InjectionToken(
-  'Alternate Color Palettes'
+  'Alternate Color Palettes',
 );
 
 export type ColorPaletteKey = string | symbol;
@@ -19,11 +19,11 @@ export class ColorService {
 
   public constructor(
     @Inject(DEFAULT_COLOR_PALETTE) defaultPalette: ColorPaletteDefinition,
-    @Optional() @Inject(ALTERNATE_COLOR_PALETTES) alternatePalettes: ColorPaletteDefinition[] | null
+    @Optional() @Inject(ALTERNATE_COLOR_PALETTES) alternatePalettes: ColorPaletteDefinition[] | null,
   ) {
     this.registerColorPalette(ColorService.DEFAULT_PALETTE_KEY, defaultPalette.colors);
     [defaultPalette, ...(alternatePalettes ?? [])].forEach(palette =>
-      this.registerColorPalette(palette.key, palette.colors)
+      this.registerColorPalette(palette.key, palette.colors),
     );
   }
 

@@ -109,15 +109,15 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.VerticalGrabHandle, url: `${iconsRootPath}/vertical-grab-handle.svg` },
         { key: IconType.Yaml, url: `${iconsRootPath}/yaml.svg` },
         { key: IconType.VirtualMachine, url: `${iconsRootPath}/virtual-machine.svg` },
-        { key: IconType.Warning, url: `${iconsRootPath}/warning.svg` }
-      ]
-    }
-  ]
+        { key: IconType.Warning, url: `${iconsRootPath}/warning.svg` },
+      ],
+    },
+  ],
 })
 export class IconLibraryModule {
   public constructor(
     iconRegistryService: IconRegistryService,
-    @Inject(SVG_ICONS) iconRegistrationInfo: SvgIconRegistrationInfo[][]
+    @Inject(SVG_ICONS) iconRegistrationInfo: SvgIconRegistrationInfo[][],
   ) {
     iconRegistrationInfo.flat().forEach(iconInfo => iconRegistryService.registerSvgIcon(iconInfo));
   }
@@ -129,9 +129,9 @@ export class IconLibraryModule {
         {
           provide: SVG_ICONS,
           useValue: iconRegistrationInfo,
-          multi: true
-        }
-      ]
+          multi: true,
+        },
+      ],
     };
   }
 }

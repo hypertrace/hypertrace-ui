@@ -13,7 +13,7 @@ export class SequenceChartService {
   public constructor(
     private readonly sequenceChartLayoutService: SequenceChartLayoutService,
     private readonly sequenceChartAxisService: SequenceChartAxisService,
-    private readonly sequenceBarRendererService: SequenceBarRendererService
+    private readonly sequenceBarRendererService: SequenceBarRendererService,
   ) {}
 
   public buildChart(chartContainer: HTMLElement, options: RecursivePartial<SequenceOptions>): SequenceObject {
@@ -51,7 +51,7 @@ export class SequenceChartService {
 
   private buildChartSelection(
     containerSelection: SequenceContainerSelection,
-    options: SequenceOptions
+    options: SequenceOptions,
   ): SequenceSVGSelection {
     const width = (containerSelection.node() as HTMLElement).offsetWidth;
 
@@ -93,7 +93,7 @@ export class SequenceChartService {
         top: 0,
         left: 16,
         bottom: 5,
-        right: 5
+        right: 5,
       },
       data: [],
       onSegmentSelected: () => {
@@ -104,7 +104,7 @@ export class SequenceChartService {
       },
       onMarkerHovered: () => {
         /** NOOP */
-      }
+      },
     };
   }
 }

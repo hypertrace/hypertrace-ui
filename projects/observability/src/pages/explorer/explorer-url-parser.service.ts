@@ -4,7 +4,7 @@ import { isEmpty, isNil } from 'lodash-es';
 import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
 import {
   ExploreOrderBy,
-  ExploreSeries
+  ExploreSeries,
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { SortDirection } from '../../shared/components/explore-query-editor/order-by/explore-query-order-by-editor.component';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
@@ -28,9 +28,9 @@ export class ExplorerUrlParserService {
       orderBy: interval === 'NONE' ? this.tryDecodeExploreOrderBy(series[0], query.orderBy?.[0]) : undefined,
       ...(!isEmpty(query.groupBy)
         ? {
-            groupBy: this.tryDecodeExploreGroupBy(query.groupBy!, query.groupLimit!, query.includeOtherGroups)
+            groupBy: this.tryDecodeExploreGroupBy(query.groupBy!, query.groupLimit!, query.includeOtherGroups),
           }
-        : {})
+        : {}),
     };
   }
 
@@ -48,9 +48,9 @@ export class ExplorerUrlParserService {
       {
         specification: new ExploreSpecificationBuilder().exploreSpecificationForKey(key, aggregation),
         visualizationOptions: {
-          type: visualizationType
-        }
-      }
+          type: visualizationType,
+        },
+      },
     ];
   }
 
@@ -62,8 +62,8 @@ export class ExplorerUrlParserService {
         aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
         direction: SortDirection.Desc,
         attribute: {
-          key: selectedSeries.specification.name
-        }
+          key: selectedSeries.specification.name,
+        },
       };
     }
 
@@ -71,8 +71,8 @@ export class ExplorerUrlParserService {
       aggregation: matches[1] as MetricAggregationType,
       direction: matches[3] as GraphQlSortDirection,
       attribute: {
-        key: matches[2]
-      }
+        key: matches[2],
+      },
     };
   }
 
@@ -101,7 +101,7 @@ export class ExplorerUrlParserService {
     return {
       keyExpressions: groupBys.flatMap(expressionString => this.tryDecodeAttributeExpression(expressionString)),
       includeRest: !isNil(includeOtherGroups) && includeOtherGroups === 'true' ? true : undefined,
-      limit: Number(groupLimit)
+      limit: Number(groupLimit),
     };
   }
 }

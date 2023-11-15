@@ -8,7 +8,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
@@ -70,7 +70,7 @@ import { FilterChipComponent } from './filter-chip/filter-chip.component';
       </div>
     </div>
     <div [innerHTML]="this.instructions" class="instructions"></div>
-  `
+  `,
 })
 export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   @Input()
@@ -105,7 +105,7 @@ export class FilterBarComponent implements OnChanges, OnInit, OnDestroy {
   public constructor(
     private readonly changeDetector: ChangeDetectorRef,
     private readonly filterUrlService: FilterUrlService,
-    private readonly filterBarService: FilterBarService
+    private readonly filterBarService: FilterBarService,
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {

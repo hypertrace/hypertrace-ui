@@ -6,16 +6,16 @@ import { MetricAggregationSpecificationModel } from '../../specifiers/metric-agg
 import { EntityValueDataSourceModel } from '../entity-value-data-source.model';
 
 @Model({
-  type: 'entity-metric-aggregation-data-source'
+  type: 'entity-metric-aggregation-data-source',
 })
 export class EntityMetricAggregationDataSourceModel extends EntityValueDataSourceModel<MetricAggregation> {
   @ModelProperty({
     key: 'metric',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: MetricAggregationSpecificationModel
+      defaultModelClass: MetricAggregationSpecificationModel,
     } as ModelModelPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public specification!: MetricAggregationSpecification;
 

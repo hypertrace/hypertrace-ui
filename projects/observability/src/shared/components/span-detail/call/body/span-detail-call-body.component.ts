@@ -36,7 +36,7 @@ import { ToggleViewMode } from '@hypertrace/components';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class SpanDetailCallBodyComponent implements OnChanges {
   public readonly parsedLabel: string = 'Parsed';

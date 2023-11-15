@@ -5,6 +5,6 @@ import { ProgressBarComponent } from './progress-bar.component';
 @NgModule({
   imports: [CommonModule],
   declarations: [ProgressBarComponent],
-  exports: [ProgressBarComponent]
+  exports: [ProgressBarComponent],
 })
 export class ProgressBarModule {}

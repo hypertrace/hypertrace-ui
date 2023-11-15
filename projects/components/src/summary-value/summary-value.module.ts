@@ -8,6 +8,6 @@ import { SummaryValueComponent } from './summary-value.component';
 @NgModule({
   imports: [CommonModule, IconModule, TooltipModule, IsNilPipeModule],
   declarations: [SummaryValueComponent],
-  exports: [SummaryValueComponent]
+  exports: [SummaryValueComponent],
 })
 export class SummaryValueModule {}

@@ -24,9 +24,9 @@ import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: CheckboxComponent,
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class CheckboxComponent implements ControlValueAccessor {
   @Input()

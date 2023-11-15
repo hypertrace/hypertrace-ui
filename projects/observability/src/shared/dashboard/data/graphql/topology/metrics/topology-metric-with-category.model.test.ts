@@ -14,7 +14,7 @@ describe('Topology Metric with category model', () => {
     fillColor: Color,
     strokeColor: Color,
     focusColor: Color,
-    maxValue?: number
+    maxValue?: number,
   ): TopologyMetricCategoryModel => {
     const categoryModel = new TopologyMetricCategoryModel();
     categoryModel.name = name;
@@ -35,38 +35,38 @@ describe('Topology Metric with category model', () => {
     const categories = [
       createCategoryModel('first', 0, Color.Blue2, Color.Blue3, Color.Blue4, 10),
       createCategoryModel('second', 10, Color.Red1, Color.Red3, Color.Red4, 50),
-      createCategoryModel('third', 50, Color.Blue2, Color.Blue3, Color.Blue4)
+      createCategoryModel('third', 50, Color.Blue2, Color.Blue3, Color.Blue4),
     ];
 
     const spectator = modelFactory(TopologyMetricWithCategoryModel, {
       properties: {
         specification: specification,
-        categories: categories
-      }
+        categories: categories,
+      },
     });
 
     expect(
       spectator.model.extractAndGetDataCategoryForMetric({
-        [specification.resultAlias()]: { value: 50 }
-      })
+        [specification.resultAlias()]: { value: 50 },
+      }),
     ).toEqual(categories[2]);
 
     expect(
       spectator.model.extractAndGetDataCategoryForMetric({
-        [specification.resultAlias()]: { value: 5 }
-      })
+        [specification.resultAlias()]: { value: 5 },
+      }),
     ).toEqual(categories[0]);
 
     expect(
       spectator.model.extractAndGetDataCategoryForMetric({
-        [specification.resultAlias()]: { value: 22 }
-      })
+        [specification.resultAlias()]: { value: 22 },
+      }),
     ).toEqual(categories[1]);
 
     expect(
       spectator.model.extractAndGetDataCategoryForMetric({
-        [specification.resultAlias()]: { value: -10 }
-      })
+        [specification.resultAlias()]: { value: -10 },
+      }),
     ).toEqual(undefined);
   });
 });

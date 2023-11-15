@@ -10,48 +10,48 @@ import { EntityAttributeDataSourceModel } from '../../data/graphql/entity/attrib
 
 @Model({
   type: 'metric-display-widget',
-  supportedDataSourceTypes: [EntityMetricAggregationDataSourceModel, EntityAttributeDataSourceModel]
+  supportedDataSourceTypes: [EntityMetricAggregationDataSourceModel, EntityAttributeDataSourceModel],
 })
 export class MetricDisplayWidgetModel {
   public static readonly METRIC_WIDGET_DEFAULTS: MetricWidgetValueData = {
     value: '-',
     units: '',
-    health: MetricHealth.NotSpecified
+    health: MetricHealth.NotSpecified,
   };
 
   @ModelProperty({
     key: 'title',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public title?: string;
 
   @ModelProperty({
     key: 'title-position',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public titlePosition?: string;
 
   @ModelProperty({
     key: 'showUnits',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public showUnits?: boolean;
 
   @ModelProperty({
     key: 'subtitle',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public subtitle?: string;
 
   @ModelProperty({
     key: 'superscript',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public superscript?: string;
 
   @ModelProperty({
     key: 'subscript',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public subscript?: string;
 
@@ -69,10 +69,10 @@ export class MetricDisplayWidgetModel {
           {
             value: this.extractValue(metricValue),
             units: this.extractUnits(metricValue),
-            health: this.extractHealth(metricValue)
+            health: this.extractHealth(metricValue),
           },
-          MetricDisplayWidgetModel.METRIC_WIDGET_DEFAULTS
-        )
+          MetricDisplayWidgetModel.METRIC_WIDGET_DEFAULTS,
+        ),
       );
     } catch (e) {
       return EMPTY;
@@ -114,7 +114,7 @@ export class MetricDisplayWidgetModel {
 
   private valueIsMetricAgg<K extends keyof MetricAggregation>(
     value: unknown,
-    requireKey: K
+    requireKey: K,
   ): value is Partial<MetricAggregation> & Pick<MetricAggregation, K> {
     if (typeof value !== 'object' || value === null) {
       return false;

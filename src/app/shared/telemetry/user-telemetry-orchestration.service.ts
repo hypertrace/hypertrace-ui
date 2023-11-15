@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserTelemetryService } from '@hypertrace/common';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserTelemetryOrchestrationService {
   public constructor(private readonly userTelemetryService: UserTelemetryService) {}

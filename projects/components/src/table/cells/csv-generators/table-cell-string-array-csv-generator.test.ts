@@ -3,7 +3,7 @@ import { TableCellStringArrayCsvGenerator } from './table-cell-string-array-csv-
 
 describe('TableCellStringArrayCsvGenerator', () => {
   const createService = createServiceFactory({
-    service: TableCellStringArrayCsvGenerator
+    service: TableCellStringArrayCsvGenerator,
   });
 
   test('should return data as expected', () => {

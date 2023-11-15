@@ -6,14 +6,14 @@ import { TimeUnit } from './time-unit.type';
 
 describe('Time duration service', () => {
   const serviceBuilder = createServiceFactory({
-    service: TimeDurationService
+    service: TimeDurationService,
   });
 
   test('can convert a time range into a duration', () => {
     const start = Date.now();
     const spectator = serviceBuilder();
     expect(spectator.service.getTimeRangeDuration(new FixedTimeRange(new Date(start), new Date(start + 130)))).toEqual(
-      new TimeDuration(130, TimeUnit.Millisecond)
+      new TimeDuration(130, TimeUnit.Millisecond),
     );
   });
 
@@ -21,7 +21,7 @@ describe('Time duration service', () => {
     const start = Date.now();
     const spectator = serviceBuilder();
     expect(
-      spectator.service.getTimeRangeDurationMillis(new FixedTimeRange(new Date(start), new Date(start + 130)))
+      spectator.service.getTimeRangeDurationMillis(new FixedTimeRange(new Date(start), new Date(start + 130))),
     ).toEqual(130);
   });
 

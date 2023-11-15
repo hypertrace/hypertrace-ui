@@ -14,7 +14,7 @@ export class ContainLayout {
     requestedXMin?: number,
     requestedXMax?: number,
     requestedYMin?: number,
-    requestedYMax?: number
+    requestedYMax?: number,
   ): ScaledLayout {
     const width = dimensions.width;
     const height = dimensions.height;
@@ -32,18 +32,18 @@ export class ContainLayout {
       return {
         rect: {
           width: width,
-          height: yAxisLength * xScaleFactor
+          height: yAxisLength * xScaleFactor,
         },
-        scaleFactor: xScaleFactor
+        scaleFactor: xScaleFactor,
       };
     }
 
     return {
       rect: {
         width: xAxisLength * yScaleFactor,
-        height: height
+        height: height,
       },
-      scaleFactor: yScaleFactor
+      scaleFactor: yScaleFactor,
     };
   }
 }

@@ -32,7 +32,7 @@ import { SpanDetailLayoutStyle } from '../span-detail-layout-style';
         <ht-span-detail-call-body [body]="this.requestBody"></ht-span-detail-call-body>
       </div>
     </div>
-  `
+  `,
 })
 export class SpanRequestDetailComponent {
   @Input()
@@ -56,5 +56,5 @@ export class SpanRequestDetailComponent {
 
 const enum RequestFieldName {
   Headers = 'requestHeaders',
-  Cookies = 'requestCookies'
+  Cookies = 'requestCookies',
 }

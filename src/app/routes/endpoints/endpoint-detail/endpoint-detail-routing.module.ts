@@ -7,7 +7,7 @@ import {
   ApiDetailModule,
   ApiMetricsComponent,
   ApiOverviewComponent,
-  ApiTraceListComponent
+  ApiTraceListComponent,
 } from '@hypertrace/observability';
 
 const ROUTE_CONFIG: HtRoute[] = [
@@ -18,25 +18,25 @@ const ROUTE_CONFIG: HtRoute[] = [
       {
         path: '',
         redirectTo: 'overview',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'overview',
-        component: ApiOverviewComponent
+        component: ApiOverviewComponent,
       },
       {
         path: 'traces',
-        component: ApiTraceListComponent
+        component: ApiTraceListComponent,
       },
       {
         path: 'metrics',
-        component: ApiMetricsComponent
-      }
-    ]
-  }
+        component: ApiMetricsComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(ROUTE_CONFIG), ApiDetailModule]
+  imports: [RouterModule.forChild(ROUTE_CONFIG), ApiDetailModule],
 })
 export class EndpointDetailRoutingModule {}

@@ -66,7 +66,7 @@ export class RadialDataLookupStrategy {
 
   private buildLocationData(
     axisName: string,
-    location: RelativeMouseLocation
+    location: RelativeMouseLocation,
   ): MouseLocationData<RadarPoint, RadarSeries>[] {
     return this.allSeries.flatMap(series =>
       series.data
@@ -74,8 +74,8 @@ export class RadialDataLookupStrategy {
         .map(dataPoint => ({
           dataPoint: dataPoint,
           context: series,
-          location: location
-        }))
+          location: location,
+        })),
     );
   }
 }

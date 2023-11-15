@@ -8,7 +8,7 @@ import {
   TopologyCoordinates,
   TopologyEdge,
   TopologyElementVisibility,
-  TopologyNode
+  TopologyNode,
 } from '../../topology';
 import { TreeLayout } from './tree-layout';
 
@@ -23,32 +23,32 @@ describe('Tree Layout', () => {
     outgoing: [],
     state: {
       visibility: TopologyElementVisibility.Normal,
-      dragging: true
+      dragging: true,
     },
     userNode: {
-      edges: []
+      edges: [],
     },
     domElementRenderer: domElementRenderer,
     renderedData: () => ({
       getAttachmentPoint: (_angleRad: number): TopologyCoordinates => ({ x: 0, y: 0 }),
-      getBoudingBox: () => ({ height: 10, width: 10, bottom: 0, left: 0, right: 0, top: 0 })
-    })
+      getBoudingBox: () => ({ height: 10, width: 10, bottom: 0, left: 0, right: 0, top: 0 }),
+    }),
   });
 
   const buildTopologyEdge = (
     source: RenderableTopologyNode,
-    target: RenderableTopologyNode
+    target: RenderableTopologyNode,
   ): RenderableTopologyEdge => ({
     source: source,
     target: target,
     state: {
-      visibility: TopologyElementVisibility.Normal
+      visibility: TopologyElementVisibility.Normal,
     },
     userEdge: {
       fromNode: source.userNode,
-      toNode: target.userNode
+      toNode: target.userNode,
     },
-    domElementRenderer: domElementRenderer
+    domElementRenderer: domElementRenderer,
   });
 
   const buildTopologyData = (): RenderableTopology<TopologyNode, TopologyEdge> => {
@@ -64,14 +64,14 @@ describe('Tree Layout', () => {
       edges: [edge1],
       neighborhood: {
         nodes: [],
-        edges: []
-      }
+        edges: [],
+      },
     };
   };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [mockProvider(Renderer2)]
+      providers: [mockProvider(Renderer2)],
     });
 
     domElementRenderer = TestBed.inject(Renderer2);
@@ -104,8 +104,8 @@ describe('Tree Layout', () => {
       edges: [edge1, edge2],
       neighborhood: {
         nodes: [],
-        edges: []
-      }
+        edges: [],
+      },
     };
 
     // Layout shouldn't error or hang on a cycle

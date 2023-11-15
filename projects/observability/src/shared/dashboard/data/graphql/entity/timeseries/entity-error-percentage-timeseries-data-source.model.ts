@@ -16,25 +16,25 @@ import { ObservabilitySpecificationBuilder } from '../../../../../graphql/reques
 import {
   EntityGraphQlQueryHandlerService,
   ENTITY_GQL_REQUEST,
-  GraphQlEntityRequest
+  GraphQlEntityRequest,
 } from '../../../../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { MetricSeries, MetricSeriesDataFetcher } from '../../../../widgets/charts/cartesian-widget/series.model';
 import { GraphQlDataSourceModel } from '../../graphql-data-source.model';
 
 @Model({
-  type: 'entity-error-percentage-timeseries-data-source'
+  type: 'entity-error-percentage-timeseries-data-source',
 })
 export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataSourceModel<
   MetricSeriesDataFetcher<MetricTimeseriesInterval>
 > {
   private readonly errorCountSpec: MetricAggregationSpecification = new ObservabilitySpecificationBuilder().metricAggregationSpecForKey(
     'errorCount',
-    MetricAggregationType.Sum
+    MetricAggregationType.Sum,
   );
 
   private readonly callCountSpec: MetricAggregationSpecification = new ObservabilitySpecificationBuilder().metricAggregationSpecForKey(
     'numCalls',
-    MetricAggregationType.Sum
+    MetricAggregationType.Sum,
   );
 
   @ModelInject(LoggerService)
@@ -42,7 +42,7 @@ export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataS
 
   public getData(): Observable<MetricSeriesDataFetcher<MetricTimeseriesInterval>> {
     return of({
-      getData: interval => this.getAllData(interval)
+      getData: interval => this.getAllData(interval),
     });
   }
 
@@ -51,19 +51,19 @@ export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataS
       errorCountIntervals: this.getErrorCountSeries(interval),
       callCountIntervals: this.getCallCountSeries(interval),
       errorCountSummary: this.getErrorCountSummary(),
-      callCountSummary: this.getCallCountSummary()
+      callCountSummary: this.getCallCountSummary(),
     }).pipe(
       map(data => ({
         intervals: this.toPercentageIntervals(data.errorCountIntervals, data.callCountIntervals),
         summary: this.toPercentageSummary(data.errorCountSummary, data.callCountSummary),
-        units: '%'
-      }))
+        units: '%',
+      })),
     );
   }
 
   private toPercentageIntervals(
     errorIntervals: MetricTimeseriesInterval[],
-    callIntervals: MetricTimeseriesInterval[]
+    callIntervals: MetricTimeseriesInterval[],
   ): MetricTimeseriesInterval[] {
     if (errorIntervals.length !== callIntervals.length) {
       this.loggerService.warn('Unable to calculate percentile. Unequal interval length.');
@@ -73,14 +73,14 @@ export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataS
 
     return callIntervals.map((callInterval, index) => ({
       value: getPercentage(errorIntervals[index].value, callInterval.value),
-      timestamp: callInterval.timestamp
+      timestamp: callInterval.timestamp,
     }));
   }
 
   private toPercentageSummary(errorSummary: MetricAggregation, callSummary: MetricAggregation): Summary {
     return {
       value: getPercentage(errorSummary.value, callSummary.value),
-      units: '%'
+      units: '%',
     };
   }
 
@@ -89,8 +89,8 @@ export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataS
       new ObservabilitySpecificationBuilder().metricTimeseriesSpec(
         this.errorCountSpec.name,
         this.errorCountSpec.aggregation,
-        interval
-      )
+        interval,
+      ),
     );
   }
 
@@ -99,8 +99,8 @@ export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataS
       new ObservabilitySpecificationBuilder().metricTimeseriesSpec(
         this.callCountSpec.name,
         this.callCountSpec.aggregation,
-        interval
-      )
+        interval,
+      ),
     );
   }
 
@@ -114,7 +114,7 @@ export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataS
 
   protected fetchSpecificationData<TResponse>(specification: MetricSpecification): Observable<TResponse> {
     return this.query<EntityGraphQlQueryHandlerService, Entity & Dictionary<TResponse>>(filters =>
-      this.buildRequest(specification, filters)
+      this.buildRequest(specification, filters),
     ).pipe(map(response => response[specification.resultAlias()]));
   }
 
@@ -126,7 +126,7 @@ export class EntityErrorPercentageTimeseriesDataSourceModel extends GraphQlDataS
       properties: [specification],
       timeRange: this.getTimeRangeOrThrow(),
       entityType: entityFilter.type,
-      id: entityFilter.id
+      id: entityFilter.id,
     };
   }
 }

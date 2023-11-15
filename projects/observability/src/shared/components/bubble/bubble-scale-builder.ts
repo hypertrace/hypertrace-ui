@@ -6,24 +6,24 @@ export class BubbleScaleBuilder {
   public getXDomain(
     data: Bubble[],
     requestedMin?: number,
-    requestedMax?: number
+    requestedMax?: number,
   ): ScaleContinuousNumeric<number, number> {
     return this.getLinearScaleDomain(
       data.flatMap(datum => [datum.x - datum.r, datum.x + datum.r]),
       requestedMin,
-      requestedMax
+      requestedMax,
     );
   }
 
   public getYDomain<T extends Bubble>(
     data: T[],
     requestedMin?: number,
-    requestedMax?: number
+    requestedMax?: number,
   ): ScaleContinuousNumeric<number, number> {
     return this.getLinearScaleDomain(
       data.flatMap(datum => [datum.y - datum.r, datum.y + datum.r]),
       requestedMin,
-      requestedMax
+      requestedMax,
     );
   }
 
@@ -31,7 +31,7 @@ export class BubbleScaleBuilder {
     data: Bubble[],
     scaledLayout: ScaledLayout,
     requestedMin?: number,
-    requestedMax?: number
+    requestedMax?: number,
   ): ScaleContinuousNumeric<number, number> {
     const xDomain = this.getXDomain(data, requestedMin, requestedMax);
     const scaledRect = scaledLayout.rect;
@@ -43,7 +43,7 @@ export class BubbleScaleBuilder {
     data: Bubble[],
     scaledLayout: ScaledLayout,
     requestedMin?: number,
-    requestedMax?: number
+    requestedMax?: number,
   ): ScaleContinuousNumeric<number, number> {
     const yDomain = this.getYDomain(data, requestedMin, requestedMax);
     const scaledRect = scaledLayout.rect;
@@ -54,7 +54,7 @@ export class BubbleScaleBuilder {
   public getRScale(
     scaledLayout: ScaledLayout,
     xScale: ScaleContinuousNumeric<number, number>,
-    yScale: ScaleContinuousNumeric<number, number>
+    yScale: ScaleContinuousNumeric<number, number>,
   ): ScaleContinuousNumeric<number, number> {
     const rDomain = this.getR(xScale, yScale);
     const scaleFactor = scaledLayout.scaleFactor;
@@ -68,7 +68,7 @@ export class BubbleScaleBuilder {
 
   private getR(
     xScale: ScaleContinuousNumeric<number, number>,
-    yScale: ScaleContinuousNumeric<number, number>
+    yScale: ScaleContinuousNumeric<number, number>,
   ): ScaleContinuousNumeric<number, number> {
     const x = this.getAxisLength(xScale);
     const y = this.getAxisLength(yScale);
@@ -83,14 +83,14 @@ export class BubbleScaleBuilder {
   private getLinearScaleDomain(
     data: number[],
     requestedMin?: number,
-    requestedMax?: number
+    requestedMax?: number,
   ): ScaleContinuousNumeric<number, number> {
     const minDataValue = requestedMin !== undefined ? requestedMin : min(data);
     const maxDataValue = requestedMax !== undefined ? requestedMax : max(data);
 
     return this.buildScale(
       minDataValue !== undefined ? minDataValue : 0,
-      maxDataValue !== undefined ? maxDataValue : 0
+      maxDataValue !== undefined ? maxDataValue : 0,
     );
   }
 

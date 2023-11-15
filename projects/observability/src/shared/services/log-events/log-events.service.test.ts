@@ -12,7 +12,7 @@ describe('Log Events Service', () => {
   const mockTrace: Trace = {
     [traceIdKey]: 'test-id',
     [traceTypeKey]: 'API_TRACE',
-    spans: []
+    spans: [],
   };
 
   const mockTraceWithLogEvents: Trace = {
@@ -26,25 +26,25 @@ describe('Log Events Service', () => {
             {
               timestamp: 'time',
               attributes: undefined,
-              summary: 'summary'
-            }
-          ]
+              summary: 'summary',
+            },
+          ],
         },
         serviceName: 'service',
         displaySpanName: 'span',
         protocolName: 'protocol',
-        startTime: 1608151401295
-      }
-    ]
+        startTime: 1608151401295,
+      },
+    ],
   };
 
   const createService = createServiceFactory({
     service: LogEventsService,
     providers: [
       mockProvider(GraphQlRequestService, {
-        query: jest.fn().mockReturnValue(of({}))
-      })
-    ]
+        query: jest.fn().mockReturnValue(of({})),
+      }),
+    ],
   });
 
   const expectSingleValueObservable = <T>(observable: Observable<T>, value: T): void => {
@@ -66,9 +66,9 @@ describe('Log Events Service', () => {
           timestamp: 'time',
           attributes: {},
           summary: 'summary',
-          spanId: 'test-id'
-        }
-      ]
+          spanId: 'test-id',
+        },
+      ],
     };
     const logEventsWithSpanStartTime = [
       {
@@ -76,11 +76,11 @@ describe('Log Events Service', () => {
         attributes: {},
         summary: 'summary',
         spanStartTime: 1608151401295,
-        spanId: 'test-id'
-      }
+        spanId: 'test-id',
+      },
     ];
     expect(spectator.service.getLogEventsWithSpanStartTime(logEvents, 1608151401295)).toMatchObject(
-      logEventsWithSpanStartTime
+      logEventsWithSpanStartTime,
     );
   });
 
@@ -88,13 +88,13 @@ describe('Log Events Service', () => {
     const spectator = createService({
       providers: [
         mockProvider(GraphQlRequestService, {
-          query: jest.fn().mockReturnValue(of(mockTrace))
-        })
-      ]
+          query: jest.fn().mockReturnValue(of(mockTrace)),
+        }),
+      ],
     });
     expectSingleValueObservable(
       spectator.service.getLogEventsGqlResponseForTrace('test', '1608151401295', 'API_TRACE'),
-      mockTrace
+      mockTrace,
     );
   });
 
@@ -108,10 +108,10 @@ describe('Log Events Service', () => {
         $$spanName: {
           serviceName: 'service',
           apiName: 'span',
-          protocolName: 'protocol'
+          protocolName: 'protocol',
         },
-        spanStartTime: 1608151401295
-      }
+        spanStartTime: 1608151401295,
+      },
     ];
     expect(spectator.service.mapLogEvents(mockTraceWithLogEvents)).toMatchObject(mappedLogEvents);
   });

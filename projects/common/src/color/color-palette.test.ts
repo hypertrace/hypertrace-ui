@@ -37,12 +37,12 @@ describe('Color palette', () => {
     expect(palette.getColorCombinations(2)).toEqual([
       {
         background: 'rgb(255, 251, 235)',
-        foreground: '#080909'
+        foreground: '#080909',
       },
       {
         background: 'rgb(20, 3, 0)',
-        foreground: '#FFFFFF'
-      }
+        foreground: '#FFFFFF',
+      },
     ]);
   });
 
@@ -50,11 +50,11 @@ describe('Color palette', () => {
     const palette = new ColorPalette(['#fffbeb', '#140300', '#789ab7']);
     expect(palette.getColorCombinationForId('test', 2)).toEqual({
       background: 'rgb(255, 251, 235)',
-      foreground: '#080909'
+      foreground: '#080909',
     });
     expect(palette.getColorCombinationForId('test')).toEqual({
       background: 'rgb(20, 3, 0)',
-      foreground: '#FFFFFF'
+      foreground: '#FFFFFF',
     });
   });
 });

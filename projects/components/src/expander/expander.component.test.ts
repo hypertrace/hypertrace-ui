@@ -12,7 +12,7 @@ describe('Expander component', () => {
     declareComponent: false,
     component: ExpanderToggleComponent,
     imports: [ExpanderToggleModule, HttpClientTestingModule, IconLibraryTestingModule],
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService)],
   });
 
   test('renders correct icon and tooltip for expanded state', () => {
@@ -21,9 +21,9 @@ describe('Expander component', () => {
       </ht-expander-toggle>`,
       {
         hostProps: {
-          expanded: true
-        }
-      }
+          expanded: true,
+        },
+      },
     );
 
     expect(spectator.query('ht-icon')).toExist();
@@ -37,9 +37,9 @@ describe('Expander component', () => {
       </ht-expander-toggle>`,
       {
         hostProps: {
-          expanded: false
-        }
-      }
+          expanded: false,
+        },
+      },
     );
 
     expect(spectator.query('ht-icon')).toExist();

@@ -19,7 +19,7 @@ import { SelectOption, SelectSize } from '@hypertrace/components';
       <ht-select-option *ngFor="let option of this.intervalSelectOptions" [value]="option.value" [label]="option.label">
       </ht-select-option>
     </ht-select>
-  `
+  `,
 })
 export class IntervalSelectComponent implements OnChanges {
   @Input()
@@ -70,7 +70,7 @@ export class IntervalSelectComponent implements OnChanges {
   private valueAsOption(interval: IntervalValue, availableIntervals: IntervalValue[]): IntervalOption {
     return {
       value: interval,
-      label: this.getLabelForIntervalValue(interval, availableIntervals)
+      label: this.getLabelForIntervalValue(interval, availableIntervals),
     };
   }
 

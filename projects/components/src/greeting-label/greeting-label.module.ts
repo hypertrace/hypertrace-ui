@@ -5,6 +5,6 @@ import { GreetingLabelComponent } from './greeting-label.component';
 @NgModule({
   declarations: [GreetingLabelComponent],
   exports: [GreetingLabelComponent],
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export class GreetingLabelModule {}
