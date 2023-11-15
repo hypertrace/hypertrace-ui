@@ -40,6 +40,7 @@ export interface Series<TInterval> {
   units?: string;
   summary?: Summary;
   color: string;
+  colors?: string[];
   name: string;
   groupName?: string;
   symbol?: SeriesSymbol;

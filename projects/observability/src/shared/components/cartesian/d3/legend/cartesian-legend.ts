@@ -1,7 +1,7 @@
 import { ComponentRef, Injector } from '@angular/core';
 import { Color, Dictionary, DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
-import { groupBy, isEmpty } from 'lodash-es';
+import { groupBy, isArray, isEmpty } from 'lodash-es';
 import { Observable, Subject } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { LegendPosition } from '../../../legend/legend.component';
@@ -28,7 +28,8 @@ export class CartesianLegend<TData> {
   private readonly initialSeries: Series<TData>[];
   private readonly groupedSeries: Dictionary<Series<TData>[]>;
 
-  private readonly isGrouped: boolean = true;
+  private readonly isGroupedWithInterval: boolean = false;
+  private readonly isGroupedWithoutInterval: boolean = false;
   private isSelectionModeOn: boolean = false;
   private legendElement?: HTMLDivElement;
   private activeSeries: Series<TData>[];
@@ -41,10 +42,24 @@ export class CartesianLegend<TData> {
     private readonly intervalData?: CartesianIntervalData,
     private readonly summaries: Summary[] = [],
   ) {
-    this.isGrouped =
-      this.series.length > 0 &&
-      this.series.every(seriesEntry => !isEmpty(seriesEntry.groupName) && seriesEntry.groupName !== seriesEntry.name);
-    this.groupedSeries = this.isGrouped ? groupBy(this.series, seriesEntry => seriesEntry.groupName) : {};
+    if (this.series.length > 0) {
+      if (
+        this.series.every(seriesEntry => !isEmpty(seriesEntry.groupName) && seriesEntry.groupName !== seriesEntry.name)
+      ) {
+        this.isGroupedWithInterval = true;
+      }
+
+      if (
+        this.series.every(seriesEntry => !isEmpty(seriesEntry.groupBy?.attribute) && isArray(seriesEntry.data?.[0]))
+      ) {
+        this.isGroupedWithoutInterval = true;
+      }
+    }
+
+    this.groupedSeries =
+      this.isGroupedWithInterval || this.isGroupedWithoutInterval
+        ? groupBy(this.series, seriesEntry => seriesEntry.groupName)
+        : {};
 
     this.activeSeries = [...this.series];
     this.initialSeries = [...this.series];
@@ -93,15 +108,7 @@ export class CartesianLegend<TData> {
 
   private drawLegendEntries(container: ContainerElement): void {
     const containerSelection = select(container);
-    if (!this.isGrouped) {
-      containerSelection
-        .append('div')
-        .classed('legend-entries', true)
-        .selectAll('.legend-entry')
-        .data(this.series.filter(series => !series.hide))
-        .enter()
-        .each((_, index, elements) => this.drawLegendEntry(elements[index]));
-    } else {
+    if (this.isGroupedWithInterval || this.isGroupedWithoutInterval) {
       containerSelection
         .selectAll('.legend-entries')
         .data(Object.values(this.groupedSeries))
@@ -109,6 +116,14 @@ export class CartesianLegend<TData> {
         .append('div')
         .classed('legend-entries', true)
         .each((seriesGroup, index, elements) => this.drawLegendEntriesTitleAndValues(seriesGroup, elements[index]));
+    } else {
+      containerSelection
+        .append('div')
+        .classed('legend-entries', true)
+        .selectAll('.legend-entry')
+        .data(this.series.filter(series => !series.hide))
+        .enter()
+        .each((_, index, elements) => this.drawLegendEntry(elements[index]));
     }
   }
 
@@ -148,7 +163,7 @@ export class CartesianLegend<TData> {
       .append('div')
       .classed(CartesianLegend.CSS_CLASS, true)
       .classed(`position-${legendPosition}`, true)
-      .classed('grouped', this.isGrouped);
+      .classed('grouped', this.isGroupedWithInterval || this.isGroupedWithoutInterval);
   }
 
   private drawLegendEntry(
@@ -180,7 +195,7 @@ export class CartesianLegend<TData> {
 
   private updateLegendClassesAndStyle(): void {
     const legendElementSelection = select(this.legendElement!);
-    if (this.isGrouped) {
+    if (this.isGroupedWithInterval || this.isGroupedWithoutInterval) {
       // Legend entries
       select(this.legendElement!)
         .selectAll('.legend-entries')

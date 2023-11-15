@@ -4,7 +4,6 @@ import { MouseDataLookupStrategy } from '../../../../utils/mouse-tracking/mouse-
 import { Series } from '../../../chart';
 import { SingleAxisDataLookupStrategy } from '../../interactivity/data-strategy/single-axis-data-lookup-strategy';
 import { CartesianSeries } from './cartesian-series';
-import { isArray } from 'lodash';
 
 export class CartesianColumn<TData> extends CartesianSeries<TData> {
   private static readonly CSS_CLASS: string = 'columns-data-series';
@@ -39,7 +38,6 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
       );
 
       context.closePath();
-
       context.strokeStyle = this.getColorForDatum(datum);
       context.fillStyle = this.getColorForDatum(datum);
       context.fill();
@@ -48,8 +46,8 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
     });
   }
 
-  private getColorForDatum(datum: TData, defaultColor?: string): string {
-    return defaultColor ?? this.series.getColor?.(datum) ?? this.series.color;
+  private getColorForDatum(datum: TData, colorIndex: number = 0): string {
+    return this.series.getColor?.(datum) ?? this.series?.colors?.[colorIndex] ?? this.series.color;
   }
 
   protected buildMultiAxisDataLookupStrategy(): MouseDataLookupStrategy<TData, Series<TData>> {
@@ -68,7 +66,7 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
       .append('path')
       .classed('column', true)
       .attr('d', datum => this.generateColumnPathString(columnWidth, this.getDatumHeight(datum)))
-      .style('fill', datum => this.getColorForDatum(datum, isArray(datum) ? datum?.[2] : undefined))
+      .style('fill', (datum, index) => this.getColorForDatum(datum, index))
       .attr(
         'transform',
         datum => `translate(${this.getBarOriginX(datum, columnXAdjustment)}, ${this.getBarOriginY(datum)})`,
