@@ -46,6 +46,13 @@ import { FileTypeUtil, SupportedFileType } from './file-types';
 
     <ng-template #defaultSubTpl>
       <ul class="file-requirements-list">
+        <li class="item" *ngFor="let req of (this.config?.customRequirementsInfo ?? [])">
+          <ht-icon class="icon" icon="${IconType.CheckCircleFill}" size="${IconSize.ExtraSmall}"></ht-icon>
+          <div class="text">
+            <strong>{{ req.key }}</strong
+            >: {{ req.value | htDisplayString }}
+          </div>
+        </li>
         <li class="item">
           <ht-icon class="icon" icon="${IconType.CheckCircleFill}" size="${IconSize.ExtraSmall}"></ht-icon>
           <div class="text"><strong>File Types</strong>: {{ this.config.supportedFileTypes | htFilePipe }}</div>
@@ -198,4 +205,10 @@ export interface UploaderConfig {
   supportedFileTypes: SupportedFileType[];
   maxFileSizeInBytes: number;
   maxNumberOfFiles: number;
+  customRequirementsInfo?: FileUploadCustomRequirementInfo[];
+}
+
+export interface FileUploadCustomRequirementInfo {
+  key: string;
+  value: string;
 }
