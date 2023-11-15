@@ -6,14 +6,14 @@ import { map } from 'rxjs/operators';
 import { TableWidgetControlModel } from './table-widget-control.model';
 
 @Model({
-  type: 'table-widget-checkbox-option'
+  type: 'table-widget-checkbox-option',
 })
 export class TableWidgetControlCheckboxOptionModel extends TableWidgetControlModel<TableCheckboxControlOption> {
   @ModelProperty({
     key: 'checked',
     displayName: 'Checked',
     type: BOOLEAN_PROPERTY.type,
-    required: false
+    required: false,
   })
   public checked: boolean = false;
 
@@ -26,9 +26,9 @@ export class TableWidgetControlCheckboxOptionModel extends TableWidgetControlMod
 
         return [
           options[0], // True
-          options[1] // False
+          options[1], // False
         ];
-      })
+      }),
     );
   }
 

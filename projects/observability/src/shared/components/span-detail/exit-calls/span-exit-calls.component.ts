@@ -8,7 +8,7 @@ import { Observable, of } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<div class="span-exit-calls">
     <ht-table [columnConfigs]="this.columnConfigs" [data]="this.dataSource" [pageable]="false"></ht-table>
-  </div> `
+  </div> `,
 })
 export class SpanExitCallsComponent implements OnInit {
   @Input()
@@ -23,7 +23,7 @@ export class SpanExitCallsComponent implements OnInit {
       visible: true,
       width: '80%',
       sortable: false,
-      filterable: false
+      filterable: false,
     },
     {
       id: 'calls',
@@ -31,8 +31,8 @@ export class SpanExitCallsComponent implements OnInit {
       title: 'Calls',
       visible: true,
       sortable: false,
-      filterable: false
-    }
+      filterable: false,
+    },
   ];
 
   public ngOnInit(): void {
@@ -44,9 +44,9 @@ export class SpanExitCallsComponent implements OnInit {
       getData: (): Observable<TableDataResponse<TableRow>> =>
         of({
           data: Object.entries(this.exitCalls ?? {}).map(item => ({ name: item[0], calls: item[1] })),
-          totalCount: Object.keys(this.exitCalls ?? {}).length
+          totalCount: Object.keys(this.exitCalls ?? {}).length,
         }),
-      getScope: () => undefined
+      getScope: () => undefined,
     };
   }
 }

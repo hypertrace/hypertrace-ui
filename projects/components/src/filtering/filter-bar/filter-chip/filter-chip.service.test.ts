@@ -22,7 +22,7 @@ describe('Filter Chip service', () => {
     getTestFilterAttribute(FilterAttributeType.Boolean),
     getTestFilterAttribute(FilterAttributeType.Number),
     getTestFilterAttribute(FilterAttributeType.String),
-    getTestFilterAttribute(FilterAttributeType.StringMap)
+    getTestFilterAttribute(FilterAttributeType.StringMap),
   ];
 
   const buildService = createServiceFactory({
@@ -46,7 +46,7 @@ describe('Filter Chip service', () => {
             default:
               assertUnreachable(type);
           }
-        }
+        },
       }),
       mockProvider(FilterParserLookupService, {
         lookup: (operator: FilterOperator) => {
@@ -70,9 +70,9 @@ describe('Filter Chip service', () => {
             default:
               assertUnreachable(operator);
           }
-        }
-      })
-    ]
+        },
+      }),
+    ],
   });
 
   beforeEach(() => {
@@ -84,23 +84,23 @@ describe('Filter Chip service', () => {
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Boolean),
         field: getTestFilterAttribute(FilterAttributeType.Boolean).name,
-        userString: getTestFilterAttribute(FilterAttributeType.Boolean).displayName
+        userString: getTestFilterAttribute(FilterAttributeType.Boolean).displayName,
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Number),
         field: getTestFilterAttribute(FilterAttributeType.Number).name,
-        userString: getTestFilterAttribute(FilterAttributeType.Number).displayName
+        userString: getTestFilterAttribute(FilterAttributeType.Number).displayName,
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.String),
         field: getTestFilterAttribute(FilterAttributeType.String).name,
-        userString: getTestFilterAttribute(FilterAttributeType.String).displayName
+        userString: getTestFilterAttribute(FilterAttributeType.String).displayName,
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.StringMap),
         field: getTestFilterAttribute(FilterAttributeType.StringMap).name,
-        userString: getTestFilterAttribute(FilterAttributeType.StringMap).displayName
-      }
+        userString: getTestFilterAttribute(FilterAttributeType.StringMap).displayName,
+      },
     ]);
   });
 
@@ -109,44 +109,44 @@ describe('Filter Chip service', () => {
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Boolean),
         field: getTestFilterAttribute(FilterAttributeType.Boolean).name,
-        userString: getTestFilterAttribute(FilterAttributeType.Boolean).displayName
+        userString: getTestFilterAttribute(FilterAttributeType.Boolean).displayName,
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Number),
         field: getTestFilterAttribute(FilterAttributeType.Number).name,
-        userString: getTestFilterAttribute(FilterAttributeType.Number).displayName
+        userString: getTestFilterAttribute(FilterAttributeType.Number).displayName,
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.String),
         field: getTestFilterAttribute(FilterAttributeType.String).name,
-        userString: getTestFilterAttribute(FilterAttributeType.String).displayName
+        userString: getTestFilterAttribute(FilterAttributeType.String).displayName,
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.StringMap),
         field: getTestFilterAttribute(FilterAttributeType.StringMap).name,
-        userString: getTestFilterAttribute(FilterAttributeType.StringMap).displayName
-      }
+        userString: getTestFilterAttribute(FilterAttributeType.StringMap).displayName,
+      },
     ]);
 
     expect(spectator.service.autocompleteFilters(attributes, 'str')).toEqual([
       {
         metadata: getTestFilterAttribute(FilterAttributeType.String),
         field: getTestFilterAttribute(FilterAttributeType.String).name,
-        userString: getTestFilterAttribute(FilterAttributeType.String).displayName
+        userString: getTestFilterAttribute(FilterAttributeType.String).displayName,
       },
       {
         metadata: getTestFilterAttribute(FilterAttributeType.StringMap),
         field: getTestFilterAttribute(FilterAttributeType.StringMap).name,
-        userString: getTestFilterAttribute(FilterAttributeType.StringMap).displayName
-      }
+        userString: getTestFilterAttribute(FilterAttributeType.StringMap).displayName,
+      },
     ]);
 
     expect(spectator.service.autocompleteFilters(attributes, 'nu')).toEqual([
       {
         metadata: getTestFilterAttribute(FilterAttributeType.Number),
         field: getTestFilterAttribute(FilterAttributeType.Number).name,
-        userString: getTestFilterAttribute(FilterAttributeType.Number).displayName
-      }
+        userString: getTestFilterAttribute(FilterAttributeType.Number).displayName,
+      },
     ]);
   });
 
@@ -158,26 +158,26 @@ describe('Filter Chip service', () => {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.Equals,
-        userString: `${attribute.displayName} ${FilterOperator.Equals}`
+        userString: `${attribute.displayName} ${FilterOperator.Equals}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.NotEquals,
-        userString: `${attribute.displayName} ${FilterOperator.NotEquals}`
+        userString: `${attribute.displayName} ${FilterOperator.NotEquals}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.In,
-        userString: `${attribute.displayName} ${FilterOperator.In}`
+        userString: `${attribute.displayName} ${FilterOperator.In}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.NotIn,
-        userString: `${attribute.displayName} ${FilterOperator.NotIn}`
-      }
+        userString: `${attribute.displayName} ${FilterOperator.NotIn}`,
+      },
     ]);
   });
 
@@ -189,50 +189,50 @@ describe('Filter Chip service', () => {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.Equals,
-        userString: `${attribute.displayName} ${FilterOperator.Equals}`
+        userString: `${attribute.displayName} ${FilterOperator.Equals}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.NotEquals,
-        userString: `${attribute.displayName} ${FilterOperator.NotEquals}`
+        userString: `${attribute.displayName} ${FilterOperator.NotEquals}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.LessThan,
-        userString: `${attribute.displayName} ${FilterOperator.LessThan}`
+        userString: `${attribute.displayName} ${FilterOperator.LessThan}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.LessThanOrEqualTo,
-        userString: `${attribute.displayName} ${FilterOperator.LessThanOrEqualTo}`
+        userString: `${attribute.displayName} ${FilterOperator.LessThanOrEqualTo}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.GreaterThan,
-        userString: `${attribute.displayName} ${FilterOperator.GreaterThan}`
+        userString: `${attribute.displayName} ${FilterOperator.GreaterThan}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.GreaterThanOrEqualTo,
-        userString: `${attribute.displayName} ${FilterOperator.GreaterThanOrEqualTo}`
+        userString: `${attribute.displayName} ${FilterOperator.GreaterThanOrEqualTo}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.In,
-        userString: `${attribute.displayName} ${FilterOperator.In}`
+        userString: `${attribute.displayName} ${FilterOperator.In}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.NotIn,
-        userString: `${attribute.displayName} ${FilterOperator.NotIn}`
-      }
+        userString: `${attribute.displayName} ${FilterOperator.NotIn}`,
+      },
     ]);
   });
 
@@ -244,38 +244,38 @@ describe('Filter Chip service', () => {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.Equals,
-        userString: `${attribute.displayName} ${FilterOperator.Equals}`
+        userString: `${attribute.displayName} ${FilterOperator.Equals}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.NotEquals,
-        userString: `${attribute.displayName} ${FilterOperator.NotEquals}`
+        userString: `${attribute.displayName} ${FilterOperator.NotEquals}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.In,
-        userString: `${attribute.displayName} ${FilterOperator.In}`
+        userString: `${attribute.displayName} ${FilterOperator.In}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.NotIn,
-        userString: `${attribute.displayName} ${FilterOperator.NotIn}`
+        userString: `${attribute.displayName} ${FilterOperator.NotIn}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.Like,
-        userString: `${attribute.displayName} ${FilterOperator.Like}`
+        userString: `${attribute.displayName} ${FilterOperator.Like}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.Contains,
-        userString: `${attribute.displayName} ${FilterOperator.Contains}`
-      }
+        userString: `${attribute.displayName} ${FilterOperator.Contains}`,
+      },
     ]);
   });
 
@@ -288,50 +288,50 @@ describe('Filter Chip service', () => {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.ContainsKey,
-        userString: `${attribute.displayName} ${FilterOperator.ContainsKey}`
+        userString: `${attribute.displayName} ${FilterOperator.ContainsKey}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.NotContainsKey,
-        userString: `${attribute.displayName} ${FilterOperator.NotContainsKey}`
+        userString: `${attribute.displayName} ${FilterOperator.NotContainsKey}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.ContainsKeyLike,
-        userString: `${attribute.displayName} ${FilterOperator.ContainsKeyLike}`
+        userString: `${attribute.displayName} ${FilterOperator.ContainsKeyLike}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.Equals,
-        userString: `${attribute.displayName}.example ${FilterOperator.Equals}`
+        userString: `${attribute.displayName}.example ${FilterOperator.Equals}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.NotEquals,
-        userString: `${attribute.displayName}.example ${FilterOperator.NotEquals}`
+        userString: `${attribute.displayName}.example ${FilterOperator.NotEquals}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.In,
-        userString: `${attribute.displayName}.example ${FilterOperator.In}`
+        userString: `${attribute.displayName}.example ${FilterOperator.In}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.NotIn,
-        userString: `${attribute.displayName}.example ${FilterOperator.NotIn}`
+        userString: `${attribute.displayName}.example ${FilterOperator.NotIn}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.Like,
-        userString: `${attribute.displayName}.example ${FilterOperator.Like}`
-      }
+        userString: `${attribute.displayName}.example ${FilterOperator.Like}`,
+      },
     ]);
 
     // Regular operators only once subpath included
@@ -341,57 +341,57 @@ describe('Filter Chip service', () => {
         field: attribute.name,
         operator: FilterOperator.ContainsKey,
         // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
-        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
+        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`),
       }),
       expect.objectContaining({
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.NotContainsKey,
         // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
-        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
+        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`),
       }),
       expect.objectContaining({
         metadata: attribute,
         field: attribute.name,
         operator: FilterOperator.ContainsKeyLike,
         // This operator isn't actually eligible but filtering operators is done by the chip/combobox, so just make sure the string doesn't match
-        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`)
+        userString: expect.not.stringMatching(`${attribute.displayName}.testKey`),
       }),
       {
         metadata: attribute,
         field: attribute.name,
         subpath: 'testKey',
         operator: FilterOperator.Equals,
-        userString: `${attribute.displayName}.testKey ${FilterOperator.Equals}`
+        userString: `${attribute.displayName}.testKey ${FilterOperator.Equals}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         subpath: 'testKey',
         operator: FilterOperator.NotEquals,
-        userString: `${attribute.displayName}.testKey ${FilterOperator.NotEquals}`
+        userString: `${attribute.displayName}.testKey ${FilterOperator.NotEquals}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         subpath: 'testKey',
         operator: FilterOperator.In,
-        userString: `${attribute.displayName}.testKey ${FilterOperator.In}`
+        userString: `${attribute.displayName}.testKey ${FilterOperator.In}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         subpath: 'testKey',
         operator: FilterOperator.NotIn,
-        userString: `${attribute.displayName}.testKey ${FilterOperator.NotIn}`
+        userString: `${attribute.displayName}.testKey ${FilterOperator.NotIn}`,
       },
       {
         metadata: attribute,
         field: attribute.name,
         subpath: 'testKey',
         operator: FilterOperator.Like,
-        userString: `${attribute.displayName}.testKey ${FilterOperator.Like}`
-      }
+        userString: `${attribute.displayName}.testKey ${FilterOperator.Like}`,
+      },
     ]);
   });
 });

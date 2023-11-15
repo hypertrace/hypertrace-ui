@@ -42,7 +42,7 @@ export class FileDownloadService {
 
         return [header, ...values];
       }),
-      map(data => data.map(datum => datum.join(',')).join('\r\n')) // Join data to create a string
+      map(data => data.map(datum => datum.join(',')).join('\r\n')), // Join data to create a string
     );
 
     return this.download({ ...config, dataSource: csvData$ }, csvData => {
@@ -80,14 +80,14 @@ export class FileDownloadService {
       }),
       this.notificationService.withNotification(
         config.successMsg ?? 'File download successful.',
-        config.failureMsg ?? 'File download failed. Please try again.'
+        config.failureMsg ?? 'File download failed. Please try again.',
       ),
       catchError(error =>
         of({
           type: FileDownloadEventType.Failure,
-          error: this.getFileDownloadErrorMessage(error)
-        })
-      )
+          error: this.getFileDownloadErrorMessage(error),
+        }),
+      ),
     );
   }
 
@@ -118,7 +118,7 @@ export type BlobDownloadFileConfig = FileDownloadBaseConfig<Blob>;
 
 export const enum FileDownloadEventType {
   Failure = 'failure',
-  Success = 'success'
+  Success = 'success',
 }
 export interface FileDownloadFailureEvent {
   type: FileDownloadEventType.Failure;

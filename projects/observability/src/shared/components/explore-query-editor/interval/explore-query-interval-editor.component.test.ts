@@ -16,13 +16,13 @@ describe('Explore Query Interval Editor component', () => {
     imports: [IntervalSelectModule, CommonModule, HttpClientTestingModule, IconLibraryTestingModule],
     providers: [
       mockProvider(NavigationService, {
-        navigation$: EMPTY
+        navigation$: EMPTY,
       }),
       mockProvider(TimeRangeService, {
         getTimeRangeAndChanges: jest.fn().mockReturnValue(mockTimeRangeSubject.asObservable()),
-        getCurrentTimeRange: jest.fn().mockReturnValue(mockTimeRangeSubject.getValue())
-      })
-    ]
+        getCurrentTimeRange: jest.fn().mockReturnValue(mockTimeRangeSubject.getValue()),
+      }),
+    ],
   });
 
   test('displays the provided interval', fakeAsync(() => {
@@ -32,9 +32,9 @@ describe('Explore Query Interval Editor component', () => {
     </ht-explore-query-interval-editor>`,
       {
         hostProps: {
-          interval: new TimeDuration(5, TimeUnit.Minute)
-        }
-      }
+          interval: new TimeDuration(5, TimeUnit.Minute),
+        },
+      },
     );
     spectator.tick();
 
@@ -48,7 +48,7 @@ describe('Explore Query Interval Editor component', () => {
     const spectator = hostBuilder(
       `
     <ht-explore-query-interval-editor>
-    </ht-explore-query-interval-editor>`
+    </ht-explore-query-interval-editor>`,
     );
     spectator.tick();
 
@@ -63,9 +63,9 @@ describe('Explore Query Interval Editor component', () => {
     </ht-explore-query-interval-editor>`,
       {
         hostProps: {
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
     spectator.tick();
 
@@ -92,10 +92,10 @@ describe('Explore Query Interval Editor component', () => {
         providers: [
           mockProvider(TimeRangeService, {
             getTimeRangeAndChanges: jest.fn().mockReturnValue(timeRangeSubject.asObservable()),
-            getCurrentTimeRange: jest.fn().mockReturnValue(timeRangeSubject.getValue())
-          })
-        ]
-      }
+            getCurrentTimeRange: jest.fn().mockReturnValue(timeRangeSubject.getValue()),
+          }),
+        ],
+      },
     );
     spectator.tick();
 
@@ -123,9 +123,9 @@ describe('Explore Query Interval Editor component', () => {
       {
         hostProps: {
           interval: new TimeDuration(1, TimeUnit.Minute),
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
     spectator.tick();
 

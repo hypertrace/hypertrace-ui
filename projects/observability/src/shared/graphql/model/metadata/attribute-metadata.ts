@@ -22,7 +22,7 @@ export const enum AttributeMetadataType {
   Double = 'DOUBLE',
   StringArray = 'STRING_ARRAY',
   StringMap = 'STRING_MAP',
-  Timestamp = 'TIMESTAMP'
+  Timestamp = 'TIMESTAMP',
 }
 
 export const toFilterAttributeType = (type: AttributeMetadataType): FilterAttributeType => {

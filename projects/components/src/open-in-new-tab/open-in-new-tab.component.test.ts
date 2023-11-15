@@ -16,7 +16,7 @@ describe('Open in new tab component', () => {
     declarations: [MockComponent(LinkComponent), MockComponent(IconComponent)],
     providers: [
       mockProvider(TimeRangeService, {
-        getShareableCurrentUrl: () => 'url-from-timerangeservice'
+        getShareableCurrentUrl: () => 'url-from-timerangeservice',
       }),
       mockProvider(NavigationService, {
         buildNavigationParams: jest.fn().mockReturnValue({
@@ -24,20 +24,20 @@ describe('Open in new tab component', () => {
             '/external',
             {
               url: 'http://test.hypertrace.ai',
-              navType: 'same_window'
-            }
+              navType: 'same_window',
+            },
           ],
-          extras: { skipLocationChange: true }
-        })
-      })
-    ]
+          extras: { skipLocationChange: true },
+        }),
+      }),
+    ],
   });
 
   test('Open in new tab component should not be displayed if paramsOrUrl is undefined', () => {
     spectator = createHost(`<ht-open-in-new-tab [paramsOrUrl]="paramsOrUrl"></ht-open-in-new-tab>`, {
       hostProps: {
-        paramsOrUrl: undefined
-      }
+        paramsOrUrl: undefined,
+      },
     });
     expect(spectator.query('.open-in-new-tab')).not.toExist();
   });
@@ -45,8 +45,8 @@ describe('Open in new tab component', () => {
   test(`Open in new tab component should exist if paramsOrUrl is not undefined`, fakeAsync(() => {
     spectator = createHost(`<ht-open-in-new-tab [paramsOrUrl]="paramsOrUrl"></ht-open-in-new-tab>`, {
       hostProps: {
-        paramsOrUrl: {}
-      }
+        paramsOrUrl: {},
+      },
     });
     expect(spectator.query('.open-in-new-tab')).toExist();
     expect(spectator.query('ht-link')).toExist();
@@ -60,9 +60,9 @@ describe('Open in new tab component', () => {
       {
         hostProps: {
           paramsOrUrl: {},
-          iconSize: IconSize.Small
-        }
-      }
+          iconSize: IconSize.Small,
+        },
+      },
     );
     expect(spectator.query('.open-in-new-tab')).toExist();
     expect(spectator.query('ht-link')).toExist();

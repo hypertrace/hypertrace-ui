@@ -22,14 +22,14 @@ import { UserTelemetryOrchestrationService } from '../shared/telemetry/user-tele
         <router-outlet></router-outlet>
       </div>
     </div>
-  `
+  `,
 })
 export class ApplicationFrameComponent implements OnInit {
   public readonly timeRangeHasInit$: Observable<TimeRange>;
 
   public constructor(
     private readonly userTelemetryOrchestrationService: UserTelemetryOrchestrationService,
-    private readonly timeRangeService: TimeRangeService
+    private readonly timeRangeService: TimeRangeService,
   ) {
     this.timeRangeHasInit$ = this.timeRangeService.getTimeRangeAndChanges().pipe(take(1));
   }

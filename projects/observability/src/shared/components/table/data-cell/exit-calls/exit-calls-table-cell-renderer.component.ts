@@ -11,7 +11,7 @@ import {
   TABLE_COLUMN_CONFIG,
   TABLE_COLUMN_INDEX,
   TABLE_DATA_PARSER,
-  TABLE_ROW_DATA
+  TABLE_ROW_DATA,
 } from '@hypertrace/components';
 import { Trace } from '../../../../graphql/model/schema/trace';
 import { ObservabilityTableCellType } from '../../observability-table-cell-type';
@@ -44,12 +44,12 @@ interface CellData {
         <ng-template #noExitCalls>No exit calls</ng-template>
       </ng-template>
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: ObservabilityTableCellType.ExitCalls,
   alignment: TableCellAlignmentType.Left,
-  parser: CoreTableCellParserType.NoOp
+  parser: CoreTableCellParserType.NoOp,
 })
 export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<CellData, Trace> implements OnInit {
   public static readonly MAX_API_CALLEES_TO_SHOW: number = 10;
@@ -63,14 +63,14 @@ export class ExitCallsTableCellRendererComponent extends TableCellRendererBase<C
     @Inject(TABLE_DATA_PARSER)
     parser: TableCellParserBase<CellData, Trace, unknown>,
     @Inject(TABLE_CELL_DATA) cellData: CellData,
-    @Inject(TABLE_ROW_DATA) rowData: Trace
+    @Inject(TABLE_ROW_DATA) rowData: Trace,
   ) {
     super(columnConfig, index, parser, cellData, rowData);
     const apiCalleeNameEntries: [string, string][] = Object.entries(cellData.value[1]);
     this.uniqueApiCalleeCount = apiCalleeNameEntries.length;
     this.apiCalleeNameEntries = apiCalleeNameEntries.slice(
       0,
-      ExitCallsTableCellRendererComponent.MAX_API_CALLEES_TO_SHOW
+      ExitCallsTableCellRendererComponent.MAX_API_CALLEES_TO_SHOW,
     );
     this.apiExitCalls = cellData.value[0];
   }

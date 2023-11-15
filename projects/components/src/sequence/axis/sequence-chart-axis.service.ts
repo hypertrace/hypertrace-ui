@@ -13,7 +13,7 @@ export class SequenceChartAxisService {
 
   public updateScaleDomainAndTickSize(
     chartSelection: SequenceSVGSelection,
-    options: SequenceOptions
+    options: SequenceOptions,
   ): ScaleLinear<number, number> {
     this.updateTickSize(chartSelection, options);
     const updatedScale = this.updateScale(chartSelection, options);

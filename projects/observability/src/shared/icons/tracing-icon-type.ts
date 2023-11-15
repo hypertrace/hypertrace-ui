@@ -3,5 +3,5 @@ export const enum TracingIconType {
   EntrySpan = 'svg:entry-span',
   ExitSpan = 'svg:exit-span',
   InternalSpan = 'svg:internal-span',
-  OpenTracing = 'svg:open-tracing'
+  OpenTracing = 'svg:open-tracing',
 }

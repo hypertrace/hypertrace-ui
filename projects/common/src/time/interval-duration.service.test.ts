@@ -13,9 +13,9 @@ describe('Interval duration service', () => {
     service: IntervalDurationService,
     providers: [
       mockProvider(TimeRangeService, {
-        getTimeRangeAndChanges: () => EMPTY
-      })
-    ]
+        getTimeRangeAndChanges: () => EMPTY,
+      }),
+    ],
   });
 
   test('emits available intervals whenever time range changes', () => {
@@ -28,10 +28,10 @@ describe('Interval duration service', () => {
               cold(marblePattern, {
                 x: new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute)),
                 y: new RelativeTimeRange(new TimeDuration(6, TimeUnit.Hour)),
-                z: new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-21T16:40:45.141Z'))
-              })
-          })
-        ]
+                z: new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-21T16:40:45.141Z')),
+              }),
+          }),
+        ],
       });
 
       expectObservable(spectator.service.availableIntervals$).toBe(marblePattern, {
@@ -41,15 +41,15 @@ describe('Interval duration service', () => {
           new TimeDuration(5, TimeUnit.Minute),
           new TimeDuration(15, TimeUnit.Minute),
           new TimeDuration(30, TimeUnit.Minute),
-          new TimeDuration(1, TimeUnit.Hour)
+          new TimeDuration(1, TimeUnit.Hour),
         ],
         z: [
           new TimeDuration(15, TimeUnit.Minute),
           new TimeDuration(30, TimeUnit.Minute),
           new TimeDuration(1, TimeUnit.Hour),
           new TimeDuration(6, TimeUnit.Hour),
-          new TimeDuration(12, TimeUnit.Hour)
-        ]
+          new TimeDuration(12, TimeUnit.Hour),
+        ],
       });
     });
   });
@@ -62,14 +62,14 @@ describe('Interval duration service', () => {
             getTimeRangeAndChanges: () =>
               cold('x-y', {
                 x: new RelativeTimeRange(new TimeDuration(15, TimeUnit.Minute)),
-                y: new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-19T16:55:45.141Z'))
-              })
-          })
-        ]
+                y: new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-19T16:55:45.141Z')),
+              }),
+          }),
+        ],
       });
 
       expectObservable(spectator.service.availableIntervals$).toBe('x--', {
-        x: [new TimeDuration(1, TimeUnit.Minute), new TimeDuration(5, TimeUnit.Minute)]
+        x: [new TimeDuration(1, TimeUnit.Minute), new TimeDuration(5, TimeUnit.Minute)],
       });
     });
   });
@@ -79,14 +79,14 @@ describe('Interval duration service', () => {
 
     expect(
       spectator.service.getAvailableIntervalsForTimeRange(
-        new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-21T16:40:45.141Z'))
-      )
+        new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-21T16:40:45.141Z')),
+      ),
     ).toEqual([
       new TimeDuration(15, TimeUnit.Minute),
       new TimeDuration(30, TimeUnit.Minute),
       new TimeDuration(1, TimeUnit.Hour),
       new TimeDuration(6, TimeUnit.Hour),
-      new TimeDuration(12, TimeUnit.Hour)
+      new TimeDuration(12, TimeUnit.Hour),
     ]);
   });
 
@@ -96,13 +96,13 @@ describe('Interval duration service', () => {
     expect(
       spectator.service.getAvailableIntervalsForTimeRange(
         new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-21T16:40:45.141Z')),
-        100
-      )
+        100,
+      ),
     ).toEqual([
       new TimeDuration(30, TimeUnit.Minute),
       new TimeDuration(1, TimeUnit.Hour),
       new TimeDuration(6, TimeUnit.Hour),
-      new TimeDuration(12, TimeUnit.Hour)
+      new TimeDuration(12, TimeUnit.Hour),
     ]);
   });
 
@@ -111,16 +111,16 @@ describe('Interval duration service', () => {
 
     expect(
       spectator.service.getAvailableIntervalsForTimeRange(
-        new FixedTimeRange(new Date('2018-09-19T16:40:45.141Z'), new Date('2019-12-21T16:40:45.141Z'))
-      )
+        new FixedTimeRange(new Date('2018-09-19T16:40:45.141Z'), new Date('2019-12-21T16:40:45.141Z')),
+      ),
     ).toEqual([new TimeDuration(1, TimeUnit.Day)]);
 
     // Low max data points
     expect(
       spectator.service.getAvailableIntervalsForTimeRange(
         new FixedTimeRange(new Date('2018-09-19T16:40:45.141Z'), new Date('2019-12-21T16:40:45.141Z')),
-        50
-      )
+        50,
+      ),
     ).toEqual([new TimeDuration(1, TimeUnit.Day)]);
   });
 
@@ -133,8 +133,8 @@ describe('Interval duration service', () => {
         new TimeDuration(30, TimeUnit.Minute),
         new TimeDuration(1, TimeUnit.Hour),
         new TimeDuration(6, TimeUnit.Hour),
-        new TimeDuration(12, TimeUnit.Hour)
-      ])
+        new TimeDuration(12, TimeUnit.Hour),
+      ]),
     ).toEqual(new TimeDuration(15, TimeUnit.Minute));
 
     expect(
@@ -143,8 +143,8 @@ describe('Interval duration service', () => {
         new TimeDuration(30, TimeUnit.Minute),
         new TimeDuration(1, TimeUnit.Hour),
         new TimeDuration(6, TimeUnit.Hour),
-        new TimeDuration(12, TimeUnit.Hour)
-      ])
+        new TimeDuration(12, TimeUnit.Hour),
+      ]),
     ).toEqual(new TimeDuration(12, TimeUnit.Hour));
   });
 
@@ -157,8 +157,8 @@ describe('Interval duration service', () => {
         new TimeDuration(30, TimeUnit.Minute),
         new TimeDuration(1, TimeUnit.Hour),
         new TimeDuration(6, TimeUnit.Hour),
-        new TimeDuration(12, TimeUnit.Hour)
-      ])
+        new TimeDuration(12, TimeUnit.Hour),
+      ]),
     ).toEqual(new TimeDuration(30, TimeUnit.Minute));
 
     expect(
@@ -167,8 +167,8 @@ describe('Interval duration service', () => {
         new TimeDuration(30, TimeUnit.Minute),
         new TimeDuration(1, TimeUnit.Hour),
         new TimeDuration(6, TimeUnit.Hour),
-        new TimeDuration(12, TimeUnit.Hour)
-      ])
+        new TimeDuration(12, TimeUnit.Hour),
+      ]),
     ).toBeUndefined();
   });
 
@@ -176,8 +176,8 @@ describe('Interval duration service', () => {
     const spectator = serviceBuilder();
     expect(
       spectator.service.getAutoDuration(
-        new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-21T16:40:45.141Z'))
-      )
+        new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-21T16:40:45.141Z')),
+      ),
     ).toEqual(new TimeDuration(15, TimeUnit.Minute)); // Smallest in range
   });
 
@@ -186,8 +186,8 @@ describe('Interval duration service', () => {
     expect(
       spectator.service.getAutoDuration(
         new FixedTimeRange(new Date('2019-09-19T16:40:45.141Z'), new Date('2019-09-21T16:40:45.141Z')),
-        100
-      )
+        100,
+      ),
     ).toEqual(new TimeDuration(30, TimeUnit.Minute)); // Smallest in range
   });
 
@@ -200,8 +200,8 @@ describe('Interval duration service', () => {
         new TimeDuration(30, TimeUnit.Minute),
         new TimeDuration(1, TimeUnit.Hour),
         new TimeDuration(6, TimeUnit.Hour),
-        new TimeDuration(12, TimeUnit.Hour)
-      ])
+        new TimeDuration(12, TimeUnit.Hour),
+      ]),
     ).toEqual(new TimeDuration(15, TimeUnit.Minute));
   });
 });

@@ -29,7 +29,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
   styleUrls: [
     './node/box/entity-node-box-renderer.scss',
     './edge/curved/entity-edge-curve-renderer.scss',
-    './topology-widget-renderer.component.scss'
+    './topology-widget-renderer.component.scss',
   ],
   providers: [
     TopologyNodeRendererService,
@@ -39,7 +39,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
     ApiNodeBoxRendererService,
     BackendNodeBoxRendererService,
     ServiceNodeBoxRendererService,
-    TopologyDataSourceModelPropertiesService
+    TopologyDataSourceModelPropertiesService,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -82,7 +82,7 @@ import { TopologyWidgetModel } from './topology-widget.model';
         </div>
       </ht-titled-content>
     </div>
-  `
+  `,
 })
 export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidgetModel, TopologyTemplateData> {
   public constructor(
@@ -96,14 +96,14 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
     entityEdgeRenderer: EntityEdgeCurveRendererService,
     serviceNodeRenderer: ServiceNodeBoxRendererService,
     apiNodeRenderer: ApiNodeBoxRendererService,
-    backendNodeRenderer: BackendNodeBoxRendererService
+    backendNodeRenderer: BackendNodeBoxRendererService,
   ) {
     super(api, changeDetector);
 
     nodeRenderer.withDelegate(serviceNodeRenderer).withDelegate(apiNodeRenderer).withDelegate(backendNodeRenderer);
     edgeRenderer.withDelegate(entityEdgeRenderer);
     tooltipRenderer.useTooltip({
-      class: TopologyEntityTooltipComponent
+      class: TopologyEntityTooltipComponent,
     });
   }
 
@@ -122,17 +122,17 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
       map(([data, nodeSpecs, edgeSpecs]) => ({
         nodes: data.nodes,
         nodeSpecs: nodeSpecs,
-        edgeSpecs: edgeSpecs
-      }))
+        edgeSpecs: edgeSpecs,
+      })),
     );
   }
 
   private buildNodeDataSpecifiers(
-    data: TopologyData
+    data: TopologyData,
   ): Observable<TopologyDataSpecifier<MetricAggregationSpecification>[]> {
     data.nodeSpecification.metricSpecifications.map(spec => ({
       label: spec.resultAlias(),
-      value: spec
+      value: spec,
     }));
 
     return forkJoinSafeEmpty(
@@ -141,25 +141,25 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
         this.metadataService.getSpecificationDisplayName(data.nodeTypes[0], spec).pipe(
           map(displayName => ({
             label: displayName,
-            value: spec
-          }))
-        )
-      )
+            value: spec,
+          })),
+        ),
+      ),
     );
   }
 
   private buildEdgeDataSpecifiers(
-    data: TopologyData
+    data: TopologyData,
   ): Observable<TopologyDataSpecifier<MetricAggregationSpecification>[]> {
     return forkJoinSafeEmpty(
       data.edgeSpecification.metricSpecifications.map(spec =>
         this.metadataService.getSpecificationDisplayName(INTERACTION_SCOPE, spec).pipe(
           map(displayName => ({
             label: displayName,
-            value: spec
-          }))
-        )
-      )
+            value: spec,
+          })),
+        ),
+      ),
     );
   }
 
@@ -167,24 +167,24 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
     return [
       {
         categoryClass: PercentileLatencyMetricValueCategory.LessThan20,
-        label: 'less than 20ms'
+        label: 'less than 20ms',
       },
       {
         categoryClass: PercentileLatencyMetricValueCategory.From20To100,
-        label: '20-100ms'
+        label: '20-100ms',
       },
       {
         categoryClass: PercentileLatencyMetricValueCategory.From100To500,
-        label: '100-500ms'
+        label: '100-500ms',
       },
       {
         categoryClass: PercentileLatencyMetricValueCategory.From500To1000,
-        label: '500-1000ms'
+        label: '500-1000ms',
       },
       {
         categoryClass: PercentileLatencyMetricValueCategory.GreaterThanOrEqualTo1000,
-        label: 'more than 1s'
-      }
+        label: 'more than 1s',
+      },
     ];
   }
 
@@ -192,8 +192,8 @@ export class TopologyWidgetRendererComponent extends WidgetRenderer<TopologyWidg
     return [
       {
         categoryClass: ErrorPercentageMetricValueCategory.GreaterThanOrEqualTo5,
-        label: '> 5%'
-      }
+        label: '> 5%',
+      },
     ];
   }
 }

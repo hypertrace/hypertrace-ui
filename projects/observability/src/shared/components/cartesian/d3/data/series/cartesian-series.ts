@@ -11,14 +11,14 @@ export abstract class CartesianSeries<TData> extends CartesianData<TData, Series
   public constructor(
     protected readonly series: Series<TData>,
     protected readonly scaleBuilder: CartesianScaleBuilder<TData>,
-    tooltipTrackingStrategy?: ChartTooltipTrackingStrategy
+    tooltipTrackingStrategy?: ChartTooltipTrackingStrategy,
   ) {
     super(series, scaleBuilder, tooltipTrackingStrategy);
   }
 
   protected buildDataLookupStrategy(
     visualization: Series<TData>,
-    strategy: ChartTooltipTrackingStrategy
+    strategy: ChartTooltipTrackingStrategy,
   ): MouseDataLookupStrategy<TData, Series<TData>> {
     if (strategy.followSingleAxis !== undefined) {
       return new SingleAxisDataLookupStrategy(
@@ -27,7 +27,7 @@ export abstract class CartesianSeries<TData> extends CartesianData<TData, Series
         this.xScale,
         this.yScale,
         strategy.radius,
-        strategy.followSingleAxis
+        strategy.followSingleAxis,
       );
     }
 

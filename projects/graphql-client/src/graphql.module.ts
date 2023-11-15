@@ -6,7 +6,7 @@ import {
   GraphQlOptions,
   GraphQlQueryHandler,
   GRAPHQL_OPTIONS,
-  GRAPHQL_REQUEST_HANDLERS_TOKENS
+  GRAPHQL_REQUEST_HANDLERS_TOKENS,
 } from './graphql-config';
 import { GraphQlRequestService } from './graphql-request.service';
 
@@ -20,23 +20,23 @@ import { GraphQlRequestService } from './graphql-request.service';
         link: httpLink.create({
           uri: options.uri,
           batchMax: options.batchSize ?? 5,
-          batchInterval: 0 // We are already adding debounce time while merging the query. No need to add batch Interval here
-        })
+          batchInterval: 0, // We are already adding debounce time while merging the query. No need to add batch Interval here
+        }),
       }),
-      deps: [HttpBatchLink, GRAPHQL_OPTIONS]
+      deps: [HttpBatchLink, GRAPHQL_OPTIONS],
     },
     {
       provide: GRAPHQL_REQUEST_HANDLERS_TOKENS,
       useValue: [],
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class GraphQlModule {
   public constructor(
     graphQlRequestService: GraphQlRequestService,
     injector: Injector,
-    @Inject(GRAPHQL_REQUEST_HANDLERS_TOKENS) handlerTokens: InjectionToken<GraphQlQueryHandler<unknown, unknown>>[][]
+    @Inject(GRAPHQL_REQUEST_HANDLERS_TOKENS) handlerTokens: InjectionToken<GraphQlQueryHandler<unknown, unknown>>[][],
   ) {
     handlerTokens
       .flat()
@@ -51,9 +51,9 @@ export class GraphQlModule {
         {
           provide: GRAPHQL_REQUEST_HANDLERS_TOKENS,
           useValue: handlerTokens,
-          multi: true
-        }
-      ]
+          multi: true,
+        },
+      ],
     };
   }
 }

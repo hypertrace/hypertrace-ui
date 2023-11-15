@@ -6,9 +6,9 @@ import { DetailSheetInteractionHandlerModel } from './detail-sheet-interaction-h
 @NgModule({
   imports: [
     DashboardCoreModule.with({
-      models: [DetailSheetInteractionHandlerModel]
-    })
+      models: [DetailSheetInteractionHandlerModel],
+    }),
   ],
-  declarations: [DetailSheetInteractionContainerComponent]
+  declarations: [DetailSheetInteractionContainerComponent],
 })
 export class DetailSheetInteractionModule {}

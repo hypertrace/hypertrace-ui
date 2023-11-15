@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TimeDuration, TimeUnit } from '@hypertrace/common';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PredefinedTimeDurationService {
   private readonly predefinedTimeDurations: TimeDuration[] = [];
@@ -22,7 +22,7 @@ export class PredefinedTimeDurationService {
       new TimeDuration(12, TimeUnit.Hour),
       new TimeDuration(1, TimeUnit.Day),
       new TimeDuration(3, TimeUnit.Day),
-      new TimeDuration(1, TimeUnit.Week)
+      new TimeDuration(1, TimeUnit.Week),
     ];
   }
 

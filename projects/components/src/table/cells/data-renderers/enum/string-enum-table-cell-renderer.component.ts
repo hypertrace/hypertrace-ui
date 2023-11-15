@@ -17,11 +17,11 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
     >
       {{ this.value | htDisplayStringEnum }}
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: CoreTableCellRendererType.StringEnum,
   alignment: TableCellAlignmentType.Left,
-  parser: CoreTableCellParserType.String
+  parser: CoreTableCellParserType.String,
 })
 export class StringEnumTableCellRendererComponent extends TableCellRendererBase<string> {}

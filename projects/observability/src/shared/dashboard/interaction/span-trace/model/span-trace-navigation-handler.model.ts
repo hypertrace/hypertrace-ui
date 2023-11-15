@@ -7,7 +7,7 @@ import { InteractionHandler } from '../../interaction-handler';
 import { TracingNavigationService } from './../../../../services/navigation/tracing-navigation.service';
 
 @Model({
-  type: 'span-trace-navigation-handler'
+  type: 'span-trace-navigation-handler',
 })
 export class SpanTraceNavigationHandlerModel implements InteractionHandler {
   @ModelInject(TracingNavigationService)
@@ -18,7 +18,7 @@ export class SpanTraceNavigationHandlerModel implements InteractionHandler {
       this.tracingNavigationService.navigateToTraceDetail(
         span.traceId as string,
         span[spanIdKey],
-        span.startTime as string | undefined
+        span.startTime as string | undefined,
       );
     }
 

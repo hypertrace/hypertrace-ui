@@ -3,7 +3,7 @@ import { LayoutChangeService, SubscriptionLifecycle } from '@hypertrace/common';
 
 @Directive({
   selector: '[htLayoutChange]',
-  providers: [SubscriptionLifecycle, LayoutChangeService]
+  providers: [SubscriptionLifecycle, LayoutChangeService],
 })
 export class LayoutChangeDirective {
   @Output('htLayoutChange')

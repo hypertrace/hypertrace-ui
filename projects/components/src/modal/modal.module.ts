@@ -7,6 +7,6 @@ import { ModalContainerComponent } from './modal-container.component';
 @NgModule({
   imports: [CommonModule, ButtonModule, TooltipModule],
   declarations: [ModalContainerComponent],
-  exports: [ModalContainerComponent]
+  exports: [ModalContainerComponent],
 })
 export class ModalModule {}

@@ -8,6 +8,6 @@ import { FilterButtonComponent } from './filter-button.component';
 @NgModule({
   imports: [CommonModule, IconModule, FilterModule, PopoverModule],
   exports: [FilterButtonComponent],
-  declarations: [FilterButtonComponent]
+  declarations: [FilterButtonComponent],
 })
 export class FilterButtonModule {}

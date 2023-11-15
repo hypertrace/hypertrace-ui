@@ -7,7 +7,7 @@ import {
   Inject,
   Renderer2,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { Renderer } from '@hypertrace/hyperdash';
 import { RendererApi, RENDERER_API } from '@hypertrace/hyperdash-angular';
@@ -27,7 +27,7 @@ import { ContainerWidgetModel } from './container-widget.model';
         <div #containerContent></div>
       </div>
     </div>
-  `
+  `,
 })
 export class ContainerWidgetRendererComponent extends WidgetRenderer<ContainerWidgetModel> implements AfterViewInit {
   @ViewChild('containerContent', { read: ViewContainerRef, static: true })
@@ -37,7 +37,7 @@ export class ContainerWidgetRendererComponent extends WidgetRenderer<ContainerWi
     @Inject(RENDERER_API) api: RendererApi<ContainerWidgetModel>,
     changeDetector: ChangeDetectorRef,
     private readonly elRef: ElementRef,
-    private readonly renderer: Renderer2
+    private readonly renderer: Renderer2,
   ) {
     super(api, changeDetector);
   }

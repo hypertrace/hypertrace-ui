@@ -12,13 +12,13 @@ import { DonutWidgetModel } from './donut-widget.model';
   imports: [
     DashboardCoreModule.with({
       models: [DonutWidgetModel],
-      renderers: [DonutWidgetRendererComponent]
+      renderers: [DonutWidgetRendererComponent],
     }),
     DonutModule,
     CommonModule,
     TitledContentModule,
     LoadAsyncModule,
-    FormattingModule
-  ]
+    FormattingModule,
+  ],
 })
 export class DonutWidgetModule {}

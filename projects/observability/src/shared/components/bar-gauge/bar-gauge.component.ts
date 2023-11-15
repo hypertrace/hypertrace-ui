@@ -8,7 +8,7 @@ import {
   QueryList,
   TemplateRef,
   ViewChild,
-  ViewChildren
+  ViewChildren,
 } from '@angular/core';
 import {
   Color,
@@ -16,7 +16,7 @@ import {
   ColorService,
   DomElementMeasurerService,
   getPercentage,
-  TypedSimpleChanges
+  TypedSimpleChanges,
 } from '@hypertrace/common';
 
 @Component({
@@ -66,7 +66,7 @@ import {
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class BarGaugeComponent implements OnChanges, AfterViewInit {
   private static readonly BAR_GAUGE_COLORS: symbol = Symbol('Bar Gauge Colors');
@@ -117,7 +117,7 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
 
   public constructor(
     private readonly domElementMeasurerService: DomElementMeasurerService,
-    private readonly colorService: ColorService
+    private readonly colorService: ColorService,
   ) {
     this.colorService.registerColorPalette(BarGaugeComponent.BAR_GAUGE_COLORS, [Color.Blue7, Color.Blue4, Color.Blue2]);
   }
@@ -157,7 +157,7 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
       .forNColors(segments.length);
 
     return segments.map((segment: Segment, index: number) =>
-      this.toBarSegment(segment, colors[index], getPercentage(segment.value, maxValue ?? 0))
+      this.toBarSegment(segment, colors[index], getPercentage(segment.value, maxValue ?? 0)),
     );
   }
 
@@ -165,7 +165,7 @@ export class BarGaugeComponent implements OnChanges, AfterViewInit {
     return {
       ...segment,
       color: segment.color ?? color,
-      percentage: percentage
+      percentage: percentage,
     };
   }
 
@@ -192,10 +192,10 @@ export interface SegmentContext {
 export const enum BarGaugeStyle {
   Regular = 'regular',
   Compact = 'compact',
-  SingleBar = 'single-bar'
+  SingleBar = 'single-bar',
 }
 
 export const enum BarGaugeSize {
   Small = 'small',
-  Large = 'large'
+  Large = 'large',
 }

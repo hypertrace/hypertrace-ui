@@ -34,7 +34,7 @@ import { ExploreSeries } from '../explore-visualization-builder';
       >
       </ht-explore-query-series-editor>
     </div>
-  `
+  `,
 })
 export class ExploreQuerySeriesGroupEditorComponent {
   @Input()

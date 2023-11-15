@@ -13,11 +13,11 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
     <div class="code-cell" [htTooltip]="this.value | htDisplayString">
       {{ this.value | htDisplayString }}
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: CoreTableCellRendererType.Code,
   alignment: TableCellAlignmentType.Left,
-  parser: CoreTableCellParserType.String
+  parser: CoreTableCellParserType.String,
 })
 export class CodeTableCellRendererComponent extends TableCellRendererBase<string> {}

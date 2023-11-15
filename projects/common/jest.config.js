@@ -5,7 +5,7 @@ module.exports = {
     'projects/common/src/**/*.ts',
     '!**/*.module.ts',
     '!**/public_api.ts',
-    '!projects/common/src/test/**'
+    '!projects/common/src/test/**',
   ],
   coverageDirectory: 'coverage/common',
   reporters: [
@@ -13,17 +13,17 @@ module.exports = {
     [
       'jest-junit',
       {
-        outputDirectory: 'test-results/common'
-      }
+        outputDirectory: 'test-results/common',
+      },
     ],
     [
       'jest-html-reporter',
       {
-        outputPath: 'test-results/common/test-report.html'
-      }
-    ]
+        outputPath: 'test-results/common/test-report.html',
+      },
+    ],
   ],
   testMatch: ['<rootDir>/projects/common/**/+(*.)+(spec|test).ts'],
   modulePathIgnorePatterns: ['BOGUS'], // Need to reset from app project, but empty is merged
-  watchPathIgnorePatterns: ['test-results']
+  watchPathIgnorePatterns: ['test-results'],
 };

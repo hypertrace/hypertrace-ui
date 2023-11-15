@@ -5,7 +5,7 @@ import {
   ListViewComponent,
   ListViewModule,
   LoadAsyncModule,
-  TooltipDirective
+  TooltipDirective,
 } from '@hypertrace/components';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { MockComponents, MockDirective, MockProvider } from 'ng-mocks';
@@ -23,16 +23,16 @@ describe('Span Tags Detail Component', () => {
     shallow: true,
     providers: [
       MockProvider(MetadataService, {
-        getAllAttributes: jest.fn().mockReturnValue(of([]))
-      })
-    ]
+        getAllAttributes: jest.fn().mockReturnValue(of([])),
+      }),
+    ],
   });
 
   test('should display tag records', () => {
     spectator = createHost(`<ht-span-tags-detail [tags]="tags"></ht-span-tags-detail>`, {
       hostProps: {
-        tags: { tag1: 'value1', tag2: 'value2' }
-      }
+        tags: { tag1: 'value1', tag2: 'value2' },
+      },
     });
 
     const listViewElement = spectator.query(ListViewComponent);

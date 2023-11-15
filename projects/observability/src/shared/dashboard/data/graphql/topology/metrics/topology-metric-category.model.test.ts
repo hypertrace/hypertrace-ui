@@ -13,8 +13,8 @@ describe('Topology Metric with category model', () => {
         maxValue: 10,
         fillColor: Color.Blue2,
         strokeColor: Color.Blue3,
-        focusColor: Color.Blue4
-      }
+        focusColor: Color.Blue4,
+      },
     });
 
     expect(spectator.model.getCategoryClassName()).toContain('test-name');

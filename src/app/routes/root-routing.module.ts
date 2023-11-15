@@ -17,110 +17,110 @@ const ROUTE_CONFIG: HtRoute[] = [
           {
             path: '',
             redirectTo: 'home',
-            pathMatch: 'full'
+            pathMatch: 'full',
           },
           {
             path: 'home',
             data: {
               breadcrumb: {
                 icon: IconType.Dashboard,
-                label: 'Dashboard'
-              }
+                label: 'Dashboard',
+              },
             },
-            loadChildren: () => import('../home/home.module').then(module => module.HomeModule)
+            loadChildren: () => import('../home/home.module').then(module => module.HomeModule),
           },
           {
             path: 'application-flow',
             data: {
               breadcrumb: {
                 icon: ObservabilityIconType.ApplicationFlow,
-                label: 'Application Flow'
-              }
+                label: 'Application Flow',
+              },
             },
             loadChildren: () =>
               import('./application-flow/application-flow-routing.module').then(
-                module => module.ApplicationFlowRoutingModule
-              )
+                module => module.ApplicationFlowRoutingModule,
+              ),
           },
           {
             path: 'backends',
             data: {
               breadcrumb: {
                 icon: ObservabilityIconType.Backend,
-                label: 'Backends'
-              }
+                label: 'Backends',
+              },
             },
             loadChildren: () =>
-              import('./backends/backends-routing.module').then(module => module.BackendsRoutingModule)
+              import('./backends/backends-routing.module').then(module => module.BackendsRoutingModule),
           },
           {
             path: 'services',
             data: {
               breadcrumb: {
                 icon: ObservabilityIconType.Service,
-                label: 'Services'
-              }
+                label: 'Services',
+              },
             },
             loadChildren: () =>
-              import('./services/services-routing.module').then(module => module.ServicesRoutingModule)
+              import('./services/services-routing.module').then(module => module.ServicesRoutingModule),
           },
           {
             path: 'endpoints',
             data: {
               breadcrumb: {
                 icon: ObservabilityIconType.Api,
-                label: 'Endpoints'
-              }
+                label: 'Endpoints',
+              },
             },
             loadChildren: () =>
-              import('./endpoints/endpoint-routing.module').then(module => module.EndpointRoutingModule)
+              import('./endpoints/endpoint-routing.module').then(module => module.EndpointRoutingModule),
           },
           {
             path: 'trace',
-            loadChildren: () => import('@hypertrace/observability').then(module => module.TraceDetailPageModule)
+            loadChildren: () => import('@hypertrace/observability').then(module => module.TraceDetailPageModule),
           },
           {
             path: 'api-trace',
-            loadChildren: () => import('@hypertrace/observability').then(module => module.ApiTraceDetailPageModule)
+            loadChildren: () => import('@hypertrace/observability').then(module => module.ApiTraceDetailPageModule),
           },
           {
             path: 'explorer',
             data: {
               breadcrumb: {
                 icon: IconType.Search,
-                label: 'Explorer'
-              }
+                label: 'Explorer',
+              },
             },
             loadChildren: () =>
-              import('./explorer/explorer-routing.module').then(module => module.ExplorerRoutingModule)
+              import('./explorer/explorer-routing.module').then(module => module.ExplorerRoutingModule),
           },
           {
             path: 'error',
-            component: NotFoundComponent
-          }
-        ]
+            component: NotFoundComponent,
+          },
+        ],
       },
       {
         path: 'external',
         canActivate: [ExternalUrlNavigator],
-        component: NotFoundComponent // Not actually used, but required by router
+        component: NotFoundComponent, // Not actually used, but required by router
       },
       {
         path: '**',
         redirectTo: 'error',
-        pathMatch: 'full'
-      }
-    ]
-  }
+        pathMatch: 'full',
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [
     NotFoundModule,
     RouterModule.forRoot(ROUTE_CONFIG, {
-      preloadingStrategy: PreloadAllModules
-    })
+      preloadingStrategy: PreloadAllModules,
+    }),
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class RootRoutingModule {}

@@ -7,7 +7,7 @@ import {
   LegendFontSize,
   LegendLayout,
   LegendPosition,
-  LegendSeries
+  LegendSeries,
 } from '../../legend/legend.component';
 import { ChartTooltipBuilderService, ChartTooltipDataMapper } from '../chart-tooltip/chart-tooltip-builder.service';
 import { ChartTooltipRef } from '../chart-tooltip/chart-tooltip-popover';
@@ -24,7 +24,7 @@ export abstract class D3VisualizationBuilderService<
     protected readonly d3: D3UtilService,
     protected readonly measurer: DomElementMeasurerService,
     protected readonly dynamicComponent: DynamicComponentService,
-    protected readonly chartTooltipBuilderService: ChartTooltipBuilderService
+    protected readonly chartTooltipBuilderService: ChartTooltipBuilderService,
   ) {}
 
   private tooltipRef?: ChartTooltipRef<unknown>;
@@ -46,7 +46,7 @@ export abstract class D3VisualizationBuilderService<
     visualizationContainer: ChartContainerSelection,
     dimensions: TDimensions,
     config: TInternalConfig,
-    renderer: Renderer2
+    renderer: Renderer2,
   ): void;
 
   protected abstract decorateDimensions(calculatedDimensions: ChartDimensions): TDimensions;
@@ -54,7 +54,7 @@ export abstract class D3VisualizationBuilderService<
   protected abstract drawVisualization(
     visualizationContainer: ChartContainerSelection,
     config: TInternalConfig,
-    renderer: Renderer2
+    renderer: Renderer2,
   ): void;
 
   protected getOuterContainerClass(): string {
@@ -88,7 +88,7 @@ export abstract class D3VisualizationBuilderService<
     config: TInternalConfig,
     renderer: Renderer2,
     dimensions: TDimensions,
-    oldDimensions?: TDimensions
+    oldDimensions?: TDimensions,
   ): void {
     if (!this.haveDimensionsChanged(dimensions, oldDimensions)) {
       return;
@@ -99,13 +99,13 @@ export abstract class D3VisualizationBuilderService<
       selection.select(selector(this.getVisualizationContainerClass())),
       dimensions,
       config,
-      renderer
+      renderer,
     );
   }
 
   protected drawOuterContainer(
     parentSelection: ChartParentSelection,
-    config: TInternalConfig
+    config: TInternalConfig,
   ): ChartContainerSelection {
     return parentSelection
       .append('div')
@@ -144,8 +144,8 @@ export abstract class D3VisualizationBuilderService<
         position: config.legend,
         layout: this.getLegendLayout(config),
         fontSize: this.getLegendFontSize(config),
-        series: this.getLegendEntries(config)
-      })
+        series: this.getLegendEntries(config),
+      }),
     );
     this.d3.select(component.location, this.getRenderer(injector));
     component.changeDetectorRef.detectChanges(); // Force change detection to get content size immediately
@@ -160,7 +160,7 @@ export abstract class D3VisualizationBuilderService<
     config: TInternalConfig,
     renderer: Renderer2,
     lookupStrategy: MouseDataLookupStrategy<TData, TContext>,
-    mapper?: ChartTooltipDataMapper<TData, TContext, TRendererData>
+    mapper?: ChartTooltipDataMapper<TData, TContext, TRendererData>,
   ): void {
     if (!config.tooltipOption) {
       return;
@@ -174,7 +174,7 @@ export abstract class D3VisualizationBuilderService<
     renderer: Renderer2,
     lookupStrategy: MouseDataLookupStrategy<TData, TContext>,
     mapper?: ChartTooltipDataMapper<TData, TContext, TRendererData>,
-    componentOrTemplate?: Type<unknown> | TemplateRef<unknown>
+    componentOrTemplate?: Type<unknown> | TemplateRef<unknown>,
   ): void {
     this.maybeSetTooltipRef(mapper, componentOrTemplate);
     this.d3
@@ -185,7 +185,7 @@ export abstract class D3VisualizationBuilderService<
 
   private onMouseMove<TData, TContext>(
     container: ContainerElement,
-    lookupStrategy: MouseDataLookupStrategy<TData, TContext>
+    lookupStrategy: MouseDataLookupStrategy<TData, TContext>,
   ): void {
     const [x, y] = mouse(container);
     this.tooltipRef?.showWithData(container, lookupStrategy.dataForLocation({ x: x, y: y }));
@@ -197,7 +197,7 @@ export abstract class D3VisualizationBuilderService<
 
   private maybeSetTooltipRef<TData, TContext, TRendererData>(
     mapper?: ChartTooltipDataMapper<TData, TContext, TRendererData>,
-    componentOrTemplate?: Type<unknown> | TemplateRef<unknown>
+    componentOrTemplate?: Type<unknown> | TemplateRef<unknown>,
   ): void {
     if (this.tooltipRef !== undefined) {
       return;
@@ -267,7 +267,7 @@ export abstract class D3VisualizationBuilderService<
       visualizationWidth: vizWidth,
       visualizationHeight: vizHeight,
       legendWidth: legendWidth,
-      legendHeight: legendHeight
+      legendHeight: legendHeight,
     });
   }
 
@@ -348,7 +348,7 @@ export abstract class D3VisualizationBuilderService<
     parentSelection: ChartParentSelection,
     config: TInternalConfig,
     renderer: Renderer2,
-    dimensions: TDimensions
+    dimensions: TDimensions,
   ): TChart {
     let currentDimensions = dimensions;
 
@@ -359,9 +359,9 @@ export abstract class D3VisualizationBuilderService<
           currentDimensions = this.measure(parentSelection, config);
           this.updateSize(parentSelection, config, renderer, currentDimensions, oldDimensions);
         },
-        destroy: () => this.clear(parentSelection)
+        destroy: () => this.clear(parentSelection),
       },
-      config
+      config,
     );
   }
 }

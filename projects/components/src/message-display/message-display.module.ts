@@ -6,6 +6,6 @@ import { MessageDisplayComponent } from './message-display.component';
 @NgModule({
   declarations: [MessageDisplayComponent],
   imports: [CommonModule, IconModule],
-  exports: [MessageDisplayComponent]
+  exports: [MessageDisplayComponent],
 })
 export class MessageDisplayModule {}

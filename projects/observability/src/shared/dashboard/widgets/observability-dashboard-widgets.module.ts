@@ -19,7 +19,7 @@ import { TopologyWidgetModule } from './topology/topology-widget.module';
     DonutWidgetModule,
     CartesianWidgetModule,
     GaugeWidgetModule,
-    IframeWidgetModule
-  ]
+    IframeWidgetModule,
+  ],
 })
 export class ObservabilityDashboardWidgetsModule {}

@@ -6,7 +6,7 @@ import {
   FileUploadEvent,
   FileUploadEventType,
   FileUploadFailureEvent,
-  FileUploadProgressEvent
+  FileUploadProgressEvent,
 } from '../file-upload.service';
 
 @Component({
@@ -60,7 +60,7 @@ import {
         ></ht-icon>
       </div>
     </div>
-  `
+  `,
 })
 export class FileDisplayComponent {
   @Input()

@@ -15,9 +15,9 @@ describe('File Download Service', () => {
     service: FileDownloadService,
     providers: [
       mockProvider(NotificationService, {
-        withNotification: () => (x: Observable<unknown>) => x
-      })
-    ]
+        withNotification: () => (x: Observable<unknown>) => x,
+      }),
+    ],
   });
 
   test('should download as text correctly', () => {
@@ -29,8 +29,8 @@ describe('File Download Service', () => {
       expectObservable(spectator.service.downloadAsText({ dataSource: data$, fileName: 'download.text' })).toBe(
         '(x|)',
         {
-          x: { type: FileDownloadEventType.Success }
-        }
+          x: { type: FileDownloadEventType.Success },
+        },
       );
     });
 
@@ -39,10 +39,10 @@ describe('File Download Service', () => {
       expectObservable(
         spectator.service.downloadAsText({
           dataSource: data$.pipe(switchMapTo(throwError(''))),
-          fileName: 'download.text'
-        })
+          fileName: 'download.text',
+        }),
       ).toBe('(x|)', {
-        x: { type: FileDownloadEventType.Failure, error: 'File upload failed due to unknown error' }
+        x: { type: FileDownloadEventType.Failure, error: 'File upload failed due to unknown error' },
       });
     });
   });
@@ -51,28 +51,28 @@ describe('File Download Service', () => {
     const spectator = createService();
     let csvData$ = of([
       { name: 'example', headCount: 123 },
-      { name: 'hypertrace', headCount: 456, optionalValue: 1 }
+      { name: 'hypertrace', headCount: 456, optionalValue: 1 },
     ]);
     // With correct data
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(spectator.service.downloadAsCsv({ dataSource: csvData$, fileName: 'download.csv' })).toBe(
         '(x|)',
         {
-          x: { type: FileDownloadEventType.Success }
-        }
+          x: { type: FileDownloadEventType.Success },
+        },
       );
     });
 
     // CSV conversion should work as expected
     expect(blobConstructorSpy).toHaveBeenLastCalledWith(
       [`Name,Head Count,Optional Value\r\n"example",123,"-"\r\n"hypertrace",456,1`],
-      { type: 'text/csv' }
+      { type: 'text/csv' },
     );
 
     //<------ Dataset-2 -  by passing headers explicitly ------>
     csvData$ = of([
       { name: 'example', headCount: 123, foo: 'bar' },
-      { name: 'hypertrace', headCount: 456, optionalValue: 1, foo: undefined, bar: 'baz' }
+      { name: 'hypertrace', headCount: 456, optionalValue: 1, foo: undefined, bar: 'baz' },
     ]);
 
     runFakeRxjs(({ expectObservable }) => {
@@ -80,16 +80,16 @@ describe('File Download Service', () => {
         spectator.service.downloadAsCsv({
           dataSource: csvData$,
           fileName: 'download.csv',
-          header: ['name', 'foo', 'optionalValue']
-        })
+          header: ['name', 'foo', 'optionalValue'],
+        }),
       ).toBe('(x|)', {
-        x: { type: FileDownloadEventType.Success }
+        x: { type: FileDownloadEventType.Success },
       });
     });
     // CSV conversion should work as expected
     expect(blobConstructorSpy).toHaveBeenLastCalledWith(
       [`Name,Foo,Optional Value\r\n"example","bar","-"\r\n"hypertrace","-",1`],
-      { type: 'text/csv' }
+      { type: 'text/csv' },
     );
   });
 });

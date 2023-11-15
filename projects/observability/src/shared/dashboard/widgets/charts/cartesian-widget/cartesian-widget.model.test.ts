@@ -15,9 +15,9 @@ describe('Cartesian Widget Model', () => {
       of({
         getData: () =>
           of({
-            intervals: data
-          })
-      })
+            intervals: data,
+          }),
+      }),
     );
 
     return series;
@@ -29,12 +29,12 @@ describe('Cartesian Widget Model', () => {
     model.series = [
       buildMockSeries('first', [
         [0, 10],
-        [1, 15]
+        [1, 15],
       ]),
       buildMockSeries('second', [
         [0, 20],
-        [1, 25]
-      ])
+        [1, 25],
+      ]),
     ];
     model.getDataFetcher().subscribe(fetcher => (dataFetcher = fetcher));
   });
@@ -47,20 +47,20 @@ describe('Cartesian Widget Model', () => {
             expect.objectContaining({
               data: [
                 [0, 10],
-                [1, 15]
+                [1, 15],
               ],
-              name: 'first'
+              name: 'first',
             }),
             expect.objectContaining({
               data: [
                 [0, 20],
-                [1, 25]
+                [1, 25],
               ],
-              name: 'second'
-            })
+              name: 'second',
+            }),
           ],
-          bands: []
-        }
+          bands: [],
+        },
       });
     });
   });

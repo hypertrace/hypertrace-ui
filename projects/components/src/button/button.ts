@@ -5,7 +5,7 @@ export const enum ButtonVariant {
   Tertiary = 'tertiary',
   Quaternary = 'quaternary',
   Destructive = 'destructive',
-  Additive = 'additive'
+  Additive = 'additive',
 }
 
 export const enum ButtonSize {
@@ -14,7 +14,7 @@ export const enum ButtonSize {
   Medium = 'medium',
   Small = 'small',
   ExtraSmall = 'extra-small',
-  Tiny = 'tiny'
+  Tiny = 'tiny',
 }
 
 export const enum ButtonStyle {
@@ -24,10 +24,10 @@ export const enum ButtonStyle {
   Outlined = 'outlined', //       No                    Yes                   No                No          Yes
   Bordered = 'bordered', //       No                    Yes                   No                Yes         Yes
   Text = 'text', //               No                    No                    Yes               No          Yes
-  PlainText = 'plain-text' //     No                    No                    Yes               No           No
+  PlainText = 'plain-text', //     No                    No                    Yes               No           No
 }
 
 export const enum ButtonType {
   Button = 'button',
-  Submit = 'submit'
+  Submit = 'submit',
 }

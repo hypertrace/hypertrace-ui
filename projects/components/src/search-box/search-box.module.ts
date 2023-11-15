@@ -9,6 +9,6 @@ import { EventBlockerModule } from '../event-blocker/event-blocker.module';
 @NgModule({
   imports: [CommonModule, EventBlockerModule, FormsModule, IconModule, IsEmptyPipeModule],
   declarations: [SearchBoxComponent],
-  exports: [SearchBoxComponent]
+  exports: [SearchBoxComponent],
 })
 export class TraceSearchBoxModule {}

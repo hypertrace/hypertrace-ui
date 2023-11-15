@@ -7,8 +7,8 @@ export const getMockFlexLayoutProviders = (): StaticProvider[] => [
     useValue: {
       getFlowDirection: jest.fn(() => ['row', '']),
       applyStyleToElement: jest.fn(),
-      applyStyleToElements: jest.fn()
-    }
+      applyStyleToElements: jest.fn(),
+    },
   },
-  ɵMockMatchMediaProvider // TODO fix this, it's now internal but no clear way to mock
+  ɵMockMatchMediaProvider, // TODO fix this, it's now internal but no clear way to mock
 ];

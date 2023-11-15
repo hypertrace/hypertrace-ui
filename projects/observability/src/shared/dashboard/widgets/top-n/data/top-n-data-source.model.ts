@@ -9,36 +9,36 @@ import { ExploreSpecificationBuilder } from '../../../../graphql/request/builder
 import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
   EXPLORE_GQL_REQUEST,
-  GraphQlExploreResponse
+  GraphQlExploreResponse,
 } from '../../../../graphql/request/handlers/explore/explore-query';
 import { GraphQlDataSourceModel } from '../../../data/graphql/graphql-data-source.model';
 import { TopNExploreSelectionSpecificationModel } from './top-n-explore-selection-specification.model';
 
 @Model({
-  type: 'top-n-data-source'
+  type: 'top-n-data-source',
 })
 export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFetcher> {
   @ModelProperty({
     key: 'entity',
     type: {
       key: ENUM_TYPE.type,
-      values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api]
+      values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api],
     } as EnumPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public entityType!: string;
 
   @ModelProperty({
     key: 'result-limit',
     displayName: 'Result Limit',
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public resultLimit: number = 10;
 
   @ModelProperty({
     type: ARRAY_PROPERTY.type,
     key: 'options',
-    required: true
+    required: true,
   })
   public options!: TopNExploreSelectionSpecificationModel[];
 
@@ -46,7 +46,7 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
     return of({
       getData: (metricSpecification: TopNExploreSelectionSpecificationModel) =>
         this.fetchDataWithMetric(metricSpecification),
-      getOptions: () => this.options
+      getOptions: () => this.options,
     });
   }
 
@@ -65,14 +65,14 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
       filters: (filters ?? []).concat(metricSpec.filters ?? []),
       groupBy: {
         keyExpressions: [{ key: labelAttributeSpec.name }, { key: idAttributeSpec.name }],
-        limit: this.resultLimit
+        limit: this.resultLimit,
       },
       orderBy: [
         {
           direction: TableSortDirection.Descending,
-          key: metricSpec.metric
-        }
-      ]
+          key: metricSpec.metric,
+        },
+      ],
     })).pipe(
       map(response =>
         response.results.map(entity => ({
@@ -80,10 +80,10 @@ export class TopNDataSourceModel extends GraphQlDataSourceModel<TopNWidgetDataFe
           value: entity[metricSpec.metric.resultAlias()].value as number,
           entity: {
             [entityIdKey]: entity[idAttributeSpec.resultAlias()].value as string,
-            [entityTypeKey]: this.entityType
-          }
-        }))
-      )
+            [entityTypeKey]: this.entityType,
+          },
+        })),
+      ),
     );
   }
 }

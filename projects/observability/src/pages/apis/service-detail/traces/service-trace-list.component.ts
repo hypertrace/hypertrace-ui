@@ -15,7 +15,7 @@ import { serviceTraceListDashboard } from './service-trace-list.dashboard';
       [filterConfig]="filterConfig"
     >
     </ht-navigable-dashboard>
-  `
+  `,
 })
 export class ServiceTraceListComponent {
   public readonly filterConfig$: ReplayObservable<NavigableDashboardFilterConfig>;
@@ -23,10 +23,10 @@ export class ServiceTraceListComponent {
     this.filterConfig$ = serviceDetailService.entityFilter$.pipe(
       map(filter => ({
         filterBar: {
-          scope: ObservabilityTraceType.Api
+          scope: ObservabilityTraceType.Api,
         },
-        implicitFilters: [filter]
-      }))
+        implicitFilters: [filter],
+      })),
     );
   }
 }

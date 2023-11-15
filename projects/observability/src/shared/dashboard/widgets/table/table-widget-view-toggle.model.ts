@@ -11,7 +11,7 @@ import { TableWidgetViewModel } from './table-widget-view.model';
 import { TableWidgetModel } from './table-widget.model';
 
 @Model({
-  type: 'table-widget-view-toggle'
+  type: 'table-widget-view-toggle',
 })
 export class TableWidgetViewToggleModel extends TableWidgetModel implements ModelOnInit {
   @ModelProperty({
@@ -20,9 +20,9 @@ export class TableWidgetViewToggleModel extends TableWidgetModel implements Mode
       key: ARRAY_PROPERTY.type,
       subtype: {
         key: ModelPropertyType.TYPE,
-        defaultModelClass: TableWidgetViewModel
-      }
-    } as ArrayPropertyTypeInstance
+        defaultModelClass: TableWidgetViewModel,
+      },
+    } as ArrayPropertyTypeInstance,
   })
   public views: TableWidgetViewModel[] = [];
 

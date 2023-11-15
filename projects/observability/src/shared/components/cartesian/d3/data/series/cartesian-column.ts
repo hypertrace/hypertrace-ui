@@ -33,7 +33,7 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
         this.getBarOriginY(datum),
         columnWidth,
         this.getDatumHeight(datum),
-        CartesianColumn.COLUMN_ROUNDING_RADIUS
+        CartesianColumn.COLUMN_ROUNDING_RADIUS,
       );
 
       context.closePath();
@@ -68,7 +68,7 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
       .style('fill', datum => this.getColorForDatum(datum))
       .attr(
         'transform',
-        datum => `translate(${this.getBarOriginX(datum, columnXAdjustment)}, ${this.getBarOriginY(datum)})`
+        datum => `translate(${this.getBarOriginX(datum, columnXAdjustment)}, ${this.getBarOriginY(datum)})`,
       );
   }
 
@@ -87,7 +87,7 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
   private getColumnWidth(): number {
     return Math.min(
       this.xScale.getBandwidth() / this.xScale.getGroupedColumnSeriesLength(this.series),
-      CartesianColumn.MAX_COLUMN_WIDTH
+      CartesianColumn.MAX_COLUMN_WIDTH,
     );
   }
 
@@ -117,7 +117,7 @@ export class CartesianColumn<TData> extends CartesianSeries<TData> {
     startY: number,
     width: number,
     height: number,
-    roundingRadius: number
+    roundingRadius: number,
   ): void {
     if (this.isShowBarTopRounding()) {
       columnPath.moveTo(startX + roundingRadius, startY);

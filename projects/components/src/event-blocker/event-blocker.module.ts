@@ -3,6 +3,6 @@ import { EventBlockerComponent } from './event-blocker.component';
 
 @NgModule({
   declarations: [EventBlockerComponent],
-  exports: [EventBlockerComponent]
+  exports: [EventBlockerComponent],
 })
 export class EventBlockerModule {}

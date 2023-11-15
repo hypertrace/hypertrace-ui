@@ -13,11 +13,11 @@ import { TracingTableCellType } from '../../tracing-table-cell-type';
         <span class="text">{{ this.value.statusCode }} - {{ this.value.statusMessage }}</span>
       </div>
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: TracingTableCellType.TraceStatus,
   alignment: TableCellAlignmentType.Left,
-  parser: TracingTableCellType.TraceStatus
+  parser: TracingTableCellType.TraceStatus,
 })
 export class TraceStatusTableCellRendererComponent extends TableCellRendererBase<TraceStatus> {}

@@ -10,12 +10,12 @@ describe('TableCsvDownloaderService', () => {
     service: TableCsvDownloaderService,
     providers: [
       mockProvider(FileDownloadService, {
-        downloadAsCsv: jest.fn().mockReturnValue(EMPTY)
+        downloadAsCsv: jest.fn().mockReturnValue(EMPTY),
       }),
       mockProvider(NotificationService, {
-        createInfoToast: jest.fn()
-      })
-    ]
+        createInfoToast: jest.fn(),
+      }),
+    ],
   });
 
   test('execute download should behave as expected for no data', fakeAsync(() => {
@@ -36,11 +36,11 @@ describe('TableCsvDownloaderService', () => {
           {
             id: 'key1',
             name: 'key1',
-            csvGenerator: { generateSafeCsv: (cellData: Dictionary<string>, _row): Dictionary<string> => cellData }
-          }
-        ] as TableColumnConfigExtended[]
+            csvGenerator: { generateSafeCsv: (cellData: Dictionary<string>, _row): Dictionary<string> => cellData },
+          },
+        ] as TableColumnConfigExtended[],
       }),
-      'table-id.csv'
+      'table-id.csv',
     );
     tick();
 

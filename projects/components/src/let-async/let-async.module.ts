@@ -5,6 +5,6 @@ import { LetAsyncDirective } from './let-async.directive';
 @NgModule({
   declarations: [LetAsyncDirective],
   exports: [LetAsyncDirective],
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export class LetAsyncModule {}

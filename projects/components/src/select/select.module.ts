@@ -31,21 +31,21 @@ import { SelectComponent } from './select.component';
     TraceSearchBoxModule,
     EventBlockerModule,
     ButtonModule,
-    IsEmptyPipeModule
+    IsEmptyPipeModule,
   ],
   declarations: [
     SelectComponent,
     SelectOptionComponent,
     SelectGroupComponent,
     SelectControlOptionComponent,
-    SelectOptionRendererDirective
+    SelectOptionRendererDirective,
   ],
   exports: [
     SelectComponent,
     SelectOptionComponent,
     SelectGroupComponent,
     SelectControlOptionComponent,
-    SelectOptionRendererDirective
-  ]
+    SelectOptionRendererDirective,
+  ],
 })
 export class SelectModule {}

@@ -8,6 +8,6 @@ import { ApplicationHeaderComponent } from './application-header.component';
 @NgModule({
   imports: [CommonModule, IconModule, SelectModule, TimeRangeModule],
   declarations: [ApplicationHeaderComponent],
-  exports: [ApplicationHeaderComponent]
+  exports: [ApplicationHeaderComponent],
 })
 export class ApplicationHeaderModule {}

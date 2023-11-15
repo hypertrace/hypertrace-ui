@@ -6,29 +6,29 @@ export class GraphQlDataExtractor {
   public extractAll(
     selectionMap: Map<unknown, GraphQlSelection>,
     requestBuilder: GraphQlRequestBuilder,
-    response: { [key: string]: unknown }
+    response: { [key: string]: unknown },
   ): Map<unknown, unknown> {
     const selectionEntries = Array.from(selectionMap.entries());
 
     return new Map(
-      selectionEntries.map(([key, selection]) => [key, this.extract(selection, requestBuilder, response)])
+      selectionEntries.map(([key, selection]) => [key, this.extract(selection, requestBuilder, response)]),
     );
   }
 
   public extract<T>(
     selection: GraphQlSelection,
     requestBuilder: GraphQlRequestBuilder,
-    response: { [key: string]: unknown }
+    response: { [key: string]: unknown },
   ): T {
     return this.getDataFromObject(
       this.getExpectedResponsePath(selection),
-      this.remapSelection(selection, requestBuilder, response)
+      this.remapSelection(selection, requestBuilder, response),
     ) as T;
   }
 
   private getDataFromObject<T extends { [key: string]: unknown }, P extends string & keyof T>(
     propertyPath: P,
-    response: T | T[]
+    response: T | T[],
   ): T[P] | T[P][] {
     if (Array.isArray(response)) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,20 +41,20 @@ export class GraphQlDataExtractor {
   private remapSelection(
     selection: GraphQlSelection,
     requestBuilder: GraphQlRequestBuilder,
-    response: { [key: string]: unknown }
+    response: { [key: string]: unknown },
   ): { [key: string]: unknown } {
     const expectedKey = this.getExpectedResponsePath(selection);
     const queriedKey = requestBuilder.getKeyForSelection(selection);
 
     return {
-      [expectedKey]: this.remapSelections(requestBuilder, response[queriedKey], selection.children)
+      [expectedKey]: this.remapSelections(requestBuilder, response[queriedKey], selection.children),
     };
   }
 
   private remapSelections(
     requestBuilder: GraphQlRequestBuilder,
     response: unknown,
-    selections: GraphQlSelection[] = []
+    selections: GraphQlSelection[] = [],
   ): unknown {
     const isPrimitiveSelection = selections.length === 0;
     if (isPrimitiveSelection) {
@@ -65,7 +65,7 @@ export class GraphQlDataExtractor {
     }
     if (typeof response === 'object' && response !== null) {
       const mappedSelections = selections.map(selection =>
-        this.remapSelection(selection, requestBuilder, response as { [key: string]: unknown })
+        this.remapSelection(selection, requestBuilder, response as { [key: string]: unknown }),
       );
 
       return merge({}, ...mappedSelections);

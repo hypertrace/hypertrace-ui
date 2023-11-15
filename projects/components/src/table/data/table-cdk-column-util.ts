@@ -4,14 +4,14 @@ import { TableColumnConfig } from '../table-api';
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace TableCdkColumnUtil {
   export const isColumnStateChange = (
-    changedColumn: TableColumnConfig | undefined
+    changedColumn: TableColumnConfig | undefined,
   ): changedColumn is TableColumnConfig => changedColumn !== undefined;
 
   export const fetchableColumnConfigs = (columnConfigs: TableColumnConfig[]): TableColumnConfig[] =>
     columnConfigs.filter(
       columnConfig =>
         columnConfig.display !== CoreTableCellRendererType.RowExpander &&
-        columnConfig.display !== CoreTableCellRendererType.Checkbox
+        columnConfig.display !== CoreTableCellRendererType.Checkbox,
     );
 
   export const unsortOtherColumns = (sortedColumn: TableColumnConfig, otherColumns: TableColumnConfig[]): void =>

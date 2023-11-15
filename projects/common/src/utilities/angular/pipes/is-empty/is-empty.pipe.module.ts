@@ -3,6 +3,6 @@ import { IsEmptyPipe } from './is-empty.pipe';
 
 @NgModule({
   declarations: [IsEmptyPipe],
-  exports: [IsEmptyPipe]
+  exports: [IsEmptyPipe],
 })
 export class IsEmptyPipeModule {}

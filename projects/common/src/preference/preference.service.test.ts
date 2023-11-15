@@ -24,9 +24,9 @@ describe('Preference Service', () => {
             third: 1,
             fifth: true,
             sixth: undefined,
-            seventh: null
+            seventh: null,
           }),
-        a: () => service.set('foo', ['first', 2, null, false, { test: 'test' }, undefined, 'null', 'undefined'])
+        a: () => service.set('foo', ['first', 2, null, false, { test: 'test' }, undefined, 'null', 'undefined']),
       }).subscribe(update => update());
 
       expectObservable(service.get('foo', 'default')).toBe('ds-b-n-o-a', {
@@ -40,9 +40,9 @@ describe('Preference Service', () => {
           third: 1,
           fifth: true,
           // Note that 'sixth: undefined' not included
-          seventh: null
+          seventh: null,
         },
-        a: ['first', 2, null, false, { test: 'test' }, null, 'null', 'undefined'] // Note the undefined -> null
+        a: ['first', 2, null, false, { test: 'test' }, null, 'null', 'undefined'], // Note the undefined -> null
       });
     });
   });
@@ -52,13 +52,13 @@ describe('Preference Service', () => {
 
     runFakeRxjs(({ expectObservable, cold }) => {
       cold('-s|', {
-        s: () => service.set('foo', 'a')
+        s: () => service.set('foo', 'a'),
       }).subscribe(update => update());
 
       expectObservable(service.get('foo')).toBe(
         '#',
         undefined,
-        Error('No value found or default provided for preferenceKey: foo')
+        Error('No value found or default provided for preferenceKey: foo'),
       );
     });
   });

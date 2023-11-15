@@ -13,14 +13,14 @@ import { Dictionary } from '../../../types/types';
  * ```
  */
 @Pipe({
-  name: 'htExtractValues'
+  name: 'htExtractValues',
 })
 export class ExtractValuesPipe implements PipeTransform {
   public transform(value: unknown[] | undefined, key: string, returnUniqueValuesOnly: boolean = true): unknown[] {
     const values: unknown[] = !isArray(value)
       ? []
       : (value ?? []).map(item =>
-          isObject(item) && item.hasOwnProperty(key) ? (item as Dictionary<unknown>)?.[key] : undefined
+          isObject(item) && item.hasOwnProperty(key) ? (item as Dictionary<unknown>)?.[key] : undefined,
         );
 
     return returnUniqueValuesOnly ? uniq(values) : values;

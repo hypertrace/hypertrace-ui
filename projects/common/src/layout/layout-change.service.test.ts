@@ -16,10 +16,10 @@ describe('LayoutChangeService', () => {
     const service = new LayoutChangeService(
       {
         nativeElement: {
-          getBoundingClientRect: jest.fn(() => size)
-        }
+          getBoundingClientRect: jest.fn(() => size),
+        },
       },
-      parent
+      parent,
     );
 
     service.initialize();
@@ -27,7 +27,7 @@ describe('LayoutChangeService', () => {
     return {
       size: size,
       service: service,
-      recordedLayout: recordObservable(service.layout$)
+      recordedLayout: recordObservable(service.layout$),
     };
   };
 

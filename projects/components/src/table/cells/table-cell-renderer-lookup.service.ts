@@ -3,7 +3,7 @@ import { LoggerService } from '@hypertrace/common';
 import { TableCellRendererConstructor } from './table-cell-renderer';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TableCellRendererLookupService {
   private defaultRenderer?: TableCellRendererConstructor;

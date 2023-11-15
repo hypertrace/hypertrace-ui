@@ -6,7 +6,7 @@ import {
   OnChanges,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { ComboBoxMode, ComboBoxOption, ComboBoxResult } from '../../../combo-box/combo-box-api';
@@ -36,7 +36,7 @@ import { FilterChipService } from './filter-chip.service';
         (escape)="this.onClear()"
       ></ht-combo-box>
     </div>
-  `
+  `,
 })
 export class FilterChipComponent implements OnInit, OnChanges {
   @Input()
@@ -124,7 +124,7 @@ export class FilterChipComponent implements OnInit, OnChanges {
   private mapToComboBoxOption(filter: IncompleteFilter): ComboBoxOption<IncompleteFilter> {
     return {
       text: filter.userString,
-      value: filter
+      value: filter,
     };
   }
 }

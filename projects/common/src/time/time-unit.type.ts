@@ -6,5 +6,5 @@ export const enum TimeUnit {
   Day = 'd',
   Week = 'w',
   Month = 'M',
-  Year = 'y'
+  Year = 'y',
 }

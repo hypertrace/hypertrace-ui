@@ -6,7 +6,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {
   Topology,
@@ -17,7 +17,7 @@ import {
   TopologyNode,
   TopologyNodeInteractionHandler,
   TopologyNodeRenderer,
-  TopologyTooltipRenderer
+  TopologyTooltipRenderer,
 } from './topology';
 import { TopologyBuilderService } from './topology-builder.service';
 
@@ -25,7 +25,7 @@ import { TopologyBuilderService } from './topology-builder.service';
   selector: 'ht-topology',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./topology.component.scss'],
-  template: ` <div #topologyContainer (htLayoutChange)="this.redraw()" class="topology"></div> `
+  template: ` <div #topologyContainer (htLayoutChange)="this.redraw()" class="topology"></div> `,
 })
 export class TopologyComponent implements OnChanges, OnDestroy {
   @Input()
@@ -68,7 +68,7 @@ export class TopologyComponent implements OnChanges, OnDestroy {
 
   public constructor(
     private readonly injector: Injector,
-    private readonly topologyBuilderService: TopologyBuilderService
+    private readonly topologyBuilderService: TopologyBuilderService,
   ) {}
 
   public ngOnChanges(): void {
@@ -88,7 +88,7 @@ export class TopologyComponent implements OnChanges, OnDestroy {
       shouldAutoZoomToFit: this.shouldAutoZoomToFit,
       nodeInteractionHandler: this.nodeInteractionHandler,
       edgeInteractionHandler: this.edgeInteractionHandler,
-      layoutType: this.layoutType
+      layoutType: this.layoutType,
     });
 
     // Angular doesn't like introducing new child views mid-change detection

@@ -29,7 +29,7 @@ describe('Abstract storage', () => {
         a: () => storage.set('foo', 'a'),
         b: () => storage.set('bar', 'b'),
         c: () => storage.set('foo', 'c'),
-        u: () => storage.delete('foo')
+        u: () => storage.delete('foo'),
       }).subscribe(update => update());
 
       expectObservable(storage.watch('foo')).toBe('ua---u-c-', { u: undefined, a: 'a', c: 'c' });
@@ -43,8 +43,8 @@ describe('Abstract storage', () => {
     const scopedStorage = new (class extends AbstractStorage {})(
       globalDictionary,
       of({
-        scopeKey: 'test-scope'
-      })
+        scopeKey: 'test-scope',
+      }),
     );
 
     expect(scopedStorage.get('foo')).toBeUndefined();
@@ -67,8 +67,8 @@ describe('Abstract storage', () => {
       globalDictionary,
       of({
         scopeKey: 'test-scope',
-        fallbackPolicy: 'read-only'
-      })
+        fallbackPolicy: 'read-only',
+      }),
     );
 
     expect(scopedStorage.get('foo')).toBe('original-foo');
@@ -89,8 +89,8 @@ describe('Abstract storage', () => {
       globalDictionary,
       of({
         scopeKey: 'test-scope',
-        fallbackPolicy: 'read-and-migrate'
-      })
+        fallbackPolicy: 'read-and-migrate',
+      }),
     );
 
     expect(scopedStorage.get('foo')).toBe('original-foo');

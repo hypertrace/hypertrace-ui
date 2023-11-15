@@ -12,7 +12,7 @@ import { SpecificationBuilder } from '../../builders/specification/specification
 import {
   GraphQlSpansRequest,
   SpansGraphQlQueryHandlerService,
-  SPANS_GQL_REQUEST
+  SPANS_GQL_REQUEST,
 } from './spans-graphql-query-handler.service';
 
 describe('SpansGraphQlQueryHandlerService', () => {
@@ -31,7 +31,7 @@ describe('SpansGraphQlQueryHandlerService', () => {
                 scope: scope,
                 onlySupportsAggregation: false,
                 onlySupportsGrouping: false,
-                allowedAggregations: [MetricAggregationType.Average]
+                allowedAggregations: [MetricAggregationType.Average],
               });
             default:
               return of({
@@ -42,16 +42,16 @@ describe('SpansGraphQlQueryHandlerService', () => {
                 scope: scope,
                 onlySupportsAggregation: false,
                 onlySupportsGrouping: false,
-                allowedAggregations: [MetricAggregationType.Average]
+                allowedAggregations: [MetricAggregationType.Average],
               });
           }
-        }
-      })
-    ]
+        },
+      }),
+    ],
   });
 
   const testTimeRange = GraphQlTimeRange.fromTimeRange(
-    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
+    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)),
   );
   const specBuilder = new SpecificationBuilder();
   const buildRequest = (): GraphQlSpansRequest => ({
@@ -59,13 +59,13 @@ describe('SpansGraphQlQueryHandlerService', () => {
     timeRange: testTimeRange,
     properties: [
       specBuilder.attributeSpecificationForKey('apiName'),
-      specBuilder.attributeSpecificationForKey('duration')
+      specBuilder.attributeSpecificationForKey('duration'),
     ],
     sort: {
       key: specBuilder.attributeSpecificationForKey('apiName'),
-      direction: 'ASC'
+      direction: 'ASC',
     },
-    limit: 2
+    limit: 2,
   });
 
   test('matches events request', () => {
@@ -81,26 +81,26 @@ describe('SpansGraphQlQueryHandlerService', () => {
       arguments: [
         {
           name: 'limit',
-          value: 2
+          value: 2,
         },
         {
           name: 'between',
           value: {
             startTime: new Date(testTimeRange.from),
-            endTime: new Date(testTimeRange.to)
-          }
+            endTime: new Date(testTimeRange.to),
+          },
         },
         {
           name: 'orderBy',
           value: [
             {
               direction: {
-                value: 'ASC'
+                value: 'ASC',
               },
-              keyExpression: { key: 'apiName' }
-            }
-          ]
-        }
+              keyExpression: { key: 'apiName' },
+            },
+          ],
+        },
       ],
       children: [
         {
@@ -110,17 +110,17 @@ describe('SpansGraphQlQueryHandlerService', () => {
             {
               alias: 'apiName',
               arguments: [{ name: 'expression', value: { key: 'apiName' } }],
-              path: 'attribute'
+              path: 'attribute',
             },
             {
               alias: 'duration',
               arguments: [{ name: 'expression', value: { key: 'duration' } }],
-              path: 'attribute'
-            }
-          ]
+              path: 'attribute',
+            },
+          ],
         },
-        { path: 'total' }
-      ]
+        { path: 'total' },
+      ],
     });
   });
 
@@ -131,15 +131,15 @@ describe('SpansGraphQlQueryHandlerService', () => {
         {
           id: 'test-id-1',
           apiName: 'first',
-          duration: 1
+          duration: 1,
         },
         {
           id: 'test-id-2',
           apiName: 'second',
-          duration: 2
-        }
+          duration: 2,
+        },
       ],
-      total: 2
+      total: 2,
     };
 
     runFakeRxjs(({ expectObservable }) => {
@@ -151,20 +151,20 @@ describe('SpansGraphQlQueryHandlerService', () => {
               apiName: 'first',
               duration: {
                 units: 'ms',
-                value: 1
-              }
+                value: 1,
+              },
             },
             {
               [spanIdKey]: 'test-id-2',
               apiName: 'second',
               duration: {
                 units: 'ms',
-                value: 2
-              }
-            }
+                value: 2,
+              },
+            },
           ],
-          total: 2
-        }
+          total: 2,
+        },
       });
     });
   }));

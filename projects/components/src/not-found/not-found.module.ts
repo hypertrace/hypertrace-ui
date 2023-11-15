@@ -4,6 +4,6 @@ import { NotFoundComponent } from './not-found.component';
 
 @NgModule({
   declarations: [NotFoundComponent],
-  imports: [ButtonModule]
+  imports: [ButtonModule],
 })
 export class NotFoundModule {}

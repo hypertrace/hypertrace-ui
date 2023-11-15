@@ -6,12 +6,12 @@ const numberCoercer = new NumberCoercer();
 const yCoercer = new NoopCoercer<unknown>({
   useSelf: false,
   extractObjectKeys: ['y', 'value'],
-  extractArrayIndices: [1]
+  extractArrayIndices: [1],
 });
 const xCoercer = new NoopCoercer<unknown>({
   useSelf: false,
   extractObjectKeys: ['x', 'timestamp'],
-  extractArrayIndices: [0]
+  extractArrayIndices: [0],
 });
 
 export const defaultYDataAccessor = <TDomain>(data: unknown): TDomain => {

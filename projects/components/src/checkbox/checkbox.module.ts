@@ -9,6 +9,6 @@ import { CheckboxComponent } from './checkbox.component';
 @NgModule({
   imports: [CommonModule, FormsModule, MatCheckboxModule, IconModule, LabelModule],
   declarations: [CheckboxComponent],
-  exports: [CheckboxComponent]
+  exports: [CheckboxComponent],
 })
 export class CheckboxModule {}

@@ -6,14 +6,14 @@ import {
   RenderableTopologyEdge,
   RenderableTopologyNode,
   TopologyEdgeRenderer,
-  TopologyNodeRenderer
+  TopologyNodeRenderer,
 } from '../../../topology';
 import { TopologyEventBehavior } from '../topology-event-behavior';
 
 export class TopologyHover extends TopologyEventBehavior {
   private static readonly DEFAULT_HOVER_OPTIONS: Required<Readonly<TopologyHoverOptions>> = {
     delayMillis: 0,
-    endHoverEvents: ['mouseleave']
+    endHoverEvents: ['mouseleave'],
   };
 
   public constructor(d3Utils: D3UtilService, domRenderer: Renderer2) {
@@ -25,43 +25,43 @@ export class TopologyHover extends TopologyEventBehavior {
   public addNodeHoverBehavior(
     nodes: RenderableTopologyNode[],
     nodeRenderer: TopologyNodeRenderer,
-    options: TopologyHoverOptions = {}
+    options: TopologyHoverOptions = {},
   ): Observable<TopologyHoverEvent<RenderableTopologyNode>> {
     return this.buildObservableForHover(
       nodes,
       node => nodeRenderer.getElementForNode(node),
-      this.buildDefaultedOptions(options)
+      this.buildDefaultedOptions(options),
     );
   }
 
   public addEdgeHoverBehavior(
     edges: RenderableTopologyEdge[],
     edgeRenderer: TopologyEdgeRenderer,
-    options: TopologyHoverOptions = {}
+    options: TopologyHoverOptions = {},
   ): Observable<TopologyHoverEvent<RenderableTopologyEdge>> {
     return this.buildObservableForHover(
       edges,
       edge => edgeRenderer.getElementForEdge(edge),
-      this.buildDefaultedOptions(options)
+      this.buildDefaultedOptions(options),
     );
   }
 
   private buildObservableForHover<T extends RenderableTopologyElement>(
     topologyElements: T[],
     elementLookupFn: (topologyElement: T) => Element | undefined,
-    options: Required<TopologyHoverOptions>
+    options: Required<TopologyHoverOptions>,
   ): Observable<TopologyHoverEvent<T>> {
     return this.buildObservableForEvents(
       topologyElements,
       elementLookupFn,
       {
         eventName: 'mouseenter',
-        callback: (element, observer) => this.onMouseEnter(element, observer, options.delayMillis)
+        callback: (element, observer) => this.onMouseEnter(element, observer, options.delayMillis),
       },
       ...options.endHoverEvents.map(eventName => ({
         eventName: eventName,
-        callback: (element: T, observer: Observer<TopologyHoverEvent<T>>) => this.onHoverEnd(element, observer)
-      }))
+        callback: (element: T, observer: Observer<TopologyHoverEvent<T>>) => this.onHoverEnd(element, observer),
+      })),
     );
   }
 
@@ -77,12 +77,12 @@ export class TopologyHover extends TopologyEventBehavior {
   private onMouseEnter<T extends RenderableTopologyElement>(
     element: T,
     observer: Observer<TopologyHoverEvent<T>>,
-    delayMillis: number
+    delayMillis: number,
   ): void {
     this.clearAnyPendingState(element);
     this.delayMap.set(element, {
       id: setTimeout(() => this.fireStartEventAndUpdateState(element, observer), delayMillis),
-      firedStart: false
+      firedStart: false,
     });
   }
 
@@ -95,29 +95,29 @@ export class TopologyHover extends TopologyEventBehavior {
 
   private fireStartEventAndUpdateState<T extends RenderableTopologyElement>(
     element: T,
-    observer: Observer<TopologyHoverEvent<T>>
+    observer: Observer<TopologyHoverEvent<T>>,
   ): void {
     const previousState = this.delayMap.get(element);
     if (previousState) {
       this.delayMap.set(element, {
         id: previousState.id,
-        firedStart: true
+        firedStart: true,
       });
     }
     // Update state first, we want the state to be updated for the subscriber's response
     observer.next({
       source: element,
-      event: 'start'
+      event: 'start',
     });
   }
 
   private fireEndEvent<T extends RenderableTopologyElement>(
     element: T,
-    observer: Observer<TopologyHoverEvent<T>>
+    observer: Observer<TopologyHoverEvent<T>>,
   ): void {
     observer.next({
       source: element,
-      event: 'end'
+      event: 'end',
     });
   }
 

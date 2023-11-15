@@ -11,8 +11,8 @@ import { homeDashboard } from './home.dashboard';
 const ROUTE_CONFIG: HtRoute[] = [
   {
     path: '',
-    component: HomeComponent
-  }
+    component: HomeComponent,
+  },
 ];
 
 @NgModule({
@@ -22,8 +22,8 @@ const ROUTE_CONFIG: HtRoute[] = [
     ObservabilityDashboardModule,
     ObserveSystemRadarDataSourceModule,
     TotalErrorsLabelDataSourceModule,
-    NavigableDashboardModule.withDefaultDashboards(homeDashboard)
+    NavigableDashboardModule.withDefaultDashboards(homeDashboard),
   ],
-  declarations: [HomeComponent]
+  declarations: [HomeComponent],
 })
 export class HomeModule {}

@@ -3,7 +3,7 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
-  NUMBER_PROPERTY
+  NUMBER_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { ExploreSpecificationBuilder } from '../../../../../graphql/request/buil
 import { ExploreGraphQlQueryHandlerService } from '../../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
   EXPLORE_GQL_REQUEST,
-  GraphQlExploreResponse
+  GraphQlExploreResponse,
 } from '../../../../../graphql/request/handlers/explore/explore-query';
 import { ExploreResult } from '../../explore/explore-result';
 import { GraphQlDataSourceModel } from '../../graphql-data-source.model';
@@ -23,16 +23,16 @@ import { AttributeSpecificationModel } from '../../specifiers/attribute-specific
 import { MetricAggregationSpecificationModel } from '../../specifiers/metric-aggregation-specification.model';
 
 @Model({
-  type: 'trace-donut-data-source'
+  type: 'trace-donut-data-source',
 })
 export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSeriesResults> {
   @ModelProperty({
     key: 'metric',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: MetricAggregationSpecificationModel
+      defaultModelClass: MetricAggregationSpecificationModel,
     } as ModelModelPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public metric!: MetricAggregationSpecification;
 
@@ -40,15 +40,15 @@ export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSerie
     key: 'groupBy',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: AttributeSpecificationModel
+      defaultModelClass: AttributeSpecificationModel,
     } as ModelModelPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public groupBy!: Specification;
 
   @ModelProperty({
     key: 'maxResults',
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public maxResults: number = 5;
 
@@ -56,7 +56,7 @@ export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSerie
     return this.query<ExploreGraphQlQueryHandlerService>(filters => ({
       requestType: EXPLORE_GQL_REQUEST,
       selections: [
-        new ExploreSpecificationBuilder().exploreSpecificationForKey(this.metric.name, this.metric.aggregation)
+        new ExploreSpecificationBuilder().exploreSpecificationForKey(this.metric.name, this.metric.aggregation),
       ],
       context: ObservabilityTraceType.Api,
       limit: this.maxResults,
@@ -64,14 +64,14 @@ export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSerie
       filters: filters,
       groupBy: {
         keyExpressions: [{ key: this.groupBy.name }],
-        limit: this.maxResults
-      }
+        limit: this.maxResults,
+      },
     })).pipe(map(exploreResponse => this.buildDonutResults(exploreResponse, this.metric)));
   }
 
   private buildDonutResults(
     exploreResponse: GraphQlExploreResponse,
-    metric: MetricAggregationSpecification
+    metric: MetricAggregationSpecification,
   ): DonutSeriesResults {
     let total = 0;
 
@@ -82,13 +82,13 @@ export class TraceDonutDataSourceModel extends GraphQlDataSourceModel<DonutSerie
 
         return {
           name: seriesTuple.keys.join(', '),
-          value: seriesTuple.value
+          value: seriesTuple.value,
         };
       });
 
     return {
       series: series,
-      total: total
+      total: total,
     };
   }
 }

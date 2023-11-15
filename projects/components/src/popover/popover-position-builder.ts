@@ -7,7 +7,7 @@ import {
   PopoverMousePosition,
   PopoverPosition,
   PopoverPositionType,
-  PopoverRelativePositionLocation
+  PopoverRelativePositionLocation,
 } from './popover';
 import { MousePositionStrategy } from './position-strategy/mouse-position-strategy';
 
@@ -15,7 +15,7 @@ import { MousePositionStrategy } from './position-strategy/mouse-position-strate
 export class PopoverPositionBuilder {
   public constructor(
     private readonly overlay: Overlay,
-    private readonly headerHeightProvider: GlobalHeaderHeightProviderService
+    private readonly headerHeightProvider: GlobalHeaderHeightProviderService,
   ) {}
 
   public buildPositionStrategy(position: PopoverPosition): PositionStrategy | undefined {
@@ -32,8 +32,8 @@ export class PopoverPositionBuilder {
             position.locationPreferences.map(location => ({
               ...this.getPositionPairForLocation(location),
               offsetX: position.offsetX,
-              offsetY: position.offsetY
-            }))
+              offsetY: position.offsetY,
+            })),
           );
       case PopoverPositionType.Hidden:
       default:
@@ -49,7 +49,7 @@ export class PopoverPositionBuilder {
       popoverPosition.boundingElement,
       flexiblePosition,
       popoverPosition.offsetX,
-      popoverPosition.offsetY
+      popoverPosition.offsetY,
     );
   }
 
@@ -58,13 +58,13 @@ export class PopoverPositionBuilder {
       case PopoverRelativePositionLocation.AboveCentered:
         return new ConnectionPositionPair(
           { originX: 'center', originY: 'top' },
-          { overlayX: 'center', overlayY: 'bottom' }
+          { overlayX: 'center', overlayY: 'bottom' },
         );
 
       case PopoverRelativePositionLocation.AboveLeftAligned:
         return new ConnectionPositionPair(
           { originX: 'start', originY: 'top' },
-          { overlayX: 'start', overlayY: 'bottom' }
+          { overlayX: 'start', overlayY: 'bottom' },
         );
 
       case PopoverRelativePositionLocation.AboveRightAligned:
@@ -73,13 +73,13 @@ export class PopoverPositionBuilder {
       case PopoverRelativePositionLocation.BelowCentered:
         return new ConnectionPositionPair(
           { originX: 'center', originY: 'bottom' },
-          { overlayX: 'center', overlayY: 'top' }
+          { overlayX: 'center', overlayY: 'top' },
         );
 
       case PopoverRelativePositionLocation.BelowLeftAligned:
         return new ConnectionPositionPair(
           { originX: 'start', originY: 'bottom' },
-          { overlayX: 'start', overlayY: 'top' }
+          { overlayX: 'start', overlayY: 'top' },
         );
 
       case PopoverRelativePositionLocation.BelowRightAligned:
@@ -88,7 +88,7 @@ export class PopoverPositionBuilder {
       case PopoverRelativePositionLocation.LeftCentered:
         return new ConnectionPositionPair(
           { originX: 'start', originY: 'center' },
-          { overlayX: 'end', overlayY: 'center' }
+          { overlayX: 'end', overlayY: 'center' },
         );
 
       case PopoverRelativePositionLocation.OverLeftAligned:
@@ -97,7 +97,7 @@ export class PopoverPositionBuilder {
       case PopoverRelativePositionLocation.RightCentered:
         return new ConnectionPositionPair(
           { originX: 'end', originY: 'center' },
-          { overlayX: 'start', overlayY: 'center' }
+          { overlayX: 'start', overlayY: 'center' },
         );
 
       case PopoverRelativePositionLocation.InsideTopLeft:

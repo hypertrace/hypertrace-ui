@@ -12,6 +12,6 @@ import { Color } from '@hypertrace/common';
       backgroundColor="${Color.Purple2}"
       labelColor="${Color.Purple5}"
     ></ht-label-tag>
-  `
+  `,
 })
 export class BetaTagComponent {}

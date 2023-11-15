@@ -21,7 +21,7 @@ import { FileDownloadService } from './service/file-download.service';
       ></ht-button>
       <ht-icon *ngIf="this.dataLoading" icon="${IconType.Loading}" size="${IconSize.Large}"></ht-icon>
     </div>
-  `
+  `,
 })
 export class DownloadFileComponent {
   @Input()
@@ -31,7 +31,7 @@ export class DownloadFileComponent {
 
   public constructor(
     private readonly cdr: ChangeDetectorRef,
-    private readonly fileDownloadService: FileDownloadService
+    private readonly fileDownloadService: FileDownloadService,
   ) {}
 
   public triggerDownload(metadata: DownloadFileMetadata): void {

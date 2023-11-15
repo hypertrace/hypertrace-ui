@@ -6,7 +6,7 @@ import {
   IconModule,
   LayoutChangeModule,
   LetAsyncModule,
-  NavigationListModule
+  NavigationListModule,
 } from '@hypertrace/components';
 import { NavigationComponent } from './navigation.component';
 
@@ -18,9 +18,9 @@ import { NavigationComponent } from './navigation.component';
     LayoutChangeModule,
     LetAsyncModule,
     FeatureConfigCheckModule,
-    NavigationListModule
+    NavigationListModule,
   ],
   declarations: [NavigationComponent],
-  exports: [NavigationComponent]
+  exports: [NavigationComponent],
 })
 export class NavigationModule {}

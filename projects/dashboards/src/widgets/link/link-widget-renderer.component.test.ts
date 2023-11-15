@@ -8,7 +8,7 @@ describe('Link widget renderer component', () => {
   let mockModel: Partial<LinkWidgetModel> = {};
   const createComponent = createComponentFactory<LinkWidgetRendererComponent>({
     component: LinkWidgetRendererComponent,
-    shallow: true
+    shallow: true,
   });
 
   beforeEach(() => {
@@ -19,7 +19,7 @@ describe('Link widget renderer component', () => {
     mockModel.url = '#';
     mockModel.displayText = 'Test';
     spectator = createComponent({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
 
     expect(spectator.query('ht-link')).toExist();
@@ -29,7 +29,7 @@ describe('Link widget renderer component', () => {
   test('Link should use url as displayText if displayText is undefined', () => {
     mockModel.url = '#';
     spectator = createComponent({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
 
     expect(spectator.query('ht-link')).toExist();

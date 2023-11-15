@@ -5,7 +5,7 @@ import {
   ContentChildren,
   EventEmitter,
   Output,
-  QueryList
+  QueryList,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -14,7 +14,7 @@ import {
   NavigationParams,
   NavigationParamsType,
   NavigationService,
-  queryListAndChanges$
+  queryListAndChanges$,
 } from '@hypertrace/common';
 import { merge, Observable } from 'rxjs';
 import { distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
@@ -59,7 +59,7 @@ import { NavigableTabComponent } from './navigable-tab.component';
       </nav>
       <div class="divider"></div>
     </div>
-  `
+  `,
 })
 export class NavigableTabGroupComponent implements AfterContentInit {
   @ContentChildren(NavigableTabComponent)
@@ -73,7 +73,7 @@ export class NavigableTabGroupComponent implements AfterContentInit {
 
   public constructor(
     public readonly navigationService: NavigationService,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
   public ngAfterContentInit(): void {
@@ -82,7 +82,7 @@ export class NavigableTabGroupComponent implements AfterContentInit {
       startWith(undefined),
       map(() => this.findActiveTab()),
       distinctUntilChanged(),
-      tap(activeTab => this.tabChange.emit(activeTab?.path))
+      tap(activeTab => this.tabChange.emit(activeTab?.path)),
     );
   }
 
@@ -90,7 +90,7 @@ export class NavigableTabGroupComponent implements AfterContentInit {
     navType: NavigationParamsType.InApp,
     path: tab.path,
     relativeTo: this.activatedRoute,
-    replaceCurrentHistory: tab.replaceHistory
+    replaceCurrentHistory: tab.replaceHistory,
   });
 
   public getBackgroundColor(activeTab: NavigableTabComponent | undefined, tab: NavigableTabComponent): Color {

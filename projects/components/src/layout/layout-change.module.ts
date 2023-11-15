@@ -4,6 +4,6 @@ import { LayoutChangeDirective } from './layout-change.directive';
 
 @NgModule({
   declarations: [LayoutChangeTriggerDirective, LayoutChangeDirective],
-  exports: [LayoutChangeTriggerDirective, LayoutChangeDirective]
+  exports: [LayoutChangeTriggerDirective, LayoutChangeDirective],
 })
 export class LayoutChangeModule {}

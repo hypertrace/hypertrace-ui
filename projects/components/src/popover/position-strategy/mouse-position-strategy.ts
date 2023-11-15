@@ -2,7 +2,7 @@ import {
   ConnectionPositionPair,
   FlexibleConnectedPositionStrategy,
   OverlayRef,
-  PositionStrategy
+  PositionStrategy,
 } from '@angular/cdk/overlay';
 import { fromEvent, Subscription } from 'rxjs';
 
@@ -13,7 +13,7 @@ export class MousePositionStrategy implements PositionStrategy {
     private readonly containingElement: Element,
     private readonly flexibleStrategy: FlexibleConnectedPositionStrategy,
     private readonly offsetX: number = 20,
-    private readonly offsetY: number = 20
+    private readonly offsetY: number = 20,
   ) {
     this.configureFlexiblePosition();
   }
@@ -21,7 +21,7 @@ export class MousePositionStrategy implements PositionStrategy {
   public attach(overlayRef: OverlayRef): void {
     this.flexibleStrategy.attach(overlayRef);
     this.subscription = fromEvent<MouseEvent>(this.containingElement, 'mousemove').subscribe(event =>
-      this.onMouseMove(event)
+      this.onMouseMove(event),
     );
   }
 
@@ -41,7 +41,7 @@ export class MousePositionStrategy implements PositionStrategy {
 
   private onMouseMove(event: MouseEvent): void {
     this.flexibleStrategy.positions.forEach(position =>
-      this.updatePositionPair(position, event, this.offsetX, this.offsetY)
+      this.updatePositionPair(position, event, this.offsetX, this.offsetY),
     );
 
     this.flexibleStrategy.apply();
@@ -57,7 +57,7 @@ export class MousePositionStrategy implements PositionStrategy {
         // Bottom Left
         new ConnectionPositionPair({ originX: 'start', originY: 'top' }, { overlayX: 'end', overlayY: 'top' }),
         // Bottom Right
-        new ConnectionPositionPair({ originX: 'start', originY: 'top' }, { overlayX: 'start', overlayY: 'top' })
+        new ConnectionPositionPair({ originX: 'start', originY: 'top' }, { overlayX: 'start', overlayY: 'top' }),
       ])
       .withFlexibleDimensions(false)
       .withGrowAfterOpen(false);

@@ -6,12 +6,12 @@ import { TraceDetailData, TraceDetailDataSourceModel } from './data/trace-detail
 
 @Model({
   type: 'trace-detail-widget',
-  supportedDataSourceTypes: [TraceDetailDataSourceModel, ApiTraceDetailDataSourceModel]
+  supportedDataSourceTypes: [TraceDetailDataSourceModel, ApiTraceDetailDataSourceModel],
 })
 export class TraceDetailWidgetModel {
   @ModelProperty({
     key: 'title',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public title: string = '';
 

@@ -13,7 +13,7 @@ describe('Back Button Component', () => {
     component: BackButtonComponent,
     declarations: [MockComponent(ButtonComponent)],
     providers: [mockProvider(NavigationService)],
-    shallow: true
+    shallow: true,
   });
 
   test('should render the button correctly', () => {

@@ -8,7 +8,7 @@ describe('Explore Query Limit Editor component', () => {
   const hostBuilder = createHostFactory({
     component: ExploreQueryLimitEditorComponent,
     imports: [InputModule, CheckboxModule],
-    shallow: true
+    shallow: true,
   });
 
   test('displays the provided limit', () => {
@@ -18,9 +18,9 @@ describe('Explore Query Limit Editor component', () => {
     </ht-explore-query-limit-editor>`,
       {
         hostProps: {
-          limit: 12
-        }
-      }
+          limit: 12,
+        },
+      },
     );
 
     expect(spectator.query(InputComponent)!.value).toBe(12);
@@ -33,13 +33,13 @@ describe('Explore Query Limit Editor component', () => {
     </ht-explore-query-limit-editor>`,
       {
         hostProps: {
-          limit: 12
-        }
-      }
+          limit: 12,
+        },
+      },
     );
 
     spectator.setHostInput({
-      limit: 13
+      limit: 13,
     });
     expect(spectator.query(InputComponent)!.value).toBe(13);
   });
@@ -53,9 +53,9 @@ describe('Explore Query Limit Editor component', () => {
       {
         hostProps: {
           limit: 12,
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     const inputEl = spectator.query('input') as HTMLInputElement;
@@ -74,9 +74,9 @@ describe('Explore Query Limit Editor component', () => {
       {
         hostProps: {
           limit: 12,
-          includeRest: true
-        }
-      }
+          includeRest: true,
+        },
+      },
     );
 
     const checkbox = spectator.query(CheckboxComponent)!;
@@ -84,7 +84,7 @@ describe('Explore Query Limit Editor component', () => {
     expect(checkbox.checked).toBe(true);
 
     spectator.setHostInput({
-      includeRest: false
+      includeRest: false,
     });
 
     expect(checkbox.checked).toBe(false);
@@ -100,9 +100,9 @@ describe('Explore Query Limit Editor component', () => {
         hostProps: {
           limit: 12,
           includeRest: true,
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     spectator.tick();

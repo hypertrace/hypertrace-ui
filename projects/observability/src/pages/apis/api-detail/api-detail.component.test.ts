@@ -16,9 +16,9 @@ describe('Api detail component', () => {
     providers: [
       mockProvider(GraphQlRequestService),
       mockProvider(FeatureStateResolver, {
-        getCombinedFeatureState: () => of(FeatureState.Enabled)
-      })
-    ]
+        getCombinedFeatureState: () => of(FeatureState.Enabled),
+      }),
+    ],
   });
 
   test('shows api overview tab for http requests', () => {
@@ -29,17 +29,17 @@ describe('Api detail component', () => {
             of({
               [entityTypeKey]: ObservabilityEntityType.Api,
               [entityIdKey]: 'test-id',
-              apiType: ApiType.Http
-            })
-        })
-      ]
+              apiType: ApiType.Http,
+            }),
+        }),
+      ],
     });
 
     expect(spectator.query(PageHeaderComponent)?.tabs).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ label: 'Overview' }),
-        expect.objectContaining({ label: 'Traces' })
-      ])
+        expect.objectContaining({ label: 'Traces' }),
+      ]),
     );
   });
 });

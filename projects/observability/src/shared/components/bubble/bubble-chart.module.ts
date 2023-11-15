@@ -7,6 +7,6 @@ import { BubbleChartComponent } from './bubble-chart.component';
 @NgModule({
   declarations: [BubbleChartComponent],
   exports: [BubbleChartComponent],
-  imports: [LayoutChangeModule, LegendModule, ChartTooltipModule]
+  imports: [LayoutChangeModule, LegendModule, ChartTooltipModule],
 })
 export class BubbleChartModule {}

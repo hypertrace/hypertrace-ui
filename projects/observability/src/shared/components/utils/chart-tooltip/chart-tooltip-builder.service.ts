@@ -12,16 +12,16 @@ export class ChartTooltipBuilderService {
 
   public constructTooltip<TData, TContext, TRenderData = DefaultChartTooltipRenderData>(
     mapper?: ChartTooltipDataMapper<TData, TContext, TRenderData>,
-    componentType: Type<unknown> | TemplateRef<unknown> = DefaultChartTooltipComponent
+    componentType: Type<unknown> | TemplateRef<unknown> = DefaultChartTooltipComponent,
   ): ChartTooltipRef<TData, TContext> {
     const inputSubject = new Subject<MouseLocationData<TData, TContext>[]>();
 
     const popoverRef = this.popoverService.drawPopover({
       componentOrTemplate: componentType,
       position: {
-        type: PopoverPositionType.Hidden
+        type: PopoverPositionType.Hidden,
       },
-      data: this.buildMappedObservable(inputSubject.asObservable(), mapper)
+      data: this.buildMappedObservable(inputSubject.asObservable(), mapper),
     });
 
     return new ChartTooltipPopover(popoverRef, inputSubject);
@@ -29,7 +29,7 @@ export class ChartTooltipBuilderService {
 
   private buildMappedObservable<TData, TContext, TRenderData>(
     locationDataObservable: Observable<MouseLocationData<TData, TContext>[]>,
-    mapper?: ChartTooltipDataMapper<TData, TContext, TRenderData>
+    mapper?: ChartTooltipDataMapper<TData, TContext, TRenderData>,
   ): Observable<TRenderData> {
     if (!mapper) {
       return locationDataObservable as Observable<TRenderData & MouseLocationData<TData, TContext>[]>;
@@ -37,11 +37,11 @@ export class ChartTooltipBuilderService {
 
     return locationDataObservable.pipe(
       map(mapper),
-      filter((data): data is TRenderData => data !== undefined)
+      filter((data): data is TRenderData => data !== undefined),
     );
   }
 }
 
 export type ChartTooltipDataMapper<TData, TContext, TRenderData> = (
-  data: MouseLocationData<TData, TContext>[]
+  data: MouseLocationData<TData, TContext>[],
 ) => TRenderData | undefined;

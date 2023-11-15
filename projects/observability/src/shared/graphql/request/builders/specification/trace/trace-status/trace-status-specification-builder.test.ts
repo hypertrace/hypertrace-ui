@@ -14,9 +14,9 @@ describe('TraceStatusSpecificationBuilder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'status' }
-          }
-        ]
+            value: { key: 'status' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -24,9 +24,9 @@ describe('TraceStatusSpecificationBuilder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'statusCode' }
-          }
-        ]
+            value: { key: 'statusCode' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -34,22 +34,22 @@ describe('TraceStatusSpecificationBuilder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'statusMessage' }
-          }
-        ]
-      }
+            value: { key: 'statusMessage' },
+          },
+        ],
+      },
     ]);
 
     expect(
       traceSpecification.extractFromServerData({
         status: TraceStatusType.FAIL,
         statusCode: '404',
-        statusMessage: 'Not Found'
-      })
+        statusMessage: 'Not Found',
+      }),
     ).toEqual({
       status: TraceStatusType.FAIL,
       statusCode: '404',
-      statusMessage: 'Not Found'
+      statusMessage: 'Not Found',
     });
   });
 });

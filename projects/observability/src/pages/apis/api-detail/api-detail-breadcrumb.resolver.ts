@@ -10,7 +10,7 @@ import { EntityMetadata, EntityMetadataMap, ENTITY_METADATA } from '../../../sha
 import { Entity, entityTypeKey, ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import {
   EntityBreadcrumb,
-  EntityBreadcrumbResolver
+  EntityBreadcrumbResolver,
 } from '../../../shared/services/entity-breadcrumb/entity-breadcrumb.resolver';
 import { EntityIconLookupService } from './../../../shared/services/entity/entity-icon-lookup.service';
 
@@ -24,7 +24,7 @@ export class ApiDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends Ent
     iconLookupService: EntityIconLookupService,
     private readonly navigationService: NavigationService,
     protected readonly breadcrumbService: BreadcrumbsService,
-    @Inject(ENTITY_METADATA) private readonly entityMetadataMap: EntityMetadataMap
+    @Inject(ENTITY_METADATA) private readonly entityMetadataMap: EntityMetadataMap,
   ) {
     super(timeRangeService, graphQlQueryService, iconLookupService);
     this.apiEntityMetadata = this.entityMetadataMap.get(ObservabilityEntityType.Api);
@@ -38,13 +38,13 @@ export class ApiDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends Ent
       this.fetchEntity(id, ObservabilityEntityType.Api).pipe(
         map(apiEntity => ({
           ...apiEntity,
-          ...this.getParentPartial(apiEntity, parentEntityMetadata)
+          ...this.getParentPartial(apiEntity, parentEntityMetadata),
         })),
         switchMap(api => [
           ...this.getParentBreadcrumbs(api, parentEntityMetadata),
-          this.createBreadcrumbForEntity(api, activatedRouteSnapshot)
-        ])
-      )
+          this.createBreadcrumbForEntity(api, activatedRouteSnapshot),
+        ]),
+      ),
     );
   }
 
@@ -53,13 +53,13 @@ export class ApiDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends Ent
       ...api,
       label: api.name as string,
       icon: this.apiEntityMetadata?.icon,
-      url: this.breadcrumbService.getPath(activatedRouteSnapshot)
+      url: this.breadcrumbService.getPath(activatedRouteSnapshot),
     };
   }
 
   protected getParentBreadcrumbs(
     api: EntityBreadcrumb,
-    parentEntityMetadata?: EntityMetadata
+    parentEntityMetadata?: EntityMetadata,
   ): (EntityBreadcrumb | Breadcrumb)[] {
     return parentEntityMetadata !== undefined
       ? [
@@ -68,13 +68,13 @@ export class ApiDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends Ent
             [entityTypeKey]: parentEntityMetadata.entityType,
             label: api.parentName as string,
             icon: parentEntityMetadata?.icon,
-            url: parentEntityMetadata?.detailPath(api.parentId as string)
+            url: parentEntityMetadata?.detailPath(api.parentId as string),
           },
           {
             label: 'Endpoints',
             icon: this.apiEntityMetadata?.icon,
-            url: parentEntityMetadata?.apisListPath?.(api.parentId as string)
-          }
+            url: parentEntityMetadata?.apisListPath?.(api.parentId as string),
+          },
         ]
       : [];
   }
@@ -94,7 +94,7 @@ export class ApiDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends Ent
 
   private getParentPartial(
     entity: Entity,
-    parentTypeMetadata?: EntityMetadata
+    parentTypeMetadata?: EntityMetadata,
   ): Partial<Pick<ApiBreadcrumbDetails, 'parentName' | 'parentId'>> {
     if (!parentTypeMetadata) {
       return {};
@@ -102,13 +102,13 @@ export class ApiDetailBreadcrumbResolver<T extends EntityBreadcrumb> extends Ent
 
     return {
       parentId: entity[this.getParentIdAttribute(parentTypeMetadata)] as string,
-      parentName: entity[this.getParentNameAttribute(parentTypeMetadata)] as string
+      parentName: entity[this.getParentNameAttribute(parentTypeMetadata)] as string,
     };
   }
 
   protected resolveParentType(): EntityMetadata | undefined {
     const sourceRoute = this.apiEntityMetadata?.sourceRoutes?.find(item =>
-      this.navigationService.isRelativePathActive([item], this.navigationService.rootRoute())
+      this.navigationService.isRelativePathActive([item], this.navigationService.rootRoute()),
     );
 
     if (sourceRoute === undefined) {

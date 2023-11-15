@@ -18,7 +18,7 @@ export class IntervalDurationService {
     new TimeDuration(1, TimeUnit.Hour),
     new TimeDuration(6, TimeUnit.Hour),
     new TimeDuration(12, TimeUnit.Hour),
-    new TimeDuration(1, TimeUnit.Day)
+    new TimeDuration(1, TimeUnit.Day),
   ];
 
   private static readonly MAX_SUPPORTED_INTERVAL: TimeDuration = last(IntervalDurationService.PREDEFINED_INTERVALS)!;
@@ -27,17 +27,17 @@ export class IntervalDurationService {
 
   public constructor(
     private readonly timeRangeService: TimeRangeService,
-    private readonly timeDurationService: TimeDurationService
+    private readonly timeDurationService: TimeDurationService,
   ) {
     this.availableIntervals$ = timeRangeService.getTimeRangeAndChanges().pipe(
       map(timeRange => this.getAvailableIntervalsForTimeRange(timeRange)),
-      distinctUntilChanged(isEqual)
+      distinctUntilChanged(isEqual),
     );
   }
 
   public getAvailableIntervalsForTimeRange(
     timeRange: TimeRange = this.timeRangeService.getCurrentTimeRange(),
-    maximumDataPoints: number = 500
+    maximumDataPoints: number = 500,
   ): TimeDuration[] {
     // Can make this configurable at some point, but for now, an interval musts produce at least 3 data points
     return this.getAvailableIntervals(timeRange, 3, maximumDataPoints);
@@ -53,7 +53,7 @@ export class IntervalDurationService {
 
   public getAutoDuration(
     timeRange: TimeRange = this.timeRangeService.getCurrentTimeRange(),
-    maximumDataPoints?: number
+    maximumDataPoints?: number,
   ): TimeDuration {
     // Currently sorted smallest to largest
     const availableDurations = this.getAvailableIntervalsForTimeRange(timeRange, maximumDataPoints);
@@ -73,7 +73,7 @@ export class IntervalDurationService {
     const timeRangeDuration = this.timeDurationService.getTimeRangeDuration(timeRange);
 
     const availableIntervals = IntervalDurationService.PREDEFINED_INTERVALS.filter(duration =>
-      this.isValidDurationForTimeRange(duration, timeRangeDuration, minDataPoints, maxDataPoints)
+      this.isValidDurationForTimeRange(duration, timeRangeDuration, minDataPoints, maxDataPoints),
     );
 
     return availableIntervals.length === 0 ? [IntervalDurationService.MAX_SUPPORTED_INTERVAL] : availableIntervals;
@@ -83,7 +83,7 @@ export class IntervalDurationService {
     duration: TimeDuration,
     timeRangeDuration: TimeDuration,
     minDataPoints: number,
-    maxDataPoints: number
+    maxDataPoints: number,
   ): boolean {
     const timeRangeDurationMs = timeRangeDuration.toMillis();
     const maximumAllowableDuration = timeRangeDurationMs / minDataPoints;

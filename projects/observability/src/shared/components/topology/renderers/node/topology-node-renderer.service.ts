@@ -7,7 +7,7 @@ import {
   TopologyCoordinates,
   TopologyNode,
   TopologyNodeRenderer,
-  TopologyNodeState
+  TopologyNodeState,
 } from '../../topology';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class TopologyNodeRendererService implements TopologyNodeRenderer {
     matchedDelegate.draw(nodeElement, node.userNode, node.state, node.domElementRenderer);
     this.renderedNodeMap.set(node, {
       element: nodeElement,
-      delegate: matchedDelegate
+      delegate: matchedDelegate,
     });
     this.updateNodePosition(node);
   }
@@ -48,7 +48,7 @@ export class TopologyNodeRendererService implements TopologyNodeRenderer {
     return {
       getAttachmentPoint: angle =>
         this.mapNodeCoordinatesToTopologyCoordinates(matchedDelegate.getAttachmentPoint(angle, node.userNode), node),
-      getBoudingBox: () => this.getBoundingBox(node, matchedDelegate)
+      getBoudingBox: () => this.getBoundingBox(node, matchedDelegate),
     };
   }
 
@@ -102,11 +102,11 @@ export class TopologyNodeRendererService implements TopologyNodeRenderer {
 
   private mapNodeCoordinatesToTopologyCoordinates(
     coordinates: TopologyCoordinates,
-    node: RenderableTopologyNode
+    node: RenderableTopologyNode,
   ): TopologyCoordinates {
     return {
       x: coordinates.x + this.getBoundedX(node),
-      y: coordinates.y + this.getBoundedY(node)
+      y: coordinates.y + this.getBoundedY(node),
     };
   }
 
@@ -124,7 +124,7 @@ export class TopologyNodeRendererService implements TopologyNodeRenderer {
       right: node.x + width,
       bottom: node.y + height,
       width: width,
-      height: height
+      height: height,
     };
   }
 }

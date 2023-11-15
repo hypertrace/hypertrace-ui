@@ -7,7 +7,7 @@ import {
   Injector,
   StaticProvider,
   Type,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
@@ -16,7 +16,7 @@ export class DynamicComponentService {
     container: Element,
     componentClass: Type<C>,
     injector: Injector,
-    providers: StaticProvider[] = []
+    providers: StaticProvider[] = [],
   ): ComponentRef<C> {
     const componentResolver = injector.get((ComponentFactoryResolver as unknown) as Type<ComponentFactoryResolver>);
 
@@ -24,7 +24,7 @@ export class DynamicComponentService {
     const domPortalOutlet = new DomPortalOutlet(container, componentResolver, applicationRef, injector);
     const componentInjector = Injector.create({
       parent: injector,
-      providers: providers
+      providers: providers,
     });
     const componentPortal = new ComponentPortal(componentClass, undefined, componentInjector);
 
@@ -42,13 +42,13 @@ export class DynamicComponentService {
   public insertComponentToViewContainer<C>(
     componentClass: Type<C>,
     viewContainerRef: ViewContainerRef,
-    providers: StaticProvider[] = []
+    providers: StaticProvider[] = [],
   ): ComponentRef<C> | undefined {
     return this.insertComponent(
       viewContainerRef.element.nativeElement,
       componentClass,
       viewContainerRef.injector,
-      providers
+      providers,
     );
   }
 }

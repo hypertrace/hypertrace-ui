@@ -6,7 +6,7 @@ process.env.TZ = 'UTC'; // Tests should always run in UTC, no time zone dependen
 // eslint-disable-next-line no-undef
 globalThis.ngJest = {
   skipNgcc: false,
-  tsconfig: 'tsconfig.spec.json'
+  tsconfig: 'tsconfig.spec.json',
 };
 
 module.exports = {
@@ -19,15 +19,15 @@ module.exports = {
     [
       'jest-junit',
       {
-        outputDirectory: 'test-results/hypertrace-ui'
-      }
+        outputDirectory: 'test-results/hypertrace-ui',
+      },
     ],
     [
       'jest-html-reporter',
       {
-        outputPath: 'test-results/hypertrace-ui/test-report.html'
-      }
-    ]
+        outputPath: 'test-results/hypertrace-ui/test-report.html',
+      },
+    ],
   ],
   watchPathIgnorePatterns: ['test-results'],
   collectCoverageFrom: [
@@ -37,7 +37,7 @@ module.exports = {
     '!src/main.ts',
     '!src/environments/**',
     '!**/*/test/**',
-    '!src/app/routes/**/*.ts'
+    '!src/app/routes/**/*.ts',
   ],
   coverageDirectory: 'coverage/hypertrace-ui',
   modulePathIgnorePatterns: ['<rootDir>/dist/'], // Need to reset from app project, but empty is merged
@@ -45,6 +45,6 @@ module.exports = {
   moduleNameMapper: {
     '^lodash-es$': 'lodash',
     '^uuid$': 'uuid',
-    ...pathsToModuleNameMapper(paths, { prefix: '<rootDir>' })
-  }
+    ...pathsToModuleNameMapper(paths, { prefix: '<rootDir>' }),
+  },
 };

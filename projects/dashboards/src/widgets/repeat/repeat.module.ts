@@ -15,8 +15,8 @@ import { RepeatModel } from './repeat.model';
     DashboardCoreModule.with({
       models: [RepeatModel],
       propertyTypes: [ModelTemplatePropertyType as Type<ModelPropertyTypeRegistrationInformation>],
-      renderers: [RepeatRendererComponent]
-    })
-  ]
+      renderers: [RepeatRendererComponent],
+    }),
+  ],
 })
 export class RepeatModule {}

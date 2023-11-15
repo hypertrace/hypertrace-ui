@@ -4,6 +4,6 @@ import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../content/content-ho
 @Component({
   selector: 'ht-panel-collapsed-body',
   template: CONTENT_HOLDER_TEMPLATE,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PanelCollapsedBodyComponent extends ContentHolder {}

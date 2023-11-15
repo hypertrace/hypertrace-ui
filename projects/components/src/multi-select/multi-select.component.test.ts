@@ -26,8 +26,8 @@ describe('Multi Select Component', () => {
     imports: [PopoverModule, CommonModule, LoadAsyncModule, IconLibraryTestingModule, IsEmptyPipeModule],
     providers: [
       mockProvider(NavigationService, {
-        navigation$: NEVER
-      })
+        navigation$: NEVER,
+      }),
     ],
     declarations: [
       SelectOptionComponent,
@@ -36,9 +36,9 @@ describe('Multi Select Component', () => {
       MockComponent(SearchBoxComponent),
       MockComponent(ButtonComponent),
       MockComponent(CheckboxComponent),
-      MockComponent(XMoreComponent)
+      MockComponent(XMoreComponent),
     ],
-    shallow: true
+    shallow: true,
   });
 
   let spectator: SpectatorHost<MultiSelectComponent<string>>;
@@ -49,7 +49,7 @@ describe('Multi Select Component', () => {
     { label: 'third', value: 'third-value' },
     { label: 'fourth', value: 'fourth-value' },
     { label: 'fifth', value: 'fifth-value' },
-    { label: 'sixth', value: 'sixth-value' }
+    { label: 'sixth', value: 'sixth-value' },
   ];
 
   test('should display initial selections', fakeAsync(() => {
@@ -64,9 +64,9 @@ describe('Multi Select Component', () => {
           options: selectionOptions,
           selected: [selectionOptions[1].value],
           searchMode: MultiSelectSearchMode.CaseInsensitive,
-          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection
-        }
-      }
+          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection,
+        },
+      },
     );
 
     spectator.tick();
@@ -82,8 +82,8 @@ describe('Multi Select Component', () => {
         x: {
           label: selectionOptions[1].label,
           overflowItemsCount: 0,
-          overflowLabel: undefined
-        }
+          overflowLabel: undefined,
+        },
       });
     });
 
@@ -103,7 +103,7 @@ describe('Multi Select Component', () => {
     expect(optionElements.length).toEqual(6);
 
     spectator.setHostInput({
-      selected: [selectionOptions[1].value, selectionOptions[2].value]
+      selected: [selectionOptions[1].value, selectionOptions[2].value],
     });
 
     spectator.tick();
@@ -114,7 +114,7 @@ describe('Multi Select Component', () => {
 
     expect(
       selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
-        .length
+        .length,
     ).toBe(2);
 
     runFakeRxjs(({ expectObservable }) => {
@@ -122,8 +122,8 @@ describe('Multi Select Component', () => {
         x: {
           label: selectionOptions[1].label,
           overflowItemsCount: 1,
-          overflowLabel: 'third'
-        }
+          overflowLabel: 'third',
+        },
       });
     });
   }));
@@ -143,9 +143,9 @@ describe('Multi Select Component', () => {
       {
         hostProps: {
           options: selectionOptions,
-          selected: [selectionOptions[1].value, selectionOptions[2].value]
-        }
-      }
+          selected: [selectionOptions[1].value, selectionOptions[2].value],
+        },
+      },
     );
     spectator.tick();
 
@@ -161,7 +161,7 @@ describe('Multi Select Component', () => {
 
     expect(
       selectedCheckboxElements.filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true')
-        .length
+        .length,
     ).toBe(2);
 
     runFakeRxjs(({ expectObservable }) => {
@@ -169,8 +169,8 @@ describe('Multi Select Component', () => {
         x: {
           label: 'second',
           overflowItemsCount: 1,
-          overflowLabel: 'third'
-        }
+          overflowLabel: 'third',
+        },
       });
     });
 
@@ -199,9 +199,9 @@ describe('Multi Select Component', () => {
         hostProps: {
           options: selectionOptions,
           selected: [],
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     spectator.tick();
@@ -228,9 +228,9 @@ describe('Multi Select Component', () => {
         hostProps: {
           options: selectionOptions,
           selected: [selectionOptions[1].value],
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     spectator.tick();
@@ -250,8 +250,8 @@ describe('Multi Select Component', () => {
         x: {
           label: 'second',
           overflowItemsCount: 1,
-          overflowLabel: 'third'
-        }
+          overflowLabel: 'third',
+        },
       });
     });
 
@@ -267,9 +267,9 @@ describe('Multi Select Component', () => {
     </ht-multi-select>`,
       {
         hostProps: {
-          options: selectionOptions
-        }
-      }
+          options: selectionOptions,
+        },
+      },
     );
 
     spectator.tick();
@@ -296,9 +296,9 @@ describe('Multi Select Component', () => {
           selected: [selectionOptions[1].value],
           placeholder: 'Select options',
           searchMode: MultiSelectSearchMode.CaseInsensitive,
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     spectator.tick();
@@ -317,7 +317,7 @@ describe('Multi Select Component', () => {
     expect(
       spectator
         .queryAll('ht-checkbox', { root: true })
-        .filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true').length
+        .filter(checkboxElement => checkboxElement.getAttribute('ng-reflect-checked') === 'true').length,
     ).toBe(0);
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenLastCalledWith([]);
@@ -341,7 +341,7 @@ describe('Multi Select Component', () => {
     expect(triggerMoreItems?.count).toEqual(5);
 
     spectator.setHostInput({
-      searchMode: MultiSelectSearchMode.Disabled
+      searchMode: MultiSelectSearchMode.Disabled,
     });
 
     expect(spectator.query('.search-bar', { root: true })).not.toExist();
@@ -366,9 +366,9 @@ describe('Multi Select Component', () => {
           options: selectionOptions,
           selected: [selectionOptions[1].value],
           onChange: onChange,
-          triggerDisplayMode: TriggerLabelDisplayMode.Placeholder
-        }
-      }
+          triggerDisplayMode: TriggerLabelDisplayMode.Placeholder,
+        },
+      },
     );
 
     spectator.tick();
@@ -387,8 +387,8 @@ describe('Multi Select Component', () => {
       expectObservable(spectator.component.triggerValues$).toBe('(x|)', {
         x: {
           label: 'Placeholder',
-          overflowItemsCount: 0
-        }
+          overflowItemsCount: 0,
+        },
       });
     });
 
@@ -407,9 +407,9 @@ describe('Multi Select Component', () => {
           options: selectionOptions,
           selected: [selectionOptions[1].value],
           showBorder: true,
-          justify: MultiSelectJustify.Left
-        }
-      }
+          justify: MultiSelectJustify.Left,
+        },
+      },
     );
     spectator.tick();
 
@@ -417,8 +417,8 @@ describe('Multi Select Component', () => {
       expectObservable(spectator.component.triggerValues$).toBe('x', {
         x: {
           label: selectionOptions[1].label,
-          overflowItemsCount: 0
-        }
+          overflowItemsCount: 0,
+        },
       });
     });
 
@@ -429,13 +429,13 @@ describe('Multi Select Component', () => {
     expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: flex-start;');
 
     spectator.setInput({
-      justify: MultiSelectJustify.Center
+      justify: MultiSelectJustify.Center,
     });
 
     expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: center;');
 
     spectator.setInput({
-      justify: MultiSelectJustify.Right
+      justify: MultiSelectJustify.Right,
     });
 
     expect(spectator.query('.trigger-content')!.getAttribute('style')).toBe('justify-content: flex-end;');
@@ -454,9 +454,9 @@ describe('Multi Select Component', () => {
         hostProps: {
           options: selectionOptions,
           searchMode: MultiSelectSearchMode.CaseInsensitive,
-          onSearchValueChange: onSearchValueChangeSpy
-        }
-      }
+          onSearchValueChange: onSearchValueChangeSpy,
+        },
+      },
     );
 
     spectator.click('.trigger-content');
@@ -488,7 +488,7 @@ describe('Multi Select Component', () => {
     // Set options list to less than 5 and search control buttons should be hidden
     spectator.component.searchOptions('');
     spectator.setHostInput({
-      options: []
+      options: [],
     });
 
     spectator.tick(2);
@@ -500,7 +500,7 @@ describe('Multi Select Component', () => {
 
     // Set options list to less than 5 and search control buttons should be hidden
     spectator.setHostInput({
-      options: selectionOptions.slice(0, 3)
+      options: selectionOptions.slice(0, 3),
     });
 
     expect(spectator.queryAll('.multi-select-option', { root: true }).length).toBe(3);
@@ -528,9 +528,9 @@ describe('Multi Select Component', () => {
         hostProps: {
           options: selectionOptions,
           searchMode: MultiSelectSearchMode.EmitOnly,
-          onSearchValueChange: onSearchValueChangeSpy
-        }
-      }
+          onSearchValueChange: onSearchValueChangeSpy,
+        },
+      },
     );
 
     spectator.click('.trigger-content');
@@ -554,7 +554,7 @@ describe('Multi Select Component', () => {
 
     // Set selected options to less than 5 with search text and search box and buttons should still be visible
     spectator.setHostInput({
-      options: selectionOptions.slice(0, 3)
+      options: selectionOptions.slice(0, 3),
     });
     spectator.tick();
     spectator.detectChanges();
@@ -608,12 +608,12 @@ describe('Multi Select Component', () => {
               value: 'third-value',
               selectedLabel: 'Third Value!!!',
               icon: 'test-icon',
-              iconColor: 'red'
-            }
+              iconColor: 'red',
+            },
           ],
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
 
     spectator.tick();
@@ -643,9 +643,9 @@ describe('Multi Select Component', () => {
           selected: [selectionOptions[1].value],
           showSelectAll: false,
           searchMode: MultiSelectSearchMode.CaseInsensitive,
-          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection
-        }
-      }
+          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection,
+        },
+      },
     );
     spectator.tick();
     spectator.click('.trigger-content');
@@ -674,9 +674,9 @@ describe('Multi Select Component', () => {
           options: selectionOptions,
           selected: [selectionOptions[1].value],
           searchMode: MultiSelectSearchMode.CaseInsensitive,
-          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection
-        }
-      }
+          triggerLabelDisplayMode: TriggerLabelDisplayMode.Selection,
+        },
+      },
     );
     spectator.tick();
     spectator.click('.trigger-content');

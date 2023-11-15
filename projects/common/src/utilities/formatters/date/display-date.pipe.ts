@@ -3,7 +3,7 @@ import { isNil } from 'lodash-es';
 import { DateFormatOptions, DateFormatter } from './date-formatter';
 
 @Pipe({
-  name: 'htDisplayDate'
+  name: 'htDisplayDate',
 })
 export class DisplayDatePipe implements PipeTransform {
   public transform(value?: string | Date | number | null, options: DateFormatOptions = {}): string {

@@ -48,7 +48,7 @@ export class RadarChartLegendService {
       .attr('dominant-baseline', 'central')
       .attr(
         'transform',
-        `translate(${RadarChartLegendService.LEGEND_ITEM_TEXT_START_X}, ${RadarChartLegendService.LEGEND_ITEM_CIRCLE_BASELINE})`
+        `translate(${RadarChartLegendService.LEGEND_ITEM_TEXT_START_X}, ${RadarChartLegendService.LEGEND_ITEM_CIRCLE_BASELINE})`,
       );
   }
 
@@ -62,8 +62,8 @@ export class RadarChartLegendService {
         legendItemWidths.push(
           RadarChartLegendService.LEGEND_ITEM_TEXT_START_X +
             RadarChartLegendService.LEGEND_ITEM_PADDING +
-            this.domElementMeasurerService.getComputedTextLength(groups[index])
-        )
+            this.domElementMeasurerService.getComputedTextLength(groups[index]),
+        ),
       );
 
     // Transform each legend item
@@ -75,7 +75,7 @@ export class RadarChartLegendService {
     // Transform Legends to be center aligned
     legendsSelection.attr(
       'transform',
-      `translate(${-sum(legendItemWidths) / 2}, ${RadarChartLegendService.LEGENDS_Y_BASELINE})`
+      `translate(${-sum(legendItemWidths) / 2}, ${RadarChartLegendService.LEGENDS_Y_BASELINE})`,
     );
   }
 }

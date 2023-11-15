@@ -14,14 +14,14 @@ import {
   EntityTopologyGraphQlQueryHandlerService,
   ENTITY_TOPOLOGY_GQL_REQUEST,
   GraphQlEntityTopologyRequest,
-  TopologyNodeSpecification
+  TopologyNodeSpecification,
 } from './entity-topology-graphql-query-handler.service';
 
 describe('Entity topology graphql query handler', () => {
   const createService = createServiceFactory({ service: EntityTopologyGraphQlQueryHandlerService });
 
   const testTimeRange = GraphQlTimeRange.fromTimeRange(
-    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
+    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)),
   );
 
   const specBuilder = new ObservabilitySpecificationBuilder();
@@ -31,7 +31,7 @@ describe('Entity topology graphql query handler', () => {
     rootNodeType: ObservabilityEntityType.Service,
     rootNodeSpecification: {
       titleSpecification: specBuilder.attributeSpecificationForKey('name'),
-      metricSpecifications: [specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)]
+      metricSpecifications: [specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)],
     },
     rootNodeFilters: [],
     rootNodeLimit: 100,
@@ -41,30 +41,30 @@ describe('Entity topology graphql query handler', () => {
         {
           titleSpecification: specBuilder.attributeSpecificationForKey('name'),
           metricSpecifications: [
-            specBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.AvgrateMinute)
-          ]
-        }
+            specBuilder.metricAggregationSpecForKey('numCalls', MetricAggregationType.AvgrateMinute),
+          ],
+        },
       ],
       [
         ObservabilityEntityType.Service,
         {
           titleSpecification: specBuilder.attributeSpecificationForKey('name'),
-          metricSpecifications: [specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)]
-        }
-      ]
+          metricSpecifications: [specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)],
+        },
+      ],
     ]),
     upstreamNodeSpecifications: new Map<ObservabilityEntityType, TopologyNodeSpecification>([
       [
         ObservabilityEntityType.Service,
         {
           titleSpecification: specBuilder.attributeSpecificationForKey('name'),
-          metricSpecifications: [specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)]
-        }
-      ]
+          metricSpecifications: [specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)],
+        },
+      ],
     ]),
     edgeSpecification: {
-      metricSpecifications: [specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)]
-    }
+      metricSpecifications: [specBuilder.metricAggregationSpecForKey('duration', MetricAggregationType.Average)],
+    },
   });
 
   const buildTopologyResponse = (): unknown => ({
@@ -74,16 +74,16 @@ describe('Entity topology graphql query handler', () => {
         name: 'service 1',
         duration: {
           avg: {
-            value: 1
-          }
+            value: 1,
+          },
         },
         outgoingEdges_BACKEND: {
           results: [
             {
               duration: {
                 avg: {
-                  value: 2
-                }
+                  value: 2,
+                },
               },
               neighbor: {
                 entityId: 'a',
@@ -91,104 +91,104 @@ describe('Entity topology graphql query handler', () => {
                 type: 'mysql',
                 numCalls: {
                   avgrate_min: {
-                    value: 3
-                  }
-                }
-              }
-            }
-          ]
+                    value: 3,
+                  },
+                },
+              },
+            },
+          ],
         },
         outgoingEdges_SERVICE: {
           results: [
             {
               duration: {
                 avg: {
-                  value: 4
-                }
+                  value: 4,
+                },
               },
               neighbor: {
                 entityId: '2',
                 name: 'service 2',
                 duration: {
                   avg: {
-                    value: 5
-                  }
-                }
-              }
-            }
-          ]
+                    value: 5,
+                  },
+                },
+              },
+            },
+          ],
         },
         incomingEdges_SERVICE: {
-          results: []
-        }
+          results: [],
+        },
       },
       {
         entityId: '2',
         name: 'service 2',
         duration: {
           avg: {
-            value: 5
-          }
+            value: 5,
+          },
         },
         outgoingEdges_BACKEND: {
-          results: []
+          results: [],
         },
         outgoingEdges_SERVICE: {
           results: [
             {
               duration: {
                 avg: {
-                  value: 6
-                }
+                  value: 6,
+                },
               },
               neighbor: {
                 entityId: '3',
                 name: 'service 3',
                 duration: {
                   avg: {
-                    value: 7
-                  }
-                }
-              }
-            }
-          ]
+                    value: 7,
+                  },
+                },
+              },
+            },
+          ],
         },
         incomingEdges_SERVICE: {
           results: [
             {
               duration: {
                 avg: {
-                  value: 4
-                }
+                  value: 4,
+                },
               },
               neighbor: {
                 entityId: '1',
                 name: 'service 1',
                 duration: {
                   avg: {
-                    value: 1
-                  }
-                }
-              }
-            }
-          ]
-        }
+                    value: 1,
+                  },
+                },
+              },
+            },
+          ],
+        },
       },
       {
         entityId: '3',
         name: 'service 3',
         duration: {
           avg: {
-            value: 7
-          }
+            value: 7,
+          },
         },
         outgoingEdges_BACKEND: {
           results: [
             {
               duration: {
                 avg: {
-                  value: 8
-                }
+                  value: 8,
+                },
               },
               neighbor: {
                 entityId: 'b',
@@ -196,38 +196,38 @@ describe('Entity topology graphql query handler', () => {
                 type: 'redis',
                 numCalls: {
                   avgrate_min: {
-                    value: 9
-                  }
-                }
-              }
-            }
-          ]
+                    value: 9,
+                  },
+                },
+              },
+            },
+          ],
         },
         outgoingEdges_SERVICE: {
-          results: []
+          results: [],
         },
         incomingEdges_SERVICE: {
           results: [
             {
               duration: {
                 avg: {
-                  value: 6
-                }
+                  value: 6,
+                },
               },
               neighbor: {
                 entityId: '2',
                 name: 'service 2',
                 duration: {
                   avg: {
-                    value: 5
-                  }
-                }
-              }
-            }
-          ]
-        }
-      }
-    ]
+                    value: 5,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+    ],
   });
 
   test('only matches topology request', () => {
@@ -249,9 +249,9 @@ describe('Entity topology graphql query handler', () => {
           name: 'between',
           value: {
             startTime: new Date(testTimeRange.from),
-            endTime: new Date(testTimeRange.to)
-          }
-        }
+            endTime: new Date(testTimeRange.to),
+          },
+        },
       ],
       children: [
         {
@@ -268,9 +268,9 @@ describe('Entity topology graphql query handler', () => {
                   path: 'avg',
                   alias: 'avg',
                   arguments: [],
-                  children: [{ path: 'value' }]
-                }
-              ]
+                  children: [{ path: 'value' }],
+                },
+              ],
             },
             {
               path: 'outgoingEdges',
@@ -289,9 +289,9 @@ describe('Entity topology graphql query handler', () => {
                           path: 'avg',
                           alias: 'avg',
                           arguments: [],
-                          children: [{ path: 'value' }]
-                        }
-                      ]
+                          children: [{ path: 'value' }],
+                        },
+                      ],
                     },
                     {
                       path: 'neighbor',
@@ -300,12 +300,12 @@ describe('Entity topology graphql query handler', () => {
                         {
                           path: 'attribute',
                           alias: 'name',
-                          arguments: [{ name: 'expression', value: { key: 'name' } }]
+                          arguments: [{ name: 'expression', value: { key: 'name' } }],
                         },
                         {
                           path: 'attribute',
                           alias: 'type',
-                          arguments: [{ name: 'expression', value: { key: 'type' } }]
+                          arguments: [{ name: 'expression', value: { key: 'type' } }],
                         },
                         {
                           path: 'metric',
@@ -317,17 +317,17 @@ describe('Entity topology graphql query handler', () => {
                               alias: 'avgrate_min',
                               arguments: [
                                 { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
-                                { name: 'size', value: 1 }
+                                { name: 'size', value: 1 },
                               ],
-                              children: [{ path: 'value' }]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
+                              children: [{ path: 'value' }],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
             },
             {
               path: 'outgoingEdges',
@@ -346,9 +346,9 @@ describe('Entity topology graphql query handler', () => {
                           path: 'avg',
                           alias: 'avg',
                           arguments: [],
-                          children: [{ path: 'value' }]
-                        }
-                      ]
+                          children: [{ path: 'value' }],
+                        },
+                      ],
                     },
                     {
                       path: 'neighbor',
@@ -357,7 +357,7 @@ describe('Entity topology graphql query handler', () => {
                         {
                           path: 'attribute',
                           alias: 'name',
-                          arguments: [{ name: 'expression', value: { key: 'name' } }]
+                          arguments: [{ name: 'expression', value: { key: 'name' } }],
                         },
                         {
                           path: 'metric',
@@ -368,15 +368,15 @@ describe('Entity topology graphql query handler', () => {
                               path: 'avg',
                               alias: 'avg',
                               arguments: [],
-                              children: [{ path: 'value' }]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
+                              children: [{ path: 'value' }],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
             },
             {
               path: 'incomingEdges',
@@ -395,9 +395,9 @@ describe('Entity topology graphql query handler', () => {
                           path: 'avg',
                           alias: 'avg',
                           arguments: [],
-                          children: [{ path: 'value' }]
-                        }
-                      ]
+                          children: [{ path: 'value' }],
+                        },
+                      ],
                     },
                     {
                       path: 'neighbor',
@@ -406,7 +406,7 @@ describe('Entity topology graphql query handler', () => {
                         {
                           path: 'attribute',
                           alias: 'name',
-                          arguments: [{ name: 'expression', value: { key: 'name' } }]
+                          arguments: [{ name: 'expression', value: { key: 'name' } }],
                         },
                         {
                           path: 'metric',
@@ -417,19 +417,19 @@ describe('Entity topology graphql query handler', () => {
                               path: 'avg',
                               alias: 'avg',
                               arguments: [],
-                              children: [{ path: 'value' }]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                              children: [{ path: 'value' }],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     });
   });
   test('correctly parses response', () => {
@@ -445,10 +445,10 @@ describe('Entity topology graphql query handler', () => {
         name: 'service 1',
         'avg(duration)': {
           value: 1,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
-      specification: request.rootNodeSpecification
+      specification: request.rootNodeSpecification,
     };
 
     const serviceNode2: EntityNode = {
@@ -459,10 +459,10 @@ describe('Entity topology graphql query handler', () => {
         name: 'service 2',
         'avg(duration)': {
           value: 5,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
-      specification: request.rootNodeSpecification
+      specification: request.rootNodeSpecification,
     };
 
     const serviceNode3: EntityNode = {
@@ -473,10 +473,10 @@ describe('Entity topology graphql query handler', () => {
         name: 'service 3',
         'avg(duration)': {
           value: 7,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
-      specification: request.rootNodeSpecification
+      specification: request.rootNodeSpecification,
     };
 
     const backendNodeA: EntityNode = {
@@ -488,10 +488,10 @@ describe('Entity topology graphql query handler', () => {
         type: 'mysql',
         'avgrate_min(numCalls)': {
           value: 3,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
-      specification: request.downstreamNodeSpecifications.get(ObservabilityEntityType.Backend)!
+      specification: request.downstreamNodeSpecifications.get(ObservabilityEntityType.Backend)!,
     };
 
     const backendNodeB: EntityNode = {
@@ -503,22 +503,22 @@ describe('Entity topology graphql query handler', () => {
         type: 'redis',
         'avgrate_min(numCalls)': {
           value: 9,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
-      specification: request.downstreamNodeSpecifications.get(ObservabilityEntityType.Backend)!
+      specification: request.downstreamNodeSpecifications.get(ObservabilityEntityType.Backend)!,
     };
 
     const service1toBackendAEdge: EntityEdge = {
       data: {
         'avg(duration)': {
           value: 2,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
       specification: request.edgeSpecification,
       fromNode: serviceNode1,
-      toNode: backendNodeA
+      toNode: backendNodeA,
     };
     serviceNode1.edges.push(service1toBackendAEdge);
     backendNodeA.edges.push(service1toBackendAEdge);
@@ -527,12 +527,12 @@ describe('Entity topology graphql query handler', () => {
       data: {
         'avg(duration)': {
           value: 4,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
       specification: request.edgeSpecification,
       fromNode: serviceNode1,
-      toNode: serviceNode2
+      toNode: serviceNode2,
     };
     serviceNode1.edges.push(service1ToService2Edge);
     serviceNode2.edges.push(service1ToService2Edge);
@@ -541,12 +541,12 @@ describe('Entity topology graphql query handler', () => {
       data: {
         'avg(duration)': {
           value: 6,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
       specification: request.edgeSpecification,
       fromNode: serviceNode2,
-      toNode: serviceNode3
+      toNode: serviceNode3,
     };
     serviceNode2.edges.push(service2ToService3Edge);
     serviceNode3.edges.push(service2ToService3Edge);
@@ -555,12 +555,12 @@ describe('Entity topology graphql query handler', () => {
       data: {
         'avg(duration)': {
           value: 8,
-          health: MetricHealth.NotSpecified
-        }
+          health: MetricHealth.NotSpecified,
+        },
       },
       specification: request.edgeSpecification,
       fromNode: serviceNode3,
-      toNode: backendNodeB
+      toNode: backendNodeB,
     };
     serviceNode3.edges.push(service3ToBackendBEdge);
     backendNodeB.edges.push(service3ToBackendBEdge);

@@ -10,7 +10,7 @@ import {
   LoadAsyncModule,
   NavigableTabModule,
   SummaryValueModule,
-  TooltipModule
+  TooltipModule,
 } from '@hypertrace/components';
 import { ExploreFilterLinkModule } from '../../shared/components/explore-filter-link/explore-filter-link.module';
 import { LogEventsTableModule } from '../../shared/components/log-events/log-events-table.module';
@@ -29,18 +29,18 @@ const ROUTE_CONFIG: HtRoute[] = [
       {
         path: '',
         redirectTo: 'sequence',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'sequence',
-        component: ApiTraceSequenceComponent
+        component: ApiTraceSequenceComponent,
       },
       {
         path: 'logs',
-        component: ApiTraceLogsComponent
-      }
-    ]
-  }
+        component: ApiTraceLogsComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
@@ -61,7 +61,7 @@ const ROUTE_CONFIG: HtRoute[] = [
     CopyShareableLinkToClipboardModule,
     NavigableTabModule,
     LogEventsTableModule,
-    NavigableDashboardModule.withDefaultDashboards(apiTraceSequenceDashboard)
-  ]
+    NavigableDashboardModule.withDefaultDashboards(apiTraceSequenceDashboard),
+  ],
 })
 export class ApiTraceDetailPageModule {}

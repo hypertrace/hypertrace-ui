@@ -8,7 +8,7 @@ import {
   ModelProperty,
   ModelPropertyType,
   NUMBER_PROPERTY,
-  STRING_PROPERTY
+  STRING_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { GraphQlFilter } from '../../../../../graphql/model/schema/filter/graphql-filter';
 import { SpecificationBackedTableColumnDef } from '../../../../widgets/table/table-widget-column.model';
@@ -17,17 +17,17 @@ import { ExploreSpecification } from './../../../../../graphql/model/schema/spec
 import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
-  GraphQlExploreResponse
+  GraphQlExploreResponse,
 } from './../../../../../graphql/request/handlers/explore/explore-query';
 
 @Model({
-  type: 'explore-table-data-source'
+  type: 'explore-table-data-source',
 })
 export class ExploreTableDataSourceModel extends TableDataSourceModel {
   @ModelProperty({
     key: 'context',
     required: true,
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public context!: string;
 
@@ -36,29 +36,29 @@ export class ExploreTableDataSourceModel extends TableDataSourceModel {
     required: false,
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: TimeDurationModel
-    } as ModelModelPropertyTypeInstance
+      defaultModelClass: TimeDurationModel,
+    } as ModelModelPropertyTypeInstance,
   })
   public interval?: TimeDurationModel;
 
   @ModelProperty({
     key: 'group-by',
     required: false,
-    type: ARRAY_PROPERTY.type
+    type: ARRAY_PROPERTY.type,
   })
   public groupBy: string[] = [];
 
   @ModelProperty({
     key: 'group-by-include-rest',
     required: false,
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public groupByIncludeRest: boolean = true;
 
   @ModelProperty({
     key: 'group-limit',
     required: false,
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public groupLimit: number = 100;
 
@@ -68,7 +68,7 @@ export class ExploreTableDataSourceModel extends TableDataSourceModel {
 
   protected buildGraphQlRequest(
     filters: GraphQlFilter[],
-    request: TableDataRequest<SpecificationBackedTableColumnDef<ExploreSpecification>>
+    request: TableDataRequest<SpecificationBackedTableColumnDef<ExploreSpecification>>,
   ): GraphQlExploreRequest {
     return {
       requestType: EXPLORE_GQL_REQUEST,
@@ -80,23 +80,23 @@ export class ExploreTableDataSourceModel extends TableDataSourceModel {
       orderBy: request.sort && [
         {
           direction: request.sort.direction,
-          key: request.sort.column.specification
-        }
+          key: request.sort.column.specification,
+        },
       ],
       filters: [...filters, ...this.toGraphQlFilters(request.filters)],
       timeRange: this.getTimeRangeOrThrow(),
       groupBy: {
         keyExpressions: this.groupBy.map(key => ({ key: key })),
         includeRest: this.groupByIncludeRest,
-        limit: this.groupLimit
-      }
+        limit: this.groupLimit,
+      },
     };
   }
 
   protected buildTableResponse(response: GraphQlExploreResponse): TableDataResponse<TableRow> {
     return {
       data: response.results,
-      totalCount: response.total ?? response.results.length
+      totalCount: response.total ?? response.results.length,
     };
   }
 }

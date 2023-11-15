@@ -14,7 +14,7 @@ export class TopologyBuilderService {
     clickableEdges: true,
     nodeDataSpecifiers: [],
     edgeDataSpecifiers: [],
-    layoutType: TopologyLayoutType.CustomTreeLayout
+    layoutType: TopologyLayoutType.CustomTreeLayout,
   };
 
   public build(hostEl: Element, injector: Injector, config: RequiredTopologyConfig): Topology {

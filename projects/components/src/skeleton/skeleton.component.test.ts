@@ -3,7 +3,7 @@ import { SkeletonComponent, SkeletonType } from './skeleton.component';
 
 describe('Skeleton Component', () => {
   const createHost = createHostFactory<SkeletonComponent>({
-    component: SkeletonComponent
+    component: SkeletonComponent,
   });
 
   let spectator: SpectatorHost<SkeletonComponent>;
@@ -28,37 +28,37 @@ describe('Skeleton Component', () => {
     const skeletonInputData: { type: SkeletonType; expectedRepeat: number }[] = [
       {
         type: SkeletonType.Donut,
-        expectedRepeat: 1
+        expectedRepeat: 1,
       },
       {
         type: SkeletonType.Text,
-        expectedRepeat: 1
+        expectedRepeat: 1,
       },
       {
         type: SkeletonType.Rectangle,
-        expectedRepeat: 1
+        expectedRepeat: 1,
       },
       {
         type: SkeletonType.Circle,
-        expectedRepeat: 1
+        expectedRepeat: 1,
       },
       {
         type: SkeletonType.TableRow,
-        expectedRepeat: 5
+        expectedRepeat: 5,
       },
       {
         type: SkeletonType.Square,
-        expectedRepeat: 1
+        expectedRepeat: 1,
       },
       {
         type: SkeletonType.ListItem,
-        expectedRepeat: 4
-      }
+        expectedRepeat: 4,
+      },
     ];
     spectator = createHost(`<ht-skeleton [skeletonType]="skeletonType"></ht-skeleton>`, {
       hostProps: {
-        skeletonType: SkeletonType.Donut
-      }
+        skeletonType: SkeletonType.Donut,
+      },
     });
 
     skeletonInputData.forEach(testConfig => {

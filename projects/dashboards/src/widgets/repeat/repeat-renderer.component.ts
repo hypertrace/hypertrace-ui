@@ -9,7 +9,7 @@ import { RepeatModel } from './repeat.model';
 @Component({
   selector: 'ht-repeat',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <div #repeaterContent></div> `
+  template: ` <div #repeaterContent></div> `,
 })
 export class RepeatRendererComponent extends WidgetRenderer<RepeatModel> implements AfterViewInit {
   @ViewChild('repeaterContent', { read: ViewContainerRef, static: true })

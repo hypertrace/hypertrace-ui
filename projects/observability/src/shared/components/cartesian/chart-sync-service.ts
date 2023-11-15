@@ -13,39 +13,39 @@ export class ChartSyncService<TData> {
   public mouseLocationChange(
     data: MouseLocationData<TData, Series<TData> | Band<TData>>[] | CartesianSelectedData<TData>,
     groupId?: string,
-    chartId?: CartesianChartComponent<TData>
+    chartId?: CartesianChartComponent<TData>,
   ): void {
     this.locationChangeSubject.next({
       groupId: groupId,
       locationData: data as MouseLocationData<TData, Series<TData> | Band<TData>>[],
-      chartId: chartId
+      chartId: chartId,
     });
   }
 
   public mouseLeave(groupId?: string, chartId?: CartesianChartComponent<TData>): void {
     this.mouseLeaveSubject.next({
       groupId: groupId,
-      chartId: chartId
+      chartId: chartId,
     });
   }
 
   public getLocationChangesForGroup(
     groupId: string,
-    chartId: CartesianChartComponent<TData>
+    chartId: CartesianChartComponent<TData>,
   ): Observable<MouseLocationData<TData, Series<TData> | Band<TData>>[]> {
     return this.locationChangeSubject.pipe(
       filter(data => data.chartId !== chartId && data.groupId === groupId),
-      map(data => data.locationData)
+      map(data => data.locationData),
     );
   }
 
   public getMouseLeave(
     groupId: string,
-    chartId: CartesianChartComponent<TData>
+    chartId: CartesianChartComponent<TData>,
   ): Observable<ChartMouseLeaveData<TData>> {
     return this.mouseLeaveSubject.pipe(
       filter(data => data.chartId !== chartId && data.groupId === groupId),
-      map(data => data)
+      map(data => data),
     );
   }
 }

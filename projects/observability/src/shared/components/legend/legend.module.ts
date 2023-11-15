@@ -6,6 +6,6 @@ import { LegendComponent } from './legend.component';
 @NgModule({
   declarations: [LegendComponent],
   imports: [CommonModule, TooltipModule],
-  exports: [LegendComponent]
+  exports: [LegendComponent],
 })
 export class LegendModule {}

@@ -9,7 +9,7 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
     type: 'container-widget',
     layout: {
       type: 'auto-container-layout',
-      'enable-style': false
+      'enable-style': false,
     },
     children: [
       {
@@ -25,8 +25,8 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
             display: ObservabilityTableCellType.Entity,
             width: '30%',
             value: {
-              type: 'entity-specification'
-            }
+              type: 'entity-specification',
+            },
           },
           {
             type: 'table-widget-column',
@@ -35,9 +35,9 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
-              aggregation: 'p99'
+              aggregation: 'p99',
             },
-            sort: TableSortDirection.Descending
+            sort: TableSortDirection.Descending,
           },
           {
             type: 'table-widget-column',
@@ -46,8 +46,8 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
-              aggregation: 'avg'
-            }
+              aggregation: 'avg',
+            },
           },
           {
             type: 'table-widget-column',
@@ -56,8 +56,8 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
-              aggregation: 'avgrate_sec'
-            }
+              aggregation: 'avgrate_sec',
+            },
           },
           {
             type: 'table-widget-column',
@@ -66,8 +66,8 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
-              aggregation: 'sum'
-            }
+              aggregation: 'sum',
+            },
           },
           {
             type: 'table-widget-column',
@@ -76,8 +76,8 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: 'avgrate_sec'
-            }
+              aggregation: 'avgrate_sec',
+            },
           },
           {
             type: 'table-widget-column',
@@ -86,15 +86,15 @@ export const serviceListDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: 'sum'
-            }
-          }
+              aggregation: 'sum',
+            },
+          },
         ],
         data: {
           type: 'entity-table-data-source',
-          entity: 'SERVICE'
-        }
-      }
-    ]
-  }
+          entity: 'SERVICE',
+        },
+      },
+    ],
+  },
 };

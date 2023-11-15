@@ -16,13 +16,13 @@ import { ExitCallsTableCellRendererComponent } from './data-cell/exit-calls/exit
     TableModule.withCellRenderers([
       EntityTableCellRendererComponent,
       BackendIconTableCellRendererComponent,
-      ExitCallsTableCellRendererComponent
+      ExitCallsTableCellRendererComponent,
     ]),
     EntityTableCellRendererModule,
     BackendIconTableCellRendererModule,
-    TooltipModule
+    TooltipModule,
   ],
   declarations: [ExitCallsTableCellRendererComponent],
-  exports: [ExitCallsTableCellRendererComponent]
+  exports: [ExitCallsTableCellRendererComponent],
 })
 export class ObservabilityTableCellRendererModule {}

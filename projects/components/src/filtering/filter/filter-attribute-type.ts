@@ -5,5 +5,5 @@ export const enum FilterAttributeType {
   String = 'STRING',
   StringArray = 'STRING_ARRAY',
   StringMap = 'STRING_MAP',
-  Timestamp = 'TIMESTAMP'
+  Timestamp = 'TIMESTAMP',
 }

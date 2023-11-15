@@ -3,7 +3,7 @@ import { Dashboard } from '@hypertrace/hyperdash';
 import { recordObservable, runFakeRxjs } from '@hypertrace/test-utils';
 import { MockService } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
-import { CartesianSeriesVisualizationType } from '../../shared/components/cartesian/chart';
+import { CartesianSeriesVisualizationType, ScaleType } from '../../shared/components/cartesian/chart';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { LegendPosition } from '../../shared/components/legend/legend.component';
 import { ExplorerVisualizationCartesianDataSourceModel } from '../../shared/dashboard/data/graphql/explorer-visualization/explorer-visualization-cartesian-data-source.model';
@@ -23,8 +23,8 @@ describe('Explorer dashboard builder', () => {
   const buildSeries = (key: string, aggregation?: MetricAggregationType) => ({
     specification: new ExploreSpecificationBuilder().exploreSpecificationForKey(key, aggregation),
     visualizationOptions: {
-      type: CartesianSeriesVisualizationType.Column
-    }
+      type: CartesianSeriesVisualizationType.Column,
+    },
   });
   test('can build dashboard JSON for visualization', done => {
     const builder = new ExplorerDashboardBuilder(MockService(MetadataService), MockService(FilterBuilderLookupService));
@@ -44,24 +44,29 @@ describe('Explorer dashboard builder', () => {
             'legend-position': LegendPosition.Bottom,
             'selection-handler': {
               type: 'cartesian-explorer-selection-handler',
-              'show-context-menu': false
-            }
+              'show-context-menu': false,
+            },
+            'x-axis': {
+              type: 'cartesian-axis',
+              'scale-type': ScaleType.Band,
+              'show-tick-labels': false,
+            },
           },
-          onReady: expect.any(Function)
-        }
+          onReady: expect.any(Function),
+        },
       });
 
       dashboardRecording.subscribe(generatedDashboard => {
         const mockDataSource = {
-          request: undefined
+          request: undefined,
         };
         const mockDashboard: Partial<Dashboard> = {
           createAndSetRootDataFromModelClass: jest.fn(),
-          getRootDataSource: jest.fn().mockReturnValue(mockDataSource)
+          getRootDataSource: jest.fn().mockReturnValue(mockDataSource),
         };
         generatedDashboard.onReady(mockDashboard as Dashboard);
         expect(mockDashboard.createAndSetRootDataFromModelClass).toHaveBeenCalledWith(
-          ExplorerVisualizationCartesianDataSourceModel
+          ExplorerVisualizationCartesianDataSourceModel,
         );
         expect(mockDataSource.request).toBe(mockRequest);
         done();
@@ -76,12 +81,12 @@ describe('Explorer dashboard builder', () => {
           of({
             name: 'test',
             displayName: capitalize('test'),
-            type: AttributeMetadataType.Long
-          })
+            type: AttributeMetadataType.Long,
+          }),
         ),
-        getSelectionAttributes: jest.fn().mockReturnValue(of([]))
+        getSelectionAttributes: jest.fn().mockReturnValue(of([])),
       }),
-      MockService(FilterBuilderLookupService)
+      MockService(FilterBuilderLookupService),
     );
 
     runFakeRxjs(({ expectObservable }) => {
@@ -97,8 +102,8 @@ describe('Explorer dashboard builder', () => {
           traceType: ObservabilityTraceType.Api,
           properties: [series.specification],
           filters: [new GraphQlFieldFilter('bar', GraphQlOperatorType.Equals, 'baz')],
-          limit: 1000
-        })
+          limit: 1000,
+        }),
       };
       builder.updateForRequest(mockRequest);
 
@@ -111,7 +116,7 @@ describe('Explorer dashboard builder', () => {
             style: TableStyle.Embedded,
             data: {
               type: 'traces-table-data-source',
-              trace: ObservabilityTraceType.Api
+              trace: ObservabilityTraceType.Api,
             },
             'child-template': {
               type: 'trace-detail-widget',
@@ -119,8 +124,8 @@ describe('Explorer dashboard builder', () => {
                 type: 'api-trace-detail-data-source',
 
                 trace: '${row}',
-                attributes: ['requestUrl']
-              }
+                attributes: ['requestUrl'],
+              },
             },
             columns: [
               expect.objectContaining({ title: 'Type' }),
@@ -138,27 +143,27 @@ describe('Explorer dashboard builder', () => {
               expect.objectContaining({ title: 'Entry Span ID' }),
               expect.objectContaining({ title: 'Service ID' }),
               expect.objectContaining({ title: 'Trace ID' }),
-              expect.objectContaining({ title: 'Request URL' })
-            ]
+              expect.objectContaining({ title: 'Request URL' }),
+            ],
           },
-          onReady: expect.any(Function)
-        }
+          onReady: expect.any(Function),
+        },
       });
 
       dashboardRecording.subscribe(generatedDashboard => {
         const mockDataSource: Partial<GraphQlFilterDataSourceModel> = {
           clearFilters: jest.fn().mockReturnThis(),
-          addFilters: jest.fn().mockReturnThis()
+          addFilters: jest.fn().mockReturnThis(),
         };
 
         const mockDashboard: Partial<Dashboard> = {
           getRootDataSource: jest.fn().mockReturnValue(mockDataSource),
-          setTimeRange: jest.fn()
+          setTimeRange: jest.fn(),
         };
         generatedDashboard.onReady(mockDashboard as Dashboard);
         expect(mockDataSource.clearFilters).toHaveBeenCalled();
         expect(mockDataSource.addFilters).toHaveBeenCalledWith(
-          new GraphQlFieldFilter('bar', GraphQlOperatorType.Equals, 'baz')
+          new GraphQlFieldFilter('bar', GraphQlOperatorType.Equals, 'baz'),
         );
         done();
       });

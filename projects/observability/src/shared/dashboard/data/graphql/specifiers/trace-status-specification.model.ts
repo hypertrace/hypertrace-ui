@@ -7,7 +7,7 @@ import { SpecificationModel } from './specification.model';
 
 @Model({
   type: 'trace-status-specification',
-  displayName: 'Trace Status'
+  displayName: 'Trace Status',
 })
 export class TraceStatusSpecificationModel extends SpecificationModel<TraceStatusSpecification> {
   protected buildInnerSpec(): TraceStatusSpecification {

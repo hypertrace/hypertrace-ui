@@ -6,7 +6,7 @@ import {
   OnChanges,
   Output,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { DateCoercer, TypedSimpleChanges } from '@hypertrace/common';
 import {
@@ -24,7 +24,7 @@ import {
   TableComponent,
   TableDataSource,
   TableMode,
-  TableStyle
+  TableStyle,
 } from '@hypertrace/components';
 import { Observable, of } from 'rxjs';
 import { MarkerTooltipData } from './marker-tooltip/marker-tooltip.component';
@@ -73,7 +73,7 @@ import { WaterfallChartService } from './waterfall-chart.service';
         <ht-marker-tooltip [data]="this.markerTooltipData" (viewAll)="this.viewAll()"></ht-marker-tooltip>
       </ng-template>
     </div>
-  `
+  `,
 })
 export class WaterfallChartComponent implements OnChanges {
   @Input()
@@ -98,7 +98,7 @@ export class WaterfallChartComponent implements OnChanges {
       visible: true,
       sortable: false,
       title: 'Name',
-      display: WaterfallTableCellType.SpanName
+      display: WaterfallTableCellType.SpanName,
     },
     {
       id: '$$iconType',
@@ -106,8 +106,8 @@ export class WaterfallChartComponent implements OnChanges {
       sortable: false,
       title: '',
       width: '48px',
-      display: CoreTableCellRendererType.Icon
-    }
+      display: CoreTableCellRendererType.Icon,
+    },
   ];
 
   // Current State
@@ -124,7 +124,7 @@ export class WaterfallChartComponent implements OnChanges {
 
   public constructor(
     private readonly waterfallChartService: WaterfallChartService,
-    private readonly popoverService: PopoverService
+    private readonly popoverService: PopoverService,
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -168,7 +168,7 @@ export class WaterfallChartComponent implements OnChanges {
   public viewAll(): void {
     this.markerSelection.emit({
       selectedData: this.marker?.id !== undefined ? this.dataNodeMap.get(this.marker?.id) : undefined,
-      timestamps: this.marker?.timestamps ?? []
+      timestamps: this.marker?.timestamps ?? [],
     });
     this.closePopover();
   }
@@ -184,9 +184,9 @@ export class WaterfallChartComponent implements OnChanges {
         position: {
           type: PopoverPositionType.Relative,
           origin: datum.origin,
-          locationPreferences: [PopoverRelativePositionLocation.AboveRightAligned]
+          locationPreferences: [PopoverRelativePositionLocation.AboveRightAligned],
         },
-        backdrop: PopoverBackdrop.Transparent
+        backdrop: PopoverBackdrop.Transparent,
       });
       this.popover.closeOnBackdropClick();
     }
@@ -202,14 +202,14 @@ export class WaterfallChartComponent implements OnChanges {
 
     let markerData: MarkerTooltipData = {
       relativeTimes: [],
-      summary: spanWaterfallData.logEvents.find(logEvent => logEvent.timestamp === marker.timestamps[0])?.summary ?? ''
+      summary: spanWaterfallData.logEvents.find(logEvent => logEvent.timestamp === marker.timestamps[0])?.summary ?? '',
     };
     spanWaterfallData.logEvents.forEach((logEvent: LogEvent) => {
       if (marker.timestamps.includes(logEvent.timestamp)) {
         const logEventTime = this.dateCoercer.coerce(logEvent.timestamp)!.getTime();
         markerData = {
           ...markerData,
-          relativeTimes: [...markerData.relativeTimes, logEventTime - spanWaterfallData.startTime]
+          relativeTimes: [...markerData.relativeTimes, logEventTime - spanWaterfallData.startTime],
         };
       }
     });
@@ -224,9 +224,9 @@ export class WaterfallChartComponent implements OnChanges {
       getData: () =>
         of({
           data: rootLevelRows,
-          totalCount: rootLevelRows.length
+          totalCount: rootLevelRows.length,
         }),
-      getScope: () => ''
+      getScope: () => '',
     };
   }
 

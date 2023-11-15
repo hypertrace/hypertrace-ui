@@ -10,6 +10,6 @@ import { FileDisplayComponent } from './file-display.component';
 @NgModule({
   imports: [CommonModule, IconModule, FormattingModule, TooltipModule, LoaderModule, ProgressBarModule],
   declarations: [FileDisplayComponent],
-  exports: [FileDisplayComponent]
+  exports: [FileDisplayComponent],
 })
 export class FileDisplayModule {}

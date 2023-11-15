@@ -3,7 +3,7 @@ import { TableCellCsvGenerator } from './table-cell-csv-generator';
 import { isArray, isUndefined } from 'lodash-es';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TableCellCsvGeneratorManagementService {
   private readonly csvGenerators: TableCellCsvGenerator<unknown>[] = [];

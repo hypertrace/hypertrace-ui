@@ -11,7 +11,7 @@ import {
   GraphQlQueryHandler,
   GraphQlRequestCacheability,
   GraphQlRequestOptions,
-  GRAPHQL_OPTIONS
+  GRAPHQL_OPTIONS,
 } from './graphql-config';
 import { GraphqlExecutionError } from './graphql-execution-error';
 import { GraphqlRequestError } from './graphql-request-error';
@@ -19,7 +19,7 @@ import {
   GraphQlRequest,
   GraphQlResultStatus,
   RequestTypeForHandler,
-  ResponseTypeForHandler
+  ResponseTypeForHandler,
 } from './graphql-request.api';
 import { GraphQlSelection } from './model/graphql-selection';
 import { GraphQlRequestBuilder } from './utils/builders/request/graphql-request-builder';
@@ -30,11 +30,11 @@ import { GraphQlRequestOptionResolver } from './utils/resolver/graphql-request-o
 export class GraphQlRequestService {
   private static readonly DEFAULT_SELECTION_KEY: unique symbol = Symbol('Default selection');
   private static readonly DEFAULT_REQUEST_OPTIONS: GraphQlRequestOptions = {
-    cacheability: GraphQlRequestCacheability.Cacheable
+    cacheability: GraphQlRequestCacheability.Cacheable,
   };
   private readonly extractor: GraphQlDataExtractor = new GraphQlDataExtractor();
   private readonly optionsResolver: GraphQlRequestOptionResolver = new GraphQlRequestOptionResolver(
-    GraphQlRequestService.DEFAULT_REQUEST_OPTIONS
+    GraphQlRequestService.DEFAULT_REQUEST_OPTIONS,
   );
   private readonly bufferedRequestObserver: Observer<RequestWithOptions>;
   private readonly bufferedResultStream: Subject<Map<GraphQlRequest, Observable<GraphQlResult>>> = new Subject();
@@ -47,7 +47,7 @@ export class GraphQlRequestService {
     requestSubject
       .pipe(
         buffer(requestSubject.pipe(debounceTime(graphqlOptions.batchDebounceTimeMs ?? this.defaultDebounceTimeMs))),
-        map(requests => this.fireRequests(...requests))
+        map(requests => this.fireRequests(...requests)),
       )
       .subscribe(this.bufferedResultStream);
   }
@@ -101,16 +101,16 @@ export class GraphQlRequestService {
         const requestOptionMap = this.groupQueriesByRequestOptions(requestsWithOptionsForType);
 
         return Array.from(requestOptionMap).flatMap(([options, requestsForOptions]) =>
-          Array.from(this.fireRequestBatch(requestsForOptions, type, options))
+          Array.from(this.fireRequestBatch(requestsForOptions, type, options)),
         );
-      })
+      }),
     );
   }
 
   private fireRequestBatch(
     requests: GraphQlRequest[],
     type: GraphQlHandlerType,
-    options: GraphQlRequestOptions
+    options: GraphQlRequestOptions,
   ): Map<GraphQlRequest, Observable<GraphQlResult>> {
     const selectionMapByRequest = this.buildSelectionMultiMap(requests);
     const allSelectionMaps = Array.from(selectionMapByRequest.values());
@@ -122,27 +122,27 @@ export class GraphQlRequestService {
     const requestStringToResponseMap = new Map(
       uniq(Array.from(selectionToRequestStringMap.values())).map(requestString => [
         requestString,
-        this.executeRequest(requestString, type, options)
-      ])
+        this.executeRequest(requestString, type, options),
+      ]),
     );
 
     const selectionResponseMap = new Map(
       allSelections.map(selection => [
         selection,
-        requestStringToResponseMap.get(selectionToRequestStringMap.get(selection)!)!
-      ])
+        requestStringToResponseMap.get(selectionToRequestStringMap.get(selection)!)!,
+      ]),
     );
 
     return this.buildResultMap(
       requests,
-      this.buildResponseGetter(requestBuilder, selectionResponseMap, selectionMapByRequest)
+      this.buildResponseGetter(requestBuilder, selectionResponseMap, selectionMapByRequest),
     );
   }
 
   private executeRequest<TResponse extends Dictionary<unknown>>(
     requestString: string,
     type: GraphQlHandlerType,
-    options: GraphQlRequestOptions
+    options: GraphQlRequestOptions,
   ): Observable<TResponse> {
     return type === GraphQlHandlerType.Mutation
       ? this.executeMutation(requestString)
@@ -151,13 +151,13 @@ export class GraphQlRequestService {
 
   private executeQuery<TResponse extends Dictionary<unknown>>(
     requestString: string,
-    options: GraphQlRequestOptions
+    options: GraphQlRequestOptions,
   ): Observable<TResponse> {
     return this.apollo
       .query<TResponse>({
         query: gql(requestString),
         errorPolicy: 'all',
-        fetchPolicy: options.cacheability
+        fetchPolicy: options.cacheability,
       })
       .pipe(
         tap(response => {
@@ -165,14 +165,14 @@ export class GraphQlRequestService {
             throw new GraphqlExecutionError(`Query response error(s) for request '${requestString}'`, requestString);
           }
         }),
-        map(response => response.data)
+        map(response => response.data),
       );
   }
 
   private executeMutation<TResponse extends Dictionary<unknown>>(requestString: string): Observable<TResponse> {
     return this.apollo
       .mutate<TResponse>({
-        mutation: gql(`mutation ${requestString}`)
+        mutation: gql(`mutation ${requestString}`),
       })
       .pipe(
         tap(response => {
@@ -180,7 +180,7 @@ export class GraphQlRequestService {
             throw new GraphqlExecutionError(`Mutation response error(s) for request '${requestString}'`, requestString);
           }
         }),
-        mergeMap(response => (response.data ? of(response.data) : EMPTY))
+        mergeMap(response => (response.data ? of(response.data) : EMPTY)),
       );
   }
 
@@ -189,13 +189,13 @@ export class GraphQlRequestService {
     return this.bufferedResultStream.pipe(
       filter(resultMap => resultMap.has(request)),
       take(1),
-      mergeMap(resultMap => this.getResultFromMap<T>(request, resultMap))
+      mergeMap(resultMap => this.getResultFromMap<T>(request, resultMap)),
     );
   }
 
   private getResultFromMap<T>(
     request: GraphQlRequest,
-    resultMap: Map<GraphQlRequest, Observable<GraphQlResult>>
+    resultMap: Map<GraphQlRequest, Observable<GraphQlResult>>,
   ): Observable<T> {
     return resultMap.get(request)!.pipe(
       map(result => {
@@ -207,7 +207,7 @@ export class GraphQlRequestService {
         console.error(`${result.error.message}\n\nExpand output to see request, result.`, request, result);
 
         throw result.error;
-      })
+      }),
     );
   }
 
@@ -239,45 +239,45 @@ export class GraphQlRequestService {
     throw Error(
       `No matching request handler found for request: ${
         typeof request === 'object' ? JSON.stringify(request) : String(request)
-      }`
+      }`,
     );
   }
 
   private buildResponseGetter(
     queryBuilder: GraphQlRequestBuilder,
     selectionResponseMap: Map<GraphQlSelection, Observable<Dictionary<unknown>>>,
-    selectionMultiMap: Map<GraphQlRequest, Map<unknown, GraphQlSelection>>
+    selectionMultiMap: Map<GraphQlRequest, Map<unknown, GraphQlSelection>>,
   ): ResponseGetter {
     return request => {
       const requestSelectionsMap = selectionMultiMap.get(request)!;
 
       return zip(
-        ...Array.from(requestSelectionsMap.values()).map(selection => selectionResponseMap.get(selection)!)
+        ...Array.from(requestSelectionsMap.values()).map(selection => selectionResponseMap.get(selection)!),
       ).pipe(
         map(selectionResponses => Object.assign({}, ...selectionResponses)),
         map(response =>
           this.convertResponseForRequest(
             request,
-            this.extractor.extractAll(requestSelectionsMap, queryBuilder, response)
-          )
+            this.extractor.extractAll(requestSelectionsMap, queryBuilder, response),
+          ),
         ),
         mergeMap(convertedResponse =>
-          convertedResponse instanceof Observable ? convertedResponse : of(convertedResponse)
-        )
+          convertedResponse instanceof Observable ? convertedResponse : of(convertedResponse),
+        ),
       );
     };
   }
 
   private buildResultMap(
     requests: GraphQlRequest[],
-    responseGetter: ResponseGetter
+    responseGetter: ResponseGetter,
   ): Map<GraphQlRequest, Observable<GraphQlResult>> {
     return new Map(requests.map(request => this.buildRequestResponsePair(request, responseGetter)));
   }
 
   private buildRequestResponsePair(
     request: GraphQlRequest,
-    responseGetter: ResponseGetter
+    responseGetter: ResponseGetter,
   ): [GraphQlRequest, Observable<GraphQlResult>] {
     return [
       request,
@@ -286,29 +286,29 @@ export class GraphQlRequestService {
           response =>
             ({
               status: GraphQlResultStatus.Success,
-              value: response
-            } as GraphQlSuccessResult)
+              value: response,
+            } as GraphQlSuccessResult),
         ),
         catchError((err: GraphqlExecutionError) =>
           of({
             status: GraphQlResultStatus.Error,
-            error: new GraphqlRequestError(err, request)
-          } as GraphQlErrorResult)
-        )
-      )
+            error: new GraphqlRequestError(err, request),
+          } as GraphQlErrorResult),
+        ),
+      ),
     ];
   }
 
   private groupQueriesByRequestType(
-    requestsWithOptions: RequestWithOptions[]
+    requestsWithOptions: RequestWithOptions[],
   ): Map<GraphQlHandlerType, RequestWithOptions[]> {
     return requestsWithOptions
       .map(
         requestWithOptions =>
           [requestWithOptions, this.findMatchingHandler(requestWithOptions.request).type] as [
             RequestWithOptions,
-            GraphQlHandlerType
-          ]
+            GraphQlHandlerType,
+          ],
       )
       .reduce((resolvedMap, [requestWithOptions, type]) => {
         if (resolvedMap.has(type)) {
@@ -323,7 +323,7 @@ export class GraphQlRequestService {
   }
 
   private groupQueriesByRequestOptions(
-    requestsWithOptions: RequestWithOptions[]
+    requestsWithOptions: RequestWithOptions[],
   ): Map<GraphQlRequestOptions, GraphQlRequest[]> {
     return this.optionsResolver.groupQueriesByResolvedOptions(
       ...requestsWithOptions
@@ -331,8 +331,8 @@ export class GraphQlRequestService {
         .map(([requestWithOptions, handler]) => ({
           request: requestWithOptions.request,
           requestOptions: requestWithOptions.options,
-          handlerOptions: handler.getRequestOptions && handler.getRequestOptions(requestWithOptions.request)
-        }))
+          handlerOptions: handler.getRequestOptions && handler.getRequestOptions(requestWithOptions.request),
+        })),
     );
   }
 }

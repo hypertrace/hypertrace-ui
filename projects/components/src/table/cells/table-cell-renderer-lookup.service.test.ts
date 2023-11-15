@@ -9,7 +9,7 @@ import { TableCellRendererLookupService } from './table-cell-renderer-lookup.ser
 describe('Table cell renderer service', () => {
   const createService = createServiceFactory({
     service: TableCellRendererLookupService,
-    providers: [mockProvider(LoggerService)]
+    providers: [mockProvider(LoggerService)],
   });
 
   test('should be able to lookup registered cell renderers', () => {
@@ -18,7 +18,7 @@ describe('Table cell renderer service', () => {
     spectator.service.registerAll([
       TextTableCellRendererComponent,
       IconTableCellRendererComponent,
-      NumericTableCellRendererComponent
+      NumericTableCellRendererComponent,
     ]);
     const found = spectator.service.lookup(IconTableCellRendererComponent.type);
     expect(found).toEqual(IconTableCellRendererComponent);
@@ -30,7 +30,7 @@ describe('Table cell renderer service', () => {
     spectator.service.registerAll([
       TextTableCellRendererComponent,
       IconTableCellRendererComponent,
-      NumericTableCellRendererComponent
+      NumericTableCellRendererComponent,
     ]);
     const found = spectator.service.lookup(undefined); // Nothing specified so should get default
     expect(found).toEqual(TextTableCellRendererComponent);
@@ -41,7 +41,7 @@ describe('Table cell renderer service', () => {
 
     spectator.service.registerAll(
       [TextTableCellRendererComponent, IconTableCellRendererComponent, NumericTableCellRendererComponent],
-      IconTableCellRendererComponent
+      IconTableCellRendererComponent,
     );
     const found = spectator.service.lookup(undefined); // Nothing specified so should get default
     expect(found).toEqual(IconTableCellRendererComponent);
@@ -52,7 +52,7 @@ describe('Table cell renderer service', () => {
 
     spectator.service.registerAll(
       [TextTableCellRendererComponent, IconTableCellRendererComponent, NumericTableCellRendererComponent],
-      IconTableCellRendererComponent
+      IconTableCellRendererComponent,
     );
     const found = spectator.service.lookup(TimestampTableCellRendererComponent.type);
     expect(found).toEqual(IconTableCellRendererComponent);

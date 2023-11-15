@@ -61,7 +61,7 @@ import { IconSize } from '../../icon/icon-size';
         ></ht-button>
       </div>
     </div>
-  `
+  `,
 })
 export class TableEditColumnsModalComponent {
   public editColumns: TableColumnConfigExtended[];
@@ -70,7 +70,7 @@ export class TableEditColumnsModalComponent {
 
   public constructor(
     private readonly modalRef: ModalRef<TableColumnConfigExtended[]>,
-    @Inject(MODAL_DATA) public readonly modalData: TableEditColumnsModalConfig
+    @Inject(MODAL_DATA) public readonly modalData: TableEditColumnsModalConfig,
   ) {
     this.editColumns = this.filterMetadaDataColumnsAndOrderVisible(this.modalData.availableColumns);
   }

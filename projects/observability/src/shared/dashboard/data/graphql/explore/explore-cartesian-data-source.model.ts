@@ -14,7 +14,7 @@ import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/h
 import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
-  GraphQlExploreResponse
+  GraphQlExploreResponse,
 } from '../../../../graphql/request/handlers/explore/explore-query';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 import { CartesianDataFetcher, CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
@@ -34,7 +34,7 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
 
   public getData(): Observable<CartesianDataFetcher<ExplorerData>> {
     return of({
-      getData: (interval: TimeDuration) => this.fetchResults(interval)
+      getData: (interval: TimeDuration) => this.fetchResults(interval),
     });
   }
 
@@ -46,11 +46,11 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     }
 
     return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
-      this.buildExploreRequest(requestState, this.getFilters(inheritedFilters), timeRange)
+      this.buildExploreRequest(requestState, this.getFilters(inheritedFilters), timeRange),
     ).pipe(
       mergeMap(response =>
-        this.mapResponseData(requestState, response, requestState.interval as TimeDuration, timeRange)
-      )
+        this.mapResponseData(requestState, response, requestState.interval as TimeDuration, timeRange),
+      ),
     );
   }
 
@@ -58,20 +58,20 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     requestState: ExploreRequestState,
     response: GraphQlExploreResponse,
     interval: TimeDuration,
-    timeRange: GraphQlTimeRange
+    timeRange: GraphQlTimeRange,
   ): Observable<CartesianResult<ExplorerData>> {
     return this.getAllData(requestState, response, interval, timeRange).pipe(
       map(explorerResults => ({
         series: explorerResults,
-        bands: []
-      }))
+        bands: [],
+      })),
     );
   }
 
   protected buildExploreRequest(
     requestState: ExploreRequestState,
     filters: GraphQlFilter[],
-    timeRange: GraphQlTimeRange
+    timeRange: GraphQlTimeRange,
   ): GraphQlExploreRequest {
     return {
       requestType: EXPLORE_GQL_REQUEST,
@@ -81,7 +81,7 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
       timeRange: timeRange,
       interval: requestState.interval as TimeDuration,
       filters: filters,
-      groupBy: requestState.groupBy
+      groupBy: requestState.groupBy,
     };
   }
 
@@ -89,7 +89,7 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     request: ExploreRequestState,
     response: GraphQlExploreResponse,
     interval?: TimeDuration,
-    timeRange?: GraphQlTimeRange
+    timeRange?: GraphQlTimeRange,
   ): Observable<ExplorerSeries[]> {
     return this.buildAllSeries(request, new ExploreResult(response, interval, timeRange));
   }
@@ -105,7 +105,7 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
     const aggregatableSpecs = request.series
       .map(series => series.specification)
       .filter(
-        (selection): selection is RequireBy<ExploreSpecification, 'aggregation'> => selection.aggregation !== undefined
+        (selection): selection is RequireBy<ExploreSpecification, 'aggregation'> => selection.aggregation !== undefined,
       );
 
     const groupByExpressions = request.groupBy?.keyExpressions ?? [];
@@ -123,13 +123,13 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
       return aggregatableSpecs.map(spec => this.buildGroupedTimeseriesData(spec, groupByExpressions, result)).flat();
     }
 
-    return [];
+    return aggregatableSpecs.map(spec => this.buildMetricAggregationSeriesData(spec, result));
   }
 
   private buildSeries(request: ExploreRequestState, result: SeriesData, color: string): Observable<ExplorerSeries> {
     return forkJoinSafeEmpty({
       specDisplayName: this.metadataService.getSpecificationDisplayName(request.context, result.spec),
-      attribute: this.metadataService.getAttribute(request.context, result.spec.name)
+      attribute: this.metadataService.getAttribute(request.context, result.spec.name),
     }).pipe(
       map(obj => ({
         data: result.data,
@@ -143,48 +143,57 @@ export abstract class ExploreCartesianDataSourceModel extends GraphQlDataSourceM
           ? {
               groupBy: {
                 attribute: request.attributes?.find(
-                  attribute => attribute.name === request.groupBy?.keyExpressions?.[0].key
+                  attribute => attribute.name === request.groupBy?.keyExpressions?.[0].key,
                 )!,
                 subpath: request.groupBy?.keyExpressions?.[0].subpath,
-                allMetadata: request.attributes
-              }
+                allMetadata: request.attributes,
+              },
             }
-          : {})
-      }))
+          : {}),
+      })),
     );
   }
 
   public buildTimeseriesData(spec: AggregatableSpec, result: ExploreResult): SeriesData {
     return {
       data: result.getTimeSeriesData(spec.name, spec.aggregation),
-      spec: spec
+      spec: spec,
     };
   }
 
   public buildGroupedSeriesData(
     spec: AggregatableSpec,
     groupByExpressions: AttributeExpression[],
-    result: ExploreResult
+    result: ExploreResult,
   ): SeriesData {
     return {
       data: result
         .getGroupedSeriesData(groupByExpressions, spec.name, spec.aggregation)
         .map(({ keys, value }) => [this.buildGroupedSeriesName(keys), value]),
-      spec: spec
+      spec: spec,
+    };
+  }
+
+  public buildMetricAggregationSeriesData(spec: AggregatableSpec, result: ExploreResult): SeriesData {
+    const metricAggregationData = result.getMetricAggregationSeriesData(spec.name, spec.aggregation);
+
+    return {
+      data: metricAggregationData?.value ? [['', metricAggregationData.value]] : [],
+      spec: spec,
     };
   }
 
   public buildGroupedTimeseriesData(
     spec: AggregatableSpec,
     groupByExpressions: AttributeExpression[],
-    result: ExploreResult
+    result: ExploreResult,
   ): SeriesData[] {
     return Array.from(result.getGroupedTimeSeriesData(groupByExpressions, spec.name, spec.aggregation).entries()).map(
       ([groupNames, data]) => ({
         data: data,
         groupName: this.buildGroupedSeriesName(groupNames),
-        spec: spec
-      })
+        spec: spec,
+      }),
     );
   }
 

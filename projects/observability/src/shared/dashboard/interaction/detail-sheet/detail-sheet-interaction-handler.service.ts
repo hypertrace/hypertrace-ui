@@ -3,7 +3,7 @@ import { OverlayService, SheetRef, SheetSize } from '@hypertrace/components';
 import { DetailSheetInteractionContainerComponent } from './container/detail-sheet-interaction-container.component';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DetailSheetInteractionHandlerService {
   public constructor(private readonly overlayService: OverlayService) {}
@@ -12,14 +12,14 @@ export class DetailSheetInteractionHandlerService {
     detailModel: object,
     sheetSize: SheetSize = SheetSize.Medium,
     title?: string,
-    showHeader: boolean = true
+    showHeader: boolean = true,
   ): SheetRef {
     return this.overlayService.createSheet({
       content: DetailSheetInteractionContainerComponent,
       size: sheetSize,
       showHeader: showHeader,
       title: title,
-      data: detailModel
+      data: detailModel,
     });
   }
 }

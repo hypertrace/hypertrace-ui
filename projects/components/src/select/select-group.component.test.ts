@@ -12,7 +12,7 @@ describe('Select group component', () => {
     component: SelectGroupComponent,
     imports: [SelectModule, HttpClientTestingModule, IconLibraryTestingModule],
     declareComponent: false,
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService)],
   });
 
   test('renders a single select with appropriate styles', fakeAsync(() => {
@@ -76,9 +76,9 @@ describe('Select group component', () => {
     </ht-select-group>`,
       {
         hostProps: {
-          selectCount: Array(1).fill(undefined)
-        }
-      }
+          selectCount: Array(1).fill(undefined),
+        },
+      },
     );
     spectator.tick();
     const initialSelects = spectator.queryAll('.select');

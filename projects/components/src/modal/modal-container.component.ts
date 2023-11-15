@@ -38,7 +38,7 @@ import { getModalDimensions, ModalConfig, ModalDimension, MODAL_DATA } from './m
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class ModalContainerComponent {
   public readonly modalTitle: string;
@@ -56,7 +56,7 @@ export class ModalContainerComponent {
   public constructor(
     private readonly popoverRef: PopoverRef,
     @Inject(POPOVER_DATA) constructionData: ModalConstructionData,
-    layoutChange: LayoutChangeService
+    layoutChange: LayoutChangeService,
   ) {
     const config = constructionData.config;
     this.showControls = config.showControls ?? false;
@@ -72,10 +72,10 @@ export class ModalContainerComponent {
       providers: [
         {
           provide: LayoutChangeService,
-          useValue: layoutChange
-        }
+          useValue: layoutChange,
+        },
       ],
-      parent: constructionData.injector
+      parent: constructionData.injector,
     });
     this.rendererContext = this.rendererInjector.get(MODAL_DATA, {});
   }
@@ -132,7 +132,7 @@ export class ModalContainerComponent {
       ...(!isNil(this.size.minHeight) ? { 'min-height': this.size.minHeight } : {}),
       ...(!isNil(this.size.minWidth) ? { 'min-width': this.size.minWidth } : {}),
       ...(!isNil(this.size.maxHeight) ? { 'max-height': this.size.maxHeight } : {}),
-      ...(!isNil(this.size.maxWidth) ? { 'max-width': this.size.maxWidth } : {})
+      ...(!isNil(this.size.maxWidth) ? { 'max-width': this.size.maxWidth } : {}),
     };
   }
 }

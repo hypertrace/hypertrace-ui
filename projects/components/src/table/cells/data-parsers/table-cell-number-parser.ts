@@ -3,7 +3,7 @@ import { TableCellParserBase } from '../table-cell-parser-base';
 import { CoreTableCellParserType } from '../types/core-table-cell-parser-type';
 
 @TableCellParser({
-  type: CoreTableCellParserType.Number
+  type: CoreTableCellParserType.Number,
 })
 export class TableCellNumberParser extends TableCellParserBase<CellData, Value, Value> {
   public parseValue(cellData: CellData): Value {
