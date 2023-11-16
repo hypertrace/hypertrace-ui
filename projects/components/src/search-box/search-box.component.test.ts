@@ -154,4 +154,38 @@ describe('Search box Component', () => {
 
     flush();
   }));
+
+  test('collapsable enabled should add collapsable class', fakeAsync(() => {
+    spectator = createHost(
+      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" [searchMode]="searchMode" [enableSearchHistory]="enableSearchHistory" [collapsable]="true"></ht-search-box>`,
+      {
+        hostProps: {
+          placeholder: 'Test Placeholder',
+          debounceTime: 200,
+          searchMode: SearchBoxEmitMode.Incremental,
+          enableSearchHistory: true,
+        },
+      },
+    );
+
+    const searchBoxELement = spectator.query('.ht-search-box')!;
+    expect(searchBoxELement).toHaveClass('collapsable');
+  }));
+
+  test('collapsable disabled should not add collapsable class', fakeAsync(() => {
+    spectator = createHost(
+      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" [searchMode]="searchMode" [enableSearchHistory]="enableSearchHistory" [collapsable]="false"></ht-search-box>`,
+      {
+        hostProps: {
+          placeholder: 'Test Placeholder',
+          debounceTime: 200,
+          searchMode: SearchBoxEmitMode.Incremental,
+          enableSearchHistory: true,
+        },
+      },
+    );
+
+    const searchBoxELement = spectator.query('.ht-search-box')!;
+    expect(searchBoxELement).not.toHaveClass('collapsable');
+  }));
 });
