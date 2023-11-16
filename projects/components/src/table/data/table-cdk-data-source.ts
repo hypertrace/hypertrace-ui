@@ -1,6 +1,6 @@
 import { DataSource } from '@angular/cdk/collections';
 import { Dictionary, forkJoinSafeEmpty, isEqualIgnoreFunctions, RequireBy, sortUnknown } from '@hypertrace/common';
-import { isEqual, isNil } from 'lodash-es';
+import { cloneDeep, isEqual, isNil } from 'lodash-es';
 import { BehaviorSubject, combineLatest, NEVER, Observable, of, Subject, Subscription, throwError } from 'rxjs';
 import { catchError, debounceTime, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 import { PageEvent } from '../../paginator/page.event';
@@ -92,7 +92,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
   private cacheNewData(total: number, rows: StatefulTableRow[], request?: TableDataRequest): void {
     this.cachedData = {
-      request: request,
+      request: cloneDeep(request),
       rows: rows.map(TableCdkRowUtil.cloneRow),
       total: total,
     };
