@@ -17,7 +17,6 @@ import {
   selector: 'ht-explore-query-editor',
   styleUrls: ['./explore-query-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ExploreVisualizationBuilder],
   template: `
     <div *ngIf="this.visualizationRequest$ | async as currentVisualization" class="query-editor">
       <ht-explore-query-series-group-editor

@@ -51,6 +51,7 @@ import { MetadataService } from '../../shared/services/metadata/metadata.service
 import { ExplorerDashboardBuilder } from './explorer-dashboard-builder';
 import { ExplorerComponent } from './explorer.component';
 import { ExplorerModule } from './explorer.module';
+import { ExploreVisualizationBuilder } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 
 describe('Explorer component', () => {
   let spectator: Spectator<ExplorerComponent>;
@@ -86,7 +87,7 @@ describe('Explorer component', () => {
       IconLibraryTestingModule
     ],
     declareComponent: false,
-    componentProviders: [LayoutChangeService],
+    componentProviders: [LayoutChangeService, ExploreVisualizationBuilder],
     providers: [
       mockProvider(GraphQlRequestService, {
         query: jest.fn().mockReturnValueOnce(of(mockAttributes)).mockReturnValue(EMPTY)

@@ -24,18 +24,11 @@ import { TraceType } from '../../graphql/model/schema/trace';
 import { ExploreSpecificationBuilder } from '../../graphql/request/builders/specification/explore/explore-specification-builder';
 import { SpecificationBuilder } from '../../graphql/request/builders/specification/specification-builder';
 import { EXPLORE_GQL_REQUEST, GraphQlExploreRequest } from '../../graphql/request/handlers/explore/explore-query';
-import {
-  GraphQlSpansRequest,
-  SPANS_GQL_REQUEST
-} from '../../graphql/request/handlers/spans/spans-graphql-query-handler.service';
-import {
-  GraphQlTracesRequest,
-  TRACES_GQL_REQUEST
-} from '../../graphql/request/handlers/traces/traces-graphql-query-handler.service';
 import { GraphQlFilterBuilderService } from '../../services/filter-builder/graphql-filter-builder.service';
 import { MetadataService } from '../../services/metadata/metadata.service';
 import { CartesianSeriesVisualizationType } from '../cartesian/chart';
 import { SortDirection } from './order-by/explore-query-order-by-editor.component';
+import { GraphQlFilter } from '../../../public-api';
 
 @Injectable()
 export class ExploreVisualizationBuilder implements OnDestroy {
@@ -45,7 +38,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
   private readonly destroyed$: Subject<void> = new Subject();
   private readonly queryStateSubject: BehaviorSubject<ExploreRequestState>;
   private readonly specBuilder: SpecificationBuilder = new SpecificationBuilder();
-  private readonly exploreSpecBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
+  protected readonly exploreSpecBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
 
   public constructor(
     private readonly graphQlFilterBuilderService: GraphQlFilterBuilderService,
@@ -53,7 +46,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     private readonly intervalDurationService: IntervalDurationService,
     private readonly timeRangeService: TimeRangeService
   ) {
-    this.queryStateSubject = new BehaviorSubject(this.buildDefaultRequest()); // Todo: Revisit first request without knowing the context
+    this.queryStateSubject = new BehaviorSubject(this.buildDefaultRequest());
 
     this.visualizationRequest$ = this.queryStateSubject.pipe(
       debounceTime(10),
@@ -197,11 +190,13 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     ];
   }
 
-  private mapStateToResultsQuery(
-    state: ExploreRequestState
-  ): Observable<TimeUnaware<GraphQlSpansRequest> | TimeUnaware<GraphQlTracesRequest>> {
+  private mapStateToResultsQuery(state: ExploreRequestState): Observable<VisualizationMetricsAndFiltersRequest> {
     return this.getResultsQuerySpecificationsFromState(state).pipe(
-      map(specifications => this.buildGraphqlRequest(state.context, specifications, state.filters))
+      map(specifications => ({
+        context: state.context,
+        specifications: specifications,
+        filters: this.graphQlFilterBuilderService.buildGraphQlFieldFilters(state.filters ?? [])
+      }))
     );
   }
 
@@ -219,46 +214,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     );
   }
 
-  private buildGraphqlRequest(
-    context: string,
-    specifications: Specification[],
-    filters?: Filter[]
-  ): TimeUnaware<GraphQlSpansRequest> | TimeUnaware<GraphQlTracesRequest> {
-    if (context === SPAN_SCOPE) {
-      return this.buildSpansGraphqlRequest(specifications, filters);
-    }
-
-    return this.buildTracesGraphqlRequest(context, specifications, filters);
-  }
-
-  private buildTracesGraphqlRequest(
-    traceType: TraceType,
-    specifications: Specification[],
-    filters?: Filter[]
-  ): TimeUnaware<GraphQlTracesRequest> {
-    return {
-      requestType: TRACES_GQL_REQUEST,
-      traceType: traceType,
-      properties: specifications,
-      limit: 100,
-      filters: filters && this.graphQlFilterBuilderService.buildGraphQlFieldFilters(filters)
-    };
-  }
-
-  private buildSpansGraphqlRequest(
-    specifications: Specification[],
-    filters?: Filter[]
-  ): TimeUnaware<GraphQlSpansRequest> {
-    return {
-      requestType: SPANS_GQL_REQUEST,
-      properties: specifications,
-      limit: 100,
-      filters: filters && this.graphQlFilterBuilderService.buildGraphQlFieldFilters(filters)
-    };
-  }
-
   private buildDefaultRequest(context: ExploreRequestContext = ObservabilityTraceType.Api): ExploreRequestState {
-    // Todo: Revisit default value
     return {
       context: context,
       interval: 'AUTO',
@@ -268,7 +224,10 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     };
   }
 
-  private buildDefaultSeries(context: string): ExploreSeries {
+  /**
+   * Override this method and define default attribute for newer context
+   */
+  protected buildDefaultSeries(context: string): ExploreSeries {
     const attributeKey = context === SPAN_SCOPE ? 'spans' : 'calls';
 
     return {
@@ -307,7 +266,7 @@ export type ExploreRequestContext = TraceType | 'SPAN' | 'DOMAIN_EVENT';
 
 export interface ExploreVisualizationRequest extends ExploreRequestState {
   exploreQuery$: Observable<TimeUnaware<GraphQlExploreRequest>>;
-  resultsQuery$: Observable<TimeUnaware<GraphQlTracesRequest | GraphQlSpansRequest>>;
+  resultsQuery$: Observable<VisualizationMetricsAndFiltersRequest>;
 }
 
 export interface ExploreSeriesVisualizationOptions {
@@ -326,3 +285,8 @@ export interface ExploreOrderBy {
 }
 
 type TimeUnaware<T> = Omit<T, 'timeRange'>;
+interface VisualizationMetricsAndFiltersRequest {
+  context: string;
+  specifications: Specification[];
+  filters: GraphQlFilter[];
+}

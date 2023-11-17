@@ -1,12 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import {
-  assertUnreachable,
-  NavigationService,
-  PreferenceService,
-  QueryParamObject,
-  TimeDuration
-} from '@hypertrace/common';
+import { NavigationService, PreferenceService, QueryParamObject, TimeDuration, ValueOrNull } from '@hypertrace/common';
 import { Filter, FilterAttribute, ToggleItem } from '@hypertrace/components';
 import { isEmpty } from 'lodash-es';
 import { concat, EMPTY, Observable, Subject } from 'rxjs';
@@ -15,6 +9,7 @@ import {
   ExploreOrderBy,
   ExploreRequestState,
   ExploreSeries,
+  ExploreVisualizationBuilder,
   ExploreVisualizationRequest
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
@@ -28,7 +23,6 @@ import {
   ExplorerDashboardBuilder,
   ExplorerDashboardBuilderFactory,
   ExplorerGeneratedDashboard,
-  ExplorerGeneratedDashboardContext,
   EXPLORER_DASHBOARD_BUILDER_FACTORY
 } from './explorer-dashboard-builder';
 import { ExplorerUrlParserService } from './explorer-url-parser.service';
@@ -37,6 +31,7 @@ import { ExplorerUrlParserService } from './explorer-url-parser.service';
   selector: 'ht-explorer',
   styleUrls: ['./explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ExploreVisualizationBuilder],
   template: `
     <div class="explorer" *htLetAsync="this.currentState$ as currentState">
       <ht-page-header class="explorer-header"></ht-page-header>
@@ -123,31 +118,16 @@ export class ExplorerComponent {
   public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
   public currentState$!: Observable<InitialExplorerState>;
-  public currentContext$!: Observable<ExplorerGeneratedDashboardContext>;
+  public currentContext$!: Observable<string>;
   public attributes$: Observable<FilterAttribute[]> = EMPTY;
 
-  public readonly contextItems: ContextToggleItem[] = [
-    {
-      label: 'Endpoint Traces',
-      value: {
-        dashboardContext: ObservabilityTraceType.Api,
-        scopeQueryParam: ScopeQueryParam.EndpointTraces
-      }
-    },
-    {
-      label: 'Spans',
-      value: {
-        dashboardContext: SPAN_SCOPE,
-        scopeQueryParam: ScopeQueryParam.Spans
-      }
-    }
-  ];
+  public readonly contextItems: ExplorerContextToggleItem[];
 
   public filters: Filter[] = [];
   public visualizationExpanded$: Observable<boolean>;
   public resultsExpanded$: Observable<boolean>;
 
-  private readonly contextChangeSubject: Subject<ExplorerGeneratedDashboardContext> = new Subject();
+  private readonly contextChangeSubject: Subject<string> = new Subject();
 
   public constructor(
     private readonly metadataService: MetadataService,
@@ -157,6 +137,7 @@ export class ExplorerComponent {
     private readonly activatedRoute: ActivatedRoute,
     private readonly explorerUrlParserService: ExplorerUrlParserService
   ) {
+    this.contextItems = this.buildContextItems();
     this.explorerDashboardBuilder = explorerDashboardBuilderFactory.build();
     this.visualizationExpanded$ = this.preferenceService.get(ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE, true);
     this.resultsExpanded$ = this.preferenceService.get(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, true);
@@ -186,18 +167,18 @@ export class ExplorerComponent {
     this.filters = [...newFilters];
   }
 
-  private getOrDefaultContextItemFromQueryParam(value?: ScopeQueryParam): ContextToggleItem {
+  private getOrDefaultContextItemFromQueryParam(value: ValueOrNull<string>): ExplorerContextToggleItem {
     return this.contextItems.find(item => value === item.value.scopeQueryParam) || this.contextItems[0];
   }
 
-  private getQueryParamFromContext(context: ExplorerGeneratedDashboardContext): ScopeQueryParam {
+  protected getQueryParamFromContext(context: string): string {
     switch (context) {
       case ObservabilityTraceType.Api:
         return ScopeQueryParam.EndpointTraces;
       case 'SPAN':
         return ScopeQueryParam.Spans;
       default:
-        return assertUnreachable(context);
+        return this.contextItems[0].value.scopeQueryParam;
     }
   }
 
@@ -225,9 +206,28 @@ export class ExplorerComponent {
     this.preferenceService.set(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, expanded);
   }
 
+  protected buildContextItems(): ExplorerContextToggleItem[] {
+    return [
+      {
+        label: 'Endpoint Traces',
+        value: {
+          dashboardContext: ObservabilityTraceType.Api,
+          scopeQueryParam: ScopeQueryParam.EndpointTraces
+        }
+      },
+      {
+        label: 'Spans',
+        value: {
+          dashboardContext: SPAN_SCOPE,
+          scopeQueryParam: ScopeQueryParam.Spans
+        }
+      }
+    ];
+  }
+
   private updateUrlWithVisualizationData(request: ExploreRequestState): void {
     this.navigationService.addQueryParametersToUrl({
-      [ExplorerQueryParam.Scope]: this.getQueryParamFromContext(request.context as ExplorerGeneratedDashboardContext),
+      [ExplorerQueryParam.Scope]: this.getQueryParamFromContext(request.context),
       [ExplorerQueryParam.Interval]: this.encodeInterval(request.interval),
       [ExplorerQueryParam.Series]: request.series.map(series => this.encodeExploreSeries(series)),
       ...this.getOrderByQueryParams(request.orderBy),
@@ -274,7 +274,7 @@ export class ExplorerComponent {
     });
 
     return {
-      contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope) as ScopeQueryParam),
+      contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope)),
       groupBy: explorerState.groupBy,
       interval: explorerState.interval,
       series: explorerState.series,
@@ -309,12 +309,12 @@ export class ExplorerComponent {
     return `${attributeExpression.key}__${attributeExpression.subpath}`;
   }
 }
-interface ContextToggleItem extends ToggleItem<ExplorerContextScope> {
+export interface ExplorerContextToggleItem extends ToggleItem<ExplorerContextScope> {
   value: ExplorerContextScope;
 }
 
 export interface InitialExplorerState {
-  contextToggle: ContextToggleItem;
+  contextToggle: ExplorerContextToggleItem;
   series: ExploreSeries[];
   interval?: IntervalValue;
   groupBy?: GraphQlGroupBy;
@@ -322,8 +322,8 @@ export interface InitialExplorerState {
 }
 
 interface ExplorerContextScope {
-  dashboardContext: ExplorerGeneratedDashboardContext;
-  scopeQueryParam: ScopeQueryParam;
+  dashboardContext: string;
+  scopeQueryParam: string;
 }
 
 export const enum ScopeQueryParam {

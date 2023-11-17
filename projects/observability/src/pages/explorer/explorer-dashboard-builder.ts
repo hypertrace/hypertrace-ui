@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { Injectable, InjectionToken } from '@angular/core';
-import { assertUnreachable, isEqualIgnoreFunctions } from '@hypertrace/common';
+import { isEqualIgnoreFunctions } from '@hypertrace/common';
 import {
   CoreTableCellRendererType,
   FilterBuilderLookupService,
@@ -8,7 +8,7 @@ import {
   TableSortDirection,
   TableStyle
 } from '@hypertrace/components';
-import { Dashboard, JsonPrimitive, ModelJson } from '@hypertrace/hyperdash';
+import { Dashboard, ModelJson } from '@hypertrace/hyperdash';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, take } from 'rxjs/operators';
 import { ExploreVisualizationRequest } from '../../shared/components/explore-query-editor/explore-visualization-builder';
@@ -98,12 +98,8 @@ export class ExplorerDashboardBuilder {
         this.metadataService.getSelectionAttributes(request.context).pipe(
           take(1),
           map(attributes => [
-            ...this.getDefaultTableColumns(request.context as ExplorerGeneratedDashboardContext),
-            ...this.getGeneratedTableColumns(
-              attributes,
-              request.context as ExplorerGeneratedDashboardContext,
-              resultsQuery.properties
-            )
+            ...this.getDefaultTableColumns(request.context),
+            ...this.getGeneratedTableColumns(attributes, request.context, resultsQuery.specifications)
           ]),
           map(columnsMetadata => this.removeDuplicatedColumns(columnsMetadata)),
           map(columnsMetadata => this.buildColumnModelJson(request.context, columnsMetadata)),
@@ -196,7 +192,7 @@ export class ExplorerDashboardBuilder {
     }
   }
 
-  protected getDefaultTableColumns(context: ExplorerGeneratedDashboardContext): SpecificationBackedColumnModelJson[] {
+  protected getDefaultTableColumns(context: string): SpecificationBackedColumnModelJson[] {
     switch (context) {
       case ObservabilityTraceType.Api:
         return [
@@ -554,11 +550,11 @@ export class ExplorerDashboardBuilder {
         ];
 
       default:
-        return assertUnreachable(context);
+        return [];
     }
   }
 
-  protected getAttributesToExcludeFromUserDisplay(context: ExplorerGeneratedDashboardContext): Set<string> {
+  protected getAttributesToExcludeFromUserDisplay(context: string): Set<string> {
     switch (context) {
       case ObservabilityTraceType.Api:
         return new Set([
@@ -582,7 +578,7 @@ export class ExplorerDashboardBuilder {
           'startTime'
         ]);
       default:
-        return assertUnreachable(context);
+        return new Set();
     }
   }
 
@@ -594,7 +590,7 @@ export class ExplorerDashboardBuilder {
 
   private getGeneratedTableColumns(
     attributes: AttributeMetadata[],
-    context: ExplorerGeneratedDashboardContext,
+    context: string,
     selectedProperties: Specification[]
   ): SpecificationBackedColumnModelJson[] {
     const attributesToExclude = this.getAttributesToExcludeFromUserDisplay(context);
@@ -612,10 +608,14 @@ export class ExplorerDashboardBuilder {
           attribute: attribute.name
         },
         visible: selectedProperties.find(selectedProperty => selectedProperty.name === attribute.name) ? true : false,
-        'click-handler': {
-          type: context === SPAN_SCOPE ? 'span-trace-navigation-handler' : 'api-trace-navigation-handler'
-        }
+        'click-handler': this.buildClickHandlerForContext(context)
       }));
+  }
+
+  protected buildClickHandlerForContext(context: string): ModelJson | undefined {
+    return {
+      type: context === SPAN_SCOPE ? 'span-trace-navigation-handler' : 'api-trace-navigation-handler'
+    };
   }
 }
 
@@ -625,18 +625,7 @@ export interface ExplorerGeneratedDashboard {
 }
 
 export interface SpecificationBackedColumnModelJson extends ModelJson {
-  value:
-    | {
-        type: ValueSpecificationType.Attribute;
-        attribute: string;
-      }
-    | {
-        type: ValueSpecificationType.Composite;
-        [key: string]: JsonPrimitive;
-      }
-    | {
-        type: ValueSpecificationType.Status;
-      };
+  value: ModelJson;
 }
 
 export const enum ValueSpecificationType {
@@ -644,8 +633,6 @@ export const enum ValueSpecificationType {
   Composite = 'composite-specification',
   Status = 'trace-status-specification'
 }
-
-export type ExplorerGeneratedDashboardContext = ObservabilityTraceType.Api | 'SPAN';
 
 interface ResultsDashboardData {
   filters: GraphQlFilter[];
