@@ -297,27 +297,24 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
   private hasCacheForRequest(request: TableDataRequest): boolean {
     if (
-      this.cachedData.rows.length !== 0 &&
-      this.cachedData.rows.length === this.cachedData.total &&
-      request.position.limit <= this.cachedData.rows.length &&
-      !this.haveColumConfigsChanged(request)
+      !isEqual(this.cachedData.request?.sort, request.sort) ||
+      !isEqual(this.cachedData.request?.filters, request.filters) ||
+      this.haveColumConfigsChanged(request)
     ) {
-      // Check if we already have all available results cached
-      return true;
+      // If the columns, sort or filters have changed, we need to make a new request
+      return false;
     }
 
-    if (this.cachedData.rows.length < request.position.limit || !isEqual(this.cachedData.request?.sort, request.sort)) {
-      // Sanity check if we have enough cached data for what we request
-      return false;
+    if (this.cachedData.rows.length !== 0 && this.cachedData.rows.length === this.cachedData.total) {
+      // Check if we already have all available results cached
+      return true;
     }
 
     const offsetWithinCachedRows = this.calcOffsetWithinCachedRows(request);
 
     // Check if requested startOffset + limit is within the cached data
     return (
-      offsetWithinCachedRows >= 0 &&
-      offsetWithinCachedRows + request.position.limit <= this.cachedData.rows.length &&
-      !this.haveColumConfigsChanged(request)
+      offsetWithinCachedRows >= 0 && offsetWithinCachedRows + request.position.limit <= this.cachedData.rows.length
     );
   }
 
