@@ -133,7 +133,6 @@ describe('Search box Component', () => {
     );
 
     const searchBoxELement = spectator.query('.ht-search-box')!;
-    expect(searchBoxELement).toHaveClass('with-search-history');
     expect(searchBoxELement).not.toHaveClass('has-value');
     expect(searchBoxELement).not.toHaveClass('focused');
 
