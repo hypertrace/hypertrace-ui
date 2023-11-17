@@ -49,7 +49,7 @@ import { FileTypeUtil, SupportedFileType } from './file-types';
         <li class="item" *ngFor="let req of (this.config?.customRequirementsInfo ?? [])">
           <ht-icon class="icon" icon="${IconType.CheckCircleFill}" size="${IconSize.ExtraSmall}"></ht-icon>
           <div class="text">
-            <strong>{{ req.key }}</strong
+            <strong>{{ req.key | htDisplayString }}</strong
             >: {{ req.value | htDisplayString }}
           </div>
         </li>
