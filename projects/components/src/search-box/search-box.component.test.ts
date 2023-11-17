@@ -155,26 +155,45 @@ describe('Search box Component', () => {
     flush();
   }));
 
-  test('collapsable enabled should add collapsable class', fakeAsync(() => {
+  test('collapsable enabled should add collapsable class', () => {
     spectator = createHost(
-      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" [searchMode]="searchMode" [enableSearchHistory]="enableSearchHistory" [collapsable]="true"></ht-search-box>`,
+      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" [searchMode]="searchMode" [enableSearchHistory]="enableSearchHistory" [collapsable]="collapsable"></ht-search-box>`,
       {
         hostProps: {
           placeholder: 'Test Placeholder',
           debounceTime: 200,
           searchMode: SearchBoxEmitMode.Incremental,
           enableSearchHistory: true,
+          collapsable: true,
         },
       },
     );
 
     const searchBoxELement = spectator.query('.ht-search-box')!;
     expect(searchBoxELement).toHaveClass('collapsable');
-  }));
+  });
 
-  test('collapsable disabled should not add collapsable class', fakeAsync(() => {
+  test('collapsable disabled should not add collapsable class', () => {
     spectator = createHost(
-      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" [searchMode]="searchMode" [enableSearchHistory]="enableSearchHistory" [collapsable]="false"></ht-search-box>`,
+      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" [searchMode]="searchMode" [enableSearchHistory]="enableSearchHistory" [collapsable]="collapsable"></ht-search-box>`,
+      {
+        hostProps: {
+          placeholder: 'Test Placeholder',
+          debounceTime: 200,
+          searchMode: SearchBoxEmitMode.Incremental,
+          enableSearchHistory: true,
+          collapsable: false,
+        },
+      },
+    );
+
+    const searchBoxELement = spectator.query('.ht-search-box')!;
+    expect(searchBoxELement).not.toHaveClass('collapsable');
+  });
+
+  test('default collapsable behaviour should not add collapsable class', () => {
+    spectator = createHost(
+      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" [searchMode]="searchMode" [enableSearchHistory]="enableSearchHistory"></ht-search-box>`,
       {
         hostProps: {
           placeholder: 'Test Placeholder',
@@ -187,5 +206,5 @@ describe('Search box Component', () => {
 
     const searchBoxELement = spectator.query('.ht-search-box')!;
     expect(searchBoxELement).not.toHaveClass('collapsable');
-  }));
+  });
 });
