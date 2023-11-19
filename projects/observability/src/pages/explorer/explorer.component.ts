@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { NavigationService, PreferenceService, QueryParamObject, TimeDuration, ValueOrNull } from '@hypertrace/common';
 import { Filter, FilterAttribute, ToggleItem } from '@hypertrace/components';
 import { isEmpty } from 'lodash-es';
-import { concat, EMPTY, Observable, Subject } from 'rxjs';
+import { combineLatest, concat, EMPTY, Observable, of, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import {
   ExploreOrderBy,
@@ -37,7 +37,7 @@ import { ExplorerUrlParserService } from './explorer-url-parser.service';
       <ht-page-header class="explorer-header"></ht-page-header>
       <ht-toggle-group
         class="explorer-data-toggle"
-        [items]="this.contextItems"
+        [items]="currentState.availableContexts"
         [activeItem]="currentState.contextToggle"
         (activeItemChange)="this.onContextUpdated($event.value)"
       ></ht-toggle-group>
@@ -72,7 +72,9 @@ import { ExplorerUrlParserService } from './explorer-url-parser.service';
                 [interval]="currentState.interval"
                 [groupBy]="currentState.groupBy"
                 [orderBy]="currentState.orderBy"
-                (visualizationRequestChange)="this.onVisualizationRequestUpdated($event, attributes)"
+                (visualizationRequestChange)="
+                  this.onVisualizationRequestUpdated($event, attributes, currentState.availableContexts)
+                "
               ></ht-explore-query-editor>
 
               <ht-application-aware-dashboard
@@ -111,7 +113,7 @@ import { ExplorerUrlParserService } from './explorer-url-parser.service';
     </div>
   `
 })
-export class ExplorerComponent {
+export class ExplorerComponent implements OnInit {
   private static readonly VISUALIZATION_EXPANDED_PREFERENCE: string = 'explorer.visualizationExpanded';
   private static readonly RESULTS_EXPANDED_PREFERENCE: string = 'explorer.resultsExpanded';
   private readonly explorerDashboardBuilder: ExplorerDashboardBuilder;
@@ -120,9 +122,6 @@ export class ExplorerComponent {
   public currentState$!: Observable<InitialExplorerState>;
   public currentContext$!: Observable<string>;
   public attributes$: Observable<FilterAttribute[]> = EMPTY;
-
-  public readonly contextItems: ExplorerContextToggleItem[];
-
   public filters: Filter[] = [];
   public visualizationExpanded$: Observable<boolean>;
   public resultsExpanded$: Observable<boolean>;
@@ -137,48 +136,59 @@ export class ExplorerComponent {
     private readonly activatedRoute: ActivatedRoute,
     private readonly explorerUrlParserService: ExplorerUrlParserService
   ) {
-    this.contextItems = this.buildContextItems();
     this.explorerDashboardBuilder = explorerDashboardBuilderFactory.build();
     this.visualizationExpanded$ = this.preferenceService.get(ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE, true);
     this.resultsExpanded$ = this.preferenceService.get(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, true);
     this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
+  }
+
+  public ngOnInit(): void {
     this.buildState();
   }
 
   protected buildState(): void {
-    this.currentState$ = this.activatedRoute.queryParamMap.pipe(
+    const contextItems$ = this.buildContextItems();
+    this.currentState$ = combineLatest([this.activatedRoute.queryParamMap, contextItems$]).pipe(
       take(1),
-      map(paramMap => this.mapToInitialState(paramMap))
+      map(([paramMap, availableContexts]) => this.mapToInitialState(paramMap, availableContexts))
     );
+
     this.currentContext$ = concat(
       this.currentState$.pipe(map(value => value.contextToggle.value.dashboardContext)),
       this.contextChangeSubject
     );
   }
 
-  public onVisualizationRequestUpdated(newRequest: ExploreVisualizationRequest, attributes: FilterAttribute[]): void {
+  public onVisualizationRequestUpdated(
+    newRequest: ExploreVisualizationRequest,
+    attributes: FilterAttribute[],
+    availableContexts: ExplorerContextToggleItem[]
+  ): void {
     const updatedRequest = { ...newRequest, attributes: attributes };
     this.explorerDashboardBuilder.updateForRequest(updatedRequest);
-    this.updateUrlWithVisualizationData(updatedRequest);
+    this.updateUrlWithVisualizationData(updatedRequest, availableContexts);
   }
 
   public onFiltersUpdated(newFilters: Filter[]): void {
     this.filters = [...newFilters];
   }
 
-  private getOrDefaultContextItemFromQueryParam(value: ValueOrNull<string>): ExplorerContextToggleItem {
-    return this.contextItems.find(item => value === item.value.scopeQueryParam) || this.contextItems[0];
+  private getOrDefaultContextItemFromQueryParam(
+    contextItems: ExplorerContextToggleItem[],
+    value: ValueOrNull<string>
+  ): ExplorerContextToggleItem {
+    return contextItems.find(item => value === item.value.scopeQueryParam) || contextItems[0];
   }
 
-  protected getQueryParamFromContext(context: string): string {
+  protected getQueryParamFromContext(context: string, contextItems: ExplorerContextToggleItem[]): string {
     switch (context) {
       case ObservabilityTraceType.Api:
         return ScopeQueryParam.EndpointTraces;
       case 'SPAN':
         return ScopeQueryParam.Spans;
       default:
-        return this.contextItems[0].value.scopeQueryParam;
+        return contextItems[0].value.scopeQueryParam;
     }
   }
 
@@ -206,8 +216,8 @@ export class ExplorerComponent {
     this.preferenceService.set(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, expanded);
   }
 
-  protected buildContextItems(): ExplorerContextToggleItem[] {
-    return [
+  protected buildContextItems(): Observable<ExplorerContextToggleItem[]> {
+    return of([
       {
         label: 'Endpoint Traces',
         value: {
@@ -222,12 +232,15 @@ export class ExplorerComponent {
           scopeQueryParam: ScopeQueryParam.Spans
         }
       }
-    ];
+    ]);
   }
 
-  private updateUrlWithVisualizationData(request: ExploreRequestState): void {
+  private updateUrlWithVisualizationData(
+    request: ExploreRequestState,
+    availableContexts: ExplorerContextToggleItem[]
+  ): void {
     this.navigationService.addQueryParametersToUrl({
-      [ExplorerQueryParam.Scope]: this.getQueryParamFromContext(request.context),
+      [ExplorerQueryParam.Scope]: this.getQueryParamFromContext(request.context, availableContexts),
       [ExplorerQueryParam.Interval]: this.encodeInterval(request.interval),
       [ExplorerQueryParam.Series]: request.series.map(series => this.encodeExploreSeries(series)),
       ...this.getOrderByQueryParams(request.orderBy),
@@ -263,7 +276,7 @@ export class ExplorerComponent {
     };
   }
 
-  private mapToInitialState(param: ParamMap): InitialExplorerState {
+  private mapToInitialState(param: ParamMap, availableContexts: ExplorerContextToggleItem[]): InitialExplorerState {
     const explorerState = this.explorerUrlParserService.getExplorerState({
       series: param.getAll(ExplorerQueryParam.Series),
       interval: param.get(ExplorerQueryParam.Interval) ?? undefined,
@@ -274,7 +287,8 @@ export class ExplorerComponent {
     });
 
     return {
-      contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope)),
+      availableContexts: availableContexts,
+      contextToggle: this.getOrDefaultContextItemFromQueryParam(availableContexts, param.get(ExplorerQueryParam.Scope)),
       groupBy: explorerState.groupBy,
       interval: explorerState.interval,
       series: explorerState.series,
@@ -315,6 +329,7 @@ export interface ExplorerContextToggleItem extends ToggleItem<ExplorerContextSco
 
 export interface InitialExplorerState {
   contextToggle: ExplorerContextToggleItem;
+  availableContexts: ExplorerContextToggleItem[];
   series: ExploreSeries[];
   interval?: IntervalValue;
   groupBy?: GraphQlGroupBy;
