@@ -13,7 +13,6 @@ import { GraphQlFieldFilter } from '../../shared/graphql/model/schema/filter/fie
 import { GraphQlOperatorType } from '../../shared/graphql/model/schema/filter/graphql-filter';
 import { ObservabilityTraceType } from '../../shared/graphql/model/schema/observability-traces';
 import { ExploreSpecificationBuilder } from '../../shared/graphql/request/builders/specification/explore/explore-specification-builder';
-import { TRACES_GQL_REQUEST } from '../../shared/graphql/request/handlers/traces/traces-graphql-query-handler.service';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
 import { ExplorerDashboardBuilder } from './explorer-dashboard-builder';
 import { AttributeMetadataType } from '../../shared/graphql/model/metadata/attribute-metadata';
@@ -98,11 +97,9 @@ describe('Explorer dashboard builder', () => {
         resultLimit: 1000,
         exploreQuery$: EMPTY,
         resultsQuery$: of({
-          requestType: TRACES_GQL_REQUEST,
-          traceType: ObservabilityTraceType.Api,
-          properties: [series.specification],
+          context: ObservabilityTraceType.Api,
+          specifications: [series.specification],
           filters: [new GraphQlFieldFilter('bar', GraphQlOperatorType.Equals, 'baz')],
-          limit: 1000,
         }),
       };
       builder.updateForRequest(mockRequest);
