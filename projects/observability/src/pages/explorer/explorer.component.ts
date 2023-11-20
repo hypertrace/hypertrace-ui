@@ -182,14 +182,8 @@ export class ExplorerComponent implements OnInit {
   }
 
   protected getQueryParamFromContext(context: string, contextItems: ExplorerContextToggleItem[]): string {
-    switch (context) {
-      case ObservabilityTraceType.Api:
-        return ScopeQueryParam.EndpointTraces;
-      case 'SPAN':
-        return ScopeQueryParam.Spans;
-      default:
-        return contextItems[0].value.scopeQueryParam;
-    }
+    return (contextItems?.find(contextItem => contextItem.value.dashboardContext === context) ?? contextItems[0]).value
+      .scopeQueryParam;
   }
 
   public onContextUpdated(contextWrapper: ExplorerContextScope): void {
