@@ -9,7 +9,7 @@ describe('Entity Specification Builder', () => {
   test('correctly builds entity specification with explicit entity type', () => {
     const entitySpec = entitySpecificationBuilder.build('id', 'name', ObservabilityEntityType.Api, [
       'attribute1',
-      'attribute2'
+      'attribute2',
     ]);
 
     expect(entitySpec.asGraphQlSelections()).toEqual([
@@ -19,9 +19,9 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'id' }
-          }
-        ]
+            value: { key: 'id' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -29,9 +29,9 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'name' }
-          }
-        ]
+            value: { key: 'name' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -39,9 +39,9 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'attribute1' }
-          }
-        ]
+            value: { key: 'attribute1' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -49,10 +49,10 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'attribute2' }
-          }
-        ]
-      }
+            value: { key: 'attribute2' },
+          },
+        ],
+      },
     ]);
 
     expect(
@@ -60,14 +60,14 @@ describe('Entity Specification Builder', () => {
         id: 'test-id',
         name: 'test-name',
         attribute1: 'test-value-attrib1',
-        attribute2: 'test-value-attrib2'
-      })
+        attribute2: 'test-value-attrib2',
+      }),
     ).toEqual({
       [entityIdKey]: 'test-id',
       [entityTypeKey]: ObservabilityEntityType.Api,
       name: 'test-name',
       attribute1: 'test-value-attrib1',
-      attribute2: 'test-value-attrib2'
+      attribute2: 'test-value-attrib2',
     });
   });
 
@@ -80,7 +80,7 @@ describe('Entity Specification Builder', () => {
       ObservabilityEntityType.Api,
       ['attribute1', 'attribute2'],
 
-      [traceSpec]
+      [traceSpec],
     );
 
     expect(entitySpec.asGraphQlSelections()).toEqual([
@@ -90,9 +90,9 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'id' }
-          }
-        ]
+            value: { key: 'id' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -100,9 +100,9 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'name' }
-          }
-        ]
+            value: { key: 'name' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -110,9 +110,9 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'attribute1' }
-          }
-        ]
+            value: { key: 'attribute1' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -120,9 +120,9 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'attribute2' }
-          }
-        ]
+            value: { key: 'attribute2' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -130,9 +130,9 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'status' }
-          }
-        ]
+            value: { key: 'status' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -140,9 +140,9 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'statusCode' }
-          }
-        ]
+            value: { key: 'statusCode' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -150,10 +150,10 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'statusMessage' }
-          }
-        ]
-      }
+            value: { key: 'statusMessage' },
+          },
+        ],
+      },
     ]);
 
     expect(
@@ -164,8 +164,8 @@ describe('Entity Specification Builder', () => {
         attribute2: 'test-value-attrib2',
         status: TraceStatusType.FAIL,
         statusCode: '404',
-        statusMessage: 'Not Found'
-      })
+        statusMessage: 'Not Found',
+      }),
     ).toEqual({
       [entityIdKey]: 'test-id',
       [entityTypeKey]: ObservabilityEntityType.Api,
@@ -175,8 +175,8 @@ describe('Entity Specification Builder', () => {
       [traceSpec.name]: {
         status: TraceStatusType.FAIL,
         statusCode: '404',
-        statusMessage: 'Not Found'
-      }
+        statusMessage: 'Not Found',
+      },
     });
   });
 
@@ -190,9 +190,9 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'id' }
-          }
-        ]
+            value: { key: 'id' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -200,25 +200,25 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'name' }
-          }
-        ]
+            value: { key: 'name' },
+          },
+        ],
       },
       {
-        path: 'type'
-      }
+        path: 'type',
+      },
     ]);
 
     expect(
       entitySpec.extractFromServerData({
         id: 'test-id',
         name: 'test-name',
-        type: 'service'
-      })
+        type: 'service',
+      }),
     ).toEqual({
       [entityIdKey]: 'test-id',
       [entityTypeKey]: ObservabilityEntityType.Service,
-      name: 'test-name'
+      name: 'test-name',
     });
   });
 
@@ -232,9 +232,9 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'id' }
-          }
-        ]
+            value: { key: 'id' },
+          },
+        ],
       },
       {
         path: 'attribute',
@@ -242,20 +242,20 @@ describe('Entity Specification Builder', () => {
         arguments: [
           {
             name: 'expression',
-            value: { key: 'name' }
-          }
-        ]
+            value: { key: 'name' },
+          },
+        ],
       },
       {
-        path: 'type'
-      }
+        path: 'type',
+      },
     ]);
 
     expect(() =>
       entitySpec.extractFromServerData({
         id: 'test-id',
-        name: 'test-name'
-      })
+        name: 'test-name',
+      }),
     ).toThrow();
   });
 });

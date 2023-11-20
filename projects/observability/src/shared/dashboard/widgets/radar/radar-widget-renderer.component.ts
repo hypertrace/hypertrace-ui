@@ -41,7 +41,7 @@ import { ComparisonDuration, RadarWidgetModel } from './radar-widget.model';
         ></ht-radar-chart>
       </ng-container>
     </ht-titled-content>
-  `
+  `,
 })
 export class RadarWidgetRendererComponent extends InteractiveDataWidgetRenderer<RadarWidgetModel, RadarOptions> {
   public selectedDuration!: ComparisonDuration;
@@ -60,7 +60,7 @@ export class RadarWidgetRendererComponent extends InteractiveDataWidgetRenderer<
   protected fetchData(): Observable<RadarOptions> {
     return this.model.getData().pipe(
       tap(fetcher => (this.fetcher = fetcher)),
-      switchMap(() => this.buildDataObservable())
+      switchMap(() => this.buildDataObservable()),
     );
   }
 
@@ -84,7 +84,7 @@ export class RadarWidgetRendererComponent extends InteractiveDataWidgetRenderer<
 
     return {
       axes: this.buildRadarAxes(comparisonedData.current, comparisonedData.previous),
-      series: series
+      series: series,
     };
   }
 
@@ -97,7 +97,7 @@ export class RadarWidgetRendererComponent extends InteractiveDataWidgetRenderer<
       name: this.model.currentSeries.name,
       data: data,
       color: this.model.currentSeries.color,
-      showPoints: true
+      showPoints: true,
     };
   }
 
@@ -106,7 +106,7 @@ export class RadarWidgetRendererComponent extends InteractiveDataWidgetRenderer<
       name: this.selectedDuration.toString(),
       data: data,
       color: '#bfd0d9',
-      showPoints: false
+      showPoints: false,
     };
   }
 

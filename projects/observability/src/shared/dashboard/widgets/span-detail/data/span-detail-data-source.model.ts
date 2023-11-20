@@ -6,26 +6,26 @@ import { Span, spanIdKey } from '../../../../graphql/model/schema/span';
 import { SpecificationBuilder } from '../../../../graphql/request/builders/specification/specification-builder';
 import {
   SpanGraphQlQueryHandlerService,
-  SPAN_GQL_REQUEST
+  SPAN_GQL_REQUEST,
 } from '../../../../graphql/request/handlers/spans/span-graphql-query-handler.service';
 import { GraphQlDataSourceModel } from '../../../data/graphql/graphql-data-source.model';
 import { GraphQlTimeRange } from './../../../../graphql/model/schema/timerange/graphql-time-range';
 
 @Model({
-  type: 'span-detail-data-source'
+  type: 'span-detail-data-source',
 })
 export class SpanDetailDataSourceModel extends GraphQlDataSourceModel<SpanDetailData> {
   @ModelProperty({
     key: 'span',
     required: true,
-    type: PLAIN_OBJECT_PROPERTY.type
+    type: PLAIN_OBJECT_PROPERTY.type,
   })
   public span!: Span;
 
   @ModelProperty({
     key: 'start-time',
     required: false,
-    type: UNKNOWN_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type,
   })
   public startTime?: unknown;
 
@@ -42,8 +42,8 @@ export class SpanDetailDataSourceModel extends GraphQlDataSourceModel<SpanDetail
       id: this.span[spanIdKey],
       timestamp: this.dateCoercer.coerce(this.startTime ?? this.span.startTime),
       properties: this.getSpanAttributes().map(attribute =>
-        this.attributeSpecBuilder.attributeSpecificationForKey(attribute)
-      )
+        this.attributeSpecBuilder.attributeSpecificationForKey(attribute),
+      ),
     }).pipe(mergeMap(span => this.mapResponseObject(span)));
   }
 
@@ -60,7 +60,7 @@ export class SpanDetailDataSourceModel extends GraphQlDataSourceModel<SpanDetail
       id: span[spanIdKey],
       traceId: span.traceId as string,
       statusCode: span.statusCode as string,
-      tags: span.spanTags as Dictionary<unknown>
+      tags: span.spanTags as Dictionary<unknown>,
     };
   }
 

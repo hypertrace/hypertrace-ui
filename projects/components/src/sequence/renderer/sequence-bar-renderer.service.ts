@@ -55,21 +55,21 @@ export class SequenceBarRendererService {
   public updateDataRowHover(chartSelection: SequenceSVGSelection, options: SequenceOptions): void {
     this.getDataRowsSelection(chartSelection).classed(
       `${SequenceBarRendererService.HOVERED_ROW_CLASS}`,
-      dataRow => !!options.hovered && dataRow.id === options.hovered.id
+      dataRow => !!options.hovered && dataRow.id === options.hovered.id,
     );
   }
 
   public updateDataRowSelection(chartSelection: SequenceSVGSelection, options: SequenceOptions): void {
     this.getDataRowsSelection(chartSelection).classed(
       `${SequenceBarRendererService.SELECTED_ROW_CLASS}`,
-      dataRow => !!options.selected && dataRow.id === options.selected.id
+      dataRow => !!options.selected && dataRow.id === options.selected.id,
     );
   }
 
   private drawBackdropRect(
     transformedBars: TransformedBarSelection,
     options: SequenceOptions,
-    plotWidth: number
+    plotWidth: number,
   ): void {
     transformedBars
       .append('line')
@@ -98,13 +98,13 @@ export class SequenceBarRendererService {
   private drawBarValueRect(
     transformedBars: TransformedBarSelection,
     xScale: ScaleLinear<number, number>,
-    options: SequenceOptions
+    options: SequenceOptions,
   ): void {
     transformedBars
       .append('rect')
       .attr(
         'transform',
-        dataRow => `translate(${xScale(dataRow.start)},${(options.rowHeight - options.barHeight) / 2})`
+        dataRow => `translate(${xScale(dataRow.start)},${(options.rowHeight - options.barHeight) / 2})`,
       )
       .attr('width', dataRow => Math.max(xScale(dataRow.end)! - xScale(dataRow.start)!, 3))
       .attr('height', options.barHeight)
@@ -117,7 +117,7 @@ export class SequenceBarRendererService {
   private drawBarMarkers(
     transformedBars: TransformedBarSelection,
     xScale: ScaleLinear<number, number>,
-    options: SequenceOptions
+    options: SequenceOptions,
   ): void {
     transformedBars
       .selectAll(`g.${SequenceBarRendererService.MARKERS_CLASS}`)
@@ -134,14 +134,14 @@ export class SequenceBarRendererService {
   private drawBarValueText(
     transformedBars: TransformedBarSelection,
     xScale: ScaleLinear<number, number>,
-    options: SequenceOptions
+    options: SequenceOptions,
   ): void {
     transformedBars
       .append('text')
       .classed('bar-value-text', true)
       .attr(
         'transform',
-        dataRow => `translate(${xScale(dataRow.end)! + 10}, ${(options.rowHeight - options.barHeight) / 2})`
+        dataRow => `translate(${xScale(dataRow.end)! + 10}, ${(options.rowHeight - options.barHeight) / 2})`,
       )
       .attr('dy', '.82em')
       .style('font-size', '14px')
@@ -150,7 +150,7 @@ export class SequenceBarRendererService {
 
   private drawPlotTopBorder(
     plotSelection: Selection<SVGElement, SequenceObject, null, undefined>,
-    plotWidth: number
+    plotWidth: number,
   ): void {
     plotSelection
       .append('line')
@@ -178,7 +178,7 @@ export class SequenceBarRendererService {
 
       transformedBars.classed(
         `${SequenceBarRendererService.SELECTED_ROW_CLASS}`,
-        dataRow => !!options.selected && dataRow.id === options.selected.id
+        dataRow => !!options.selected && dataRow.id === options.selected.id,
       );
     });
   }
@@ -212,7 +212,7 @@ export class SequenceBarRendererService {
     const scaledEnd: number = Math.floor(xScale(segment.end)!);
     const pixelScaledMarkers: Marker[] = segment.markers.map((marker: Marker) => ({
       ...marker,
-      markerTime: Math.floor(xScale(marker.markerTime)!)
+      markerTime: Math.floor(xScale(marker.markerTime)!),
     }));
     const scaledNormalizedMarkers: Marker[] = [];
     let markerTime = -1 * Infinity;
@@ -228,13 +228,13 @@ export class SequenceBarRendererService {
               ? scaledStart + this.markerWidth + 1
               : marker.markerTime >= scaledEnd - this.markerWidth // Grouping - closest to end
               ? scaledEnd - this.markerWidth - 2
-              : marker.markerTime
+              : marker.markerTime,
         });
         markerTime = marker.markerTime;
       } else {
         scaledNormalizedMarkers[index] = {
           ...scaledNormalizedMarkers[index],
-          timestamps: [...scaledNormalizedMarkers[index].timestamps, ...marker.timestamps]
+          timestamps: [...scaledNormalizedMarkers[index].timestamps, ...marker.timestamps],
         };
       }
     });

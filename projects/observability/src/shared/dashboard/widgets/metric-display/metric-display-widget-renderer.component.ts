@@ -25,7 +25,7 @@ import { MetricDisplayWidgetModel, MetricWidgetValueData } from './metric-displa
       >
       </ht-metric-display>
     </ht-titled-content>
-  `
+  `,
 })
 export class MetricDisplayWidgetRendererComponent extends WidgetRenderer<
   MetricDisplayWidgetModel,

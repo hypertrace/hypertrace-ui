@@ -18,7 +18,7 @@ export class TelemetryGlobalErrorHandler implements ErrorHandler {
       url: url,
       stack: error.stack,
       name: error.name,
-      isError: true
+      isError: true,
     });
 
     throw error;

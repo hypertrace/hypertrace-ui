@@ -8,13 +8,13 @@ import { map } from 'rxjs/operators';
 export abstract class TableWidgetControlModel<T extends TableControlOption> {
   @ModelProperty({
     key: 'sort',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public sort: boolean = true;
 
   @ModelProperty({
     key: 'unique-values',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public uniqueValues: boolean = false;
 
@@ -22,7 +22,7 @@ export abstract class TableWidgetControlModel<T extends TableControlOption> {
     key: 'visible',
     displayName: 'Visible',
     type: BOOLEAN_PROPERTY.type,
-    required: false
+    required: false,
   })
   public visible: boolean = true;
 
@@ -32,7 +32,7 @@ export abstract class TableWidgetControlModel<T extends TableControlOption> {
   public getOptions(): Observable<T[]> {
     return this.api.getData<T[]>().pipe(
       map(options => (this.uniqueValues ? this.filterUnique(options) : options)),
-      map(options => (this.sort ? this.applySort(options) : options))
+      map(options => (this.sort ? this.applySort(options) : options)),
     );
   }
 

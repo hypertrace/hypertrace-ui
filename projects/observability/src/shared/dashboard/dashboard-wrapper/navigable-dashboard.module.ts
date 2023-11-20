@@ -13,17 +13,17 @@ const DEFAULT_DASHBOARDS = new InjectionToken<DashboardDefaultConfiguration[]>('
   imports: [CommonModule, DashboardCoreModule, DashboardEditorModule, LoadAsyncModule, FilterBarModule],
   declarations: [ApplicationAwareDashboardComponent, NavigableDashboardComponent],
   providers: [{ provide: DEFAULT_DASHBOARDS, useValue: [], multi: true }],
-  exports: [ApplicationAwareDashboardComponent, NavigableDashboardComponent]
+  exports: [ApplicationAwareDashboardComponent, NavigableDashboardComponent],
 })
 export class NavigableDashboardModule {
   public constructor(
     dashboardPersistenceService: DashboardPersistenceService,
-    @Inject(DEFAULT_DASHBOARDS) defaultDashboards: DashboardDefaultConfiguration[][]
+    @Inject(DEFAULT_DASHBOARDS) defaultDashboards: DashboardDefaultConfiguration[][],
   ) {
     defaultDashboards
       .flat()
       .forEach(({ json, location }) =>
-        dashboardPersistenceService.setDefaultForLocation(location, { content: json, tags: [], name: location })
+        dashboardPersistenceService.setDefaultForLocation(location, { content: json, tags: [], name: location }),
       );
   }
 
@@ -36,9 +36,9 @@ export class NavigableDashboardModule {
         {
           provide: DEFAULT_DASHBOARDS,
           useValue: dashboardDefaults,
-          multi: true
-        }
-      ]
+          multi: true,
+        },
+      ],
     };
   }
 }

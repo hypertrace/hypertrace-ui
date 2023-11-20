@@ -3,7 +3,7 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
-  STRING_PROPERTY
+  STRING_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { Observable } from 'rxjs';
 import { EntityType } from '../../../../../graphql/model/schema/entity';
@@ -12,23 +12,23 @@ import { AttributeSpecificationModel } from '../../specifiers/attribute-specific
 import { EntitiesValuesDataSourceModel } from '../entities-values-data-source.model';
 
 @Model({
-  type: 'entities-attribute-data-source'
+  type: 'entities-attribute-data-source',
 })
 export class EntitiesAttributeDataSourceModel extends EntitiesValuesDataSourceModel {
   @ModelProperty({
     key: 'attribute',
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: AttributeSpecificationModel
+      defaultModelClass: AttributeSpecificationModel,
     } as ModelModelPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public specification!: Specification;
 
   @ModelProperty({
     key: 'entity',
     type: STRING_PROPERTY.type,
-    required: true
+    required: true,
   })
   public entityType!: EntityType;
 

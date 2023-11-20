@@ -21,11 +21,11 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
         <ht-copy-to-clipboard size="${ButtonSize.ExtraSmall}" label="" [text]="this.value"></ht-copy-to-clipboard>
       </div>
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: CoreTableCellRendererType.TextWithCopyAction,
   alignment: TableCellAlignmentType.Left,
-  parser: CoreTableCellParserType.String
+  parser: CoreTableCellParserType.String,
 })
 export class TextWithCopyActionTableCellRendererComponent extends TableCellRendererBase<string> {}

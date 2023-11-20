@@ -3,7 +3,7 @@ import { select } from 'd3-selection';
 import {
   MouseDataLookupStrategy,
   MouseLocationData,
-  RelativeMouseLocation
+  RelativeMouseLocation,
 } from '../../../../utils/mouse-tracking/mouse-tracking';
 import { Series } from '../../../chart';
 import { AnyCartesianScale } from '../../scale/cartesian-scale-builder';
@@ -16,7 +16,7 @@ export class ColormapDataLookupStrategy<TData> implements MouseDataLookupStrateg
   public constructor(
     private readonly xScale: AnyCartesianScale<TData>,
     private readonly yScale: AnyCartesianScale<TData>,
-    visualization: ColorMappableSeriesVisualization<TData>
+    visualization: ColorMappableSeriesVisualization<TData>,
   ) {
     this.colorPickerContext = this.createColorContext();
 
@@ -55,7 +55,7 @@ export class ColormapDataLookupStrategy<TData> implements MouseDataLookupStrateg
     this.colorMap.set(color, {
       dataPoint: data,
       context: series,
-      location: this.domainCoordinatesToLocationCoordinates(data)
+      location: this.domainCoordinatesToLocationCoordinates(data),
     });
   }
 
@@ -66,7 +66,7 @@ export class ColormapDataLookupStrategy<TData> implements MouseDataLookupStrateg
   private domainCoordinatesToLocationCoordinates(data: TData): RelativeMouseLocation {
     return {
       x: this.xScale.transformToTooltipAnchor(data),
-      y: this.yScale.transformToTooltipAnchor(data)
+      y: this.yScale.transformToTooltipAnchor(data),
     };
   }
 

@@ -7,7 +7,7 @@ import {
   StatefulTreeTableRow,
   TableRow,
   TableRowState,
-  TreeTableRow
+  TreeTableRow,
 } from '../table-api';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -19,17 +19,17 @@ export namespace TableCdkRowUtil {
   export const buildInitialRowStates = (rows: TableRow[]): StatefulTableRow[] =>
     rows.map(row => ({
       ...row,
-      $$state: buildInitialRowState(row)
+      $$state: buildInitialRowState(row),
     }));
 
   export const buildInitialChildRowStates = (
     children: TreeTableRow[],
-    parent: StatefulTreeTableRow
+    parent: StatefulTreeTableRow,
   ): StatefulTreeTableRow[] => children.map(child => buildInitialChildRowState(child, parent));
 
   const buildInitialChildRowState = (child: TreeTableRow, parent: StatefulTreeTableRow): StatefulTreeTableRow => ({
     ...child,
-    $$state: buildInitialRowState(child, parent)
+    $$state: buildInitialRowState(child, parent),
   });
 
   const buildInitialRowState = (row: TableRow, parent?: StatefulTableRow): TableRowState => ({
@@ -39,12 +39,12 @@ export namespace TableCdkRowUtil {
     root: !parent,
     children: isStatefulPrefetchedTreeTableRow(row) ? row.$$state.children : undefined,
     leaf: isStatefulPrefetchedTreeTableRow(row) ? row.$$state.children.length === 0 : !!parent,
-    depth: !parent ? 0 : calcDepth(parent, 1)
+    depth: !parent ? 0 : calcDepth(parent, 1),
   });
 
   export const cloneRow = (row: StatefulTableRow): StatefulTableRow => ({
     ...row,
-    $$state: { ...row.$$state }
+    $$state: { ...row.$$state },
   });
 
   /****************************
@@ -56,7 +56,7 @@ export namespace TableCdkRowUtil {
 
   export const buildRowStateChanges = (
     cachedRows: StatefulTableRow[],
-    changedRow: StatefulTableRow | undefined
+    changedRow: StatefulTableRow | undefined,
   ): RowStateChange[] =>
     /*
      * We need a way to determine if a row or its ancestors state has changed since last it was cached. Ancestor
@@ -71,12 +71,12 @@ export namespace TableCdkRowUtil {
      */
     cachedRows.map(cachedRow => ({
       cached: cachedRow,
-      changed: buildChangedState(cachedRow, changedRow)
+      changed: buildChangedState(cachedRow, changedRow),
     }));
 
   const buildChangedState = (
     cachedRow: StatefulTableRow,
-    changedRow: StatefulTableRow | undefined
+    changedRow: StatefulTableRow | undefined,
   ): StatefulTableRow | undefined => {
     /*
      * We need to check for changes not only in the current row, but also for any changes in the ancestors. So, we
@@ -92,7 +92,7 @@ export namespace TableCdkRowUtil {
 
   export const buildChanged = (
     cachedRow: StatefulTableRow,
-    changedRow: StatefulTableRow | undefined
+    changedRow: StatefulTableRow | undefined,
   ): StatefulTableRow => {
     const row =
       changedRow === undefined ? cachedRow : isEqualExceptState(cachedRow, changedRow) ? changedRow : cachedRow;
@@ -110,7 +110,7 @@ export namespace TableCdkRowUtil {
 
   const isRowOrAncestorChange = (
     row: StatefulTableRow | undefined,
-    changedRow: StatefulTableRow | undefined
+    changedRow: StatefulTableRow | undefined,
   ): boolean => {
     if (row === undefined || changedRow === undefined) {
       return false;
@@ -145,7 +145,7 @@ export namespace TableCdkRowUtil {
     }
 
     const children = row.$$state.children.flatMap(child =>
-      expandChildrenRows(buildInitialChildRowState(child, row) as StatefulPrefetchedTreeTableRow)
+      expandChildrenRows(buildInitialChildRowState(child, row) as StatefulPrefetchedTreeTableRow),
     );
 
     return [row, ...children];
@@ -172,7 +172,7 @@ export namespace TableCdkRowUtil {
       if (found) {
         toRow.$$state = {
           ...toRow.$$state,
-          ...found.$$state
+          ...found.$$state,
         };
       }
 

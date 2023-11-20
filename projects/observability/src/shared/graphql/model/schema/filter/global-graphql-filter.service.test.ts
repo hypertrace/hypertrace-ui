@@ -9,7 +9,7 @@ describe('Global graphql filter serivce', () => {
   const secondFilter = new GraphQlFieldFilter('second', GraphQlOperatorType.Equals, 'second');
   const thirdFilter = new GraphQlFieldFilter('third', GraphQlOperatorType.Equals, 'third');
   const createService = createServiceFactory({
-    service: GlobalGraphQlFilterService
+    service: GlobalGraphQlFilterService,
   });
   test('provides no filters by default', () => {
     const spectator = createService();
@@ -20,13 +20,13 @@ describe('Global graphql filter serivce', () => {
   test('provides filters from multiple matching rules', () => {
     const spectator = createService();
     spectator.service.setGlobalFilterRule(Symbol('first'), {
-      filtersForScope: scope => (scope === SPAN_SCOPE ? [firstFilter] : [])
+      filtersForScope: scope => (scope === SPAN_SCOPE ? [firstFilter] : []),
     });
     spectator.service.setGlobalFilterRule(Symbol('second'), {
-      filtersForScope: scope => (scope === 'fake' ? [secondFilter] : [])
+      filtersForScope: scope => (scope === 'fake' ? [secondFilter] : []),
     });
     spectator.service.setGlobalFilterRule(Symbol('third'), {
-      filtersForScope: scope => (scope === SPAN_SCOPE ? [thirdFilter] : [])
+      filtersForScope: scope => (scope === SPAN_SCOPE ? [thirdFilter] : []),
     });
     expect(spectator.service.getGlobalFilters(SPAN_SCOPE)).toEqual([firstFilter, thirdFilter]);
   });
@@ -35,7 +35,7 @@ describe('Global graphql filter serivce', () => {
     const spectator = createService();
     const filterRuleKey = Symbol('first');
     spectator.service.setGlobalFilterRule(filterRuleKey, {
-      filtersForScope: scope => (scope === SPAN_SCOPE ? [firstFilter] : [])
+      filtersForScope: scope => (scope === SPAN_SCOPE ? [firstFilter] : []),
     });
 
     expect(spectator.service.getGlobalFilters(SPAN_SCOPE)).toEqual([firstFilter]);
@@ -47,7 +47,7 @@ describe('Global graphql filter serivce', () => {
   test('merges with local filters', () => {
     const spectator = createService();
     spectator.service.setGlobalFilterRule(Symbol('first'), {
-      filtersForScope: scope => (scope === SPAN_SCOPE ? [firstFilter] : [])
+      filtersForScope: scope => (scope === SPAN_SCOPE ? [firstFilter] : []),
     });
 
     expect(spectator.service.mergeGlobalFilters(SPAN_SCOPE)).toEqual([firstFilter]);

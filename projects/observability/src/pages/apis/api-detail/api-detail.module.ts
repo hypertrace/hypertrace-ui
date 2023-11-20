@@ -20,7 +20,7 @@ import { ApiTraceListModule } from './traces/api-trace-list.module';
     ApiOverviewModule,
     ApiTraceListModule,
     ApiMetricsModule,
-    PageHeaderModule
-  ]
+    PageHeaderModule,
+  ],
 })
 export class ApiDetailModule {}

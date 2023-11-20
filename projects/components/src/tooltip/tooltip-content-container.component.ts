@@ -15,14 +15,14 @@ import { POPOVER_DATA } from '../popover/popover';
         {{ this.data.content }}
       </ng-template>
     </div>
-  `
+  `,
 })
 export class TooltipContentContainerComponent {
   public readonly isComplexContent: boolean;
   public readonly templateRef: TemplateRef<unknown>;
 
   public constructor(
-    @Inject(POPOVER_DATA) public readonly data: { content: string | TemplateRef<unknown>; context: unknown }
+    @Inject(POPOVER_DATA) public readonly data: { content: string | TemplateRef<unknown>; context: unknown },
   ) {
     this.isComplexContent = data.content instanceof TemplateRef;
     this.templateRef = data.content as TemplateRef<unknown>;

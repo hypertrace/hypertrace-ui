@@ -5,7 +5,7 @@ import {
   Component,
   ElementRef,
   OnChanges,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 
 @Component({
@@ -36,7 +36,7 @@ import {
         show more
       </div>
     </div>
-  `
+  `,
 })
 export class DescriptionComponent implements OnChanges, AfterViewInit {
   public isInitialized: boolean = false;

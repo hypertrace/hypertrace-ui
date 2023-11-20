@@ -15,13 +15,13 @@ describe('Donut widget renderer component', () => {
     component: DonutWidgetRendererComponent,
     shallow: true,
     imports: [FormattingModule, LoadAsyncModule],
-    declarations: [MockComponent(DonutComponent), MockComponent(TitledContentComponent)]
+    declarations: [MockComponent(DonutComponent), MockComponent(TitledContentComponent)],
   });
 
   test('should render provided data with title and legend', () => {
     mockModel = {
       header: {
-        title: 'Test title'
+        title: 'Test title',
       },
       legendPosition: LegendPosition.Right,
       getData: jest.fn(() =>
@@ -29,40 +29,40 @@ describe('Donut widget renderer component', () => {
           series: [
             {
               name: 'first',
-              value: 3
+              value: 3,
             },
             {
               name: 'second',
-              value: 5
-            }
+              value: 5,
+            },
           ],
           center: {
             title: 'total',
-            value: 2
-          }
-        })
+            value: 2,
+          },
+        }),
       ),
-      displayLegendCounts: false
+      displayLegendCounts: false,
     };
 
     const spectator = componentFactory({
-      providers: [...mockDashboardWidgetProviders(mockModel)]
+      providers: [...mockDashboardWidgetProviders(mockModel)],
     });
     expect(spectator.query(TitledContentComponent)!.title).toBe('TEST TITLE');
 
     expect(spectator.query(DonutComponent)!.series).toEqual([
       {
         name: 'first',
-        value: 3
+        value: 3,
       },
       {
         name: 'second',
-        value: 5
-      }
+        value: 5,
+      },
     ]);
     expect(spectator.query(DonutComponent)!.center).toEqual({
       title: 'total',
-      value: 2
+      value: 2,
     });
     expect(spectator.query(DonutComponent)!.legendPosition).toEqual(LegendPosition.Right);
     expect(spectator.query(DonutComponent)!.displayLegendCounts).toEqual(false);

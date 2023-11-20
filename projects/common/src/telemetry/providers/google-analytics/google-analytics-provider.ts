@@ -19,7 +19,7 @@ export class GoogleAnalyticsTelemetry<InitConfig extends TelemetryProviderConfig
       hitType: 'event',
       eventCategory: 'user-actions',
       eventAction: name,
-      ...eventData
+      ...eventData,
     });
   }
 
@@ -27,7 +27,7 @@ export class GoogleAnalyticsTelemetry<InitConfig extends TelemetryProviderConfig
     ga('send', {
       hitType: 'pageview',
       page: name,
-      ...eventData
+      ...eventData,
     });
   }
 
@@ -36,7 +36,7 @@ export class GoogleAnalyticsTelemetry<InitConfig extends TelemetryProviderConfig
       hitType: 'event',
       eventCategory: 'error',
       eventAction: name,
-      ...eventData
+      ...eventData,
     });
   }
 }

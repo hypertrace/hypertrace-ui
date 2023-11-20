@@ -13,6 +13,6 @@ import { StepperTabComponent } from './tab/stepper-tab.component';
 @NgModule({
   imports: [ButtonModule, CommonModule, IconModule, LabelModule, LoadAsyncModule, MatStepperModule, MemoizeModule],
   declarations: [StepperComponent, StepperTabComponent, StepperTabControlsComponent],
-  exports: [StepperComponent, StepperTabComponent, StepperTabControlsComponent]
+  exports: [StepperComponent, StepperTabComponent, StepperTabControlsComponent],
 })
 export class StepperModule {}

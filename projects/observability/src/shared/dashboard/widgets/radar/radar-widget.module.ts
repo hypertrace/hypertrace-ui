@@ -16,7 +16,7 @@ import { RadarSeriesModel } from './series/radar-series.model';
   imports: [
     DashboardCoreModule.with({
       models: [RadarWidgetModel, RadarSeriesModel, EntityRadarDataSourceModel],
-      renderers: [RadarWidgetRendererComponent]
+      renderers: [RadarWidgetRendererComponent],
     }),
     GraphQlModule.withHandlerProviders([EntityGraphQlQueryHandlerService]),
     CommonModule,
@@ -25,7 +25,7 @@ import { RadarSeriesModel } from './series/radar-series.model';
     LoadAsyncModule,
     RadarChartModule,
     IconModule,
-    FormattingModule
-  ]
+    FormattingModule,
+  ],
 })
 export class RadarWidgetModule {}

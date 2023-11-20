@@ -26,7 +26,7 @@ export class DefaultSheetRef extends SheetRef {
         this.closedWithResult = false;
       },
       complete: () => this.closedObserver.complete(),
-      error: err => this.closedObserver.error(err)
+      error: err => this.closedObserver.error(err),
     });
   }
 

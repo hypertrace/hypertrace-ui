@@ -12,21 +12,21 @@ describe('Chart tooltip Builder service', () => {
     show: jest.fn(),
     hide: jest.fn(),
     close: jest.fn(),
-    updatePositionStrategy: jest.fn()
+    updatePositionStrategy: jest.fn(),
   };
 
   const createHost = createHostFactory({
     component: Component({
       selector: 'test-svg',
-      template: `<svg></svg>`
+      template: `<svg></svg>`,
     })(class {}),
     imports: [ChartTooltipModule],
     providers: [
       ChartTooltipBuilderService,
       mockProvider(PopoverService, {
-        drawPopover: jest.fn().mockReturnValue(mockPopoverRef)
-      })
-    ]
+        drawPopover: jest.fn().mockReturnValue(mockPopoverRef),
+      }),
+    ],
   });
 
   test('builds tooltip popover', fakeAsync(() => {

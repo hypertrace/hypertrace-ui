@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TableCellParserConstructor } from './table-cell-parser';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TableCellParserLookupService {
   private readonly parsers: Map<string, TableCellParserConstructor<unknown, unknown, unknown>> = new Map();

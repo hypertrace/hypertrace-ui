@@ -5,13 +5,13 @@ import { GraphQlFieldFilter } from '../../../../graphql/model/schema/filter/fiel
 import { GraphQlFilter, GraphQlOperatorType } from '../../../../graphql/model/schema/filter/graphql-filter';
 
 @Model({
-  type: 'graphql-key-value-filter'
+  type: 'graphql-key-value-filter',
 })
 export class GraphQlKeyValueFilterModel implements GraphQlFilter {
   @ModelProperty({
     key: 'key',
     type: STRING_PROPERTY.type,
-    required: true
+    required: true,
   })
   public key!: string;
 
@@ -31,16 +31,16 @@ export class GraphQlKeyValueFilterModel implements GraphQlFilter {
         GraphQlOperatorType.Like,
         GraphQlOperatorType.NotIn,
         GraphQlOperatorType.ContainsKey,
-        GraphQlOperatorType.NotContainsKey
-      ]
-    } as EnumPropertyTypeInstance
+        GraphQlOperatorType.NotContainsKey,
+      ],
+    } as EnumPropertyTypeInstance,
   })
   public operator!: GraphQlOperatorType;
 
   @ModelProperty({
     key: 'value',
     required: true,
-    type: UNKNOWN_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type,
   })
   public value!: GraphQlArgumentValue;
 

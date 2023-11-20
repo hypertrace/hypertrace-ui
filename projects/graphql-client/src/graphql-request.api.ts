@@ -2,7 +2,7 @@ import { GraphQlHandler } from './graphql-config';
 
 export const enum GraphQlResultStatus {
   Success = 'SUCCESS',
-  Error = 'ERROR'
+  Error = 'ERROR',
 }
 
 export type GraphQlRequest = unknown;

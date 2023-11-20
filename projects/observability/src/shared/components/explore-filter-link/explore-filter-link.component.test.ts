@@ -9,14 +9,14 @@ describe('Explore Filter Link component', () => {
 
   const createHost = createHostFactory({
     component: ExploreFilterLinkComponent,
-    declarations: [MockComponent(LinkComponent), MockComponent(IconComponent)]
+    declarations: [MockComponent(LinkComponent), MockComponent(IconComponent)],
   });
 
   test('should display all elements', () => {
     spectator = createHost(`<ht-explore-filter-link [paramsOrUrl]="paramsOrUrl"></ht-explore-filter-link>`, {
       props: {
-        paramsOrUrl: undefined
-      }
+        paramsOrUrl: undefined,
+      },
     });
 
     expect(spectator.query('.ht-link')).not.toExist();
@@ -25,8 +25,8 @@ describe('Explore Filter Link component', () => {
   test('Link should navigate correctly to external URLs', () => {
     spectator = createHost(`<ht-explore-filter-link [paramsOrUrl]="paramsOrUrl"></ht-explore-filter-link>`, {
       hostProps: {
-        paramsOrUrl: 'http://test.hypertrace.ai'
-      }
+        paramsOrUrl: 'http://test.hypertrace.ai',
+      },
     });
 
     const linkComponent = spectator.query(LinkComponent);

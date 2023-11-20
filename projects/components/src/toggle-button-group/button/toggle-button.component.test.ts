@@ -13,14 +13,14 @@ describe('Toggle Button Component', () => {
     declareComponent: true,
     imports: [IconModule, LabelModule, RouterTestingModule],
     component: ToggleButtonComponent,
-    providers: []
+    providers: [],
   });
 
   test('should show a label button', () => {
     spectator = createHost('<ht-toggle-button [label]="label"> </ht-toggle-button>', {
       hostProps: {
-        label: 'Parsed'
-      }
+        label: 'Parsed',
+      },
     });
 
     const buttonElement = spectator.query<HTMLElement>('.ht-toggle-button > .button');
@@ -31,8 +31,8 @@ describe('Toggle Button Component', () => {
   test('should set correct styles with set state mode', () => {
     spectator = createHost('<ht-toggle-button [label]="label"> </ht-toggle-button>', {
       hostProps: {
-        label: 'Parsed'
-      }
+        label: 'Parsed',
+      },
     });
 
     spectator.component.setState({
@@ -40,7 +40,7 @@ describe('Toggle Button Component', () => {
       isLast: false,
       isDisabled: false,
       selectedLabel: 'Parsed',
-      viewMode: ToggleViewMode.Button
+      viewMode: ToggleViewMode.Button,
     });
 
     expect(spectator.query('.first')).toExist();
@@ -55,7 +55,7 @@ describe('Toggle Button Component', () => {
       isLast: true,
       isDisabled: false,
       selectedLabel: 'Parsed',
-      viewMode: ToggleViewMode.Button
+      viewMode: ToggleViewMode.Button,
     });
 
     expect(spectator.query('.first')).not.toExist();
@@ -70,7 +70,7 @@ describe('Toggle Button Component', () => {
       isLast: true,
       isDisabled: false,
       selectedLabel: 'Raw',
-      viewMode: ToggleViewMode.Button
+      viewMode: ToggleViewMode.Button,
     });
 
     expect(spectator.query('.first')).not.toExist();
@@ -85,7 +85,7 @@ describe('Toggle Button Component', () => {
       isLast: true,
       isDisabled: true,
       selectedLabel: 'Raw',
-      viewMode: ToggleViewMode.Button
+      viewMode: ToggleViewMode.Button,
     });
 
     expect(spectator.query('.first')).not.toExist();
@@ -99,22 +99,22 @@ describe('Toggle Button Component', () => {
   test('should set correct view mode styles', () => {
     spectator = createHost('<ht-toggle-button [label]="label"> </ht-toggle-button>', {
       hostProps: {
-        label: 'Parsed'
-      }
+        label: 'Parsed',
+      },
     });
 
     spectator.component.setState({
-      viewMode: ToggleViewMode.Text
+      viewMode: ToggleViewMode.Text,
     });
     expect(spectator.query('.ht-toggle-button')).toBe(spectator.query('.text-view-mode'));
 
     spectator.component.setState({
-      viewMode: ToggleViewMode.Button
+      viewMode: ToggleViewMode.Button,
     });
     expect(spectator.query('.ht-toggle-button')).toBe(spectator.query('.button-view-mode'));
 
     spectator.component.setState({
-      viewMode: ToggleViewMode.ButtonGroup
+      viewMode: ToggleViewMode.ButtonGroup,
     });
     expect(spectator.query('.ht-toggle-button')).toBe(spectator.query('.button-group-view-mode'));
   });
@@ -127,9 +127,9 @@ describe('Toggle Button Component', () => {
       {
         hostProps: {
           label: 'Raw',
-          onlabelClicked: labelClickedSpy
-        }
-      }
+          onlabelClicked: labelClickedSpy,
+        },
+      },
     );
 
     spectator.click(spectator.query('.ht-toggle-button')!);

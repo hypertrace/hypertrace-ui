@@ -10,7 +10,7 @@ import { Trace, TraceType, traceTypeKey } from '../../graphql/model/schema/trace
 import { SpecificationBuilder } from '../../graphql/request/builders/specification/specification-builder';
 import {
   TraceGraphQlQueryHandlerService,
-  TRACE_GQL_REQUEST
+  TRACE_GQL_REQUEST,
 } from '../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
 
 @Injectable({ providedIn: 'root' })
@@ -23,7 +23,7 @@ export class LogEventsService {
     'startTime',
     'displayEntityName',
     'displaySpanName',
-    'protocolName'
+    'protocolName',
   ];
 
   public constructor(private readonly graphQlQueryService: GraphQlRequestService) {}
@@ -35,14 +35,14 @@ export class LogEventsService {
 
     return logEventsObject.results.map(logEvent => ({
       ...logEvent,
-      spanStartTime: startTime
+      spanStartTime: startTime,
     }));
   }
 
   public getLogEventsGqlResponseForTrace(
     traceId: string,
     startTime?: string,
-    traceType?: TraceType
+    traceType?: TraceType,
   ): Observable<Trace> {
     return this.graphQlQueryService.query<TraceGraphQlQueryHandlerService, Trace>({
       requestType: TRACE_GQL_REQUEST,
@@ -55,9 +55,9 @@ export class LogEventsService {
         : this.spanPropertiesForTrace
       ).map(property => this.specificationBuilder.attributeSpecificationForKey(property)),
       logEventProperties: this.logEventProperties.map(property =>
-        this.specificationBuilder.attributeSpecificationForKey(property)
+        this.specificationBuilder.attributeSpecificationForKey(property),
       ),
-      spanLimit: 1000
+      spanLimit: 1000,
     });
   }
 
@@ -69,10 +69,10 @@ export class LogEventsService {
           $$spanName: {
             serviceName: trace[traceTypeKey] === ObservabilityTraceType.Api ? span.displayEntityName : span.serviceName,
             protocolName: span.protocolName,
-            apiName: span.displaySpanName
+            apiName: span.displaySpanName,
           },
-          spanStartTime: span.startTime as number
-        }))
+          spanStartTime: span.startTime as number,
+        })),
       )
       .flat();
   }

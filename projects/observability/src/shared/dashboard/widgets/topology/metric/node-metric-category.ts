@@ -7,13 +7,13 @@ const enum PrimaryNodeMetricCategoryValueType {
   From100To500 = 'from-100-to-500',
   From500To1000 = 'from-500-to-1000',
   GreaterThanOrEqualTo1000 = 'greater-than-or-equal-to-1000',
-  NotSpecified = 'not-specified'
+  NotSpecified = 'not-specified',
 }
 
 const enum SecondaryNodeMetricCategoryValueType {
   LessThan5 = 'less-than-5',
   GreaterThanOrEqualTo5 = 'greater-than-or-equal-to-5',
-  NotSpecified = 'not-specified'
+  NotSpecified = 'not-specified',
 }
 
 export const defaultPrimaryNodeMetricCategories: Omit<TopologyMetricCategoryData, 'getCategoryClassName'>[] = [
@@ -23,7 +23,7 @@ export const defaultPrimaryNodeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: 20,
     fillColor: Color.BlueGray1,
     strokeColor: Color.BlueGray1,
-    focusColor: Color.Blue4
+    focusColor: Color.Blue4,
   },
   {
     name: PrimaryNodeMetricCategoryValueType.From20To100,
@@ -31,7 +31,7 @@ export const defaultPrimaryNodeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: 100,
     fillColor: Color.BlueGray2,
     strokeColor: Color.BlueGray2,
-    focusColor: Color.Blue4
+    focusColor: Color.Blue4,
   },
   {
     name: PrimaryNodeMetricCategoryValueType.From100To500,
@@ -39,7 +39,7 @@ export const defaultPrimaryNodeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: 500,
     fillColor: Color.BlueGray3,
     strokeColor: Color.BlueGray3,
-    focusColor: Color.Blue4
+    focusColor: Color.Blue4,
   },
   {
     name: PrimaryNodeMetricCategoryValueType.From500To1000,
@@ -47,7 +47,7 @@ export const defaultPrimaryNodeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: 1000,
     fillColor: Color.BlueGray4,
     strokeColor: Color.BlueGray4,
-    focusColor: Color.Blue4
+    focusColor: Color.Blue4,
   },
   {
     name: PrimaryNodeMetricCategoryValueType.GreaterThanOrEqualTo1000,
@@ -55,8 +55,8 @@ export const defaultPrimaryNodeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: undefined,
     fillColor: Color.BlueGray4,
     strokeColor: Color.BlueGray4,
-    focusColor: Color.Blue4
-  }
+    focusColor: Color.Blue4,
+  },
 ];
 
 export const defaultSecondaryNodeMetricCategories: Omit<TopologyMetricCategoryData, 'getCategoryClassName'>[] = [
@@ -66,7 +66,7 @@ export const defaultSecondaryNodeMetricCategories: Omit<TopologyMetricCategoryDa
     maxValue: 5,
     fillColor: Color.Gray2,
     strokeColor: Color.Gray2,
-    focusColor: Color.Blue4
+    focusColor: Color.Blue4,
   },
   {
     name: SecondaryNodeMetricCategoryValueType.GreaterThanOrEqualTo5,
@@ -75,6 +75,6 @@ export const defaultSecondaryNodeMetricCategories: Omit<TopologyMetricCategoryDa
     fillColor: Color.Red1,
     strokeColor: Color.Red5,
     focusColor: Color.Red5,
-    highestPrecedence: true
-  }
+    highestPrecedence: true,
+  },
 ];

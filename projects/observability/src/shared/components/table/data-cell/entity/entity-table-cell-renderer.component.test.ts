@@ -12,7 +12,7 @@ describe('Entity table cell renderer component', () => {
   const entity: Entity = {
     [entityIdKey]: 'test-id',
     [entityTypeKey]: ObservabilityEntityType.Service,
-    name: 'test service'
+    name: 'test service',
   };
 
   const buildComponent = createComponentFactory({
@@ -23,27 +23,27 @@ describe('Entity table cell renderer component', () => {
       mockProvider(NavigationService),
       ...tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
         new EntityTableCellParser(undefined!),
         0,
-        entity
-      )
+        entity,
+      ),
     ],
-    shallow: true
+    shallow: true,
   });
 
   test('should render a milliseconds only value', () => {
     const spectator = buildComponent();
     expect(spectator.component.value).toEqual({
       ...entity,
-      isInactive: false
+      isInactive: false,
     });
   });
 
   test('should render first column with additional css class', () => {
     const spectator = buildComponent({
-      providers: [tableCellIndexProvider(0)]
+      providers: [tableCellIndexProvider(0)],
     });
 
     expect(spectator.query('.first-column')).toExist();
@@ -51,7 +51,7 @@ describe('Entity table cell renderer component', () => {
 
   test('should render not first columns without an icon and no additional css class', () => {
     const spectator = buildComponent({
-      providers: [tableCellIndexProvider(1)]
+      providers: [tableCellIndexProvider(1)],
     });
 
     expect(spectator.query('ht-icon')).not.toExist();

@@ -15,8 +15,8 @@ export class SequenceChartLayoutService {
       width: chartWidth,
       position: {
         x: 0,
-        y: options.headerHeight
-      }
+        y: options.headerHeight,
+      },
     };
 
     this.addSection(chartSelection, axisDimension, SequenceLayoutStyleClass.Axis);
@@ -29,8 +29,8 @@ export class SequenceChartLayoutService {
       width: chartWidth,
       position: {
         x: 0,
-        y: options.headerHeight
-      }
+        y: options.headerHeight,
+      },
     };
 
     this.addSection(chartSelection, axisDimension, SequenceLayoutStyleClass.Plot);
@@ -39,7 +39,7 @@ export class SequenceChartLayoutService {
   private addSection(
     parent: SequenceSVGSelection,
     dimension: SectionDimension,
-    className: string
+    className: string,
   ): SequenceSVGSelection {
     const childSection = parent
       .append<SVGElement>('svg:g')

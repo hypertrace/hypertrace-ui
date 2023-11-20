@@ -4,14 +4,14 @@ import {
   TableMode,
   TableRow,
   TableSelectionMode,
-  TableStyle
+  TableStyle,
 } from '@hypertrace/components';
 import {
   ArrayPropertyTypeInstance,
   BaseModel,
   EnumPropertyTypeInstance,
   ENUM_TYPE,
-  WidgetHeaderModel
+  WidgetHeaderModel,
 } from '@hypertrace/dashboards';
 import {
   ARRAY_PROPERTY,
@@ -21,7 +21,7 @@ import {
   ModelProperty,
   ModelPropertyType,
   PLAIN_OBJECT_PROPERTY,
-  STRING_PROPERTY
+  STRING_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
@@ -34,30 +34,30 @@ export abstract class TableWidgetBaseModel extends BaseModel {
   @ModelProperty({
     key: 'viewId',
     displayName: 'Model View ID',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public viewId?: string;
 
   @ModelProperty({
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: WidgetHeaderModel
+      defaultModelClass: WidgetHeaderModel,
     } as ModelModelPropertyTypeInstance,
-    key: 'header'
+    key: 'header',
   })
   public header!: WidgetHeaderModel;
 
   @ModelProperty({
     key: 'searchAttribute',
     displayName: 'Search Attribute',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public searchAttribute?: string;
 
   @ModelProperty({
     key: 'search-placeholder',
     displayName: 'Search Placeholder',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public searchPlaceholder?: string;
 
@@ -68,9 +68,9 @@ export abstract class TableWidgetBaseModel extends BaseModel {
       key: ARRAY_PROPERTY.type,
       subtype: {
         key: ModelPropertyType.TYPE,
-        defaultModelClass: TableWidgetControlSelectOptionModel
-      }
-    } as ArrayPropertyTypeInstance
+        defaultModelClass: TableWidgetControlSelectOptionModel,
+      },
+    } as ArrayPropertyTypeInstance,
   })
   public selectOptions: TableWidgetControlSelectOptionModel[] = [];
 
@@ -81,9 +81,9 @@ export abstract class TableWidgetBaseModel extends BaseModel {
       key: ARRAY_PROPERTY.type,
       subtype: {
         key: ModelPropertyType.TYPE,
-        defaultModelClass: TableWidgetControlCheckboxOptionModel
-      }
-    } as ArrayPropertyTypeInstance
+        defaultModelClass: TableWidgetControlCheckboxOptionModel,
+      },
+    } as ArrayPropertyTypeInstance,
   })
   public checkboxOptions: TableWidgetControlCheckboxOptionModel[] = [];
 
@@ -92,8 +92,8 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     displayName: 'Table Mode',
     type: {
       key: ENUM_TYPE.type,
-      values: [TableMode.Flat, TableMode.Tree, TableMode.Detail]
-    } as EnumPropertyTypeInstance
+      values: [TableMode.Flat, TableMode.Tree, TableMode.Detail],
+    } as EnumPropertyTypeInstance,
   })
   public mode: TableMode = TableMode.Flat;
 
@@ -102,43 +102,43 @@ export abstract class TableWidgetBaseModel extends BaseModel {
     displayName: 'Table Style',
     type: {
       key: ENUM_TYPE.type,
-      values: [TableStyle.FullPage, TableStyle.Embedded, TableStyle.List]
-    } as EnumPropertyTypeInstance
+      values: [TableStyle.FullPage, TableStyle.Embedded, TableStyle.List],
+    } as EnumPropertyTypeInstance,
   })
   public style: TableStyle = TableStyle.Embedded;
 
   @ModelProperty({
     key: 'pageable',
     displayName: 'Pageable',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public pageable: boolean = true;
 
   @ModelProperty({
     key: 'resizable',
     displayName: 'Resizable',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public resizable: boolean = true;
 
   @ModelProperty({
     key: 'row-height',
     displayName: 'Row Height',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public rowHeight: string = '44px';
 
   @ModelProperty({
     key: 'max-row-height',
     displayName: 'Max Row Height',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public maxRowHeight?: string;
 
   @ModelProperty({
     key: 'loadingConfig',
     required: false,
-    type: PLAIN_OBJECT_PROPERTY.type
+    type: PLAIN_OBJECT_PROPERTY.type,
   })
   public loadingConfig?: LoadAsyncConfig;
 

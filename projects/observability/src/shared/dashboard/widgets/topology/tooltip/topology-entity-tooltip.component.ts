@@ -7,14 +7,14 @@ import { map, switchMap } from 'rxjs/operators';
 import {
   TopologyTooltipData,
   TopologyTooltipEdgeData,
-  TopologyTooltipNodeData
+  TopologyTooltipNodeData,
 } from '../../../../components/topology/renderers/tooltip/topology-tooltip-renderer.service';
 import { MetricAggregation } from '../../../../graphql/model/metrics/metric-aggregation';
 import { entityTypeKey, INTERACTION_SCOPE } from '../../../../graphql/model/schema/entity';
 import { MetricAggregationSpecification } from '../../../../graphql/model/schema/specifications/metric-aggregation-specification';
 import {
   EntityEdge,
-  EntityNode
+  EntityNode,
 } from '../../../../graphql/request/handlers/entities/query/topology/entity-topology-graphql-query-handler.service';
 import { MetadataService } from '../../../../services/metadata/metadata.service';
 
@@ -55,14 +55,14 @@ import { MetadataService } from '../../../../services/metadata/metadata.service'
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class TopologyEntityTooltipComponent {
   public readonly data$: Observable<TooltipTemplateData>;
   public constructor(
     @Inject(POPOVER_DATA) dataStream: Observable<TopologyTooltipData>,
     private readonly metadataService: MetadataService,
-    private readonly popoverRef: PopoverRef
+    private readonly popoverRef: PopoverRef,
   ) {
     this.data$ = dataStream.pipe(switchMap(tooltipData => this.convertTooltipDataToTemplateData(tooltipData)));
   }
@@ -86,11 +86,11 @@ export class TopologyEntityTooltipComponent {
       map(metrics => ({
         title: {
           type: 'node',
-          value: this.getTitleForNode(node)
+          value: this.getTitleForNode(node),
         },
         metrics: metrics,
-        showHideButton: !!nodeData.options.modal
-      }))
+        showHideButton: !!nodeData.options.modal,
+      })),
     );
   }
 
@@ -102,11 +102,11 @@ export class TopologyEntityTooltipComponent {
         title: {
           type: 'edge',
           from: this.getTitleForNode(edge.fromNode),
-          to: this.getTitleForNode(edge.toNode)
+          to: this.getTitleForNode(edge.toNode),
         },
         metrics: metrics,
-        showHideButton: !!edgeData.options.modal
-      }))
+        showHideButton: !!edgeData.options.modal,
+      })),
     );
   }
 
@@ -117,7 +117,7 @@ export class TopologyEntityTooltipComponent {
   private getMetrics(
     dataContainer: Dictionary<unknown>,
     metricSpecs: MetricAggregationSpecification[],
-    scope: string
+    scope: string,
   ): Observable<TooltipMetricRow[]> {
     return forkJoinSafeEmpty(
       metricSpecs.map(spec =>
@@ -128,11 +128,11 @@ export class TopologyEntityTooltipComponent {
             return {
               label: metricDetailFromSpec.name,
               value: metric.value,
-              units: metric.units ?? metricDetailFromSpec.units
+              units: metric.units ?? metricDetailFromSpec.units,
             };
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
   }
 }

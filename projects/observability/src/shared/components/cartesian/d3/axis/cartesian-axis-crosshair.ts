@@ -10,7 +10,7 @@ export class CartesianAxisCrosshair {
   public constructor(
     private readonly axisType: AxisType,
     private readonly axisCrosshair: AxisCrosshair,
-    private readonly bounds: ScaleBounds
+    private readonly bounds: ScaleBounds,
   ) {}
 
   public draw(axisElement: SVGGElement, locationData: MouseLocationData<unknown, unknown>[]): void {
@@ -28,7 +28,7 @@ export class CartesianAxisCrosshair {
     this.updatePosition(
       crosshairSelection,
       position,
-      locationData.map(data => data.location)
+      locationData.map(data => data.location),
     );
     crosshairSelection.attr('hidden', null);
   }
@@ -59,7 +59,7 @@ export class CartesianAxisCrosshair {
   private updatePosition(
     crosshairSelection: Selection<SVGGElement, {}, null, undefined>,
     position: number,
-    pointLocations: RelativeMouseLocation[]
+    pointLocations: RelativeMouseLocation[],
   ): void {
     this.updateLinePosition(crosshairSelection, position);
     this.updatePointPosition(crosshairSelection, pointLocations);
@@ -90,7 +90,7 @@ export class CartesianAxisCrosshair {
 
   private updatePointPosition(
     crosshairSelection: Selection<SVGGElement, {}, null, undefined>,
-    pointLocations: RelativeMouseLocation[]
+    pointLocations: RelativeMouseLocation[],
   ): void {
     const points = crosshairSelection
       .selectAll<SVGCircleElement, RelativeMouseLocation>('.crosshair-point')
@@ -130,7 +130,7 @@ export class CartesianAxisCrosshair {
 
   private getSnappableData(
     container: ContainerElement,
-    data: MouseLocationData<unknown, unknown>[]
+    data: MouseLocationData<unknown, unknown>[],
   ): MouseLocationData<unknown, unknown>[] {
     // Make sure we're only snapping to the closest point, and any other points that fall on the same line
     const mouseRange = this.getMouseRangeValue(container);

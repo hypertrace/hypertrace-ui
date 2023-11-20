@@ -11,9 +11,9 @@ import { serviceApisListDashboard } from './service-apis-list.dashboard';
     ObservabilityDashboardModule,
     CommonModule,
     FilterBarModule,
-    NavigableDashboardModule.withDefaultDashboards(serviceApisListDashboard)
+    NavigableDashboardModule.withDefaultDashboards(serviceApisListDashboard),
   ],
   declarations: [ServiceApisListComponent],
-  exports: [ServiceApisListComponent]
+  exports: [ServiceApisListComponent],
 })
 export class ServiceApisListModule {}

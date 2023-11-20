@@ -12,10 +12,10 @@ export class BreadcrumbsService<T extends Breadcrumb = Breadcrumb> {
   public constructor(private readonly navigationService: NavigationService) {
     this.breadcrumbs$ = concat(
       defer(() => of(this.navigationService.getCurrentActivatedRoute())),
-      this.navigationService.navigation$
+      this.navigationService.navigation$,
     ).pipe(
       switchMap(route => this.buildBreadcrumbs(route.snapshot)),
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 
@@ -25,10 +25,10 @@ export class BreadcrumbsService<T extends Breadcrumb = Breadcrumb> {
       .filter(activatedRouteSnapshot => this.hasBreadcrumb(activatedRouteSnapshot));
 
     return forkJoinSafeEmpty(
-      breadcrumbRoutes.map(activatedRouteSnapshot => this.mapBreadcrumbs(activatedRouteSnapshot))
+      breadcrumbRoutes.map(activatedRouteSnapshot => this.mapBreadcrumbs(activatedRouteSnapshot)),
     ).pipe(
       map(breadcrumbs => breadcrumbs.flat()),
-      map(breadcrumbs => (breadcrumbs.some(breadcrumb => breadcrumb.hide) ? [] : breadcrumbs))
+      map(breadcrumbs => (breadcrumbs.some(breadcrumb => breadcrumb.hide) ? [] : breadcrumbs)),
     );
   }
 
@@ -55,7 +55,7 @@ export class BreadcrumbsService<T extends Breadcrumb = Breadcrumb> {
 
         return breadcrumb;
       }),
-      toArray()
+      toArray(),
     );
   }
 

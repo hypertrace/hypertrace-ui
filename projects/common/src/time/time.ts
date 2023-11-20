@@ -13,7 +13,7 @@ export class Time {
     public readonly minutes: number = 0,
     public readonly seconds: number = 0,
     public readonly milliseconds: number = 0,
-    public readonly isUTC: boolean = false
+    public readonly isUTC: boolean = false,
   ) {
     this._date = new Date();
 
@@ -41,7 +41,7 @@ export class Time {
       scheduledDate.getUTCMinutes(),
       scheduledDate.getUTCSeconds(),
       scheduledDate.getUTCMilliseconds(),
-      true
+      true,
     );
   }
 

@@ -73,7 +73,7 @@ export const enum Color {
   Aurora = '#27C675',
   Teal = '#01BCD6',
   Transparent = 'transparent',
-  OffWhite = '#f6f6f64d'
+  OffWhite = '#f6f6f64d',
 }
 
 export interface ColorCombination {
@@ -96,7 +96,7 @@ export const getHexColorForString = (id: string): string => {
 export const getContrastColor = (
   rgbColorString: string,
   darkColor: string = Color.Gray9,
-  lightColor: string = Color.White
+  lightColor: string = Color.White,
 ): string => {
   // Convert to RGB value
   const rgbColor = rgb(rgbColorString);

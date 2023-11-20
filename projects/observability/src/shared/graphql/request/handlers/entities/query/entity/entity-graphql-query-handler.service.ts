@@ -3,7 +3,7 @@ import {
   GraphQlHandlerType,
   GraphQlQueryHandler,
   GraphQlRequestOptions,
-  GraphQlSelection
+  GraphQlSelection,
 } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map, throwIfEmpty } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { EntitiesGraphqlQueryBuilderService } from '../entities-graphql-query-bu
 import {
   EntitiesGraphQlQueryHandlerService,
   ENTITIES_GQL_REQUEST,
-  GraphQlEntitiesQueryRequest
+  GraphQlEntitiesQueryRequest,
 } from '../entities-graphql-query-handler.service';
 
 @Injectable({ providedIn: 'root' })
@@ -24,7 +24,7 @@ export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
 
   public constructor(
     private readonly entitiesGraphQlQueryHandler: EntitiesGraphQlQueryHandlerService,
-    private readonly entityGraphQlQueryBuilder: EntitiesGraphqlQueryBuilderService
+    private readonly entityGraphQlQueryBuilder: EntitiesGraphqlQueryBuilderService,
   ) {}
 
   public matchesRequest(request: unknown): request is GraphQlEntityRequest {
@@ -42,7 +42,7 @@ export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
   public convertResponse(response: unknown, request: GraphQlEntityRequest): Observable<Entity | undefined> {
     return this.entitiesGraphQlQueryHandler.convertResponse(response, this.asEntitiesRequest(request)).pipe(
       map(results => results.results[0]),
-      throwIfEmpty(() => new Error('No Entity found'))
+      throwIfEmpty(() => new Error('No Entity found')),
     );
   }
 
@@ -63,7 +63,7 @@ export class EntityGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
       // If querying for a single API by ID, ignore all global filters on entities query
       ignoreGlobalFilters: true,
       // If querying for a single Entity by ID, ignore sources filters on entities query
-      ignoreSourcesFilter: true
+      ignoreSourcesFilter: true,
     };
   }
 }

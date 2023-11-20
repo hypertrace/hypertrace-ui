@@ -18,21 +18,21 @@ describe('Cartesian Chart component', () => {
     providers: [
       mockProvider(ChartTooltipBuilderService, {
         constructTooltip: jest.fn().mockReturnValue({
-          destroy: jest.fn()
-        })
+          destroy: jest.fn(),
+        }),
       }),
       mockProvider(DomElementMeasurerService, {
         measureSvgElement: () => ({
           x: 0,
           y: 0,
           width: 0,
-          height: 0
+          height: 0,
         }),
-        getComputedTextLength: () => 0
+        getComputedTextLength: () => 0,
       }),
       mockProvider(Renderer2),
-      mockProvider(PopoverService)
-    ]
+      mockProvider(PopoverService),
+    ],
   });
 
   test('should render data', fakeAsync(() => {
@@ -43,10 +43,10 @@ describe('Cartesian Chart component', () => {
             data: [[1, 2]],
             name: 'test series',
             color: 'blue',
-            type: CartesianSeriesVisualizationType.Area
-          }
-        ]
-      }
+            type: CartesianSeriesVisualizationType.Area,
+          },
+        ],
+      },
     });
     tick();
     expect(chart.queryAll('.data-series', { root: true }).length).toBe(1);
@@ -57,15 +57,15 @@ describe('Cartesian Chart component', () => {
           data: [[1, 2]],
           name: 'test series',
           color: 'blue',
-          type: CartesianSeriesVisualizationType.Line
+          type: CartesianSeriesVisualizationType.Line,
         },
         {
           data: [[3, 4]],
           name: 'test series 2 ',
           color: 'red',
-          type: CartesianSeriesVisualizationType.Line
-        }
-      ]
+          type: CartesianSeriesVisualizationType.Line,
+        },
+      ],
     });
     tick();
     expect(chart.queryAll('.data-series', { root: true }).length).toBe(2);
@@ -78,9 +78,9 @@ describe('Cartesian Chart component', () => {
       `,
       {
         hostProps: {
-          series: []
-        }
-      }
+          series: [],
+        },
+      },
     );
     tick();
     expect(chart.queryAll(CartesianAxis.CSS_SELECTOR, { root: true }).length).toBe(2);
@@ -93,9 +93,9 @@ describe('Cartesian Chart component', () => {
       `,
       {
         hostProps: {
-          series: []
-        }
-      }
+          series: [],
+        },
+      },
     );
     tick();
     expect(chart.queryAll(CartesianAxis.CSS_SELECTOR, { root: true }).length).toBe(0);
@@ -104,8 +104,8 @@ describe('Cartesian Chart component', () => {
   test('should display no data message if not provided any data', fakeAsync(() => {
     const chart = createHost(`<ht-cartesian-chart [series]="series"></ht-cartesian-chart>`, {
       hostProps: {
-        series: []
-      }
+        series: [],
+      },
     });
     tick();
     expect(chart.queryAll(selector(CartesianNoDataMessage.CSS_CLASS), { root: true }).length).toBe(1);
@@ -116,9 +116,9 @@ describe('Cartesian Chart component', () => {
           data: [],
           name: 'test series',
           color: 'blue',
-          type: CartesianSeriesVisualizationType.Line
-        }
-      ]
+          type: CartesianSeriesVisualizationType.Line,
+        },
+      ],
     });
     tick();
     expect(chart.queryAll(selector(CartesianNoDataMessage.CSS_CLASS), { root: true }).length).toBe(1);
@@ -129,15 +129,15 @@ describe('Cartesian Chart component', () => {
           data: [],
           name: 'test series',
           color: 'blue',
-          type: CartesianSeriesVisualizationType.Line
+          type: CartesianSeriesVisualizationType.Line,
         },
         {
           data: [[1, 2]],
           name: 'test series 2 ',
           color: 'red',
-          type: CartesianSeriesVisualizationType.Line
-        }
-      ]
+          type: CartesianSeriesVisualizationType.Line,
+        },
+      ],
     });
     tick();
     expect(chart.queryAll(selector(CartesianNoDataMessage.CSS_CLASS), { root: true }).length).toBe(0);
@@ -146,13 +146,13 @@ describe('Cartesian Chart component', () => {
   test('should render legend on bottom', fakeAsync(() => {
     const chart = createHost(`<ht-cartesian-chart [legend]="legend"></ht-cartesian-chart>`, {
       hostProps: {
-        legend: undefined
-      }
+        legend: undefined,
+      },
     });
     expect(chart.queryAll(CartesianLegend.CSS_SELECTOR, { root: true }).length).toBe(0);
 
     chart.setHostInput({
-      legend: LegendPosition.Bottom
+      legend: LegendPosition.Bottom,
     });
     tick();
     expect(chart.queryAll(CartesianLegend.CSS_SELECTOR, { root: true }).length).toBe(1);
@@ -161,13 +161,13 @@ describe('Cartesian Chart component', () => {
   test('should render legend on top left', fakeAsync(() => {
     const chart = createHost(`<ht-cartesian-chart [legend]="legend"></ht-cartesian-chart>`, {
       hostProps: {
-        legend: undefined
-      }
+        legend: undefined,
+      },
     });
     expect(chart.queryAll(CartesianLegend.CSS_SELECTOR, { root: true }).length).toBe(0);
 
     chart.setHostInput({
-      legend: LegendPosition.TopLeft
+      legend: LegendPosition.TopLeft,
     });
     tick();
     expect(chart.queryAll(CartesianLegend.CSS_SELECTOR, { root: true }).length).toBe(1);
@@ -177,8 +177,8 @@ describe('Cartesian Chart component', () => {
     const chart = createHost(`<ht-cartesian-chart [series]="series" [legend]="legend"></ht-cartesian-chart>`, {
       hostProps: {
         series: [],
-        legend: undefined
-      }
+        legend: undefined,
+      },
     });
     chart.setHostInput({
       series: [
@@ -188,7 +188,7 @@ describe('Cartesian Chart component', () => {
           color: 'blue',
           type: CartesianSeriesVisualizationType.Column,
           groupName: 'test series',
-          stacking: true
+          stacking: true,
         },
         {
           data: [[1, 6]],
@@ -196,10 +196,10 @@ describe('Cartesian Chart component', () => {
           color: 'red',
           type: CartesianSeriesVisualizationType.Column,
           groupName: 'test series',
-          stacking: true
-        }
+          stacking: true,
+        },
       ],
-      legend: LegendPosition.Bottom
+      legend: LegendPosition.Bottom,
     });
     tick();
     expect(chart.queryAll(CartesianLegend.CSS_SELECTOR, { root: true }).length).toBe(1);
@@ -238,10 +238,10 @@ describe('Cartesian Chart component', () => {
             data: [[1, 2]],
             name: 'test series',
             color: 'blue',
-            type: CartesianSeriesVisualizationType.Column
-          }
-        ]
-      }
+            type: CartesianSeriesVisualizationType.Column,
+          },
+        ],
+      },
     });
     tick();
     const columnElements = chart.queryAll('.data-series > .columns-data-series', { root: true });
@@ -261,17 +261,17 @@ describe('Cartesian Chart component', () => {
             name: 'test series 1',
             color: 'blue',
             type: CartesianSeriesVisualizationType.Column,
-            stacking: true
+            stacking: true,
           },
           {
             data: [[1, 6]],
             name: 'test series 2',
             color: 'red',
             type: CartesianSeriesVisualizationType.Column,
-            stacking: true
-          }
-        ]
-      }
+            stacking: true,
+          },
+        ],
+      },
     });
 
     tick();
@@ -298,23 +298,23 @@ describe('Cartesian Chart component', () => {
           xAxisOption: {
             type: AxisType.X,
             location: AxisLocation.Bottom,
-            scale: ScaleType.Band
+            scale: ScaleType.Band,
           },
           yAxisOption: {
             type: AxisType.Y,
             location: AxisLocation.Left,
-            scale: ScaleType.Linear
+            scale: ScaleType.Linear,
           },
           series: [
             {
               data: [['Category 1', 2]],
               name: 'test series',
               color: 'blue',
-              type: CartesianSeriesVisualizationType.Column
-            }
-          ]
-        }
-      }
+              type: CartesianSeriesVisualizationType.Column,
+            },
+          ],
+        },
+      },
     );
     tick();
     const columnElements = chart.queryAll('.data-series > .columns-data-series', { root: true });
@@ -333,12 +333,12 @@ describe('Cartesian Chart component', () => {
           xAxisOption: {
             type: AxisType.X,
             location: AxisLocation.Bottom,
-            scale: ScaleType.Linear
+            scale: ScaleType.Linear,
           },
           yAxisOption: {
             type: AxisType.Y,
             location: AxisLocation.Left,
-            scale: ScaleType.Linear
+            scale: ScaleType.Linear,
           },
           series: [
             {
@@ -346,11 +346,11 @@ describe('Cartesian Chart component', () => {
               name: 'test series',
               color: 'blue',
               getColor: () => 'overridden-blue',
-              type: CartesianSeriesVisualizationType.Column
-            }
-          ]
-        }
-      }
+              type: CartesianSeriesVisualizationType.Column,
+            },
+          ],
+        },
+      },
     );
     tick();
     const columnElements = chart.queryAll('.data-series > .columns-data-series', { root: true });

@@ -10,7 +10,7 @@ import { StringFilterBuilder } from './types/string-filter-builder';
 import { StringMapFilterBuilder } from './types/string-map-filter-builder';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FilterBuilderLookupService {
   public lookup(type: FilterAttributeType): AbstractFilterBuilder<FilterValue> {

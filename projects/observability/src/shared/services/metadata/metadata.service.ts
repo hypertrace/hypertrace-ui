@@ -8,20 +8,20 @@ import { catchError, defaultIfEmpty, filter, map, shareReplay, tap, throwIfEmpty
 import {
   AttributeMetadata,
   AttributeMetadataType,
-  toFilterAttributeType
+  toFilterAttributeType,
 } from '../../graphql/model/metadata/attribute-metadata';
 import {
   addAggregationToDisplayName,
   getAggregationDisplayName,
   getAggregationUnitDisplayName,
   isMetricAggregation,
-  MetricAggregation
+  MetricAggregation,
 } from '../../graphql/model/metrics/metric-aggregation';
 import { Specification } from '../../graphql/model/schema/specifier/specification';
 import { isMetricSpecification, MetricSpecification } from '../../graphql/model/specifications/metric-specification';
 import {
   MetadataGraphQlQueryHandlerService,
-  METADATA_GQL_REQUEST
+  METADATA_GQL_REQUEST,
 } from './handler/metadata-graphql-query-handler.service';
 
 @Injectable({ providedIn: 'root' })
@@ -30,7 +30,7 @@ export class MetadataService {
 
   public constructor(
     private readonly graphqlQueryService: GraphQlRequestService,
-    private readonly filterBuilderLookupService: FilterBuilderLookupService
+    private readonly filterBuilderLookupService: FilterBuilderLookupService,
   ) {}
 
   public getFilterAttributes(scope: string): ReplayObservable<AttributeMetadata[]> {
@@ -42,8 +42,8 @@ export class MetadataService {
           } catch {
             return false;
           }
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -55,9 +55,9 @@ export class MetadataService {
           attribute =>
             attribute.allowedAggregations.length > 0 &&
             attribute.type !== AttributeMetadataType.StringMap &&
-            !(attribute.type === AttributeMetadataType.String && !attribute.groupable)
-        )
-      )
+            !(attribute.type === AttributeMetadataType.String && !attribute.groupable),
+        ),
+      ),
     );
   }
 
@@ -65,8 +65,8 @@ export class MetadataService {
     return this.getServerDefinedAttributes(scope).pipe(
       // Can only group by strings or string map subpaths right now
       map(attributes =>
-        attributes.filter(attribute => attribute.groupable || attribute.type === AttributeMetadataType.StringMap)
-      )
+        attributes.filter(attribute => attribute.groupable || attribute.type === AttributeMetadataType.StringMap),
+      ),
     );
   }
 
@@ -76,16 +76,16 @@ export class MetadataService {
 
   public getSpecificationDisplayNameWithUnit(
     scope: string,
-    spec: Specification
+    spec: Specification,
   ): Observable<{ name: string; units?: string }> {
     return forkJoinSafeEmpty([
       this.getSpecificationDisplayName(scope, spec),
-      this.getAttributeKeyUnits(scope, spec.name)
+      this.getAttributeKeyUnits(scope, spec.name),
     ]).pipe(
       map(result => ({
         name: result[0],
-        units: result[1]
-      }))
+        units: result[1],
+      })),
     );
   }
 
@@ -95,28 +95,28 @@ export class MetadataService {
     }
 
     return this.getAttributeKeyDisplayName(scope, spec.name).pipe(
-      map(displayName => this.getSpecificationDisplayNameForAttributeDisplayName(spec, displayName))
+      map(displayName => this.getSpecificationDisplayNameForAttributeDisplayName(spec, displayName)),
     );
   }
 
   public getAttributeKeyDisplayName(scope: string, attributeKey: string): Observable<string> {
     return this.getAttribute(scope, attributeKey).pipe(
       map(attribute => this.getAttributeDisplayName(attribute)),
-      defaultIfEmpty(attributeKey) // Defaults to key if attribute not known. Should it error?
+      defaultIfEmpty(attributeKey), // Defaults to key if attribute not known. Should it error?
     );
   }
 
   public getAttributeKeyUnits(scope: string, attributeKey: string): Observable<string> {
     return this.getAttribute(scope, attributeKey).pipe(
       map(attribute => attribute.units),
-      defaultIfEmpty('')
+      defaultIfEmpty(''),
     );
   }
 
   public getAttribute(scope: string, attributeKey: string): Observable<AttributeMetadata> {
     return this.getAllAttributes(scope).pipe(
       map(attributes => attributes.find(attribute => attribute.name === attributeKey)),
-      filter((maybeAttribute): maybeAttribute is AttributeMetadata => maybeAttribute !== undefined)
+      filter((maybeAttribute): maybeAttribute is AttributeMetadata => maybeAttribute !== undefined),
     );
   }
 
@@ -133,7 +133,7 @@ export class MetadataService {
   public buildSpecificationResultWithUnits(
     rawResult: Dictionary<unknown>,
     specifications: Specification[],
-    scope: string
+    scope: string,
   ): Observable<Map<Specification, unknown>> {
     return forkJoinSafeEmpty(
       specifications.map(spec => {
@@ -141,19 +141,19 @@ export class MetadataService {
 
         if (isMetricSpecification(spec) && isMetricAggregation(data)) {
           return this.resultUnits(scope, spec).pipe(
-            map(units => [spec, { units: units, ...(data as object) }] as [Specification, unknown])
+            map(units => [spec, { units: units, ...(data as object) }] as [Specification, unknown]),
           );
         }
 
         return of([spec, data] as [Specification, unknown]);
-      })
+      }),
     ).pipe(map((results: [Specification, unknown][]) => new Map(results)));
   }
 
   private resultUnits(scope: string, specification: MetricSpecification): Observable<string> {
     return this.getAttribute(scope, specification.name).pipe(
       map(attribute => getAggregationUnitDisplayName(attribute, specification.aggregation)),
-      defaultIfEmpty('') // FIXME: getAttribute() will complete if it can't find any attribute
+      defaultIfEmpty(''), // FIXME: getAttribute() will complete if it can't find any attribute
     );
   }
 
@@ -165,7 +165,7 @@ export class MetadataService {
         catchError(() => of([])),
         tap(this.sortByDisplayName),
         tap(this.sortSupportedAggregations),
-        shareReplay(1)
+        shareReplay(1),
       );
 
     return this.attributes$;
@@ -182,13 +182,13 @@ export class MetadataService {
         const displayNameB = getAggregationDisplayName(b);
 
         return displayNameA.localeCompare(displayNameB);
-      })
+      }),
     );
   }
 
   private getServerDefinedAttributes(scope: string): ReplayObservable<AttributeMetadata[]> {
     return (this.attributes$ || this.fetchAttributes()).pipe(
-      map(attributes => attributes.filter(attribute => this.matchesScopes(attribute, [scope])))
+      map(attributes => attributes.filter(attribute => this.matchesScopes(attribute, [scope]))),
     );
   }
 

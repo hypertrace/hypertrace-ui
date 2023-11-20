@@ -9,7 +9,7 @@ import {
   NavigationService,
   TimeDuration,
   TimeRangeService,
-  TimeUnit
+  TimeUnit,
 } from '@hypertrace/common';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
@@ -24,7 +24,7 @@ import { ExploreVisualizationBuilder, ExploreVisualizationRequest } from './expl
 describe('Explore query editor', () => {
   const defaultTimeRange = new FixedTimeRange(
     new Date('2019-11-08T22:18:31.159Z'),
-    new Date('2019-11-08T23:18:31.159Z')
+    new Date('2019-11-08T23:18:31.159Z'),
   );
   const metadata: AttributeMetadata[] = [
     {
@@ -37,7 +37,7 @@ describe('Explore query editor', () => {
       onlySupportsGrouping: false,
       allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
       groupable: false,
-      isCustom: false
+      isCustom: false,
     },
     {
       name: 'second',
@@ -49,7 +49,7 @@ describe('Explore query editor', () => {
       onlySupportsGrouping: false,
       allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
       groupable: false,
-      isCustom: false
+      isCustom: false,
     },
     {
       name: 'first groupable',
@@ -61,7 +61,7 @@ describe('Explore query editor', () => {
       onlySupportsGrouping: false,
       allowedAggregations: [],
       groupable: true,
-      isCustom: false
+      isCustom: false,
     },
     {
       name: 'second groupable',
@@ -73,8 +73,8 @@ describe('Explore query editor', () => {
       onlySupportsGrouping: false,
       allowedAggregations: [],
       groupable: true,
-      isCustom: false
-    }
+      isCustom: false,
+    },
   ];
 
   const hostBuilder = createHostFactory({
@@ -84,38 +84,38 @@ describe('Explore query editor', () => {
     providers: [
       mockProvider(TimeRangeService, {
         getTimeRangeAndChanges: () => of(defaultTimeRange),
-        getCurrentTimeRange: () => defaultTimeRange
+        getCurrentTimeRange: () => defaultTimeRange,
       }),
       mockProvider(GraphQlRequestService, {
-        query: jest.fn(() => of(metadata))
+        query: jest.fn(() => of(metadata)),
       }),
       mockProvider(IntervalDurationService, {
         availableIntervals$: of('AUTO'),
         getAutoDurationFromTimeDurations: () => new TimeDuration(1, TimeUnit.Minute),
-        getAutoDuration: () => new TimeDuration(1, TimeUnit.Minute)
+        getAutoDuration: () => new TimeDuration(1, TimeUnit.Minute),
       }),
       mockProvider(FeatureStateResolver, {
-        getCombinedFeatureState: () => of(FeatureState.Disabled)
+        getCombinedFeatureState: () => of(FeatureState.Disabled),
       }),
       mockProvider(NavigationService, {
-        navigation$: EMPTY
-      })
+        navigation$: EMPTY,
+      }),
     ],
-    declareComponent: false
+    declareComponent: false,
   });
 
   const matchSeriesWithName = (name: string) =>
     expect.objectContaining({
       specification: expect.objectContaining({
-        name: name
-      })
+        name: name,
+      }),
     });
   const defaultSeries = matchSeriesWithName('calls');
 
   const expectedDefaultQuery = (): ExploreVisualizationRequest =>
     expect.objectContaining({
       interval: 'AUTO',
-      series: [defaultSeries]
+      series: [defaultSeries],
     });
 
   test('defaults query', fakeAsync(() => {
@@ -125,9 +125,9 @@ describe('Explore query editor', () => {
     </ht-explore-query-editor>`,
       {
         hostProps: {
-          onRequestChange: onRequestChange
-        }
-      }
+          onRequestChange: onRequestChange,
+        },
+      },
     );
 
     spectator.tick(10);
@@ -146,9 +146,9 @@ describe('Explore query editor', () => {
     </ht-explore-query-editor>`,
       {
         hostProps: {
-          onRequestChange: onRequestChange
-        }
-      }
+          onRequestChange: onRequestChange,
+        },
+      },
     );
     spectator.tick(10);
     spectator.click('.add-series-button');
@@ -156,8 +156,8 @@ describe('Explore query editor', () => {
 
     expect(onRequestChange).toHaveBeenCalledWith(
       expect.objectContaining({
-        series: [defaultSeries, defaultSeries]
-      })
+        series: [defaultSeries, defaultSeries],
+      }),
     );
     discardPeriodicTasks();
   }));
@@ -170,9 +170,9 @@ describe('Explore query editor', () => {
     </ht-explore-query-editor>`,
       {
         hostProps: {
-          onRequestChange: onRequestChange
-        }
-      }
+          onRequestChange: onRequestChange,
+        },
+      },
     );
     spectator.tick(10);
 
@@ -187,9 +187,9 @@ describe('Explore query editor', () => {
         series: [defaultSeries],
         groupBy: {
           keyExpressions: [{ key: 'first groupable' }],
-          limit: 5 // Default group by limit
-        }
-      })
+          limit: 5, // Default group by limit
+        },
+      }),
     );
 
     flush(); // Option overlay detaches asyncs
@@ -203,9 +203,9 @@ describe('Explore query editor', () => {
     </ht-explore-query-editor>`,
       {
         hostProps: {
-          onQueryChange: onQueryChange
-        }
-      }
+          onQueryChange: onQueryChange,
+        },
+      },
     );
     spectator.tick(10);
 
@@ -226,9 +226,9 @@ describe('Explore query editor', () => {
         series: [defaultSeries],
         groupBy: {
           keyExpressions: [{ key: 'first groupable' }],
-          limit: 6
-        }
-      })
+          limit: 6,
+        },
+      }),
     );
     flush(); // Option overlay detaches async
   }));
@@ -241,9 +241,9 @@ describe('Explore query editor', () => {
     </ht-explore-query-editor>`,
       {
         hostProps: {
-          onRequestChange: onRequestChange
-        }
-      }
+          onRequestChange: onRequestChange,
+        },
+      },
     );
     spectator.tick(10);
 
@@ -255,8 +255,8 @@ describe('Explore query editor', () => {
 
     expect(onRequestChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        interval: undefined
-      })
+        interval: undefined,
+      }),
     );
 
     flush(); // Option overlay detaches async
@@ -270,9 +270,9 @@ describe('Explore query editor', () => {
     </ht-explore-query-editor>`,
       {
         hostProps: {
-          onRequestChange: onRequestChange
-        }
-      }
+          onRequestChange: onRequestChange,
+        },
+      },
     );
     spectator.tick(10);
 
@@ -290,9 +290,9 @@ describe('Explore query editor', () => {
     expect(onRequestChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
         groupBy: expect.objectContaining({
-          includeRest: true
-        })
-      })
+          includeRest: true,
+        }),
+      }),
     );
 
     flush(); // Option overlay detaches async

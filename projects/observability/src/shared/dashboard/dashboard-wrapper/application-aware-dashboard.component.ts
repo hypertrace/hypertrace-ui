@@ -27,7 +27,7 @@ import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-fil
       >
       </hda-model-editor>
     </div>
-  `
+  `,
 })
 export class ApplicationAwareDashboardComponent implements OnDestroy, OnChanges {
   @Input()

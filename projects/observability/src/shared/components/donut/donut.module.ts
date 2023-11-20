@@ -8,6 +8,6 @@ import { DonutComponent } from './donut.component';
 @NgModule({
   declarations: [DonutComponent],
   exports: [DonutComponent],
-  imports: [CommonModule, LayoutChangeModule, LegendModule, ChartTooltipModule]
+  imports: [CommonModule, LayoutChangeModule, LegendModule, ChartTooltipModule],
 })
 export class DonutModule {}

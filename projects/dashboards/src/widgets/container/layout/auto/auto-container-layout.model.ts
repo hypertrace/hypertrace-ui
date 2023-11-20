@@ -2,34 +2,34 @@ import { Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { ContainerLayout, ContainerLayoutData } from '../container-layout';
 
 @Model({
-  type: 'auto-container-layout'
+  type: 'auto-container-layout',
 })
 export class AutoContainerLayoutModel extends ContainerLayout {
   @ModelProperty({
     key: 'columns',
     type: NUMBER_PROPERTY.type,
-    required: false
+    required: false,
   })
   public numberColumns?: number;
 
   @ModelProperty({
     key: 'rows',
     type: NUMBER_PROPERTY.type,
-    required: false
+    required: false,
   })
   public numberRows?: number;
 
   @ModelProperty({
     key: 'min-column-width',
     type: NUMBER_PROPERTY.type,
-    required: false
+    required: false,
   })
   public minColumnWidth: number = 50;
 
   @ModelProperty({
     key: 'min-row-height',
     type: NUMBER_PROPERTY.type,
-    required: false
+    required: false,
   })
   public minRowHeight: number = 50;
 
@@ -41,7 +41,7 @@ export class AutoContainerLayoutModel extends ContainerLayout {
       columns: `repeat(${gridDimension[1]}, minmax(${this.minColumnWidth}px, 1fr))`,
       gap: `${this.gridGap}`,
       enableStyle: this.enableStyle,
-      children: children.map(child => ({ model: child, areaSpan: '' }))
+      children: children.map(child => ({ model: child, areaSpan: '' })),
     };
   }
 

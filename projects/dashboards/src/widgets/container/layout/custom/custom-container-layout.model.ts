@@ -4,27 +4,27 @@ import { CellSpanModel } from './cell-span/cell-span.model';
 import { CellDimension } from './dimension/dimension.model';
 
 @Model({
-  type: 'custom-container-layout'
+  type: 'custom-container-layout',
 })
 export class CustomContainerLayoutModel extends ContainerLayout {
   @ModelProperty({
     key: 'column-dimensions',
     type: ARRAY_PROPERTY.type,
-    required: true
+    required: true,
   })
   public readonly columnDimensions!: CellDimension[];
 
   @ModelProperty({
     key: 'row-dimensions',
     type: ARRAY_PROPERTY.type,
-    required: true
+    required: true,
   })
   public readonly rowDimensions!: CellDimension[];
 
   @ModelProperty({
     key: 'cell-spans',
     type: ARRAY_PROPERTY.type,
-    required: true
+    required: true,
   })
   public readonly cellSpans!: CellSpanModel[];
 
@@ -34,7 +34,7 @@ export class CustomContainerLayoutModel extends ContainerLayout {
       columns: this.getColumnStyles(),
       gap: `${this.gridGap}`,
       enableStyle: this.enableStyle,
-      children: this.getChildLayoutData(children)
+      children: this.getChildLayoutData(children),
     };
   }
 
@@ -49,7 +49,7 @@ export class CustomContainerLayoutModel extends ContainerLayout {
   private getChildLayoutData(children: object[]): ContainerLayoutChildData[] {
     return children.map((child, index) => ({
       model: child,
-      areaSpan: this.cellSpans[index].toString()
+      areaSpan: this.cellSpans[index].toString(),
     }));
   }
 }

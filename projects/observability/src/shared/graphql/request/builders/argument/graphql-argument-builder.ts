@@ -18,7 +18,7 @@ export class GraphQlArgumentBuilder {
   public forAttributeExpression(attributeExpression: AttributeExpression): GraphQlArgument {
     return {
       name: 'expression',
-      value: this.buildAttributeExpression(attributeExpression)
+      value: this.buildAttributeExpression(attributeExpression),
     };
   }
 
@@ -38,15 +38,15 @@ export class GraphQlArgumentBuilder {
     return [
       {
         name: 'orderBy',
-        value: orderBys.map(orderBy => this.buildOrderByArgumentValue(orderBy))
-      }
+        value: orderBys.map(orderBy => this.buildOrderByArgumentValue(orderBy)),
+      },
     ];
   }
 
   public forTimeRange(timeRange: GraphQlTimeRange): GraphQlArgument {
     return {
       name: 'between',
-      value: timeRange.asArgumentObject()
+      value: timeRange.asArgumentObject(),
     };
   }
 
@@ -58,22 +58,22 @@ export class GraphQlArgumentBuilder {
     return [
       {
         name: 'filterBy',
-        value: filters.flatMap(filter => filter.asArgumentObjects())
-      }
+        value: filters.flatMap(filter => filter.asArgumentObjects()),
+      },
     ];
   }
 
   public forId(id: string): GraphQlArgument {
     return {
       name: 'id',
-      value: id
+      value: id,
     };
   }
 
   public forTraceType(type: TraceType): GraphQlArgument {
     return {
       name: 'type',
-      value: new GraphQlEnumArgument(type)
+      value: new GraphQlEnumArgument(type),
     };
   }
 
@@ -82,11 +82,11 @@ export class GraphQlArgumentBuilder {
   }
 
   protected buildAttributeExpression(
-    attributeExpression: AttributeExpression
+    attributeExpression: AttributeExpression,
   ): AttributeExpression & GraphQlArgumentObject {
     return {
       key: attributeExpression.key,
-      ...(!isEmpty(attributeExpression.subpath) ? { subpath: attributeExpression.subpath } : {})
+      ...(!isEmpty(attributeExpression.subpath) ? { subpath: attributeExpression.subpath } : {}),
     };
   }
 
@@ -97,7 +97,7 @@ export class GraphQlArgumentBuilder {
     return {
       ...unknownFields,
       direction: new GraphQlEnumArgument(orderBy.direction),
-      keyExpression: this.buildAttributeExpression(orderByFragment.expression)
+      keyExpression: this.buildAttributeExpression(orderByFragment.expression),
     };
   }
 }

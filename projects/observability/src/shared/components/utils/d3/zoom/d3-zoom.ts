@@ -94,7 +94,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
     this.zoomBehavior.translateTo(
       this.getContainerSelectionOrThrow(),
       viewRect.left + availableRect.width / 2,
-      viewRect.top + availableRect.height / 2
+      viewRect.top + availableRect.height / 2,
     );
   }
 
@@ -113,12 +113,12 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
       left: containerdBox.width - D3Zoom.DATA_BRUSH_OVERLAY_WIDTH,
       right: containerdBox.right,
       width: D3Zoom.DATA_BRUSH_OVERLAY_WIDTH,
-      height: D3Zoom.DATA_BRUSH_OVERLAY_HEIGHT
+      height: D3Zoom.DATA_BRUSH_OVERLAY_HEIGHT,
     };
 
     this.brushBehaviour.extent([
       [0, 0],
-      [D3Zoom.DATA_BRUSH_OVERLAY_WIDTH / overlayZoomScale, D3Zoom.DATA_BRUSH_OVERLAY_HEIGHT / overlayZoomScale]
+      [D3Zoom.DATA_BRUSH_OVERLAY_WIDTH / overlayZoomScale, D3Zoom.DATA_BRUSH_OVERLAY_HEIGHT / overlayZoomScale],
     ]);
 
     this.config.brushOverlay = throwIfNil(this.config)
@@ -135,7 +135,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
 
   protected styleBrushSelection(
     brushSelection: Selection<SVGGElement, unknown, null, undefined>,
-    overlayZoomScale: number
+    overlayZoomScale: number,
   ): void {
     // Map values
     const overlayBorderRadius = 4 / overlayZoomScale;
@@ -171,7 +171,7 @@ export abstract class D3Zoom<TContainer extends Element = Element, TTarget exten
       bottom: end[1] * chartZoomScale,
       right: end[0] * chartZoomScale,
       width: end[0] * chartZoomScale - start[0] * chartZoomScale,
-      height: end[1] * chartZoomScale - start[1] * chartZoomScale
+      height: end[1] * chartZoomScale - start[1] * chartZoomScale,
     };
 
     this.panToRect(viewRect);

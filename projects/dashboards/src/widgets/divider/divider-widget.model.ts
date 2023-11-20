@@ -1,6 +1,6 @@
 import { Model } from '@hypertrace/hyperdash';
 
 @Model({
-  type: 'divider-widget'
+  type: 'divider-widget',
 })
 export class DividerWidgetModel {}

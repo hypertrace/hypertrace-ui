@@ -8,6 +8,6 @@ import { endpointListDashboard } from './endpoint-list.dashboard';
       <ht-page-header></ht-page-header>
       <ht-navigable-dashboard navLocation="${endpointListDashboard.location}"></ht-navigable-dashboard>
     </div>
-  `
+  `,
 })
 export class EndpointListComponent {}

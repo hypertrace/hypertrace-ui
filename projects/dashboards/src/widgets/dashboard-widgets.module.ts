@@ -20,7 +20,7 @@ import { TextWidgetModule } from './text/text-widget.module';
     RepeatModule,
     TextWidgetModule,
     GreetingLabelWidgetModule,
-    ConditionalWidgetModule
-  ]
+    ConditionalWidgetModule,
+  ],
 })
 export class DashboardWidgetsModule {}

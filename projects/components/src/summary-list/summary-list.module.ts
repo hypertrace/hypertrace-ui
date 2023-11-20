@@ -9,6 +9,6 @@ import { SummaryListComponent } from './summary-list.component';
 @NgModule({
   declarations: [SummaryListComponent],
   exports: [SummaryListComponent],
-  imports: [CommonModule, LoadAsyncModule, FormattingModule, LabelModule, IconModule]
+  imports: [CommonModule, LoadAsyncModule, FormattingModule, LabelModule, IconModule],
 })
 export class SummaryListModule {}

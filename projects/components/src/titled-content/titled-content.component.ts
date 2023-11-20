@@ -37,7 +37,7 @@ import { TitledHeaderControlDirective } from './header-controls/titled-header-co
         <ht-label [ngClass]="this.titleStyle" [label]="this.title" class="title"></ht-label>
       </div>
     </div>
-  `
+  `,
 })
 export class TitledContentComponent {
   @Input()
@@ -83,17 +83,17 @@ export class TitledContentComponent {
 
 export const enum TitlePosition {
   Header = 'header',
-  Footer = 'footer'
+  Footer = 'footer',
 }
 
 // Regular title (black) and GrayedOut new style (gray)
 export const enum TitledContentTitleStyle {
   Regular = 'regular',
   GrayedOut = 'grayed-out',
-  TitleCaseGray = 'title-case-gray'
+  TitleCaseGray = 'title-case-gray',
 }
 
 export const enum TitledContentHeaderJustify {
   Center = 'center',
-  SpaceBetween = 'space-between'
+  SpaceBetween = 'space-between',
 }

@@ -9,7 +9,7 @@ import {
   Output,
   Renderer2,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { Color } from '@hypertrace/common';
 import { PanelBodyComponent } from './body/panel-body.component';
@@ -37,7 +37,7 @@ import { PanelHeaderComponent } from './header/panel-header.component';
         <ng-container *ngTemplateOutlet="this.collapsedBody.content"></ng-container>
       </div>
     </div>
-  `
+  `,
 })
 export class PanelComponent implements AfterViewInit {
   @Input()

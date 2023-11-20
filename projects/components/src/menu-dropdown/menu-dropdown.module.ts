@@ -10,6 +10,6 @@ import { MenuItemComponent } from './menu-item/menu-item.component';
 @NgModule({
   declarations: [MenuDropdownComponent, MenuItemComponent],
   imports: [CommonModule, PopoverModule, IconModule, LabelModule, EventBlockerModule],
-  exports: [MenuDropdownComponent, MenuItemComponent]
+  exports: [MenuDropdownComponent, MenuItemComponent],
 })
 export class MenuDropdownModule {}

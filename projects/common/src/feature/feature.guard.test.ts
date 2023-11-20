@@ -14,14 +14,14 @@ import { FeatureState } from './state/feature.state';
 describe('Feature Guard', () => {
   const buildRouteForFeatures = (features: string[]): HtRoute => ({
     data: {
-      features: features
-    }
+      features: features,
+    },
   });
 
   const mockFeatureMap = new Map([
     ['test-feature-1', true],
     ['test-feature-2', false],
-    ['test-feature-3', true]
+    ['test-feature-3', true],
   ]);
 
   const mockFeatureResolverService = new (class extends FeatureStateResolver {
@@ -48,13 +48,13 @@ describe('Feature Guard', () => {
           of([
             { key: 'test-feature-1', value: true },
             { key: 'test-feature-2', value: false },
-            { key: 'test-feature-3', value: true }
-          ])
+            { key: 'test-feature-3', value: true },
+          ]),
       }),
       {
         provide: FeatureStateResolver,
-        useValue: mockFeatureResolverService
-      }
+        useValue: mockFeatureResolverService,
+      },
     ],
     imports: [
       RouterTestingModule.withRoutes([
@@ -65,11 +65,11 @@ describe('Feature Guard', () => {
             { path: 'child2', children: [], ...buildRouteForFeatures(['test-feature-1']) },
             { path: 'child3', children: [], ...buildRouteForFeatures(['test-feature-1', 'test-feature-3']) },
             { path: 'child4', children: [], ...buildRouteForFeatures(['test-feature-1', 'test-feature-2']) },
-            { path: 'child5', children: [], ...buildRouteForFeatures(['non-existent']) }
-          ]
-        }
-      ])
-    ]
+            { path: 'child5', children: [], ...buildRouteForFeatures(['non-existent']) },
+          ],
+        },
+      ]),
+    ],
   });
 
   test('returns can load true for routes without feature flags or only enabled', () => {
@@ -77,10 +77,10 @@ describe('Feature Guard', () => {
       const spectator = buildService();
       expectObservable(spectator.service.canLoad({}, [])).toBe('(x|)', { x: true });
       expectObservable(
-        spectator.service.canLoad(buildRouteForFeatures(['test-feature-1', 'test-feature-3']), [])
+        spectator.service.canLoad(buildRouteForFeatures(['test-feature-1', 'test-feature-3']), []),
       ).toBe('(x|)', { x: true });
       expectObservable(spectator.service.canLoad(buildRouteForFeatures(['test-feature-1']), [])).toBe('(x|)', {
-        x: true
+        x: true,
       });
     });
   });
@@ -93,14 +93,14 @@ describe('Feature Guard', () => {
       providers: [
         mockProvider(NavigationService, {
           getUrlTree: getUrlTreeMock,
-          navigateWithinApp: navMock
-        })
-      ]
+          navigateWithinApp: navMock,
+        }),
+      ],
     });
 
     runFakeRxjs(({ expectObservable, flush }) => {
       expectObservable(
-        spectator.service.canLoad(buildRouteForFeatures(['test-feature-1', 'test-feature-2']), urlSegments)
+        spectator.service.canLoad(buildRouteForFeatures(['test-feature-1', 'test-feature-2']), urlSegments),
       ).toBe('(x|)', { x: false });
       flush();
       expect(getUrlTreeMock).toHaveBeenLastCalledWith([urlSegments[0]]);
@@ -110,7 +110,7 @@ describe('Feature Guard', () => {
       navMock.mockClear();
 
       expectObservable(spectator.service.canLoad(buildRouteForFeatures(['non-existent']), urlSegments)).toBe('(x|)', {
-        x: false
+        x: false,
       });
       flush();
       expect(getUrlTreeMock).toHaveBeenLastCalledWith([urlSegments[0]]);
@@ -145,12 +145,12 @@ describe('Feature Guard', () => {
       expectObservable(
         spectator.service
           .canActivate(getRouteSnapshot('/root/child4'))
-          .pipe(map(tree => tree instanceof UrlTree && tree.toString()))
+          .pipe(map(tree => tree instanceof UrlTree && tree.toString())),
       ).toBe('(x|)', { x: '/root' });
       expectObservable(
         spectator.service
           .canActivate(getRouteSnapshot('/root/child4'))
-          .pipe(map(tree => tree instanceof UrlTree && tree.toString()))
+          .pipe(map(tree => tree instanceof UrlTree && tree.toString())),
       ).toBe('(x|)', { x: '/root' });
     });
   });

@@ -11,7 +11,7 @@ export abstract class MetricSpecificationModel<TSpecification extends MetricSpec
     key: 'metric',
     displayName: 'Metric',
     type: STRING_PROPERTY.type,
-    required: true
+    required: true,
   })
   public metric!: string;
 
@@ -31,9 +31,9 @@ export abstract class MetricSpecificationModel<TSpecification extends MetricSpec
         MetricAggregationType.Sum,
         MetricAggregationType.AvgrateMinute,
         MetricAggregationType.AvgrateSecond,
-        MetricAggregationType.Count
-      ]
-    } as EnumPropertyTypeInstance
+        MetricAggregationType.Count,
+      ],
+    } as EnumPropertyTypeInstance,
   })
   public aggregation!: MetricAggregationType;
 }

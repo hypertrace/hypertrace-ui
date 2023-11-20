@@ -15,7 +15,7 @@ import { traceSequenceDashboard } from './trace-sequence.dashboard';
       navLocation="${traceSequenceDashboard.location}"
     >
     </ht-navigable-dashboard>
-  `
+  `,
 })
 export class TraceSequenceComponent {
   public readonly traceVariables$: Observable<TraceDetailVariables>;
@@ -25,8 +25,8 @@ export class TraceSequenceComponent {
       map(details => ({
         traceId: details.id,
         startTime: details.startTime,
-        spanId: details.entrySpanId
-      }))
+        spanId: details.entrySpanId,
+      })),
     );
   }
 }

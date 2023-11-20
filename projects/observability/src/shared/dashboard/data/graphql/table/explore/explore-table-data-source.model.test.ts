@@ -30,19 +30,19 @@ describe('Explore table data source model', () => {
             results: [
               {
                 name: 'test-name',
-                duration: 100
-              }
+                duration: 100,
+              },
             ],
-            total: 1
-          })
-        )
-      })
-    ]
+            total: 1,
+          }),
+        ),
+      }),
+    ],
   });
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     spectator = buildModel(ExploreTableDataSourceModel);
     spectator.model.api = mockApi as ModelApi;
@@ -56,25 +56,25 @@ describe('Explore table data source model', () => {
     tableDataSource.getData({
       position: {
         startIndex: 0,
-        limit: 50
+        limit: 50,
       },
       columns: [
         {
           id: 'Name',
-          specification: specBuilder.exploreSpecificationForKey('name')
+          specification: specBuilder.exploreSpecificationForKey('name'),
         },
         {
           id: 'duration',
-          specification: specBuilder.exploreSpecificationForKey('duration')
-        }
+          specification: specBuilder.exploreSpecificationForKey('duration'),
+        },
       ],
       sort: {
         column: {
           id: 'Name',
-          specification: specBuilder.exploreSpecificationForKey('name')
+          specification: specBuilder.exploreSpecificationForKey('name'),
         },
-        direction: TableSortDirection.Descending
-      }
+        direction: TableSortDirection.Descending,
+      },
     });
 
     // Query is debounced, flush it out
@@ -89,12 +89,12 @@ describe('Explore table data source model', () => {
         orderBy: [
           {
             direction: TableSortDirection.Descending,
-            key: expect.objectContaining({ name: 'name' })
-          }
+            key: expect.objectContaining({ name: 'name' }),
+          },
         ],
         filters: [],
-        timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime)
-      })
+        timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
+      }),
     );
   }));
 
@@ -106,25 +106,25 @@ describe('Explore table data source model', () => {
     tableDataSource.getData({
       position: {
         startIndex: 0,
-        limit: 50
+        limit: 50,
       },
       columns: [
         {
           id: 'Name',
-          specification: specBuilder.exploreSpecificationForKey('name')
+          specification: specBuilder.exploreSpecificationForKey('name'),
         },
         {
           id: 'duration',
-          specification: specBuilder.exploreSpecificationForKey('duration')
-        }
+          specification: specBuilder.exploreSpecificationForKey('duration'),
+        },
       ],
       sort: {
         column: {
           id: 'Name',
-          specification: specBuilder.exploreSpecificationForKey('name')
+          specification: specBuilder.exploreSpecificationForKey('name'),
         },
-        direction: TableSortDirection.Descending
-      }
+        direction: TableSortDirection.Descending,
+      },
     });
 
     // Query is debounced, flush it out
@@ -140,12 +140,12 @@ describe('Explore table data source model', () => {
         orderBy: [
           {
             direction: TableSortDirection.Descending,
-            key: expect.objectContaining({ name: 'name' })
-          }
+            key: expect.objectContaining({ name: 'name' }),
+          },
         ],
         filters: [],
-        timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime)
-      })
+        timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
+      }),
     );
   }));
 
@@ -156,25 +156,25 @@ describe('Explore table data source model', () => {
     tableDataSource.getData({
       position: {
         startIndex: 0,
-        limit: 50
+        limit: 50,
       },
       columns: [
         {
           id: 'Name',
-          specification: specBuilder.exploreSpecificationForKey('name')
+          specification: specBuilder.exploreSpecificationForKey('name'),
         },
         {
           id: 'duration',
-          specification: specBuilder.exploreSpecificationForKey('duration')
-        }
+          specification: specBuilder.exploreSpecificationForKey('duration'),
+        },
       ],
       sort: {
         column: {
           id: 'Name',
-          specification: specBuilder.exploreSpecificationForKey('name')
+          specification: specBuilder.exploreSpecificationForKey('name'),
         },
-        direction: TableSortDirection.Descending
-      }
+        direction: TableSortDirection.Descending,
+      },
     });
 
     // Query is debounced, flush it out
@@ -188,17 +188,17 @@ describe('Explore table data source model', () => {
         offset: 0,
         groupBy: expect.objectContaining({
           keyExpressions: [{ key: 'name' }],
-          includeRest: false
+          includeRest: false,
         }),
         orderBy: [
           {
             direction: TableSortDirection.Descending,
-            key: expect.objectContaining({ name: 'name' })
-          }
+            key: expect.objectContaining({ name: 'name' }),
+          },
         ],
         filters: [],
-        timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime)
-      })
+        timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
+      }),
     );
   }));
 });

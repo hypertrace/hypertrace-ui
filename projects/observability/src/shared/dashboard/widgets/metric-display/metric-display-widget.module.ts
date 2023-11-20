@@ -12,13 +12,13 @@ import { MetricDisplayWidgetModel } from './metric-display-widget.model';
   imports: [
     DashboardCoreModule.with({
       models: [MetricDisplayWidgetModel],
-      renderers: [MetricDisplayWidgetRendererComponent]
+      renderers: [MetricDisplayWidgetRendererComponent],
     }),
     MetricDisplayModule,
     CommonModule,
     TitledContentModule,
     LoadAsyncModule,
-    FormattingModule
-  ]
+    FormattingModule,
+  ],
 })
 export class MetricDisplayWidgetModule {}

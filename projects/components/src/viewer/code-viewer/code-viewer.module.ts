@@ -9,6 +9,6 @@ import { CodeViewerComponent } from './code-viewer.component';
 @NgModule({
   imports: [CommonModule, CopyToClipboardModule, DownloadFileModule, MessageDisplayModule, TraceSearchBoxModule],
   declarations: [CodeViewerComponent],
-  exports: [CodeViewerComponent]
+  exports: [CodeViewerComponent],
 })
 export class CodeViewerModule {}

@@ -5,28 +5,28 @@ describe('GraphQl request option resolver', () => {
   const request1 = {};
   const request2 = {};
   const cacheable = () => ({
-    cacheability: GraphQlRequestCacheability.Cacheable
+    cacheability: GraphQlRequestCacheability.Cacheable,
   });
 
   const notCacheable = () => ({
-    cacheability: GraphQlRequestCacheability.NotCacheable
+    cacheability: GraphQlRequestCacheability.NotCacheable,
   });
 
   test('resolves provided options by priority', () => {
     const resolver = new GraphQlRequestOptionResolver(notCacheable());
 
     expect(resolver.groupQueriesByResolvedOptions({ request: request1 })).toEqual(
-      new Map([[notCacheable(), [request1]]])
+      new Map([[notCacheable(), [request1]]]),
     );
     expect(resolver.groupQueriesByResolvedOptions({ request: request1, handlerOptions: cacheable() })).toEqual(
-      new Map([[cacheable(), [request1]]])
+      new Map([[cacheable(), [request1]]]),
     );
     expect(
       resolver.groupQueriesByResolvedOptions({
         request: request1,
         handlerOptions: cacheable(),
-        requestOptions: notCacheable()
-      })
+        requestOptions: notCacheable(),
+      }),
     ).toEqual(new Map([[notCacheable(), [request1]]]));
   });
 
@@ -34,11 +34,11 @@ describe('GraphQl request option resolver', () => {
     const resolver = new GraphQlRequestOptionResolver(cacheable());
 
     expect(resolver.groupQueriesByResolvedOptions({ request: request1 }, { request: request2 })).toEqual(
-      new Map([[cacheable(), [request1, request2]]])
+      new Map([[cacheable(), [request1, request2]]]),
     );
 
     expect(
-      resolver.groupQueriesByResolvedOptions({ request: request1 }, { request: request2, handlerOptions: cacheable() })
+      resolver.groupQueriesByResolvedOptions({ request: request1 }, { request: request2, handlerOptions: cacheable() }),
     ).toEqual(new Map([[cacheable(), [request1, request2]]]));
   });
 
@@ -48,13 +48,13 @@ describe('GraphQl request option resolver', () => {
     expect(
       resolver.groupQueriesByResolvedOptions(
         { request: request1 },
-        { request: request2, handlerOptions: notCacheable() }
-      )
+        { request: request2, handlerOptions: notCacheable() },
+      ),
     ).toEqual(
       new Map([
         [cacheable(), [request1]],
-        [notCacheable(), [request2]]
-      ])
+        [notCacheable(), [request2]],
+      ]),
     );
   });
 });

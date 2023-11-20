@@ -6,7 +6,7 @@ import {
   ModelModelPropertyTypeInstance,
   ModelProperty,
   ModelPropertyType,
-  STRING_PROPERTY
+  STRING_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
@@ -15,14 +15,14 @@ import { TopologyData, TopologyDataSourceModel } from '../../data/graphql/topolo
 
 @Model({
   type: 'topology-widget',
-  supportedDataSourceTypes: [TopologyDataSourceModel]
+  supportedDataSourceTypes: [TopologyDataSourceModel],
 })
 export class TopologyWidgetModel {
   @ModelProperty({
     key: 'title',
     displayName: 'Title',
     type: STRING_PROPERTY.type,
-    required: false
+    required: false,
   })
   public title?: string;
 
@@ -31,8 +31,8 @@ export class TopologyWidgetModel {
     required: false,
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: LinkWidgetModel
-    } as ModelModelPropertyTypeInstance
+      defaultModelClass: LinkWidgetModel,
+    } as ModelModelPropertyTypeInstance,
   })
   public link?: LinkWidgetModel;
 
@@ -40,7 +40,7 @@ export class TopologyWidgetModel {
     key: 'showLegend',
     displayName: 'Show Legend',
     type: BOOLEAN_PROPERTY.type,
-    required: false
+    required: false,
   })
   public showLegend?: boolean = true;
 
@@ -48,7 +48,7 @@ export class TopologyWidgetModel {
     key: 'showBrush',
     displayName: 'Show Brush',
     type: BOOLEAN_PROPERTY.type,
-    required: false
+    required: false,
   })
   public showBrush?: boolean = true;
 
@@ -56,7 +56,7 @@ export class TopologyWidgetModel {
     key: 'shouldAutoZoomToFit',
     displayName: 'Should Auto Zoom To Fit',
     type: BOOLEAN_PROPERTY.type,
-    required: false
+    required: false,
   })
   public shouldAutoZoomToFit?: boolean = false;
 
@@ -64,7 +64,7 @@ export class TopologyWidgetModel {
     key: 'enableBoxStyle',
     displayName: 'Enable Box Style',
     type: BOOLEAN_PROPERTY.type,
-    required: false
+    required: false,
   })
   public enableBoxStyle?: boolean = false;
 
@@ -72,7 +72,7 @@ export class TopologyWidgetModel {
     key: 'layoutType',
     displayName: 'Layout Type',
     type: STRING_PROPERTY.type,
-    required: false
+    required: false,
   })
   public layoutType?: TopologyLayoutType = TopologyLayoutType.CustomTreeLayout;
 

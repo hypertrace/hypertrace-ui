@@ -2,7 +2,7 @@ import { BaseType } from 'd3-selection';
 import {
   MouseDataLookupStrategy,
   MouseLocationData,
-  RelativeMouseLocation
+  RelativeMouseLocation,
 } from '../../../utils/mouse-tracking/mouse-tracking';
 import { AxisType } from '../../chart';
 import { ChartTooltipTrackingOptions as ChartTooltipTrackingStrategy } from '../../chart-interactivty';
@@ -16,7 +16,7 @@ export abstract class CartesianData<TData, TVisualization> {
   protected constructor(
     protected readonly visualization: TVisualization,
     protected readonly scaleBuilder: CartesianScaleBuilder<TData>,
-    tooltipTrackingStrategy?: ChartTooltipTrackingStrategy
+    tooltipTrackingStrategy?: ChartTooltipTrackingStrategy,
   ) {
     this.xScale = this.buildXScale();
     this.yScale = this.buildYScale();
@@ -29,12 +29,12 @@ export abstract class CartesianData<TData, TVisualization> {
   public abstract drawCanvas(context: CanvasRenderingContext2D): void;
 
   protected abstract buildMultiAxisDataLookupStrategy(
-    tooltipStrategy: ChartTooltipTrackingStrategy
+    tooltipStrategy: ChartTooltipTrackingStrategy,
   ): MouseDataLookupStrategy<TData, TVisualization>;
 
   protected abstract buildDataLookupStrategy(
     visualization: TVisualization,
-    strategy: ChartTooltipTrackingStrategy
+    strategy: ChartTooltipTrackingStrategy,
   ): MouseDataLookupStrategy<TData, TVisualization>;
 
   public dataForLocation(location: RelativeMouseLocation): MouseLocationData<TData, TVisualization>[] {

@@ -22,7 +22,7 @@ export abstract class AbstractFilterBuilder<TValue extends FilterValue> {
   public buildFiltersForSupportedOperators(
     attribute: FilterAttribute,
     value: TValue,
-    subpath?: string
+    subpath?: string,
   ): Filter<TValue>[] {
     return !isEmpty(subpath)
       ? this.supportedSubpathOperators().map(operator => this.buildFilter(attribute, operator, value, subpath))
@@ -33,7 +33,7 @@ export abstract class AbstractFilterBuilder<TValue extends FilterValue> {
     attribute: FilterAttribute,
     operator: FilterOperator,
     value: TValue,
-    subpath?: string
+    subpath?: string,
   ): Filter<TValue> {
     if (
       (isEmpty(subpath) && !this.supportedTopLevelOperators().includes(operator)) ||
@@ -49,7 +49,7 @@ export abstract class AbstractFilterBuilder<TValue extends FilterValue> {
       operator: operator,
       value: value,
       userString: this.buildUserFilterString(attribute, subpath, operator, value),
-      urlString: this.buildUrlFilterString(attribute, subpath, operator, value)
+      urlString: this.buildUrlFilterString(attribute, subpath, operator, value),
     };
   }
 
@@ -57,7 +57,7 @@ export abstract class AbstractFilterBuilder<TValue extends FilterValue> {
     attribute: FilterAttribute,
     operator?: FilterOperator,
     value?: TValue,
-    subpath?: string
+    subpath?: string,
   ): IncompleteFilter<TValue> {
     if (
       operator !== undefined &&
@@ -73,7 +73,7 @@ export abstract class AbstractFilterBuilder<TValue extends FilterValue> {
       subpath: subpath,
       operator: operator,
       value: value,
-      userString: this.buildUserFilterString(attribute, subpath, operator, value)
+      userString: this.buildUserFilterString(attribute, subpath, operator, value),
     };
   }
 
@@ -81,23 +81,23 @@ export abstract class AbstractFilterBuilder<TValue extends FilterValue> {
     attribute: FilterAttribute,
     subpath?: string,
     operator?: FilterOperator,
-    value?: TValue
+    value?: TValue,
   ): string {
     const attributeString = this.buildAttributeExpressionString(attribute.displayName, subpath);
 
     return collapseWhitespace(
-      `${attributeString} ${operator ?? ''} ${value !== undefined ? this.buildValueString(value) : ''}`
+      `${attributeString} ${operator ?? ''} ${value !== undefined ? this.buildValueString(value) : ''}`,
     ).trim();
   }
 
   public buildUserStringWithMatchingWhitespace(
     userEnteredString: string,
     attributeExpression: FilterAttributeExpression,
-    operator: FilterOperator
+    operator: FilterOperator,
   ): string {
     const attributeString = this.buildAttributeExpressionString(
       attributeExpression.attribute.displayName,
-      attributeExpression.subpath
+      attributeExpression.subpath,
     );
     const userStringAfterAttributeExpression = userEnteredString.slice(attributeString.length);
     const whitespace =
@@ -112,7 +112,7 @@ export abstract class AbstractFilterBuilder<TValue extends FilterValue> {
     attribute: FilterAttribute,
     subpath: string | undefined,
     operator: FilterOperator,
-    value: TValue
+    value: TValue,
   ): string {
     const attributeString = this.buildAttributeExpressionString(attribute.name, subpath);
 

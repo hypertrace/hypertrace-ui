@@ -48,5 +48,5 @@ export type SequenceSVGSelection = Selection<SVGElement, SequenceObject, null, u
 
 export const enum SequenceLayoutStyleClass {
   Plot = 'plot-section',
-  Axis = 'axis-section'
+  Axis = 'axis-section',
 }

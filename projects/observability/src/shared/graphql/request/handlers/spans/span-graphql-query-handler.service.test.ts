@@ -14,7 +14,7 @@ import { SpecificationBuilder } from '../../builders/specification/specification
 import {
   GraphQlSpanRequest,
   SpanGraphQlQueryHandlerService,
-  SPAN_GQL_REQUEST
+  SPAN_GQL_REQUEST,
 } from './span-graphql-query-handler.service';
 
 describe('SpanGraphQlQueryHandlerService', () => {
@@ -33,7 +33,7 @@ describe('SpanGraphQlQueryHandlerService', () => {
                 scope: scope,
                 onlySupportsAggregation: false,
                 onlySupportsGrouping: false,
-                allowedAggregations: [MetricAggregationType.Average]
+                allowedAggregations: [MetricAggregationType.Average],
               });
             default:
               return of({
@@ -44,21 +44,21 @@ describe('SpanGraphQlQueryHandlerService', () => {
                 scope: scope,
                 onlySupportsAggregation: false,
                 onlySupportsGrouping: false,
-                allowedAggregations: [MetricAggregationType.Average]
+                allowedAggregations: [MetricAggregationType.Average],
               });
           }
-        }
+        },
       }),
       mockProvider(TimeRangeService, {
         getCurrentTimeRange: jest
           .fn()
-          .mockReturnValue(new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)))
-      })
-    ]
+          .mockReturnValue(new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))),
+      }),
+    ],
   });
 
   const testTimeRange = GraphQlTimeRange.fromTimeRange(
-    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
+    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)),
   );
   const specBuilder = new SpecificationBuilder();
 
@@ -68,8 +68,8 @@ describe('SpanGraphQlQueryHandlerService', () => {
     timestamp: timestamp,
     properties: [
       specBuilder.attributeSpecificationForKey('apiName'),
-      specBuilder.attributeSpecificationForKey('duration')
-    ]
+      specBuilder.attributeSpecificationForKey('duration'),
+    ],
   });
 
   test('matches events request', () => {
@@ -85,14 +85,14 @@ describe('SpanGraphQlQueryHandlerService', () => {
       arguments: [
         {
           name: 'limit',
-          value: 1
+          value: 1,
         },
         {
           name: 'between',
           value: {
             startTime: new Date(testTimeRange.from),
-            endTime: new Date(testTimeRange.to)
-          }
+            endTime: new Date(testTimeRange.to),
+          },
         },
         {
           name: 'filterBy',
@@ -101,10 +101,10 @@ describe('SpanGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Attribute),
-              keyExpression: { key: 'id' }
-            }
-          ]
-        }
+              keyExpression: { key: 'id' },
+            },
+          ],
+        },
       ],
       children: [
         {
@@ -112,11 +112,11 @@ describe('SpanGraphQlQueryHandlerService', () => {
           children: [
             { path: 'id' },
             { path: 'attribute', alias: 'apiName', arguments: [{ name: 'expression', value: { key: 'apiName' } }] },
-            { path: 'attribute', alias: 'duration', arguments: [{ name: 'expression', value: { key: 'duration' } }] }
-          ]
+            { path: 'attribute', alias: 'duration', arguments: [{ name: 'expression', value: { key: 'duration' } }] },
+          ],
         },
-        { path: 'total' }
-      ]
+        { path: 'total' },
+      ],
     });
   });
 
@@ -129,14 +129,14 @@ describe('SpanGraphQlQueryHandlerService', () => {
       arguments: [
         {
           name: 'limit',
-          value: 1
+          value: 1,
         },
         {
           name: 'between',
           value: {
             startTime: new Date(0),
-            endTime: new Date(timestamp.getTime() * 2)
-          }
+            endTime: new Date(timestamp.getTime() * 2),
+          },
         },
         {
           name: 'filterBy',
@@ -145,10 +145,10 @@ describe('SpanGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Attribute),
-              keyExpression: { key: 'id' }
-            }
-          ]
-        }
+              keyExpression: { key: 'id' },
+            },
+          ],
+        },
       ],
       children: [
         {
@@ -156,11 +156,11 @@ describe('SpanGraphQlQueryHandlerService', () => {
           children: [
             { path: 'id' },
             { path: 'attribute', alias: 'apiName', arguments: [{ name: 'expression', value: { key: 'apiName' } }] },
-            { path: 'attribute', alias: 'duration', arguments: [{ name: 'expression', value: { key: 'duration' } }] }
-          ]
+            { path: 'attribute', alias: 'duration', arguments: [{ name: 'expression', value: { key: 'duration' } }] },
+          ],
         },
-        { path: 'total' }
-      ]
+        { path: 'total' },
+      ],
     });
   });
 
@@ -171,9 +171,9 @@ describe('SpanGraphQlQueryHandlerService', () => {
         {
           id: 'test-id-1',
           apiName: 'first',
-          duration: 1
-        }
-      ]
+          duration: 1,
+        },
+      ],
     };
 
     runFakeRxjs(({ expectObservable }) => {
@@ -183,9 +183,9 @@ describe('SpanGraphQlQueryHandlerService', () => {
           apiName: 'first',
           duration: {
             units: 'ms',
-            value: 1
-          }
-        }
+            value: 1,
+          },
+        },
       });
     });
   }));

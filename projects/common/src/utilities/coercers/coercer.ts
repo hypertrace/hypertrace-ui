@@ -23,7 +23,7 @@ export abstract class Coercer<T, TOptions extends CoercerOptions<T>> {
   protected assignDefaults(options: TOptions): TOptions {
     return {
       useSelf: true,
-      ...options
+      ...options,
     };
   }
 
@@ -35,7 +35,7 @@ export abstract class Coercer<T, TOptions extends CoercerOptions<T>> {
     return [
       this.options.useSelf ? value : undefined,
       ...this.extractObjectKeys(value),
-      ...this.extractArrayIndices(value)
+      ...this.extractArrayIndices(value),
     ];
   }
 

@@ -4,5 +4,5 @@ export enum SeriesVisualizationType {
   DashedLine = 'dashed-line',
   Area = 'area',
   Scatter = 'scatter',
-  Column = 'column'
+  Column = 'column',
 }

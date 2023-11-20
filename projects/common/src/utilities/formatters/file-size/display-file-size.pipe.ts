@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'htDisplayFileSize'
+  name: 'htDisplayFileSize',
 })
 export class DisplayFileSizePipe implements PipeTransform {
   public transform(sizeInBytes: number): string {

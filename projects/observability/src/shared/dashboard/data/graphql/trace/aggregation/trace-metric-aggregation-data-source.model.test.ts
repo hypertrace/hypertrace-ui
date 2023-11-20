@@ -15,7 +15,7 @@ describe('Trace metric aggregation data source model', () => {
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     model = new TraceMetricAggregationDataSourceModel();
     model.specification = specBuilder.exploreSpecificationForKey('duration', MetricAggregationType.Average);
@@ -31,7 +31,7 @@ describe('Trace metric aggregation data source model', () => {
       timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
       context: ObservabilityTraceType.Api,
       limit: 1,
-      selections: [model.specification]
+      selections: [model.specification],
     });
   });
 });

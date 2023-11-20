@@ -2,7 +2,7 @@ import { Directive, Input, OnChanges } from '@angular/core';
 import { LayoutChangeService } from '@hypertrace/common';
 
 @Directive({
-  selector: '[htLayoutChangeTrigger]'
+  selector: '[htLayoutChangeTrigger]',
 })
 export class LayoutChangeTriggerDirective implements OnChanges {
   public constructor(private readonly layoutChange: LayoutChangeService) {}

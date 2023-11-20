@@ -6,31 +6,31 @@ import { Trace, traceIdKey, traceTypeKey } from '../../../../graphql/model/schem
 import { SpecificationBuilder } from '../../../../graphql/request/builders/specification/specification-builder';
 import {
   TraceGraphQlQueryHandlerService,
-  TRACE_GQL_REQUEST
+  TRACE_GQL_REQUEST,
 } from '../../../../graphql/request/handlers/traces/trace-graphql-query-handler.service';
 import { GraphQlDataSourceModel } from '../../../data/graphql/graphql-data-source.model';
 
 @Model({
-  type: 'trace-detail-data-source'
+  type: 'trace-detail-data-source',
 })
 export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDetailData> {
   @ModelProperty({
     key: 'trace',
     required: true,
-    type: PLAIN_OBJECT_PROPERTY.type
+    type: PLAIN_OBJECT_PROPERTY.type,
   })
   public trace!: Trace;
 
   @ModelProperty({
     key: 'start-time',
     required: false,
-    type: UNKNOWN_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type,
   })
   public startTime?: unknown;
 
   @ModelProperty({
     key: 'attributes',
-    type: ARRAY_PROPERTY.type
+    type: ARRAY_PROPERTY.type,
   })
   public attributes: string[] = [];
 
@@ -45,8 +45,8 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
       spanLimit: 1000,
       timestamp: this.dateCoercer.coerce(this.startTime ?? this.trace.startTime),
       traceProperties: this.getTraceAttributes().map(attribute =>
-        this.attributeSpecBuilder.attributeSpecificationForKey(attribute)
-      )
+        this.attributeSpecBuilder.attributeSpecificationForKey(attribute),
+      ),
     }).pipe(mergeMap(trace => this.mapResponseObject(trace)));
   }
 
@@ -76,7 +76,7 @@ export class TraceDetailDataSourceModel extends GraphQlDataSourceModel<TraceDeta
       userCountry: trace.userCountry as string,
       apiName: trace.apiName as string,
       responseBody: trace.responseBody as string,
-      responseHeader: trace.responseHeaders as Dictionary<unknown>
+      responseHeader: trace.responseHeaders as Dictionary<unknown>,
     };
   }
 }

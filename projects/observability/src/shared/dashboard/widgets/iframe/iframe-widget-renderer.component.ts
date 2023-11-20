@@ -12,7 +12,7 @@ import { IFrameWidgetModel } from './iframe-widget.model';
   selector: 'ht-iframe-widget-renderer',
   template: ` <iframe width="100%" height="100%" frameBorder="0" [src]="urlSafe"></iframe> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./iframe-widget-renderer.component.scss']
+  styleUrls: ['./iframe-widget-renderer.component.scss'],
 })
 export class IframeWidgetRendererComponent extends WidgetRenderer<IFrameWidgetModel> implements OnInit {
   public urlSafe?: SafeResourceUrl;
@@ -20,7 +20,7 @@ export class IframeWidgetRendererComponent extends WidgetRenderer<IFrameWidgetMo
   public constructor(
     private readonly sanitizer: DomSanitizer,
     @Inject(RENDERER_API) api: RendererApi<IFrameWidgetModel>,
-    changeDetector: ChangeDetectorRef
+    changeDetector: ChangeDetectorRef,
   ) {
     super(api, changeDetector);
   }

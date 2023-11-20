@@ -6,7 +6,7 @@ describe('Not found component', () => {
   const buildComponent = createComponentFactory({
     component: NotFoundComponent,
     shallow: true,
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService)],
   });
   test('can navigate home', () => {
     const spectator = buildComponent();

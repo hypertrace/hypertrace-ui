@@ -6,7 +6,7 @@ export const apiTraceSequenceDashboard: DashboardDefaultConfiguration = {
     type: 'container-widget',
     layout: {
       type: 'auto-container-layout',
-      'enable-style': false
+      'enable-style': false,
     },
     children: [
       {
@@ -17,9 +17,9 @@ export const apiTraceSequenceDashboard: DashboardDefaultConfiguration = {
 
           'trace-id': '${traceId}',
 
-          'start-time': '${startTime}'
-        }
-      }
-    ]
-  }
+          'start-time': '${startTime}',
+        },
+      },
+    ],
+  },
 };

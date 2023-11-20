@@ -4,7 +4,7 @@ import {
   IntervalDurationService,
   isEqualIgnoreFunctions,
   TimeDuration,
-  TimeRangeService
+  TimeRangeService,
 } from '@hypertrace/common';
 import { Filter, FilterAttribute } from '@hypertrace/components';
 import { uniqBy } from 'lodash-es';
@@ -44,7 +44,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     private readonly graphQlFilterBuilderService: GraphQlFilterBuilderService,
     private readonly metadataService: MetadataService,
     private readonly intervalDurationService: IntervalDurationService,
-    private readonly timeRangeService: TimeRangeService
+    private readonly timeRangeService: TimeRangeService,
   ) {
     this.queryStateSubject = new BehaviorSubject(this.buildDefaultRequest());
 
@@ -52,7 +52,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       debounceTime(10),
       map(requestState => this.buildRequest(requestState)),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 
@@ -69,25 +69,25 @@ export class ExploreVisualizationBuilder implements OnDestroy {
 
   public addNewSeries(): this {
     return this.updateState({
-      series: [...this.currentState().series, this.buildDefaultSeries(this.currentState().context)]
+      series: [...this.currentState().series, this.buildDefaultSeries(this.currentState().context)],
     });
   }
 
   public setSeries(newSeries: ExploreSeries[]): this {
     return this.updateState({
-      series: [...newSeries]
+      series: [...newSeries],
     });
   }
 
   public groupBy(groupBy?: GraphQlGroupBy): this {
     return this.updateState({
-      groupBy: groupBy
+      groupBy: groupBy,
     });
   }
 
   public orderBy(orderBy?: ExploreOrderBy): this {
     return this.updateState({
-      orderBy: orderBy
+      orderBy: orderBy,
     });
   }
 
@@ -96,15 +96,15 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       interval: interval,
       ...(interval !== undefined
         ? {
-            orderBy: undefined
+            orderBy: undefined,
           }
-        : undefined)
+        : undefined),
     });
   }
 
   public filters(filters?: Filter[]): this {
     return this.updateState({
-      filters: filters && filters.length > 0 ? filters : undefined
+      filters: filters && filters.length > 0 ? filters : undefined,
     });
   }
 
@@ -137,7 +137,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       groupBy: state.groupBy && { ...state.groupBy },
       orderBy: orderBy,
       exploreQuery$: this.mapStateToExploreQuery({ ...state, orderBy: orderBy }),
-      resultsQuery$: this.mapStateToResultsQuery(state)
+      resultsQuery$: this.mapStateToResultsQuery(state),
     };
   }
 
@@ -147,13 +147,13 @@ export class ExploreVisualizationBuilder implements OnDestroy {
         aggregation: selectedSeries.specification.aggregation as MetricAggregationType,
         direction: SortDirection.Desc,
         attribute: {
-          key: selectedSeries.specification.name
-        }
+          key: selectedSeries.specification.name,
+        },
       };
     }
 
     return {
-      ...orderBy
+      ...orderBy,
     };
   }
 
@@ -162,8 +162,8 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       ? [
           this.exploreSpecBuilder.exploreSpecificationForAttributeExpression(
             state.orderBy.attribute,
-            state.orderBy.aggregation
-          )
+            state.orderBy.aggregation,
+          ),
         ]
       : [];
 
@@ -176,8 +176,8 @@ export class ExploreVisualizationBuilder implements OnDestroy {
         filters: state.filters && this.graphQlFilterBuilderService.buildGraphQlFieldFilters(state.filters),
         groupBy: state.groupBy,
         orderBy: state.orderBy && this.mapOrderByToGraphQlSpecification(state.orderBy),
-        limit: state.resultLimit
-      }))
+        limit: state.resultLimit,
+      })),
     );
   }
 
@@ -185,8 +185,8 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     return [
       {
         direction: orderBy.direction,
-        key: this.exploreSpecBuilder.exploreSpecificationForAttributeExpression(orderBy.attribute, orderBy.aggregation)
-      }
+        key: this.exploreSpecBuilder.exploreSpecificationForAttributeExpression(orderBy.attribute, orderBy.aggregation),
+      },
     ];
   }
 
@@ -195,22 +195,22 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       map(specifications => ({
         context: state.context,
         specifications: specifications,
-        filters: this.graphQlFilterBuilderService.buildGraphQlFieldFilters(state.filters ?? [])
-      }))
+        filters: this.graphQlFilterBuilderService.buildGraphQlFieldFilters(state.filters ?? []),
+      })),
     );
   }
 
   private getResultsQuerySpecificationsFromState(state: ExploreRequestState): Observable<Specification[]> {
     return forkJoinSafeEmpty(
-      state.series.map(series => this.metadataService.getAttribute(state.context, series.specification.name))
+      state.series.map(series => this.metadataService.getAttribute(state.context, series.specification.name)),
     ).pipe(
       defaultIfEmpty<AttributeMetadata[]>([]),
       map(attributes =>
         attributes
           .filter(attribute => !attribute.onlySupportsGrouping)
-          .map(attribute => this.specBuilder.attributeSpecificationForKey(attribute.name))
+          .map(attribute => this.specBuilder.attributeSpecificationForKey(attribute.name)),
       ),
-      map(specsFromRequest => uniqBy(specsFromRequest, spec => spec.name))
+      map(specsFromRequest => uniqBy(specsFromRequest, spec => spec.name)),
     );
   }
 
@@ -220,7 +220,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
       interval: 'AUTO',
       attributes: [],
       resultLimit: ExploreVisualizationBuilder.DEFAULT_LIMIT,
-      series: [this.buildDefaultSeries(context)]
+      series: [this.buildDefaultSeries(context)],
     };
   }
 
@@ -233,8 +233,8 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     return {
       specification: this.exploreSpecBuilder.exploreSpecificationForKey(attributeKey, MetricAggregationType.Count),
       visualizationOptions: {
-        type: CartesianSeriesVisualizationType.Column
-      }
+        type: CartesianSeriesVisualizationType.Column,
+      },
     };
   }
 
@@ -242,7 +242,7 @@ export class ExploreVisualizationBuilder implements OnDestroy {
     if (interval === 'AUTO') {
       return this.timeRangeService.getTimeRangeAndChanges().pipe(
         map(timeRange => this.intervalDurationService.getAutoDuration(timeRange)),
-        distinctUntilChanged(isEqualIgnoreFunctions)
+        distinctUntilChanged(isEqualIgnoreFunctions),
       );
     }
 

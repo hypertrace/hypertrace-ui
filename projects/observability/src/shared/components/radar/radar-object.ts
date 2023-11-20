@@ -7,7 +7,7 @@ export class RadarObject {
   public constructor(
     private readonly containerSelection: RadarContainerSelection,
     private readonly options: RadarOptions,
-    private readonly radarChartService: RadarChartService
+    private readonly radarChartService: RadarChartService,
   ) {}
 
   public destroy(): void {

@@ -6,7 +6,7 @@ import { StepperTabComponent } from '../tab/stepper-tab.component';
 @Component({
   selector: 'ht-stepper-tab-controls',
   template: CONTENT_HOLDER_TEMPLATE,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepperTabControlsComponent extends ContentHolder {
   public constructor(private readonly stepper: StepperComponent, public readonly step: StepperTabComponent) {

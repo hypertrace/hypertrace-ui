@@ -11,7 +11,7 @@ describe('Display string enum', () => {
     Kabob = 'kabob-case',
     Train = 'Train-Case',
     Macro = 'MACRO_CASE',
-    MacroTrain = 'MACRO-TRAIN-CASE'
+    MacroTrain = 'MACRO-TRAIN-CASE',
   }
 
   test('can convert to display string', () => {

@@ -5,47 +5,47 @@ import { mergeMap } from 'rxjs/operators';
 import { Trace, TraceType } from '../../../../../shared/graphql/model/schema/trace';
 import {
   TraceGraphQlQueryHandlerService,
-  TRACE_GQL_REQUEST
+  TRACE_GQL_REQUEST,
 } from '../../../../../shared/graphql/request/handlers/traces/trace-graphql-query-handler.service';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 import { AttributeSpecificationModel } from '../specifiers/attribute-specification.model';
 
 @Model({
-  type: 'trace-data-source'
+  type: 'trace-data-source',
 })
 export class TraceDataSourceModel extends GraphQlDataSourceModel<Trace> {
   @ModelProperty({
     key: 'trace',
     required: true,
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public traceType!: TraceType;
 
   @ModelProperty({
     key: 'traceId',
     required: true,
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public traceId!: string;
 
   @ModelProperty({
     key: 'start-time',
     required: false,
-    type: UNKNOWN_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type,
   })
   public startTime?: unknown;
 
   @ModelProperty({
     key: 'trace-attributes',
     type: ARRAY_PROPERTY.type,
-    required: false
+    required: false,
   })
   public traceSpecifications: AttributeSpecificationModel[] = [];
 
   @ModelProperty({
     key: 'spans-attributes',
     type: ARRAY_PROPERTY.type,
-    required: false
+    required: false,
   })
   public spansSpecifications: AttributeSpecificationModel[] = [];
 
@@ -59,7 +59,7 @@ export class TraceDataSourceModel extends GraphQlDataSourceModel<Trace> {
       spanLimit: 100,
       timestamp: this.dateCoercer.coerce(this.startTime),
       traceProperties: this.traceSpecifications,
-      spanProperties: this.spansSpecifications
+      spanProperties: this.spansSpecifications,
     }).pipe(mergeMap(response => (response ? of(response) : EMPTY)));
   }
 }

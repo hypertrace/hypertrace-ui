@@ -10,8 +10,8 @@ import { StatefulTableRow } from '../../table-api';
     trigger('rowExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
       state('expanded', style({ height: '*' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
-    ])
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
   ],
   template: `
     <div *ngIf="!!this.content && this.expanded" [class.expanded]="this.expanded" class="table-expanded-cell-renderer">
@@ -19,7 +19,7 @@ import { StatefulTableRow } from '../../table-api';
         <ng-container *ngTemplateOutlet="this.content; context: { row: this.row }"></ng-container>
       </div>
     </div>
-  `
+  `,
 })
 export class TableExpandedDetailRowCellRendererComponent {
   @Input()

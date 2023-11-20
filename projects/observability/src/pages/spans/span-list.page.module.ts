@@ -10,8 +10,8 @@ import { spanListDashboard } from './span-list.page.dashboard';
 const ROUTE_CONFIG: HtRoute[] = [
   {
     path: '',
-    component: SpanListPageComponent
-  }
+    component: SpanListPageComponent,
+  },
 ];
 
 @NgModule({
@@ -19,8 +19,8 @@ const ROUTE_CONFIG: HtRoute[] = [
     TracingDashboardModule,
     CommonModule,
     NavigableDashboardModule.withDefaultDashboards(spanListDashboard),
-    RouterModule.forChild(ROUTE_CONFIG)
+    RouterModule.forChild(ROUTE_CONFIG),
   ],
-  declarations: [SpanListPageComponent]
+  declarations: [SpanListPageComponent],
 })
 export class SpanListPageModule {}

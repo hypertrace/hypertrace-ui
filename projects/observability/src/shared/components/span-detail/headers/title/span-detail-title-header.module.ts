@@ -7,6 +7,6 @@ import { SpanDetailTitleHeaderComponent } from './span-detail-title-header.compo
 @NgModule({
   imports: [CommonModule, TooltipModule, ButtonModule, CopyShareableLinkToClipboardModule],
   declarations: [SpanDetailTitleHeaderComponent],
-  exports: [SpanDetailTitleHeaderComponent]
+  exports: [SpanDetailTitleHeaderComponent],
 })
 export class SpanDetailTitleHeaderModule {}

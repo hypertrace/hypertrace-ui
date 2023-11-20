@@ -14,7 +14,7 @@ import { IconSize } from '../icon/icon-size';
         </ht-link>
       </ht-event-blocker>
     </div>
-  `
+  `,
 })
 export class OpenInNewTabComponent {
   @Input()

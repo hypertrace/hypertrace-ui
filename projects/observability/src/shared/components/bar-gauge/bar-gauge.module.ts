@@ -7,6 +7,6 @@ import { BarGaugeComponent } from './bar-gauge.component';
 @NgModule({
   declarations: [BarGaugeComponent],
   imports: [CommonModule, FormattingModule, LayoutChangeModule, TooltipModule],
-  exports: [BarGaugeComponent]
+  exports: [BarGaugeComponent],
 })
 export class BarGaugeModule {}

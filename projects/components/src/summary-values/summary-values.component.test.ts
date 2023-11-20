@@ -11,7 +11,7 @@ describe('Summary Values Component', () => {
   const createHost = createHostFactory({
     component: SummaryValuesComponent,
     shallow: true,
-    declarations: [MockComponent(SummaryValueComponent), MockDirective(TooltipDirective)]
+    declarations: [MockComponent(SummaryValueComponent), MockDirective(TooltipDirective)],
   });
 
   test('should pass on inputs correct to child component when multiple values are present', () => {
@@ -24,9 +24,9 @@ describe('Summary Values Component', () => {
           icon: IconType.Add,
           label: 'label',
           tooltip: 'label tooltip',
-          summaryValueDisplayStyle: SummaryValueDisplayStyle.Text
-        }
-      }
+          summaryValueDisplayStyle: SummaryValueDisplayStyle.Text,
+        },
+      },
     );
 
     const summaryValueComponent = spectator.query(SummaryValueComponent);
@@ -51,9 +51,9 @@ describe('Summary Values Component', () => {
           icon: IconType.Add,
           label: 'label',
           tooltip: 'label tooltip',
-          summaryValueDisplayStyle: SummaryValueDisplayStyle.Text
-        }
-      }
+          summaryValueDisplayStyle: SummaryValueDisplayStyle.Text,
+        },
+      },
     );
 
     const summaryValueComponent = spectator.query(SummaryValueComponent);
@@ -78,9 +78,9 @@ describe('Summary Values Component', () => {
           icon: IconType.Add,
           label: 'label',
           tooltip: 'label tooltip',
-          summaryValueDisplayStyle: SummaryValueDisplayStyle.Text
-        }
-      }
+          summaryValueDisplayStyle: SummaryValueDisplayStyle.Text,
+        },
+      },
     );
 
     const summaryValueComponent = spectator.query(SummaryValueComponent);
@@ -105,9 +105,9 @@ describe('Summary Values Component', () => {
           icon: IconType.Add,
           label: 'label',
           tooltip: 'label tooltip',
-          summaryValueDisplayStyle: SummaryValueDisplayStyle.Text
-        }
-      }
+          summaryValueDisplayStyle: SummaryValueDisplayStyle.Text,
+        },
+      },
     );
 
     const summaryValueComponent = spectator.query(SummaryValueComponent);

@@ -6,7 +6,7 @@ import {
   TimeDuration,
   TimeRange,
   TimeRangeService,
-  TimeUnit
+  TimeUnit,
 } from '@hypertrace/common';
 import { concat, EMPTY, interval, Observable, of, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -67,12 +67,12 @@ import { PopoverRef } from '../popover/popover-ref';
       >
       </ht-refresh-button>
     </div>
-  `
+  `,
 })
 export class TimeRangeComponent {
   @Input()
   public dropdownLocationPreference: PopoverRelativePositionLocation[] = [
-    PopoverRelativePositionLocation.BelowRightAligned
+    PopoverRelativePositionLocation.BelowRightAligned,
   ];
 
   public timeRange$: Observable<TimeRange> = this.timeRangeService.getTimeRangeAndChanges();
@@ -119,7 +119,7 @@ export class TimeRangeComponent {
         of({
           text$: of('Refresh'),
           variant: ButtonVariant.Tertiary,
-          isEmphasized: false
+          isEmphasized: false,
         }),
         this.ngZone.runOutsideAngular(() =>
           // Long-running timer will prevent zone from stabilizing
@@ -130,16 +130,16 @@ export class TimeRangeComponent {
                 map(() =>
                   new TimeDuration(
                     Date.now() - lastRefreshTimeMillis,
-                    TimeUnit.Millisecond
-                  ).getMostSignificantUnitOnly()
+                    TimeUnit.Millisecond,
+                  ).getMostSignificantUnitOnly(),
                 ),
-                map(duration => `Refresh - updated ${duration.toString()} ago`)
+                map(duration => `Refresh - updated ${duration.toString()} ago`),
               ),
               variant: ButtonVariant.Primary,
-              isEmphasized: true
-            }))
-          )
-        )
+              isEmphasized: true,
+            })),
+          ),
+        ),
       );
     }
 

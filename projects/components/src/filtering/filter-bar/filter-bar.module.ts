@@ -10,6 +10,6 @@ import { FilterChipComponent } from './filter-chip/filter-chip.component';
 @NgModule({
   imports: [CommonModule, IconModule, ButtonModule, ComboBoxModule, FilterModule],
   exports: [FilterBarComponent],
-  declarations: [FilterBarComponent, FilterChipComponent]
+  declarations: [FilterBarComponent, FilterChipComponent],
 })
 export class FilterBarModule {}

@@ -18,15 +18,15 @@ import { PanelComponent } from './panel.component';
     LayoutChangeModule,
     ExpanderToggleModule,
     EventBlockerModule,
-    ButtonModule
+    ButtonModule,
   ],
   declarations: [
     PanelComponent,
     PanelHeaderComponent,
     PanelBodyComponent,
     PanelTitleComponent,
-    PanelCollapsedBodyComponent
+    PanelCollapsedBodyComponent,
   ],
-  exports: [PanelComponent, PanelHeaderComponent, PanelBodyComponent, PanelTitleComponent, PanelCollapsedBodyComponent]
+  exports: [PanelComponent, PanelHeaderComponent, PanelBodyComponent, PanelTitleComponent, PanelCollapsedBodyComponent],
 })
 export class PanelModule {}

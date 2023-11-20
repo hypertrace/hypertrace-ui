@@ -18,7 +18,7 @@ import { LoaderType } from '../load-async.service';
         <img [ngClass]="[this.currentLoaderType]" [src]="this.imagePath" alt="Loader icon" />
       </ng-template>
     </div>
-  `
+  `,
 })
 export class LoaderComponent implements OnChanges {
   @Input()

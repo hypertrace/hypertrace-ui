@@ -5,6 +5,6 @@ import { TraceDetailModule } from './trace-detail/trace-detail-widget.module';
 import { WaterfallWidgetModule } from './waterfall/waterfall-widget.module';
 
 @NgModule({
-  imports: [SpanDetailWidgetModule, TableWidgetModule, TraceDetailModule, WaterfallWidgetModule]
+  imports: [SpanDetailWidgetModule, TableWidgetModule, TraceDetailModule, WaterfallWidgetModule],
 })
 export class TracingDashboardWidgetsModule {}

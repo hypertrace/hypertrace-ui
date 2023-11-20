@@ -6,31 +6,31 @@ import { Span } from '../../../../../shared/graphql/model/schema/span';
 import { Specification } from '../../../../../shared/graphql/model/schema/specifier/specification';
 import {
   SpanGraphQlQueryHandlerService,
-  SPAN_GQL_REQUEST
+  SPAN_GQL_REQUEST,
 } from '../../../../../shared/graphql/request/handlers/spans/span-graphql-query-handler.service';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 @Model({
-  type: 'span-data-source'
+  type: 'span-data-source',
 })
 export class SpanDataSourceModel extends GraphQlDataSourceModel<Span> {
   @ModelProperty({
     key: 'span-id',
     required: true,
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public spanId!: string;
 
   @ModelProperty({
     key: 'start-time',
     required: false,
-    type: UNKNOWN_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type,
   })
   public startTime: unknown;
 
   @ModelProperty({
     key: 'attributes',
     type: ARRAY_PROPERTY.type,
-    required: false
+    required: false,
   })
   public specifications: Specification[] = [];
 
@@ -41,7 +41,7 @@ export class SpanDataSourceModel extends GraphQlDataSourceModel<Span> {
       requestType: SPAN_GQL_REQUEST,
       id: this.spanId,
       timestamp: this.dateCoercer.coerce(this.startTime),
-      properties: this.specifications
+      properties: this.specifications,
     }).pipe(mergeMap(span => this.mapResponseObject(span)));
   }
 

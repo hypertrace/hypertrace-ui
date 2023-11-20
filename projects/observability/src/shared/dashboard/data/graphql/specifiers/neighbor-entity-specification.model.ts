@@ -6,7 +6,7 @@ import { EntitySpecificationModel } from './entity-specification.model';
 
 @Model({
   type: 'neighbor-entity-specification',
-  displayName: 'Neighbor entity'
+  displayName: 'Neighbor entity',
 })
 export class NeighborEntitySpecificationModel extends EntitySpecificationModel implements DefinesNeighbor {
   @ModelProperty({
@@ -14,9 +14,9 @@ export class NeighborEntitySpecificationModel extends EntitySpecificationModel i
     displayName: 'Neighbor Direction',
     type: {
       key: ENUM_TYPE.type,
-      values: [NeighborDirection.Upstream, NeighborDirection.Downstream]
+      values: [NeighborDirection.Upstream, NeighborDirection.Downstream],
     } as EnumPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public neighborDirection!: NeighborDirection;
 
@@ -25,9 +25,9 @@ export class NeighborEntitySpecificationModel extends EntitySpecificationModel i
     displayName: 'Neighbor Entity Type',
     type: {
       key: ENUM_TYPE.type,
-      values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api, ObservabilityEntityType.Backend]
+      values: [ObservabilityEntityType.Service, ObservabilityEntityType.Api, ObservabilityEntityType.Backend],
     } as EnumPropertyTypeInstance,
-    required: true
+    required: true,
   })
   public neighborType!: ObservabilityEntityType;
 }

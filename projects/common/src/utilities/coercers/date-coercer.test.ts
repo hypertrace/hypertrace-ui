@@ -19,7 +19,7 @@ describe('Date coercer', () => {
   test('coerces string', () => {
     expect(basicCoercer.coerce(dateAsIsoString)).toEqual(dataAsDate);
     expect(basicCoercer.coerce('Thu Apr 11 2019 09:33:47 GMT-0700 (Pacific Daylight Time)')).toEqual(
-      new Date(dateInMillisRounded)
+      new Date(dateInMillisRounded),
     );
     expect(basicCoercer.coerce('Thu, 11 Apr 2019 16:33:47 GMT')).toEqual(new Date(dateInMillisRounded));
     expect(basicCoercer.coerce('2019-04-11T16:33:47Z')).toEqual(new Date(dateInMillisRounded));
@@ -35,7 +35,7 @@ describe('Date coercer', () => {
   test('limits in time range', () => {
     const limitedCoercer = new DateCoercer({
       earliestDate: new Date('2019-04-10T16:33:47.046Z'),
-      latestDate: new Date('2019-04-12T16:33:47.046Z')
+      latestDate: new Date('2019-04-12T16:33:47.046Z'),
     });
     expect(limitedCoercer.coerce('2019-04-09T16:33:47.046Z')).toBeUndefined();
     expect(limitedCoercer.coerce('2019-04-11T16:33:47.046Z')).toBeDefined();
@@ -61,7 +61,7 @@ describe('Date coercer', () => {
   test('works with object and array keys', () => {
     const coercer = new DateCoercer({
       extractObjectKeys: ['foo'],
-      extractArrayIndices: [0]
+      extractArrayIndices: [0],
     });
 
     expect(coercer.coerce({ foo: dataAsDate })).toEqual(dataAsDate);
@@ -70,7 +70,7 @@ describe('Date coercer', () => {
 
   test('uses default value', () => {
     const defaultingCoercer = new DateCoercer({
-      defaultValue: dataAsDate
+      defaultValue: dataAsDate,
     });
     expect(defaultingCoercer.coerce({})).toEqual(dataAsDate);
   });

@@ -15,17 +15,17 @@ describe('Icon table cell renderer component', () => {
       mockProvider(NavigationService),
       ...tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
         new TableCellIconParser(undefined!),
         0,
         {
           icon: IconType.AddCircleOutline,
-          label: 'I am Label'
-        }
-      )
+          label: 'I am Label',
+        },
+      ),
     ],
-    shallow: true
+    shallow: true,
   });
 
   test('should render an icon', () => {
@@ -52,9 +52,9 @@ describe('Icon table cell renderer component', () => {
           id: 'test',
           onClick: () => {
             /* NOOP */
-          }
-        })
-      ]
+          },
+        }),
+      ],
     });
 
     const element = spectator.query('.clickable');

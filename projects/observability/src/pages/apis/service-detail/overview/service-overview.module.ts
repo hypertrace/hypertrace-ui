@@ -11,9 +11,9 @@ import { serviceOverviewDashboard } from './service-overview.dashboard';
     CommonModule,
     ObservabilityDashboardModule,
     LoadAsyncModule,
-    NavigableDashboardModule.withDefaultDashboards(serviceOverviewDashboard)
+    NavigableDashboardModule.withDefaultDashboards(serviceOverviewDashboard),
   ],
   declarations: [ServiceOverviewComponent],
-  exports: [ServiceOverviewComponent]
+  exports: [ServiceOverviewComponent],
 })
 export class ServiceOverviewModule {}

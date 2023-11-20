@@ -5,13 +5,13 @@ import {
   ModelApi,
   ModelProperty,
   NUMBER_PROPERTY,
-  STRING_PROPERTY
+  STRING_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
 
 @Model({
-  type: 'band'
+  type: 'band',
 })
 export class BandModel<TInterval> {
   private static readonly BAND_COLOR: string = Color.Gray2;
@@ -23,45 +23,45 @@ export class BandModel<TInterval> {
 
   @ModelProperty({
     key: 'name',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public name: string = BandModel.BASELINE_NAME;
 
   @ModelProperty({
     key: 'upper-bound-name',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public upperBoundName: string = BandModel.UPPER_BOUND_NAME;
 
   @ModelProperty({
     key: 'lower-bound-name',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public lowerBoundName: string = BandModel.LOWER_BOUND_NAME;
 
   @ModelProperty({
     key: 'color',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public color: string = BandModel.BASELINE_COLOR;
 
   @ModelProperty({
     key: 'band-color',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public bandColor: string = BandModel.BAND_COLOR;
 
   @ModelProperty({
     key: 'opacity',
     displayName: 'Opacity',
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public opacity: number = BandModel.DEFAULT_OPACITY;
 
   @ModelProperty({
     key: 'hide',
     displayName: 'hide',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public hide: boolean = false;
 

@@ -49,5 +49,5 @@ const loadGA = () => {
 };
 
 module.exports = {
-  loadGA
+  loadGA,
 };

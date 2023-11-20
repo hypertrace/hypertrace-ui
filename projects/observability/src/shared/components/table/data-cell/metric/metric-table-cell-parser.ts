@@ -3,7 +3,7 @@ import { MetricAggregation } from '../../../../graphql/model/metrics/metric-aggr
 import { TracingTableCellType } from '../../tracing-table-cell-type';
 
 @TableCellParser({
-  type: TracingTableCellType.Metric
+  type: TracingTableCellType.Metric,
 })
 export class MetricTableCellParser extends TableCellParserBase<number, CellValue, CellValue> {
   public parseValue(cellData: CellData): CellValue {

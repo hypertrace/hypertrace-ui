@@ -10,10 +10,10 @@ import { PercentageCompositeDataSourceModel } from './percentage-composite-data-
   declarations: [],
   imports: [
     DashboardCoreModule.with({
-      models: [PercentageCompositeDataSourceModel, MetricAggregationDataSourceModel]
+      models: [PercentageCompositeDataSourceModel, MetricAggregationDataSourceModel],
     }),
     GraphQlModule.withHandlerProviders([ExploreGraphQlQueryHandlerService]),
-    CommonModule
-  ]
+    CommonModule,
+  ],
 })
 export class PercentageCompositeDataSourceModule {}

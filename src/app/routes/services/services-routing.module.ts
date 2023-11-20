@@ -7,35 +7,35 @@ import {
   ServiceDetailBreadcrumbResolver,
   ServiceDetailService,
   ServiceListComponent,
-  ServiceListModule
+  ServiceListModule,
 } from '@hypertrace/observability';
 
 const ROUTE_CONFIG: HtRoute[] = [
   {
     path: '',
-    component: ServiceListComponent
+    component: ServiceListComponent,
   },
   {
     path: `service/:${ServiceDetailService.SERVICE_ID_PARAM_NAME}`,
     resolve: {
-      breadcrumb: ServiceDetailBreadcrumbResolver
+      breadcrumb: ServiceDetailBreadcrumbResolver,
     },
     loadChildren: () =>
-      import('./service-detail/service-detail-routing.module').then(module => module.ServiceDetailRoutingModule)
+      import('./service-detail/service-detail-routing.module').then(module => module.ServiceDetailRoutingModule),
   },
   {
     path: `endpoint/:${ApiDetailService.API_ID_PARAM_NAME}`,
     resolve: {
-      breadcrumb: ApiDetailBreadcrumbResolver
+      breadcrumb: ApiDetailBreadcrumbResolver,
     },
     loadChildren: () =>
       import('../endpoints/endpoint-detail/endpoint-detail-routing.module').then(
-        module => module.EndpointDetailRoutingModule
-      )
-  }
+        module => module.EndpointDetailRoutingModule,
+      ),
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(ROUTE_CONFIG), ServiceListModule]
+  imports: [RouterModule.forChild(ROUTE_CONFIG), ServiceListModule],
 })
 export class ServicesRoutingModule {}

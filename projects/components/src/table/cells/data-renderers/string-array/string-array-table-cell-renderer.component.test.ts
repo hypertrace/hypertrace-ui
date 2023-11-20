@@ -13,18 +13,18 @@ describe('String array table cell renderer component', () => {
     providers: [
       tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
-        new TableCellNoOpParser(undefined!)
-      )
+        new TableCellNoOpParser(undefined!),
+      ),
     ],
 
-    shallow: true
+    shallow: true,
   });
 
   test('should render an array with one item as expected', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(['first-item'])]
+      providers: [tableCellDataProvider(['first-item'])],
     });
 
     expect(spectator.query('.first-item')).toHaveText('first-item');
@@ -33,7 +33,7 @@ describe('String array table cell renderer component', () => {
 
   test('should render an empty array as expected', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider([])]
+      providers: [tableCellDataProvider([])],
     });
 
     expect(spectator.query('.string-array-cell')).toHaveText('-');
@@ -43,7 +43,7 @@ describe('String array table cell renderer component', () => {
 
   test('should render array with multiple items as expected', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(['first-item', 'second-item', 'third-item'])]
+      providers: [tableCellDataProvider(['first-item', 'second-item', 'third-item'])],
     });
 
     expect(spectator.query('.first-item')).toHaveText('first-item');

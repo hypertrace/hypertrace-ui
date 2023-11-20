@@ -4,7 +4,7 @@ import { EntityIconLookupService } from '../../../../services/entity/entity-icon
 import { ObservabilityTableCellType } from '../../observability-table-cell-type';
 
 @TableCellParser({
-  type: ObservabilityTableCellType.BackendIcon
+  type: ObservabilityTableCellType.BackendIcon,
 })
 export class BackendIconTableCellParser extends TableCellParserBase<string, string, string> {
   public constructor(protected readonly rootInjector: Injector) {

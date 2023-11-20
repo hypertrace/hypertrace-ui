@@ -8,12 +8,12 @@ import { Entity, entityIdKey, EntityType, entityTypeKey } from '../../../graphql
 export class EntityNavigationService {
   public constructor(
     private readonly navigationService: NavigationService,
-    @Inject(ENTITY_METADATA) private readonly entityMetadata: EntityMetadataMap
+    @Inject(ENTITY_METADATA) private readonly entityMetadata: EntityMetadataMap,
   ) {
     Array.from(this.entityMetadata.values()).forEach(item => {
       this.registerEntityNavigationAction(item.entityType, (id, sourceRoute, inactive) => ({
         navType: NavigationParamsType.InApp,
-        path: ['/', ...item.detailPath(id, sourceRoute, inactive)]
+        path: ['/', ...item.detailPath(id, sourceRoute, inactive)],
       }));
     });
   }
@@ -41,7 +41,7 @@ export class EntityNavigationService {
     // Supply that root route to the navigation function
     const entityMetadata = this.entityMetadata.get(entityType);
     const sourceRoute: string | undefined = entityMetadata?.sourceRoutes?.find(item =>
-      this.navigationService.isRelativePathActive([item], this.navigationService.rootRoute())
+      this.navigationService.isRelativePathActive([item], this.navigationService.rootRoute()),
     );
 
     return navigationFunction ? navigationFunction(entityId, sourceRoute, isInactive) : undefined;
@@ -49,7 +49,7 @@ export class EntityNavigationService {
 
   public registerEntityNavigationAction(
     entityType: EntityType,
-    action: (id: string, sourceRoute?: string, inactive?: boolean) => InAppNavigationParams
+    action: (id: string, sourceRoute?: string, inactive?: boolean) => InAppNavigationParams,
   ): void {
     this.entityNavigationMap.set(entityType, action);
   }

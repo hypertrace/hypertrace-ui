@@ -3,7 +3,7 @@ import {
   PopoverFixedPositionLocation,
   PopoverPositionType,
   PopoverRef,
-  PopoverService
+  PopoverService,
 } from '@hypertrace/components';
 import { BOOLEAN_PROPERTY, Model, ModelProperty } from '@hypertrace/hyperdash';
 import { ModelInject } from '@hypertrace/hyperdash-angular';
@@ -15,7 +15,7 @@ import { CartesianExplorerContextMenuComponent } from './cartesian-explorer-cont
 import { CartesainExplorerNavigationService } from './cartesian-explorer-navigation.service';
 
 @Model({
-  type: 'cartesian-explorer-selection-handler'
+  type: 'cartesian-explorer-selection-handler',
 })
 export class CartesianExplorerSelectionHandlerModel<TData> implements InteractionHandler {
   @ModelInject(CartesainExplorerNavigationService)
@@ -29,7 +29,7 @@ export class CartesianExplorerSelectionHandlerModel<TData> implements Interactio
   @ModelProperty({
     key: 'show-context-menu',
     displayName: 'Show Context Menu',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public showContextMenu: boolean = true;
 
@@ -41,7 +41,7 @@ export class CartesianExplorerSelectionHandlerModel<TData> implements Interactio
     } else {
       this.cartesainExplorerNavigationService.navigateToExplorer(
         selectionData.timeRange.startTime,
-        selectionData.timeRange.endTime
+        selectionData.timeRange.endTime,
       );
     }
 
@@ -55,9 +55,9 @@ export class CartesianExplorerSelectionHandlerModel<TData> implements Interactio
       position: {
         type: PopoverPositionType.Fixed,
         location: PopoverFixedPositionLocation.Custom,
-        customLocation: selectionData.location
+        customLocation: selectionData.location,
       },
-      backdrop: PopoverBackdrop.Transparent
+      backdrop: PopoverBackdrop.Transparent,
     });
   }
 }

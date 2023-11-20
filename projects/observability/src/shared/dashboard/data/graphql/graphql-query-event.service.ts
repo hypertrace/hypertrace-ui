@@ -4,27 +4,27 @@ import {
   GraphQlRequestOptions,
   GraphQlRequestService,
   RequestTypeForHandler,
-  ResponseTypeForHandler
+  ResponseTypeForHandler,
 } from '@hypertrace/graphql-client';
 import { ModelScopedDashboardEvent, ModelScopedData } from '@hypertrace/hyperdash';
 import {
   DashboardEventManagerService,
   DataSourceManagerService,
-  ModelDestroyedEventService
+  ModelDestroyedEventService,
 } from '@hypertrace/hyperdash-angular';
 import { Observable, Observer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { GraphQlFilter, GraphQlFilterable } from '../../../graphql/model/schema/filter/graphql-filter';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GraphQlQueryEventService extends ModelScopedDashboardEvent<ObservedGraphQlRequest> {
   public constructor(
     dashboardEventManager: DashboardEventManagerService,
     private readonly modelDestroyedEvent: ModelDestroyedEventService,
     private readonly graphqlQueryService: GraphQlRequestService,
-    private readonly dataSourceManager: DataSourceManagerService
+    private readonly dataSourceManager: DataSourceManagerService,
   ) {
     super(dashboardEventManager);
 
@@ -57,7 +57,7 @@ export class GraphQlQueryEventService extends ModelScopedDashboardEvent<Observed
 
     return collectedDataSources.reduce<GraphQlFilter[]>(
       (inherited, filterable) => filterable.getFilters(inherited),
-      []
+      [],
     );
   }
 

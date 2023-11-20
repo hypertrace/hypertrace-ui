@@ -3,7 +3,7 @@ import { TimeDuration, TimeUnit, UnitStringType } from './../../../public-api';
 import { durationFormatter } from './duration-formatter';
 
 @Pipe({
-  name: 'htDisplayDuration'
+  name: 'htDisplayDuration',
 })
 export class DisplayDurationPipe implements PipeTransform {
   public transform(millis?: number, unitStringType: UnitStringType = UnitStringType.Short): string {

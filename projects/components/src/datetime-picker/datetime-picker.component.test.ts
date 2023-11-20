@@ -10,7 +10,7 @@ describe('Date Time Picker Component', () => {
   const createHost = createHostFactory({
     component: DatetimePickerComponent,
     shallow: true,
-    declarations: [MockComponent(LabelComponent), MockComponent(InputComponent), MockComponent(TimePickerComponent)]
+    declarations: [MockComponent(LabelComponent), MockComponent(InputComponent), MockComponent(TimePickerComponent)],
   });
 
   beforeEach(() => {
@@ -20,9 +20,9 @@ describe('Date Time Picker Component', () => {
         hostProps: {
           date: initDate,
           showTimeTriggerIcon: false,
-          onDateChange: onDateChangeSpy
-        }
-      }
+          onDateChange: onDateChangeSpy,
+        },
+      },
     );
   });
 
@@ -51,23 +51,23 @@ describe('Date Time Picker Component', () => {
       {
         date: new Date('2020-10-10'),
         time: new Time(18, 10, 0, 0, true),
-        expected: '2020-10-10'
+        expected: '2020-10-10',
       },
       {
         date: new Date('2020-1-1'),
         time: new Time(0, 30, 0, 0, true),
-        expected: '2020-01-01'
+        expected: '2020-01-01',
       },
       {
         date: new Date('2020-1-1'),
         time: new Time(23, 59, 0, 0, true),
-        expected: '2020-01-01'
+        expected: '2020-01-01',
       },
       {
         date: new Date('2020-1-1'),
         time: new Time(0, 0, 0, 0, true),
-        expected: '2020-01-01'
-      }
+        expected: '2020-01-01',
+      },
     ];
 
     validationSet.forEach(({ date, time, expected }) => {

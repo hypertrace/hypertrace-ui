@@ -7,7 +7,7 @@ import {
   PreferenceService,
   PreferenceValue,
   StorageType,
-  SubscriptionLifecycle
+  SubscriptionLifecycle,
 } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
@@ -35,12 +35,12 @@ describe('Table component', () => {
   const buildData = () => [
     {
       firstId: 'first 1',
-      secondId: 'second 1'
+      secondId: 'second 1',
     },
     {
       firstId: 'first 2',
-      secondId: 'second 2'
-    }
+      secondId: 'second 2',
+    },
   ];
 
   const buildColumns = (): TableColumnConfigExtended[] => [
@@ -50,7 +50,7 @@ describe('Table component', () => {
       parser: new TableCellStringParser(undefined!),
       filterValues: [],
       width: 100,
-      visible: true
+      visible: true,
     },
     {
       id: 'secondId',
@@ -58,8 +58,8 @@ describe('Table component', () => {
       parser: new TableCellStringParser(undefined!),
       filterValues: [],
       width: 200,
-      visible: true
-    }
+      visible: true,
+    },
   ];
   const createHost = createHostFactory({
     component: TableComponent,
@@ -68,7 +68,7 @@ describe('Table component', () => {
     providers: [
       mockProvider(NavigationService),
       mockProvider(ActivatedRoute, {
-        queryParamMap: EMPTY
+        queryParamMap: EMPTY,
       }),
       mockProvider(DomElementMeasurerService, {
         measureHtmlElement: (): Partial<ClientRect> => ({
@@ -77,27 +77,28 @@ describe('Table component', () => {
           bottom: 20,
           right: 200,
           height: 20,
-          width: 200
-        })
+          width: 200,
+        }),
       }),
       mockProvider(TableService, {
-        buildExtendedColumnConfigs: (columnConfigs: TableColumnConfig[]) => columnConfigs as TableColumnConfigExtended[]
+        buildExtendedColumnConfigs: (columnConfigs: TableColumnConfig[]) =>
+          columnConfigs as TableColumnConfigExtended[],
       }),
       mockProvider(ModalService, {
-        createModal: jest.fn().mockReturnValue({ closed$: of([]) })
+        createModal: jest.fn().mockReturnValue({ closed$: of([]) }),
       }),
       mockProvider(PreferenceService, {
         getOnce: jest.fn().mockReturnValue(localStorage),
-        set: (_: unknown, value: PreferenceValue) => (localStorage = value)
+        set: (_: unknown, value: PreferenceValue) => (localStorage = value),
       }),
       mockProvider(TableCsvDownloaderService, {
         csvDownloadRequest$: mockDownloadSubject.asObservable(),
         triggerDownload: jest.fn().mockImplementation(id => mockDownloadSubject.next(id)),
-        executeDownload: jest.fn()
+        executeDownload: jest.fn(),
       }),
       mockProvider(SubscriptionLifecycle, {
-        add: jest.fn()
-      })
+        add: jest.fn(),
+      }),
     ],
     declarations: [MockComponent(PaginatorComponent), MockComponent(SearchBoxComponent)],
     template: `
@@ -106,7 +107,7 @@ describe('Table component', () => {
         [data]="data"
         [syncWithUrl]="syncWithUrl">
       </ht-table>
-    `
+    `,
   });
 
   test('pass custom page size options to paginator', fakeAsync(() => {
@@ -116,9 +117,9 @@ describe('Table component', () => {
         hostProps: {
           columnConfigs: buildColumns(),
           data: buildData(),
-          pageSizeOptions: [10, 25]
-        }
-      }
+          pageSizeOptions: [10, 25],
+        },
+      },
     );
 
     expect(spectator.query(PaginatorComponent)?.pageSizeOptions).toEqual([10, 25]);
@@ -135,20 +136,20 @@ describe('Table component', () => {
           columnConfigs: buildColumns(),
           data: buildData(),
           syncWithUrl: false,
-          pageChange: mockPageChange
-        }
-      }
+          pageChange: mockPageChange,
+        },
+      },
     );
 
     spectator.triggerEventHandler(PaginatorComponent, 'pageChange', {
       pageIndex: 1,
-      pageSize: 50
+      pageSize: 50,
     });
 
     expect(spectator.inject(NavigationService).addQueryParametersToUrl).not.toHaveBeenCalled();
     expect(mockPageChange).toHaveBeenCalledWith({
       pageIndex: 1,
-      pageSize: 50
+      pageSize: 50,
     });
     flush();
   }));
@@ -163,14 +164,14 @@ describe('Table component', () => {
         hostProps: {
           columnConfigs: buildColumns(),
           data: rows,
-          selectionsChange: mockSelectionsChange
-        }
-      }
+          selectionsChange: mockSelectionsChange,
+        },
+      },
     );
 
     spectator.triggerEventHandler(PaginatorComponent, 'pageChange', {
       pageIndex: 1,
-      pageSize: 50
+      pageSize: 50,
     });
 
     expect(mockSelectionsChange).not.toHaveBeenCalled();
@@ -188,14 +189,14 @@ describe('Table component', () => {
           columnConfigs: buildColumns(),
           data: rows,
           selections: TableCdkRowUtil.buildInitialRowStates(rows),
-          selectionsChange: mockSelectionsChange
-        }
-      }
+          selectionsChange: mockSelectionsChange,
+        },
+      },
     );
 
     spectator.triggerEventHandler(PaginatorComponent, 'pageChange', {
       pageIndex: 1,
-      pageSize: 50
+      pageSize: 50,
     });
 
     expect(mockSelectionsChange).toHaveBeenCalledWith([]);
@@ -212,23 +213,23 @@ describe('Table component', () => {
           columnConfigs: buildColumns(),
           data: buildData(),
           syncWithUrl: true,
-          pageChange: mockPageChange
-        }
-      }
+          pageChange: mockPageChange,
+        },
+      },
     );
 
     spectator.triggerEventHandler(PaginatorComponent, 'pageChange', {
       pageIndex: 1,
-      pageSize: 50
+      pageSize: 50,
     });
 
     expect(spectator.inject(NavigationService).addQueryParametersToUrl).toHaveBeenCalledWith({
       page: 1,
-      'page-size': 50
+      'page-size': 50,
     });
     expect(mockPageChange).toHaveBeenCalledWith({
       pageIndex: 1,
-      pageSize: 50
+      pageSize: 50,
     });
     flush();
   }));
@@ -238,18 +239,18 @@ describe('Table component', () => {
       hostProps: {
         columnConfigs: buildColumns(),
         data: buildData(),
-        syncWithUrl: true
+        syncWithUrl: true,
       },
       providers: [
         mockProvider(ActivatedRoute, {
           queryParamMap: of(
             convertToParamMap({
               page: 1,
-              'page-size': 100
-            })
-          )
-        })
-      ]
+              'page-size': 100,
+            }),
+          ),
+        }),
+      ],
     });
 
     const paginator = spectator.query(PaginatorComponent);
@@ -263,18 +264,18 @@ describe('Table component', () => {
       hostProps: {
         columnConfigs: buildColumns(),
         data: buildData(),
-        syncWithUrl: true
+        syncWithUrl: true,
       },
       providers: [
         mockProvider(ActivatedRoute, {
           queryParamMap: of(
             convertToParamMap({
               'sort-by': 'firstId',
-              'sort-direction': TableSortDirection.Ascending
-            })
-          )
-        })
-      ]
+              'sort-direction': TableSortDirection.Ascending,
+            }),
+          ),
+        }),
+      ],
     });
     spectator.tick();
 
@@ -282,8 +283,8 @@ describe('Table component', () => {
       expectObservable(spectator.component.columnConfigs$.pipe(map(columns => columns[0]))).toBe('x', {
         x: expect.objectContaining({
           sort: TableSortDirection.Ascending,
-          id: 'firstId'
-        })
+          id: 'firstId',
+        }),
       });
     });
     flush();
@@ -295,8 +296,8 @@ describe('Table component', () => {
       hostProps: {
         columnConfigs: columns,
         data: buildData(),
-        syncWithUrl: false
-      }
+        syncWithUrl: false,
+      },
     });
 
     spectator.component.onSortChange(TableSortDirection.Ascending, columns[0]);
@@ -311,15 +312,15 @@ describe('Table component', () => {
       hostProps: {
         columnConfigs: columns,
         data: buildData(),
-        syncWithUrl: true
-      }
+        syncWithUrl: true,
+      },
     });
 
     spectator.component.onSortChange(TableSortDirection.Ascending, columns[0]);
 
     expect(spectator.inject(NavigationService).addQueryParametersToUrl).toHaveBeenCalledWith({
       'sort-by': 'firstId',
-      'sort-direction': TableSortDirection.Ascending
+      'sort-direction': TableSortDirection.Ascending,
     });
     flush();
   }));
@@ -333,9 +334,9 @@ describe('Table component', () => {
           columnConfigs: columns,
           data: buildData(),
           selectionMode: TableSelectionMode.Multiple,
-          mode: TableMode.Flat
-        }
-      }
+          mode: TableMode.Flat,
+        },
+      },
     );
     spectator.tick();
 
@@ -345,15 +346,15 @@ describe('Table component', () => {
           expect.objectContaining({
             id: '$$selected',
             display: CoreTableCellRendererType.Checkbox,
-            visible: true
+            visible: true,
           }),
           expect.objectContaining({
-            id: 'firstId'
+            id: 'firstId',
           }),
           expect.objectContaining({
-            id: 'secondId'
-          })
-        ]
+            id: 'secondId',
+          }),
+        ],
       });
     });
   }));
@@ -367,9 +368,9 @@ describe('Table component', () => {
           columnConfigs: columns,
           data: buildData(),
           selectionMode: TableSelectionMode.Single,
-          mode: TableMode.Flat
-        }
-      }
+          mode: TableMode.Flat,
+        },
+      },
     );
     spectator.tick();
 
@@ -377,12 +378,12 @@ describe('Table component', () => {
       expectObservable(spectator.component.columnConfigs$).toBe('x', {
         x: [
           expect.objectContaining({
-            id: 'firstId'
+            id: 'firstId',
           }),
           expect.objectContaining({
-            id: 'secondId'
-          })
-        ]
+            id: 'secondId',
+          }),
+        ],
       });
     });
   }));
@@ -396,19 +397,19 @@ describe('Table component', () => {
           columnConfigs: columns,
           data: buildData(),
           selectionMode: TableSelectionMode.Multiple,
-          mode: TableMode.Tree
-        }
-      }
+          mode: TableMode.Tree,
+        },
+      },
     );
     spectator.tick();
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
         spectator.component.columnConfigs$.pipe(
-          map(columnConfigs => columnConfigs.map(columnConfig => spectator.component.isExpanderColumn(columnConfig)))
-        )
+          map(columnConfigs => columnConfigs.map(columnConfig => spectator.component.isExpanderColumn(columnConfig))),
+        ),
       ).toBe('x', {
-        x: [false, true, false, false]
+        x: [false, true, false, false],
       });
 
       expectObservable(spectator.component.columnConfigs$).toBe('x', {
@@ -416,20 +417,20 @@ describe('Table component', () => {
           expect.objectContaining({
             id: '$$selected',
             display: CoreTableCellRendererType.Checkbox,
-            visible: true
+            visible: true,
           }),
           expect.objectContaining({
             id: '$$expanded',
             display: CoreTableCellRendererType.RowExpander,
-            visible: true
+            visible: true,
           }),
           expect.objectContaining({
-            id: 'firstId'
+            id: 'firstId',
           }),
           expect.objectContaining({
-            id: 'secondId'
-          })
-        ]
+            id: 'secondId',
+          }),
+        ],
       });
     });
   }));
@@ -446,9 +447,9 @@ describe('Table component', () => {
           data: buildData(),
           selectionMode: TableSelectionMode.Multiple,
           mode: TableMode.Flat,
-          selectionsChange: mockSelectionsChange
-        }
-      }
+          selectionsChange: mockSelectionsChange,
+        },
+      },
     );
 
     const row: StatefulTableRow = {
@@ -458,8 +459,8 @@ describe('Table component', () => {
         selected: false,
         root: false,
         leaf: true,
-        depth: 1
-      }
+        depth: 1,
+      },
     };
 
     spectator.component.toggleRowSelected(row);
@@ -483,9 +484,9 @@ describe('Table component', () => {
           data: rows,
           selectionMode: TableSelectionMode.Multiple,
           mode: TableMode.Flat,
-          selections: statefulRows
-        }
-      }
+          selections: statefulRows,
+        },
+      },
     );
 
     spectator.tick();
@@ -515,9 +516,9 @@ describe('Table component', () => {
           data: rows,
           selectionMode: TableSelectionMode.Single,
           mode: TableMode.Flat,
-          selections: [statefulRows[0]]
-        }
-      }
+          selections: [statefulRows[0]],
+        },
+      },
     );
 
     expect(spectator.component.shouldHighlightRowAsSelection(statefulRows[0])).toBeTruthy();
@@ -538,9 +539,9 @@ describe('Table component', () => {
           data: rows,
           selectionMode: TableSelectionMode.Multiple,
           mode: TableMode.Flat,
-          selections: [statefulRows[0]]
-        }
-      }
+          selections: [statefulRows[0]],
+        },
+      },
     );
 
     expect(spectator.component.shouldHighlightRowAsSelection(statefulRows[0])).toBeTruthy();
@@ -553,9 +554,9 @@ describe('Table component', () => {
       hostProps: {
         columnConfigs: buildColumns(),
         data: {
-          getData: buildData
-        }
-      }
+          getData: buildData,
+        },
+      },
     });
     spectator.tick();
 
@@ -566,26 +567,26 @@ describe('Table component', () => {
       preventDefault: () => {
         /* No-op */
       },
-      target: resizeHandlerElem
+      target: resizeHandlerElem,
     };
 
     spectator.component.headerRowElement = {
       nativeElement: {
         offsetLeft: 0,
-        offsetWidth: 300
-      } as HTMLElement
+        offsetWidth: 300,
+      } as HTMLElement,
     };
 
     spectator.component.queryHeaderCellElement = (index: number) =>
       [
         {
           offsetLeft: 0,
-          offsetWidth: 100
+          offsetWidth: 100,
         },
         {
           offsetLeft: 100,
-          offsetWidth: 200
-        }
+          offsetWidth: 200,
+        },
       ][index] as HTMLElement;
 
     spectator.component.onResizeMouseDown((mouseEvent as unknown) as MouseEvent, 1);
@@ -597,12 +598,12 @@ describe('Table component', () => {
       expectObservable(spectator.component.columnConfigs$).toBe('x', {
         x: [
           expect.objectContaining({
-            width: 100
+            width: 100,
           }),
           expect.objectContaining({
-            width: '200px'
-          })
-        ]
+            width: '200px',
+          }),
+        ],
       });
     });
     flush();
@@ -614,10 +615,10 @@ describe('Table component', () => {
       columns: [
         {
           id: 'firstId',
-          visible: false
+          visible: false,
         },
-        { id: 'secondId', visible: true }
-      ]
+        { id: 'secondId', visible: true },
+      ],
     };
     const spectator = createHost(
       '<ht-table id="test-table" [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
@@ -626,17 +627,17 @@ describe('Table component', () => {
           columnConfigs: columns,
           data: buildData(),
           selectionMode: TableSelectionMode.Single,
-          mode: TableMode.Flat
+          mode: TableMode.Flat,
         },
         providers: [
           mockProvider(PreferenceService, {
             getOnce: jest.fn().mockReturnValue(localStorageOverride),
             set: jest.fn().mockImplementation((_key: string, value: PreferenceValue, _storageType: StorageType) => {
               localStorageOverride = value;
-            })
-          })
-        ]
-      }
+            }),
+          }),
+        ],
+      },
     );
     spectator.tick();
 
@@ -645,20 +646,20 @@ describe('Table component', () => {
         x: [
           expect.objectContaining({
             id: 'firstId',
-            visible: false
+            visible: false,
           }),
           expect.objectContaining({
             id: 'secondId',
-            visible: true
-          })
-        ]
+            visible: true,
+          }),
+        ],
       });
     });
 
     expect(spectator.inject(PreferenceService).getOnce).toHaveBeenLastCalledWith(
       'test-table',
       { columns: [] },
-      StorageType.Local
+      StorageType.Local,
     );
     flush();
   }));
@@ -666,7 +667,7 @@ describe('Table component', () => {
   test('should save user preferences for columns when a column is hidden', fakeAsync(() => {
     const columns = buildColumns();
     let localStorageOverride: PreferenceValue = {
-      columns: []
+      columns: [],
     };
     const spectator = createHost(
       '<ht-table id="test-table" [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
@@ -675,17 +676,17 @@ describe('Table component', () => {
           columnConfigs: columns,
           data: buildData(),
           selectionMode: TableSelectionMode.Single,
-          mode: TableMode.Flat
+          mode: TableMode.Flat,
         },
         providers: [
           mockProvider(PreferenceService, {
             getOnce: jest.fn().mockReturnValue(localStorageOverride),
             set: jest.fn().mockImplementation((_key: string, value: PreferenceValue, _storageType: StorageType) => {
               localStorageOverride = value;
-            })
-          })
-        ]
-      }
+            }),
+          }),
+        ],
+      },
     );
     spectator.component.onHideColumn({ ...columns[0] });
     spectator.tick();
@@ -695,15 +696,15 @@ describe('Table component', () => {
         columns: expect.arrayContaining([
           {
             id: 'firstId',
-            visible: false
+            visible: false,
           },
           {
             id: 'secondId',
-            visible: true
-          }
-        ])
+            visible: true,
+          },
+        ]),
       },
-      StorageType.Local
+      StorageType.Local,
     );
 
     flush();
@@ -712,7 +713,7 @@ describe('Table component', () => {
   test('should save user preferences for columns when columns are edited', fakeAsync(() => {
     const columns = buildColumns();
     let localStorageOverride: PreferenceValue = {
-      columns: []
+      columns: [],
     };
     const spectator = createHost(
       '<ht-table id="test-table" [columnConfigs]="columnConfigs" [data]="data" [selectionMode]="selectionMode" [mode]="mode"></ht-table>',
@@ -721,20 +722,20 @@ describe('Table component', () => {
           columnConfigs: columns,
           data: buildData(),
           selectionMode: TableSelectionMode.Single,
-          mode: TableMode.Flat
+          mode: TableMode.Flat,
         },
         providers: [
           mockProvider(PreferenceService, {
             getOnce: jest.fn().mockReturnValue(localStorageOverride),
             set: jest.fn().mockImplementation((_key: string, value: PreferenceValue, _storageType: StorageType) => {
               localStorageOverride = value;
-            })
+            }),
           }),
           mockProvider(ModalService, {
-            createModal: jest.fn().mockReturnValue({ closed$: of([columns[0], { ...columns[1], visible: false }]) })
-          })
-        ]
-      }
+            createModal: jest.fn().mockReturnValue({ closed$: of([columns[0], { ...columns[1], visible: false }]) }),
+          }),
+        ],
+      },
     );
     spectator.tick();
     spectator.component.showEditColumnsModal();
@@ -745,15 +746,15 @@ describe('Table component', () => {
         columns: expect.arrayContaining([
           {
             id: 'firstId',
-            visible: true
+            visible: true,
           },
           {
             id: 'secondId',
-            visible: false
-          }
-        ])
+            visible: false,
+          },
+        ]),
       },
-      StorageType.Local
+      StorageType.Local,
     );
 
     flush();
@@ -771,10 +772,10 @@ describe('Table component', () => {
           mode: TableMode.Flat,
           csvDownloadConfig: {
             limit: 1000,
-            fileName: 'different-name.csv'
-          }
-        }
-      }
+            fileName: 'different-name.csv',
+          },
+        },
+      },
     );
     spectator.tick();
 
@@ -782,7 +783,7 @@ describe('Table component', () => {
     expect(spectator.inject(TableCsvDownloaderService).executeDownload).toHaveBeenCalledTimes(1);
     expect(spectator.inject(TableCsvDownloaderService).executeDownload).toHaveBeenCalledWith(
       expect.anything(),
-      'different-name.csv'
+      'different-name.csv',
     );
 
     // This should not trigger a download event in this table.

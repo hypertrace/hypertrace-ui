@@ -6,6 +6,6 @@ import { IntervalSelectComponent } from './interval-select.component';
 @NgModule({
   declarations: [IntervalSelectComponent],
   exports: [IntervalSelectComponent],
-  imports: [SelectModule, CommonModule]
+  imports: [SelectModule, CommonModule],
 })
 export class IntervalSelectModule {}

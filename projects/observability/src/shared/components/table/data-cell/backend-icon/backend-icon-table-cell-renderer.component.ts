@@ -10,11 +10,11 @@ import { ObservabilityTableCellType } from '../../observability-table-cell-type'
     <div class="icon-cell" [ngClass]="{ clickable: this.clickable }">
       <ht-icon class="icon" [icon]="this.value" size="${IconSize.Medium}" [showTooltip]="true"></ht-icon>
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: ObservabilityTableCellType.BackendIcon,
   alignment: TableCellAlignmentType.Center,
-  parser: ObservabilityTableCellType.BackendIcon
+  parser: ObservabilityTableCellType.BackendIcon,
 })
 export class BackendIconTableCellRendererComponent extends TableCellRendererBase<string> {}

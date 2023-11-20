@@ -5,20 +5,20 @@ export class NumericFormatter {
     { minimumValue: 1000, suffix: 'K', unitValue: 1000 },
     { minimumValue: 1000000, suffix: 'M', unitValue: 1000000 },
     { minimumValue: 1000000000, suffix: 'B', unitValue: 1000000000 },
-    { minimumValue: 1000000000000, suffix: 'T', unitValue: 1000000000000 }
+    { minimumValue: 1000000000000, suffix: 'T', unitValue: 1000000000000 },
   ];
 
   private static readonly DEFAULT_THRESHOLD: NumericFormatterThreshold = {
     minimumValue: -Infinity,
     suffix: '',
-    unitValue: 1
+    unitValue: 1,
   };
 
   private static readonly DEFAULT_OPTIONS: Readonly<Required<NumericFormatterOptions>> = {
     trailingUnscaledDigits: 1,
     trailingScaledDigits: 1,
     trimTrailingZeros: true,
-    thresholds: [...NumericFormatter.STANDARD_VALUES]
+    thresholds: [...NumericFormatter.STANDARD_VALUES],
   };
 
   protected readonly options: Readonly<Required<NumericFormatterOptions>>;
@@ -87,12 +87,12 @@ export class NumericFormatter {
 export const integerFormatter = new NumericFormatter({
   trailingScaledDigits: 2,
   trailingUnscaledDigits: 0,
-  trimTrailingZeros: false
+  trimTrailingZeros: false,
 });
 export const floatFormatter = new NumericFormatter({
   trailingScaledDigits: 2,
   trailingUnscaledDigits: 2,
-  trimTrailingZeros: false
+  trimTrailingZeros: false,
 });
 
 interface NumericFormatterOptions {

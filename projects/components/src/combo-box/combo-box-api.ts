@@ -13,5 +13,5 @@ export interface ComboBoxResult<TValue = string> {
 export const enum ComboBoxMode {
   // These values are used in css
   Input = 'input',
-  Chip = 'chip'
+  Chip = 'chip',
 }
