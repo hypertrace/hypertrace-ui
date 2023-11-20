@@ -181,9 +181,8 @@ export class ExplorerComponent implements OnInit {
     return contextItems.find(item => value === item.value.scopeQueryParam) || contextItems[0];
   }
 
-  protected getQueryParamFromContext(context: string, contextItems: ExplorerContextToggleItem[]): string {
-    return (contextItems?.find(contextItem => contextItem.value.dashboardContext === context) ?? contextItems[0]).value
-      .scopeQueryParam;
+  protected getQueryParamFromContext(context: string, contextItems: ExplorerContextToggleItem[]): string | undefined {
+    return contextItems?.find(contextItem => contextItem.value.dashboardContext === context)?.value.scopeQueryParam;
   }
 
   public onContextUpdated(contextWrapper: ExplorerContextScope): void {
