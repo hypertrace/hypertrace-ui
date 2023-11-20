@@ -38,7 +38,7 @@ import { isEmpty, uniq } from 'lodash-es';
       class="ht-search-box"
       [ngClass]="this.displayMode"
       [class.focused]="this.isFocused"
-      [class.with-search-history]="this.enableSearchHistory"
+      [class.collapsable]="this.collapsable"
       [class.has-value]="!(this.value | htIsEmpty)"
     >
       <ht-icon
@@ -112,6 +112,9 @@ export class SearchBoxComponent implements OnInit, OnChanges {
 
   @Input()
   public enableSearchHistory: boolean = false; // Experimental
+
+  @Input()
+  public collapsable: boolean = false;
 
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
