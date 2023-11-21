@@ -19,21 +19,27 @@ export class TopologyNodeDrag extends TopologyEventBehavior {
    */
   public addDragBehavior(
     topologyData: RenderableTopology<TopologyNode, TopologyEdge>,
-    nodeRenderer: TopologyNodeRenderer
+    nodeRenderer: TopologyNodeRenderer,
+    supportGroupNode: boolean
   ): Observable<TopologyDragEvent> {
     if (topologyData.nodes.length === 0) {
       return EMPTY;
     }
 
-    const childUserNodesOfGroup = topologyData.nodes
-      .filter(n => TopologyGroupNodeUtil.isTopologyGroupNode(n.userNode))
-      .flatMap(n => (n.userNode as TopologyGroupNode).children);
-    const childRenderableNodesOfGroup = topologyData.nodes.filter(n => childUserNodesOfGroup.includes(n.userNode));
+    let nodeLookup = this.buildLookupMap(topologyData.nodes, node => nodeRenderer.getElementForNode(node));
 
-    const nodeLookup = this.buildLookupMap(
-      topologyData.nodes.filter(n => !childRenderableNodesOfGroup.includes(n)),
-      node => nodeRenderer.getElementForNode(node)
-    );
+    if (supportGroupNode) {
+      const childUserNodesOfGroup = topologyData.nodes
+        .filter(n => TopologyGroupNodeUtil.isTopologyGroupNode(n.userNode))
+        .flatMap(n => (n.userNode as TopologyGroupNode).children);
+      const childRenderableNodesOfGroup = topologyData.nodes.filter(n => childUserNodesOfGroup.includes(n.userNode));
+
+      nodeLookup = this.buildLookupMap(
+        topologyData.nodes.filter(n => !childRenderableNodesOfGroup.includes(n)),
+        node => nodeRenderer.getElementForNode(node)
+      );
+    }
+
     const dragSubect = new Subject<TopologyDragEvent>();
 
     this.d3Utils.selectAll(Array.from(nodeLookup.keys()), this.domRenderer).call(

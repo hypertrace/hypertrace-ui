@@ -18,7 +18,8 @@ export class TopologyConverter {
     stateManager: TopologyStateManager,
     nodeRenderer: TopologyNodeRenderer,
     domRenderer: Renderer2,
-    oldTopology?: RenderableTopology<TopologyNode, TopologyEdge>
+    oldTopology?: RenderableTopology<TopologyNode, TopologyEdge>,
+    supportGroupNode: boolean = false
   ): RenderableTopology<TopologyNode, TopologyEdge> {
     const renderableNodeMap = this.buildRenderableNodeMap(
       nodes,
@@ -31,7 +32,13 @@ export class TopologyConverter {
 
     return {
       nodes: Array.from(renderableNodeMap.values()),
-      edges: this.convertEdgesToRenderableEdges(uniqueEdges, renderableNodeMap, domRenderer, stateManager),
+      edges: this.convertEdgesToRenderableEdges(
+        uniqueEdges,
+        renderableNodeMap,
+        domRenderer,
+        stateManager,
+        supportGroupNode
+      ),
       neighborhood: {
         nodes: nodes,
         edges: uniqueEdges
@@ -89,17 +96,23 @@ export class TopologyConverter {
     edges: TopologyEdge[],
     nodeMap: Map<TopologyNode, RenderableTopologyNode>,
     domRenderer: Renderer2,
-    stateManager: TopologyStateManager
+    stateManager: TopologyStateManager,
+    supportGroupNode: boolean = false
   ): RenderableTopologyEdge[] {
-    return edges
-      .filter(edge => nodeMap.get(edge.fromNode) !== undefined && nodeMap.get(edge.toNode) !== undefined)
-      .filter(edge => this.handleEdgeFilteringBasedOnGroupNode(edge))
-      .map(edge => {
-        const sourceNode = nodeMap.get(edge.fromNode)!;
-        const targetNode = nodeMap.get(edge.toNode)!;
+    let filteredEdges = edges;
 
-        return this.buildNewTopologyEdge(edge, sourceNode, targetNode, stateManager.getEdgeState(edge), domRenderer);
-      });
+    if (supportGroupNode) {
+      filteredEdges = edges
+        .filter(edge => nodeMap.get(edge.fromNode) !== undefined && nodeMap.get(edge.toNode) !== undefined)
+        .filter(edge => this.handleEdgeFilteringBasedOnGroupNode(edge));
+    }
+
+    return filteredEdges.map(edge => {
+      const sourceNode = nodeMap.get(edge.fromNode)!;
+      const targetNode = nodeMap.get(edge.toNode)!;
+
+      return this.buildNewTopologyEdge(edge, sourceNode, targetNode, stateManager.getEdgeState(edge), domRenderer);
+    });
   }
 
   private handleEdgeFilteringBasedOnGroupNode(edge: TopologyEdge): boolean {
