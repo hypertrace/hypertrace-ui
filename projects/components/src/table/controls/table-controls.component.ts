@@ -7,7 +7,7 @@ import {
   IterableDiffers,
   OnChanges,
   Output,
-  TemplateRef
+  TemplateRef,
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
@@ -23,7 +23,7 @@ import {
   TableCheckboxControl,
   TableSelectChange,
   TableSelectControl,
-  TableSelectControlOption
+  TableSelectControlOption,
 } from './table-controls-api';
 
 @Component({
@@ -123,7 +123,7 @@ import {
         </ng-container>
       </div>
     </div>
-  `
+  `,
 })
 export class TableControlsComponent implements OnChanges {
   public readonly DEFAULT_SEARCH_PLACEHOLDER: string = 'Search...';
@@ -214,7 +214,7 @@ export class TableControlsComponent implements OnChanges {
     this.selectControls?.forEach(selectControl => {
       this.selectSelections.set(
         selectControl,
-        selectControl.options.filter(option => option.applied)
+        selectControl.options.filter(option => option.applied),
       );
     });
   }
@@ -246,21 +246,21 @@ export class TableControlsComponent implements OnChanges {
 
     this.selectChange.emit({
       select: selectControl,
-      values: selections
+      values: selections,
     });
     this.diffSelections();
   }
 
   private applySelections(selectControl: TableSelectControl, selections: TableSelectControlOption[]): void {
     selectControl.options.forEach(
-      option => (option.applied = selections.find(selection => isEqual(selection, option)) !== undefined)
+      option => (option.applied = selections.find(selection => isEqual(selection, option)) !== undefined),
     );
   }
 
   public onSelectChange(selectControl: TableSelectControl, selection?: TableSelectControlOption): void {
     this.selectChange.emit({
       select: selectControl,
-      values: !isNil(selection) ? [selection] : []
+      values: !isNil(selection) ? [selection] : [],
     });
     this.diffSelections();
   }
@@ -273,24 +273,24 @@ export class TableControlsComponent implements OnChanges {
 
     diff.forEachAddedItem(addedItem => {
       const found: TableCheckboxControl | undefined = this.checkboxControls?.find(
-        control => control.label === addedItem.item
+        control => control.label === addedItem.item,
       );
       if (found) {
         this.checkboxChange.emit({
           checkbox: found,
-          option: found.options[0] // First index is always the true option
+          option: found.options[0], // First index is always the true option
         });
       }
     });
 
     diff.forEachRemovedItem(removedItem => {
       const found: TableCheckboxControl | undefined = this.checkboxControls?.find(
-        control => control.label === removedItem.item
+        control => control.label === removedItem.item,
       );
       if (found) {
         this.checkboxChange.emit({
           checkbox: found,
-          option: found.options[1] // Second index is always the false option
+          option: found.options[1], // Second index is always the false option
         });
       }
     });

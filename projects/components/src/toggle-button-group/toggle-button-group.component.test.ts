@@ -13,7 +13,7 @@ describe('Toggle Button Group Component', () => {
     declareComponent: false,
     component: ToggleButtonGroupComponent,
     imports: [ToggleButtonModule, IconModule, LabelModule, RouterTestingModule],
-    providers: []
+    providers: [],
   });
 
   test('should show two toggle buttons', fakeAsync(() => {
@@ -26,9 +26,9 @@ describe('Toggle Button Group Component', () => {
     `,
       {
         hostProps: {
-          labels: labels
-        }
-      }
+          labels: labels,
+        },
+      },
     );
 
     spectator.tick();
@@ -53,9 +53,9 @@ describe('Toggle Button Group Component', () => {
     `,
       {
         hostProps: {
-          labels: labels
-        }
-      }
+          labels: labels,
+        },
+      },
     );
 
     spectator.tick();
@@ -74,9 +74,9 @@ describe('Toggle Button Group Component', () => {
       {
         hostProps: {
           selectedLabel: 'Raw',
-          labels: ['Parsed', 'Raw']
-        }
-      }
+          labels: ['Parsed', 'Raw'],
+        },
+      },
     );
 
     spectator.tick();
@@ -96,9 +96,9 @@ describe('Toggle Button Group Component', () => {
     `,
       {
         hostProps: {
-          labels: labels
-        }
-      }
+          labels: labels,
+        },
+      },
     );
 
     spectator.tick();
@@ -131,9 +131,9 @@ describe('Toggle Button Group Component', () => {
       {
         hostProps: {
           labels: ['Parsed', 'Raw'],
-          selectedLabelChange: spySelectionChange
-        }
-      }
+          selectedLabelChange: spySelectionChange,
+        },
+      },
     );
 
     spectator.tick();
@@ -157,9 +157,9 @@ describe('Toggle Button Group Component', () => {
       {
         hostProps: {
           labels: ['Parsed', 'Raw'],
-          disabled: true
-        }
-      }
+          disabled: true,
+        },
+      },
     );
 
     spectator.tick();
@@ -177,9 +177,9 @@ describe('Toggle Button Group Component', () => {
     `,
       {
         hostProps: {
-          labels: ['Parsed', 'Raw']
-        }
-      }
+          labels: ['Parsed', 'Raw'],
+        },
+      },
     );
 
     spectator.tick();

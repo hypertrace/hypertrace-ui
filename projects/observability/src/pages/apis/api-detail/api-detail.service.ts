@@ -25,5 +25,5 @@ export interface ApiEntity extends Entity {
 
 export const enum ApiType {
   Http = 'HTTP',
-  Grpc = 'GRPC'
+  Grpc = 'GRPC',
 }

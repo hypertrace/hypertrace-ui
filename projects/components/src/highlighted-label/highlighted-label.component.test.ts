@@ -8,7 +8,7 @@ describe('Highlighted Label component', () => {
   const createHost = createHostFactory({
     declareComponent: false,
     component: HighlightedLabelComponent,
-    imports: [HighlightedLabelModule]
+    imports: [HighlightedLabelModule],
   });
 
   test('should render interpolated string correctly', () => {
@@ -17,16 +17,16 @@ describe('Highlighted Label component', () => {
       {
         hostProps: {
           data: { a: 'first value', b: 2 },
-          templateString: 'test {a} and {b}'
-        }
-      }
+          templateString: 'test {a} and {b}',
+        },
+      },
     );
 
     expect(spectator.component.tokens).toEqual([
       { value: 'test ', highlight: false },
       { value: 'first value', highlight: true },
       { value: ' and ', highlight: false },
-      { value: '2', highlight: true }
+      { value: '2', highlight: true },
     ]);
 
     const highlightedSections = spectator.queryAll('.highlight');

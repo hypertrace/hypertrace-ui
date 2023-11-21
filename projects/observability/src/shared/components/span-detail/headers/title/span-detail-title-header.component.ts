@@ -41,7 +41,7 @@ import { SpanTitle } from '../../span-title';
         </ht-button>
       </div>
     </div>
-  `
+  `,
 })
 export class SpanDetailTitleHeaderComponent implements OnChanges {
   @Input()

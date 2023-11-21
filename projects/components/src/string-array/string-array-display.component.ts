@@ -14,7 +14,7 @@ import { XMoreDisplay } from '../x-more/x-more.component';
         <div *ngFor="let value of this.values">{{ value }}</div>
       </ng-template>
     </div>
-  `
+  `,
 })
 export class StringArrayDisplayComponent {
   @Input()

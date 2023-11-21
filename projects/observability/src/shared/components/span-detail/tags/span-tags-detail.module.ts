@@ -7,7 +7,7 @@ import {
   LetAsyncModule,
   ListViewModule,
   LoadAsyncModule,
-  TooltipModule
+  TooltipModule,
 } from '@hypertrace/components';
 import { SpanTagsDetailComponent } from './span-tags-detail.component';
 
@@ -20,9 +20,9 @@ import { SpanTagsDetailComponent } from './span-tags-detail.component';
     LetAsyncModule,
     LoadAsyncModule,
     MemoizeModule,
-    TooltipModule
+    TooltipModule,
   ],
   declarations: [SpanTagsDetailComponent],
-  exports: [SpanTagsDetailComponent]
+  exports: [SpanTagsDetailComponent],
 })
 export class SpanTagsDetailModule {}

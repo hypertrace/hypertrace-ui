@@ -44,7 +44,7 @@ export class RadarSeriesRendererService {
   private drawPoints(
     seriesSelections: SeriesSVGGSelection,
     axisDataMap: Map<string, RadarAxisData>,
-    onPointClicked: (point: RadarPoint, seriesName: string) => void
+    onPointClicked: (point: RadarPoint, seriesName: string) => void,
   ): void {
     const pointsSelection = seriesSelections
       .filter(series => series.showPoints)
@@ -95,7 +95,7 @@ export class RadarSeriesRendererService {
         radarPoint: radarPoint,
         seriesName: series.name,
         axisData: axisData,
-        coordinates: this.getPointCoordinates(axisData, radarPoint)
+        coordinates: this.getPointCoordinates(axisData, radarPoint),
       };
     });
   }

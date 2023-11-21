@@ -8,7 +8,7 @@ import { SelectOption } from './select-option';
 @Component({
   selector: 'ht-select-option',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ``
+  template: ``,
 })
 export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
   @Input()
@@ -60,5 +60,5 @@ export class SelectOptionComponent<V> implements OnChanges, SelectOption<V> {
 
 export const enum SelectOptionStyle {
   Default = 'default',
-  Primary = 'primary'
+  Primary = 'primary',
 }

@@ -15,7 +15,7 @@ describe('Trace Details Page Component', () => {
     type: 'trace-type',
     timeString: 'test-time-string',
     titleString: 'test-title',
-    startTime: 'test-start-time'
+    startTime: 'test-start-time',
   };
 
   const createComponent = createComponentFactory({
@@ -24,16 +24,16 @@ describe('Trace Details Page Component', () => {
     providers: [
       mockProvider(NavigationService),
       mockProvider(ExplorerService, {
-        buildNavParamsWithFilters: jest.fn().mockReturnValue(of('traceId_eq_test-123'))
-      })
+        buildNavParamsWithFilters: jest.fn().mockReturnValue(of('traceId_eq_test-123')),
+      }),
     ],
     imports: [LoadAsyncModule, MemoizeModule],
     componentProviders: [
       mockProvider(TraceDetailService, {
-        fetchTraceDetails: jest.fn().mockReturnValue(of(mockTraceDetails))
-      })
+        fetchTraceDetails: jest.fn().mockReturnValue(of(mockTraceDetails)),
+      }),
     ],
-    declarations: [MockComponent(ExploreFilterLinkComponent)]
+    declarations: [MockComponent(ExploreFilterLinkComponent)],
   });
 
   test('should render content correctly', fakeAsync(() => {

@@ -7,6 +7,6 @@ import { CollapsibleSidebarComponent } from './collapsible-sidebar.component';
 @NgModule({
   imports: [CommonModule, IconModule, EventBlockerModule],
   declarations: [CollapsibleSidebarComponent],
-  exports: [CollapsibleSidebarComponent]
+  exports: [CollapsibleSidebarComponent],
 })
 export class CollapsibleSidebarModule {}

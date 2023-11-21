@@ -6,7 +6,7 @@ import {
   Input,
   OnChanges,
   Output,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { RecursivePartial, TypedSimpleChanges } from '@hypertrace/common';
 import { minBy } from 'lodash-es';
@@ -18,7 +18,7 @@ import { SequenceObject } from './sequence-object';
   selector: 'ht-sequence-chart',
   styleUrls: ['./sequence-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <div class="ht-sequence-chart" (htLayoutChange)="this.buildChart()" #chartContainer></div> `
+  template: ` <div class="ht-sequence-chart" (htLayoutChange)="this.buildChart()" #chartContainer></div> `,
 })
 export class SequenceChartComponent implements OnChanges {
   @Input()
@@ -89,7 +89,7 @@ export class SequenceChartComponent implements OnChanges {
   public buildChart(): void {
     this.sequenceObject = this.sequenceChartService.buildChart(
       this.chartContainer.nativeElement,
-      this.buildSequenceOptions()
+      this.buildSequenceOptions(),
     );
   }
 
@@ -104,7 +104,7 @@ export class SequenceChartComponent implements OnChanges {
       unit: this.unit,
       onSegmentSelected: (segment?: SequenceSegment) => this.onSegmentSelected(segment),
       onSegmentHovered: (segment?: SequenceSegment) => this.onSegmentHovered(segment),
-      onMarkerHovered: (datum?: MarkerDatum) => this.onMarkerHovered(datum)
+      onMarkerHovered: (datum?: MarkerDatum) => this.onMarkerHovered(datum),
     };
   }
 
@@ -122,7 +122,7 @@ export class SequenceChartComponent implements OnChanges {
       color: segment.color,
       markers: segment.markers
         .map((marker: Marker) => ({ ...marker, markerTime: marker.markerTime - minStart }))
-        .sort((marker1, marker2) => marker1.markerTime - marker2.markerTime)
+        .sort((marker1, marker2) => marker1.markerTime - marker2.markerTime),
     }));
   }
 

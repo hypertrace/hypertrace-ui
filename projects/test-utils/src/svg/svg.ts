@@ -2,11 +2,11 @@ export const addWidthAndHeightToSvgElForTest = (el: SVGSVGElement, width: number
   // Certain D3 internals require measurements on elements, which JSDom does not provide. patch them here.
   const makeLength = (length: number): SVGAnimatedLength => ({
     baseVal: {
-      value: length
+      value: length,
     } as SVGLength,
     animVal: {
-      value: length
-    } as SVGLength
+      value: length,
+    } as SVGLength,
   });
 
   const writableSvg: Writeable<SVGSVGElement> = el;

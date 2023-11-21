@@ -25,7 +25,7 @@ export const enum ModalSize {
   LargeTall = 'large-tall',
   MediumWide = 'medium-wide',
   LargeWide = 'large-wide',
-  ExpandTo90 = 'expand-to-90'
+  ExpandTo90 = 'expand-to-90',
 }
 
 export interface ModalDimension {
@@ -63,7 +63,7 @@ export const getModalDimensions = (modalSize: ModalSize): ModalDimension => {
 
 const getModalDimensionObject = (width: number | string, height: number | string): ModalDimension => ({
   width: width,
-  height: height
+  height: height,
 });
 
 export const MODAL_DATA = new InjectionToken<unknown>('MODAL_DATA');

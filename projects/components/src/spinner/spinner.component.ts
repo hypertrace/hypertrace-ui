@@ -32,7 +32,7 @@ import { IconSize } from '../icon/icon-size';
         <ht-label [label]="this.loadingLabel" class="label"></ht-label>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class SpinnerComponent implements OnChanges {
   @Input()
@@ -63,18 +63,18 @@ export class SpinnerComponent implements OnChanges {
       ignoreElements(),
       startWith(SpinnerAsyncState.Loading),
       endWith(SpinnerAsyncState.Success),
-      catchError(() => of(SpinnerAsyncState.Error))
+      catchError(() => of(SpinnerAsyncState.Error)),
     );
   }
 }
 
 export const enum SpinnerTheme {
   Dark = 'dark',
-  Light = 'light'
+  Light = 'light',
 }
 
 export const enum SpinnerAsyncState {
   Loading = 'loading',
   Error = 'error',
-  Success = 'success'
+  Success = 'success',
 }

@@ -10,20 +10,20 @@ export abstract class RadarDataSourceModel extends GraphQlDataSourceModel<RadarW
 
   public getData(): Observable<RadarWidgetDataFetcher> {
     return of({
-      getData: (previousTimeDuration: TimeDuration) => this.fetchComparisonData(previousTimeDuration)
+      getData: (previousTimeDuration: TimeDuration) => this.fetchComparisonData(previousTimeDuration),
     });
   }
 
   protected buildRadarPoint(axis: string, value: number): RadarPoint {
     return {
       axis: axis,
-      value: value
+      value: value,
     };
   }
 
   private fetchComparisonData(previousTimeDuration: TimeDuration): Observable<RadarComparisonData> {
     return forkJoinSafeEmpty([this.fetchCurrentData(), this.fetchPreviousData(previousTimeDuration)]).pipe(
-      map(combinedData => this.buildComparisonData(combinedData[0], combinedData[1]))
+      map(combinedData => this.buildComparisonData(combinedData[0], combinedData[1])),
     );
   }
 
@@ -46,7 +46,7 @@ export abstract class RadarDataSourceModel extends GraphQlDataSourceModel<RadarW
   private buildComparisonData(current: RadarPoint[], previous: RadarPoint[]): RadarComparisonData {
     return {
       current: current,
-      previous: previous
+      previous: previous,
     };
   }
 }

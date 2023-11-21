@@ -15,7 +15,7 @@ import { IconSize } from '../icon/icon-size';
         {{ this.value }}
       </div>
     </div>
-  `
+  `,
 })
 export class SummaryValueComponent implements OnChanges {
   @Input()
@@ -59,5 +59,5 @@ export class SummaryValueComponent implements OnChanges {
 
 export const enum SummaryValueDisplayStyle {
   Text = 'text',
-  Link = 'link'
+  Link = 'link',
 }

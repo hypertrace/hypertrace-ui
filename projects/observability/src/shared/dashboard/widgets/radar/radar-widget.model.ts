@@ -6,7 +6,7 @@ import {
   ModelProperty,
   ModelPropertyType,
   NUMBER_PROPERTY,
-  STRING_PROPERTY
+  STRING_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
@@ -15,12 +15,12 @@ import { RadarWidgetDataFetcher } from './data/radar-data-source.model';
 import { RadarSeriesModel } from './series/radar-series.model';
 
 @Model({
-  type: 'radar-widget'
+  type: 'radar-widget',
 })
 export class RadarWidgetModel {
   @ModelProperty({
     key: 'title',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public title: string = '';
 
@@ -28,7 +28,7 @@ export class RadarWidgetModel {
     key: 'series',
     displayName: 'Series',
     type: ModelPropertyType.TYPE,
-    required: true
+    required: true,
   })
   public currentSeries!: RadarSeriesModel;
 
@@ -43,16 +43,16 @@ export class RadarWidgetModel {
           ComparisonDuration.PriorHour,
           ComparisonDuration.PriorDay,
           ComparisonDuration.PriorWeek,
-          ComparisonDuration.PriorMonth
-        ]
-      }
-    } as ArrayPropertyTypeInstance
+          ComparisonDuration.PriorMonth,
+        ],
+      },
+    } as ArrayPropertyTypeInstance,
   })
   public comparisonDurations: ComparisonDuration[] = [
     ComparisonDuration.PriorHour,
     ComparisonDuration.PriorDay,
     ComparisonDuration.PriorWeek,
-    ComparisonDuration.PriorMonth
+    ComparisonDuration.PriorMonth,
   ];
 
   @ModelProperty({
@@ -61,8 +61,8 @@ export class RadarWidgetModel {
     displayName: 'Legend Position',
     type: {
       key: ENUM_TYPE.type,
-      values: [LegendPosition.Bottom, LegendPosition.None]
-    } as EnumPropertyTypeInstance
+      values: [LegendPosition.Bottom, LegendPosition.None],
+    } as EnumPropertyTypeInstance,
   })
   public legendPosition: LegendPosition = LegendPosition.Bottom;
 
@@ -70,7 +70,7 @@ export class RadarWidgetModel {
     key: 'levels',
     displayName: 'levels',
     type: NUMBER_PROPERTY.type,
-    required: false
+    required: false,
   })
   public levels: number = 10;
 
@@ -86,5 +86,5 @@ export const enum ComparisonDuration {
   PriorHour = 'Prior Hour',
   PriorDay = 'Prior Day',
   PriorWeek = 'Prior Week',
-  PriorMonth = 'Prior Month'
+  PriorMonth = 'Prior Month',
 }

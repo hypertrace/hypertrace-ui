@@ -6,7 +6,7 @@ describe('Description Component', () => {
 
   const createHost = createHostFactory<DescriptionComponent>({
     component: DescriptionComponent,
-    shallow: true
+    shallow: true,
   });
 
   test('should render the description', () => {

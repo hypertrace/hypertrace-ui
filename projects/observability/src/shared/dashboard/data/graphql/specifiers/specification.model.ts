@@ -9,7 +9,7 @@ export abstract class SpecificationModel<TSpecification extends Specification> i
   @ModelProperty({
     key: 'display-name',
     displayName: 'DisplayName',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public displayName?: string;
 

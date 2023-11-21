@@ -9,7 +9,7 @@ import { ExploreSpecificationBuilder } from '../../../../graphql/request/builder
 import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
   EXPLORE_GQL_REQUEST,
-  GraphQlExploreResponse
+  GraphQlExploreResponse,
 } from '../../../../graphql/request/handlers/explore/explore-query';
 import { ObservedGraphQlRequest } from '../graphql-query-event.service';
 import { ExploreSelectionSpecificationModel } from '../specifiers/explore-selection-specification.model';
@@ -22,12 +22,12 @@ describe('Metric aggregation data source model', () => {
 
   const callCountSpec = new ExploreSpecificationBuilder().exploreSpecificationForKey(
     'calls',
-    MetricAggregationType.Count
+    MetricAggregationType.Count,
   );
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     model = new MetricAggregationDataSourceModel();
     model.context = 'API_TRACE';
@@ -49,14 +49,14 @@ describe('Metric aggregation data source model', () => {
               {
                 [callCountSpec.resultAlias()]: {
                   value: 10,
-                  type: AttributeMetadataType.Long
-                }
-              }
-            ]
+                  type: AttributeMetadataType.Long,
+                },
+              },
+            ],
           });
           responseObserver.complete();
         }
-      }
+      },
     );
   });
 
@@ -72,16 +72,16 @@ describe('Metric aggregation data source model', () => {
         selections: [expect.objectContaining({ name: 'calls', aggregation: MetricAggregationType.Count })],
         timeRange: expect.objectContaining({
           from: new Date(testTimeRange.startTime),
-          to: new Date(testTimeRange.endTime)
+          to: new Date(testTimeRange.endTime),
         }),
         filters: [
           expect.objectContaining({
             keyOrExpression: 'duration',
             operator: GraphQlOperatorType.GreaterThan,
-            value: 500
-          })
-        ]
-      })
+            value: 500,
+          }),
+        ],
+      }),
     );
   });
 
@@ -93,8 +93,8 @@ describe('Metric aggregation data source model', () => {
         x: {
           health: 'notspecified',
           value: 10,
-          units: ''
-        }
+          units: '',
+        },
       });
     });
   }));

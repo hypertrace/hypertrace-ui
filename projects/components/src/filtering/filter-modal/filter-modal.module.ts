@@ -10,6 +10,6 @@ import { InFilterModalComponent } from './in-filter-modal.component';
 @NgModule({
   imports: [CommonModule, IconModule, PopoverModule, CheckboxModule, FilterModule, ButtonModule],
   exports: [InFilterModalComponent],
-  declarations: [InFilterModalComponent]
+  declarations: [InFilterModalComponent],
 })
 export class FilterModalModule {}

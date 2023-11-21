@@ -5,7 +5,7 @@ import { TableFilter } from '../table-api';
 export const enum TableControlOptionType {
   Filter = 'filter',
   Property = 'property',
-  Unset = 'unset'
+  Unset = 'unset',
 }
 
 export type TableControlOption = TableUnsetControlOption | TableFilterControlOption | TablePropertyControlOption;
@@ -84,6 +84,9 @@ export const toInFilter = (tableFilters: TableFilter[]): TableFilter =>
     return {
       field: previousValue.field,
       operator: FilterOperator.In,
-      value: [...(Array.isArray(previousValue.value) ? previousValue.value : [previousValue.value]), currentValue.value]
+      value: [
+        ...(Array.isArray(previousValue.value) ? previousValue.value : [previousValue.value]),
+        currentValue.value,
+      ],
     };
   });

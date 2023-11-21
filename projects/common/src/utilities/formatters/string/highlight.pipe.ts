@@ -22,7 +22,7 @@ export class HighlightPipe implements PipeTransform {
 
       return highlightedText.replace(
         new RegExp(this.escapeReserveRegExpCharacters(highlightConfig.text), 'ig'),
-        `<${highlightHtmlTag}>$&</${highlightHtmlTag}>`
+        `<${highlightHtmlTag}>$&</${highlightHtmlTag}>`,
       );
     }, fullText);
   }

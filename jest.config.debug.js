@@ -6,7 +6,7 @@ process.env.TZ = 'UTC'; // Tests should always run in UTC, no time zone dependen
 // eslint-disable-next-line no-undef
 globalThis.ngJest = {
   skipNgcc: false,
-  tsconfig: 'tsconfig.spec.json'
+  tsconfig: 'tsconfig.spec.json',
 };
 
 module.exports = {
@@ -19,9 +19,9 @@ module.exports = {
       'jest-preset-angular',
       {
         tsconfig: '<rootDir>/tsconfig.spec.json',
-        stringifyContentPathRegex: '\\.(html|svg)$'
-      }
-    ]
+        stringifyContentPathRegex: '\\.(html|svg)$',
+      },
+    ],
   },
   testMatch: ['<rootDir>/(src|projects)/**/+(*.)+(spec|test).ts'],
   watchPathIgnorePatterns: ['test-results'],
@@ -29,6 +29,6 @@ module.exports = {
   moduleNameMapper: {
     '^lodash-es$': 'lodash',
     '^uuid$': 'uuid',
-    ...pathsToModuleNameMapper(paths, { prefix: '<rootDir>' })
-  }
+    ...pathsToModuleNameMapper(paths, { prefix: '<rootDir>' }),
+  },
 };

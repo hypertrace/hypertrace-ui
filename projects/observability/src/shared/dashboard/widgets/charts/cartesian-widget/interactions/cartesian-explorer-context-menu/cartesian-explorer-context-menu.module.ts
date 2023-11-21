@@ -6,6 +6,6 @@ import { CartesianExplorerContextMenuComponent } from './cartesian-explorer-cont
 @NgModule({
   imports: [CommonModule, DividerModule, ButtonModule],
   declarations: [CartesianExplorerContextMenuComponent],
-  exports: [CartesianExplorerContextMenuComponent]
+  exports: [CartesianExplorerContextMenuComponent],
 })
 export class CartesianExplorerContextMenuModule {}

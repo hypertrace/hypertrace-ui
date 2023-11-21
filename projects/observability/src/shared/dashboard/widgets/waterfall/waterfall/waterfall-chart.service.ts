@@ -7,14 +7,14 @@ import { TracingIconLookupService } from '../../../../services/icon-lookup/traci
 import { LogEvent, WaterfallData, WaterfallDataNode } from './waterfall-chart';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WaterfallChartService {
   private static readonly SEQUENCE_COLORS: symbol = Symbol('Sequence colors');
   private readonly dateCoercer: DateCoercer = new DateCoercer();
   public constructor(
     private readonly colorService: ColorService,
-    private readonly iconLookupService: TracingIconLookupService
+    private readonly iconLookupService: TracingIconLookupService,
   ) {
     this.colorService.registerColorPalette(WaterfallChartService.SEQUENCE_COLORS, [
       Color.Blue5,
@@ -24,7 +24,7 @@ export class WaterfallChartService {
       Color.Orange5,
       Color.Orange3,
       Color.Purple5,
-      Color.Purple3
+      Color.Purple3,
     ]);
   }
 
@@ -37,18 +37,18 @@ export class WaterfallChartService {
         ...datum,
         $$state: {
           expanded: true,
-          children: []
+          children: [],
         },
         $$spanName: {
           apiName: datum.apiName,
           serviceName: datum.serviceName,
           protocolName: datum.protocolName,
           hasError: datum.errorCount > 0,
-          hasLogs: datum.logEvents.length > 0
+          hasLogs: datum.logEvents.length > 0,
         },
         $$iconType: this.iconLookupService.forSpanType(datum.spanType)!,
         getChildren: () => of([]),
-        isExpandable: () => true
+        isExpandable: () => true,
       };
 
       dataNodeMap.set(currentNode.id, currentNode);
@@ -94,8 +94,8 @@ export class WaterfallChartService {
           markers: node.logEvents.map((logEvent: LogEvent) => ({
             id: node.id,
             markerTime: this.dateCoercer.coerce(logEvent.timestamp)!.getTime(),
-            timestamps: [logEvent.timestamp]
-          }))
+            timestamps: [logEvent.timestamp],
+          })),
         });
 
         sequenceNodes.unshift(...node.$$state.children);

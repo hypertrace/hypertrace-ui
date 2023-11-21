@@ -31,7 +31,7 @@ import { JsonElementType, JsonRecord } from './json-viewer.type';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class JsonViewerComponent {
   @Input()
@@ -68,5 +68,5 @@ const enum DisplayValueStyle {
   String = 'string-value',
   Primitive = 'primitive-value',
   Summary = 'summary-value',
-  Null = 'null-value'
+  Null = 'null-value',
 }

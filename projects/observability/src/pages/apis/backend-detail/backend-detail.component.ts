@@ -13,21 +13,21 @@ import { BackendDetailService } from './backend-detail.service';
         <router-outlet></router-outlet>
       </div>
     </div>
-  `
+  `,
 })
 export class BackendDetailComponent {
   public readonly tabs: NavigableTab[] = [
     {
       path: 'overview',
-      label: 'Overview'
+      label: 'Overview',
     },
     {
       path: 'traces',
-      label: 'Traces'
+      label: 'Traces',
     },
     {
       path: 'metrics',
-      label: 'Metrics'
-    }
+      label: 'Metrics',
+    },
   ];
 }

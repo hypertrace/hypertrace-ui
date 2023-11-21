@@ -13,7 +13,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, O
     >
       {{ this.isNoLabel() ? 'no-label' : label }}
     </div>
-  `
+  `,
 })
 export class LabelComponent implements OnChanges, AfterViewInit {
   /*

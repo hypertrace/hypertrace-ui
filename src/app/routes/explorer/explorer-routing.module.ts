@@ -6,14 +6,14 @@ import {
   ExplorerComponent,
   ExplorerDashboardBuilder,
   ExplorerModule,
-  MetadataService
+  MetadataService,
 } from '@hypertrace/observability';
 
 const ROUTE_CONFIG: HtRoute[] = [
   {
     path: '',
-    component: ExplorerComponent
-  }
+    component: ExplorerComponent,
+  },
 ];
 
 @NgModule({
@@ -22,8 +22,8 @@ const ROUTE_CONFIG: HtRoute[] = [
     ExplorerModule.withDashboardBuilderFactory({
       useFactory: (metadataService: MetadataService, filterBuilderLookupService: FilterBuilderLookupService) =>
         new ExplorerDashboardBuilder(metadataService, filterBuilderLookupService),
-      deps: [MetadataService, FilterBuilderLookupService]
-    })
-  ]
+      deps: [MetadataService, FilterBuilderLookupService],
+    }),
+  ],
 })
 export class ExplorerRoutingModule {}

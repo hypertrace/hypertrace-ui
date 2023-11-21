@@ -11,6 +11,6 @@ import { TabComponent } from './tab/tab.component';
 @NgModule({
   declarations: [TabGroupComponent, TabComponent, TabCustomHeaderDirective],
   exports: [TabGroupComponent, TabComponent, TabCustomHeaderDirective],
-  imports: [MatTabsModule, CommonModule, RouterModule, LabelTagModule, InfoIconModule]
+  imports: [MatTabsModule, CommonModule, RouterModule, LabelTagModule, InfoIconModule],
 })
 export class TabModule {}

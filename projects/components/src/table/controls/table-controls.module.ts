@@ -18,9 +18,9 @@ import { TableControlsComponent } from './table-controls.component';
     CheckboxModule,
     SelectModule,
     MultiSelectModule,
-    FeatureConfigCheckModule
+    FeatureConfigCheckModule,
   ],
   declarations: [TableControlsComponent],
-  exports: [TableControlsComponent]
+  exports: [TableControlsComponent],
 })
 export class TableControlsModule {}

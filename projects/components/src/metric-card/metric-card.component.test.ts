@@ -9,14 +9,14 @@ describe('Metric Card Component', () => {
   const createComponent = createComponentFactory({
     component: MetricCardComponent,
     declarations: [MockComponent(IconComponent)],
-    shallow: true
+    shallow: true,
   });
 
   test('should render everything correctly', () => {
     const spectator = createComponent({
       props: {
-        value: 123
-      }
+        value: 123,
+      },
     });
 
     expect(spectator.query('.metric-card')).toExist();
@@ -26,7 +26,7 @@ describe('Metric Card Component', () => {
 
     spectator.setInput({
       icon: IconType.Add,
-      indicator: MetricCardIndicatorType.Icon
+      indicator: MetricCardIndicatorType.Icon,
     });
 
     expect(spectator.query('.dot')).not.toExist();

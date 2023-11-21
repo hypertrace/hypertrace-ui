@@ -6,6 +6,6 @@ import { LogEventsTableComponent } from './log-events-table.component';
 @NgModule({
   imports: [CommonModule, TableModule, IconModule, TooltipModule, FormattingModule, ListViewModule, MemoizeModule],
   declarations: [LogEventsTableComponent],
-  exports: [LogEventsTableComponent]
+  exports: [LogEventsTableComponent],
 })
 export class LogEventsTableModule {}

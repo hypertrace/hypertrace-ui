@@ -17,7 +17,7 @@ export class CustomTreeLayout extends TreeLayout {
     nodeRowIndex: number,
     nodeColumnIndex: number,
     cellWidth: number,
-    cellHeight: number
+    cellHeight: number,
   ): number {
     if (hierarchyNode.data.sourceNode !== undefined) {
       hierarchyNode.data.sourceNode.x = nodeColumnIndex * cellWidth;

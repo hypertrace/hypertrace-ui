@@ -8,7 +8,7 @@ import {
   TopologyEdgeState,
   TopologyNode,
   TopologyNodeRenderer,
-  TopologyNodeState
+  TopologyNodeState,
 } from '../topology';
 import { TopologyGroupNodeUtil } from './topology-group-node.util';
 
@@ -19,14 +19,14 @@ export class TopologyConverter {
     nodeRenderer: TopologyNodeRenderer,
     domRenderer: Renderer2,
     oldTopology?: RenderableTopology<TopologyNode, TopologyEdge>,
-    supportGroupNode: boolean = false
+    supportGroupNode: boolean = false,
   ): RenderableTopology<TopologyNode, TopologyEdge> {
     const renderableNodeMap = this.buildRenderableNodeMap(
       nodes,
       stateManager,
       nodeRenderer,
       domRenderer,
-      oldTopology && oldTopology.nodes
+      oldTopology && oldTopology.nodes,
     );
     const uniqueEdges = this.findUniqueEdges(nodes);
 
@@ -37,12 +37,12 @@ export class TopologyConverter {
         renderableNodeMap,
         domRenderer,
         stateManager,
-        supportGroupNode
+        supportGroupNode,
       ),
       neighborhood: {
         nodes: nodes,
-        edges: uniqueEdges
-      }
+        edges: uniqueEdges,
+      },
     };
   }
 
@@ -51,7 +51,7 @@ export class TopologyConverter {
     stateManager: TopologyStateManager,
     nodeRenderer: TopologyNodeRenderer,
     domRenderer: Renderer2,
-    oldRenderableNodes: RenderableTopologyNode[] = []
+    oldRenderableNodes: RenderableTopologyNode[] = [],
   ): Map<TopologyNode, RenderableTopologyNode> {
     const oldNodeMap = new WeakMap(oldRenderableNodes.map(oldNode => [oldNode.userNode, oldNode]));
     const nodeMap = new Map<TopologyNode, RenderableTopologyNode>();
@@ -64,8 +64,8 @@ export class TopologyConverter {
           stateManager.getNodeState(userNode),
           nodeRenderer,
           domRenderer,
-          oldNodeMap.get(userNode)
-        )
+          oldNodeMap.get(userNode),
+        ),
       );
     });
 
@@ -97,7 +97,7 @@ export class TopologyConverter {
     nodeMap: Map<TopologyNode, RenderableTopologyNode>,
     domRenderer: Renderer2,
     stateManager: TopologyStateManager,
-    supportGroupNode: boolean = false
+    supportGroupNode: boolean = false,
   ): RenderableTopologyEdge[] {
     let filteredEdges = edges;
 
@@ -131,7 +131,7 @@ export class TopologyConverter {
     state: TopologyNodeState,
     nodeRenderer: TopologyNodeRenderer,
     domRenderer: Renderer2,
-    oldNode?: RenderableTopologyNode
+    oldNode?: RenderableTopologyNode,
   ): RenderableTopologyNode {
     const renderableNode = {
       incoming: [],
@@ -141,7 +141,7 @@ export class TopologyConverter {
       y: oldNode ? oldNode.y : 0,
       userNode: node,
       renderedData: () => nodeRenderer.getRenderedNodeData(renderableNode),
-      domElementRenderer: domRenderer
+      domElementRenderer: domRenderer,
     };
 
     return renderableNode;
@@ -152,14 +152,14 @@ export class TopologyConverter {
     sourceNode: RenderableTopologyNode,
     targetNode: RenderableTopologyNode,
     state: TopologyEdgeState,
-    domElementRenderer: Renderer2
+    domElementRenderer: Renderer2,
   ): RenderableTopologyEdge {
     const renderableEdge = {
       source: sourceNode,
       target: targetNode,
       userEdge: edge,
       state: state,
-      domElementRenderer: domElementRenderer
+      domElementRenderer: domElementRenderer,
     };
 
     sourceNode.outgoing.push(renderableEdge);

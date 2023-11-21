@@ -12,7 +12,7 @@ import {
   GraphQlTimeRange,
   MetricAggregationType,
   ObservabilityTraceType,
-  ObservedGraphQlRequest
+  ObservedGraphQlRequest,
 } from '@hypertrace/observability';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { mockProvider } from '@ngneat/spectator/jest';
@@ -26,7 +26,7 @@ describe('Observe System radar data source model', () => {
   const modelFactory = createModelFactory();
 
   const mockApi: Partial<ModelApi> = {
-    getTimeRange: jest.fn(() => testTimeRange)
+    getTimeRange: jest.fn(() => testTimeRange),
   };
 
   const exploreRequest = (timeRange: GraphQlTimeRange, selection: Partial<ExploreSpecification>) => ({
@@ -34,12 +34,12 @@ describe('Observe System radar data source model', () => {
     timeRange: timeRange,
     context: ObservabilityTraceType.Api,
     limit: 1,
-    selections: [expect.objectContaining(selection)]
+    selections: [expect.objectContaining(selection)],
   });
 
   const buildSelection = (name: string, aggregation: MetricAggregationType) => ({
     name: name,
-    aggregation: aggregation
+    aggregation: aggregation,
   });
 
   beforeEach(() => {
@@ -49,10 +49,10 @@ describe('Observe System radar data source model', () => {
       providers: [
         mockProvider(TimeDurationService, {
           getTimeRangeDuration: (timeRange: Pick<TimeRange, 'startTime' | 'endTime'>) =>
-            new TimeDuration(timeRange.endTime.getTime() - timeRange.startTime.getTime(), TimeUnit.Millisecond)
+            new TimeDuration(timeRange.endTime.getTime() - timeRange.startTime.getTime(), TimeUnit.Millisecond),
         }),
-        mockProvider(GraphQlQueryEventService)
-      ]
+        mockProvider(GraphQlQueryEventService),
+      ],
     });
 
     spectator.model.api = mockApi as ModelApi;
@@ -63,22 +63,22 @@ describe('Observe System radar data source model', () => {
           {
             'p99(duration)': {
               type: AttributeMetadataType.Long,
-              value: 23
+              value: 23,
             },
             'avgrate_sec(calls)': {
               type: AttributeMetadataType.Long,
-              value: 33
+              value: 33,
             },
             'avg(duration)': {
               type: AttributeMetadataType.Long,
-              value: 43
+              value: 43,
             },
             'avgrate_sec(errorCount)': {
               type: AttributeMetadataType.Long,
-              value: 53
-            }
-          }
-        ]
+              value: 53,
+            },
+          },
+        ],
       });
       query.responseObserver.complete();
     });
@@ -97,7 +97,7 @@ describe('Observe System radar data source model', () => {
     const current = new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime);
     const lastHour = new GraphQlTimeRange(
       new Date(testTimeRange.startTime.valueOf() - new TimeDuration(1, TimeUnit.Hour).toMillis()),
-      new Date(testTimeRange.endTime.valueOf() - new TimeDuration(1, TimeUnit.Hour).toMillis())
+      new Date(testTimeRange.endTime.valueOf() - new TimeDuration(1, TimeUnit.Hour).toMillis()),
     );
 
     const expectedRequests = [
@@ -108,7 +108,7 @@ describe('Observe System radar data source model', () => {
       exploreRequest(lastHour, buildSelection('duration', MetricAggregationType.P99)),
       exploreRequest(lastHour, buildSelection('calls', MetricAggregationType.AvgrateSecond)),
       exploreRequest(lastHour, buildSelection('duration', MetricAggregationType.Average)),
-      exploreRequest(lastHour, buildSelection('errorCount', MetricAggregationType.AvgrateSecond))
+      exploreRequest(lastHour, buildSelection('errorCount', MetricAggregationType.AvgrateSecond)),
     ];
 
     expect(emittedRequests).toEqual(expectedRequests);
@@ -117,46 +117,46 @@ describe('Observe System radar data source model', () => {
   test('builds expected requests and response', fakeAsync(() => {
     runFakeRxjs(({ expectObservable }) => {
       expectObservable(
-        spectator.model.getData().pipe(mergeMap(fetcher => fetcher.getData(new TimeDuration(1, TimeUnit.Hour))))
+        spectator.model.getData().pipe(mergeMap(fetcher => fetcher.getData(new TimeDuration(1, TimeUnit.Hour)))),
       ).toBe('(x|)', {
         x: {
           current: [
             {
               axis: 'P99 Latency',
-              value: 23
+              value: 23,
             },
             {
               axis: 'Calls/Second',
-              value: 33
+              value: 33,
             },
             {
               axis: 'Avg Latency',
-              value: 43
+              value: 43,
             },
             {
               axis: 'Errors/Second',
-              value: 53
-            }
+              value: 53,
+            },
           ],
           previous: [
             {
               axis: 'P99 Latency',
-              value: 23
+              value: 23,
             },
             {
               axis: 'Calls/Second',
-              value: 33
+              value: 33,
             },
             {
               axis: 'Avg Latency',
-              value: 43
+              value: 43,
             },
             {
               axis: 'Errors/Second',
-              value: 53
-            }
-          ]
-        }
+              value: 53,
+            },
+          ],
+        },
       });
     });
   }));

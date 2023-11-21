@@ -25,7 +25,7 @@ describe('Dom Utilities', () => {
       width: 20,
       x: 0,
       y: 0,
-      toJSON: () => ''
+      toJSON: () => '',
     };
 
     const clientRect2: DOMRect = {
@@ -37,7 +37,7 @@ describe('Dom Utilities', () => {
       width: 45,
       x: 0,
       y: 0,
-      toJSON: () => ''
+      toJSON: () => '',
     };
 
     expect(unionOfClientRects(clientRect1, clientRect2)).toEqual({
@@ -46,7 +46,7 @@ describe('Dom Utilities', () => {
       top: 5,
       bottom: 55,
       height: 50,
-      width: 45
+      width: 45,
     });
   });
 });

@@ -10,6 +10,6 @@ import { TitledContentComponent } from './titled-content.component';
 @NgModule({
   declarations: [TitledContentComponent, TitledHeaderControlDirective],
   exports: [TitledContentComponent, TitledHeaderControlDirective],
-  imports: [LabelModule, CommonModule, LinkModule, ButtonModule, LayoutChangeModule]
+  imports: [LabelModule, CommonModule, LinkModule, ButtonModule, LayoutChangeModule],
 })
 export class TitledContentModule {}

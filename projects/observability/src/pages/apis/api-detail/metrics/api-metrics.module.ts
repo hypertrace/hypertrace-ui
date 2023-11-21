@@ -12,9 +12,9 @@ import { apiMetricsDashboard } from './api-metrics.dashboard';
     CommonModule,
     FilterBarModule,
     NavigableDashboardModule.withDefaultDashboards(apiMetricsDashboard),
-    LoadAsyncModule
+    LoadAsyncModule,
   ],
   declarations: [ApiMetricsComponent],
-  exports: [ApiMetricsComponent]
+  exports: [ApiMetricsComponent],
 })
 export class ApiMetricsModule {}

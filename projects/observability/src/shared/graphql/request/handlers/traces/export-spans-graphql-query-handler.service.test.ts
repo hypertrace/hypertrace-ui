@@ -7,7 +7,7 @@ import { TRACE_SCOPE } from '../../../model/schema/trace';
 import {
   ExportSpansGraphQlQueryHandlerService,
   EXPORT_SPANS_GQL_REQUEST,
-  GraphQlExportSpansRequest
+  GraphQlExportSpansRequest,
 } from './export-spans-graphql-query-handler.service';
 
 describe('ExportSpansGraphQlQueryHandlerService', () => {
@@ -17,19 +17,19 @@ describe('ExportSpansGraphQlQueryHandlerService', () => {
       mockProvider(TimeRangeService, {
         getCurrentTimeRange: jest
           .fn()
-          .mockReturnValue(new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)))
-      })
-    ]
+          .mockReturnValue(new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))),
+      }),
+    ],
   });
 
   const testTimeRange = GraphQlTimeRange.fromTimeRange(
-    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
+    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)),
   );
   const buildRequest = (timestamp?: Date): GraphQlExportSpansRequest => ({
     requestType: EXPORT_SPANS_GQL_REQUEST,
     traceId: 'test-id',
     timestamp: timestamp,
-    limit: 1
+    limit: 1,
   });
 
   test('matches request', () => {
@@ -46,14 +46,14 @@ describe('ExportSpansGraphQlQueryHandlerService', () => {
       arguments: [
         {
           name: 'limit',
-          value: 1
+          value: 1,
         },
         {
           name: 'between',
           value: {
             startTime: new Date(testTimeRange.from),
-            endTime: new Date(testTimeRange.to)
-          }
+            endTime: new Date(testTimeRange.to),
+          },
         },
         {
           name: 'filterBy',
@@ -62,16 +62,16 @@ describe('ExportSpansGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-              idScope: TRACE_SCOPE
-            }
-          ]
-        }
+              idScope: TRACE_SCOPE,
+            },
+          ],
+        },
       ],
       children: [
         {
-          path: 'result'
-        }
-      ]
+          path: 'result',
+        },
+      ],
     });
   });
 
@@ -84,14 +84,14 @@ describe('ExportSpansGraphQlQueryHandlerService', () => {
       arguments: [
         {
           name: 'limit',
-          value: 1
+          value: 1,
         },
         {
           name: 'between',
           value: {
             startTime: new Date(0),
-            endTime: new Date(traceTimestamp.getTime() * 2)
-          }
+            endTime: new Date(traceTimestamp.getTime() * 2),
+          },
         },
         {
           name: 'filterBy',
@@ -100,23 +100,23 @@ describe('ExportSpansGraphQlQueryHandlerService', () => {
               operator: new GraphQlEnumArgument('EQUALS'),
               value: 'test-id',
               type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-              idScope: TRACE_SCOPE
-            }
-          ]
-        }
+              idScope: TRACE_SCOPE,
+            },
+          ],
+        },
       ],
       children: [
         {
-          path: 'result'
-        }
-      ]
+          path: 'result',
+        },
+      ],
     });
   });
 
   test('converts response', () => {
     const spectator = createService();
     const exportSpansResponse = {
-      result: '{}'
+      result: '{}',
     };
 
     expect(spectator.service.convertResponse(exportSpansResponse)).toEqual('{}');

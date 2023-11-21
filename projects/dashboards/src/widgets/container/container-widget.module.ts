@@ -28,14 +28,14 @@ import { MaxContentContainerLayoutModel } from './layout/max-content/max-content
         CellSpanModel,
         DimensionModel,
         AutoDimensionModel,
-        MaxContentContainerLayoutModel
+        MaxContentContainerLayoutModel,
       ],
-      renderers: [ContainerWidgetRendererComponent]
+      renderers: [ContainerWidgetRendererComponent],
     }),
     FlexLayoutModule,
     TitledContentModule,
     LabelModule,
-    FormattingModule
-  ]
+    FormattingModule,
+  ],
 })
 export class ContainerWidgetModule {}

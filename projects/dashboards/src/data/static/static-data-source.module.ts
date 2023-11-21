@@ -5,8 +5,8 @@ import { StaticDataSource } from './static-data-source.model';
 @NgModule({
   imports: [
     DashboardCoreModule.with({
-      models: [StaticDataSource]
-    })
-  ]
+      models: [StaticDataSource],
+    }),
+  ],
 })
 export class StaticDataSourceModule {}

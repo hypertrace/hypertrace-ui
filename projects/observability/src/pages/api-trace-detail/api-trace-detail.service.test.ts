@@ -5,7 +5,7 @@ import {
   RelativeTimeRange,
   TimeDuration,
   TimeRangeService,
-  TimeUnit
+  TimeUnit,
 } from '@hypertrace/common';
 import { GraphQlRequestService } from '@hypertrace/graphql-client';
 import { runFakeRxjs } from '@hypertrace/test-utils';
@@ -24,11 +24,13 @@ describe('Api TraceDetailService', () => {
     providers: [
       mockProvider(ActivatedRoute, {
         paramMap: of({
-          get: (key: string) => (key === 'id' ? 'test-id' : '1576364117792')
-        })
+          get: (key: string) => (key === 'id' ? 'test-id' : '1576364117792'),
+        }),
       }),
       mockProvider(TimeRangeService, {
-        getTimeRangeAndChanges: jest.fn().mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))))
+        getTimeRangeAndChanges: jest
+          .fn()
+          .mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)))),
       }),
       mockProvider(GraphQlRequestService, {
         query: jest.fn().mockReturnValue(
@@ -40,9 +42,9 @@ describe('Api TraceDetailService', () => {
             protocol: 'test protocol',
             apiName: 'test api name',
             startTime: 1576364117792,
-            duration: 20
-          })
-        )
+            duration: 20,
+          }),
+        ),
       }),
       mockProvider(MetadataService, {
         getAttribute: (scope: string, attributeKey: string) =>
@@ -54,10 +56,10 @@ describe('Api TraceDetailService', () => {
             scope: scope,
             onlySupportsAggregation: false,
             onlySupportsGrouping: false,
-            allowedAggregations: []
-          })
-      })
-    ]
+            allowedAggregations: [],
+          }),
+      }),
+    ],
   });
 
   test('should map fetch and map trace details', () => {
@@ -69,11 +71,11 @@ describe('Api TraceDetailService', () => {
           startTime: 1576364117792,
           traceId: 'trace-id',
           timeString: `${new DisplayDatePipe().transform(1576364117792, {
-            mode: DateFormatMode.DateAndTimeWithSeconds
+            mode: DateFormatMode.DateAndTimeWithSeconds,
           })} for 20 ms`,
           titleString: 'test service test protocol test api name',
-          type: ObservabilityTraceType.Api
-        }
+          type: ObservabilityTraceType.Api,
+        },
       });
     });
   });
@@ -92,26 +94,26 @@ describe('Api TraceDetailService', () => {
       timestamp: new Date(1576364117792),
       traceProperties: [
         expect.objectContaining({
-          name: 'serviceName'
+          name: 'serviceName',
         }),
         expect.objectContaining({
-          name: 'protocol'
+          name: 'protocol',
         }),
         expect.objectContaining({
-          name: 'apiName'
+          name: 'apiName',
         }),
         expect.objectContaining({
-          name: 'startTime'
+          name: 'startTime',
         }),
         expect.objectContaining({
-          name: 'duration'
+          name: 'duration',
         }),
         expect.objectContaining({
-          name: 'traceId'
-        })
+          name: 'traceId',
+        }),
       ],
       spanProperties: [],
-      spanLimit: 1
+      spanLimit: 1,
     });
   });
 
@@ -120,8 +122,8 @@ describe('Api TraceDetailService', () => {
       providers: [
         mockProvider(ActivatedRoute, {
           paramMap: of({
-            get: (key: string) => (key === 'id' ? 'test-id' : '1576364117792')
-          })
+            get: (key: string) => (key === 'id' ? 'test-id' : '1576364117792'),
+          }),
         }),
         mockProvider(GraphQlRequestService, {
           query: jest.fn().mockReturnValue(
@@ -134,20 +136,20 @@ describe('Api TraceDetailService', () => {
                       {
                         timestamp: 'time',
                         attributes: undefined,
-                        summary: 'summary'
-                      }
-                    ]
+                        summary: 'summary',
+                      },
+                    ],
                   },
                   displayEntityName: 'service',
                   displaySpanName: 'span',
                   protocolName: 'protocol',
-                  startTime: 1608151401295
-                }
-              ]
-            })
-          )
-        })
-      ]
+                  startTime: 1608151401295,
+                },
+              ],
+            }),
+          ),
+        }),
+      ],
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -160,11 +162,11 @@ describe('Api TraceDetailService', () => {
             $$spanName: {
               serviceName: 'service',
               protocolName: 'protocol',
-              apiName: 'span'
+              apiName: 'span',
             },
-            spanStartTime: 1608151401295
-          }
-        ]
+            spanStartTime: 1608151401295,
+          },
+        ],
       });
     });
   });

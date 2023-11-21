@@ -25,7 +25,7 @@ import { CardContainerComponent } from './container/card-container.component';
     </div>
   `,
   styleUrls: ['./card-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardListComponent implements AfterContentInit {
   @Input()
@@ -52,5 +52,5 @@ export class CardListComponent implements AfterContentInit {
 export const enum CardListMode {
   // The strings represent css classes
   Card = 'card',
-  List = 'list'
+  List = 'list',
 }

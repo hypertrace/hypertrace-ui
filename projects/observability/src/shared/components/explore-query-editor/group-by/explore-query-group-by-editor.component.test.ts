@@ -15,7 +15,7 @@ describe('Explore Query Group by Editor component', () => {
   const attributeMetadata = [
     { name: 'test value', type: AttributeMetadataType.String },
     { name: 'foo bar', type: AttributeMetadataType.String },
-    { name: 'test map', type: AttributeMetadataType.StringMap }
+    { name: 'test map', type: AttributeMetadataType.StringMap },
   ];
   const hostBuilder = createHostFactory({
     component: ExploreQueryGroupByEditorComponent,
@@ -23,13 +23,13 @@ describe('Explore Query Group by Editor component', () => {
     providers: [
       mockProvider(MetadataService, {
         getAttributeDisplayName: (attribute: AttributeMetadata) => attribute.name,
-        getGroupableAttributes: () => of(attributeMetadata)
+        getGroupableAttributes: () => of(attributeMetadata),
       }),
       mockProvider(NavigationService, {
-        navigation$: EMPTY
-      })
+        navigation$: EMPTY,
+      }),
     ],
-    shallow: true
+    shallow: true,
   });
 
   test('sets group by to none if undefined provided', fakeAsync(() => {
@@ -53,9 +53,9 @@ describe('Explore Query Group by Editor component', () => {
   `,
       {
         hostProps: {
-          groupByExpression: { key: 'test value' }
-        }
-      }
+          groupByExpression: { key: 'test value' },
+        },
+      },
     );
 
     expect(spectator.query(SelectComponent)!.selected).toEqual(attributeMetadata[0]);
@@ -70,9 +70,9 @@ describe('Explore Query Group by Editor component', () => {
   `,
       {
         hostProps: {
-          groupByExpression: { key: 'test value' }
-        }
-      }
+          groupByExpression: { key: 'test value' },
+        },
+      },
     );
 
     spectator.setHostInput({ groupByExpression: { key: 'foo bar' } });
@@ -95,9 +95,9 @@ describe('Explore Query Group by Editor component', () => {
       {
         hostProps: {
           groupByExpression: { key: 'test value' },
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
     spectator.tick(); // Needs to tick to interact with select which is async
 
@@ -125,9 +125,9 @@ describe('Explore Query Group by Editor component', () => {
       {
         hostProps: {
           groupByExpression: { key: 'test value' },
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
     spectator.tick(); // Needs to tick to interact with select which is async
 
@@ -153,9 +153,9 @@ describe('Explore Query Group by Editor component', () => {
   `,
       {
         hostProps: {
-          groupByExpression: { key: 'test value' }
-        }
-      }
+          groupByExpression: { key: 'test value' },
+        },
+      },
     );
     spectator.tick(); // Needs to tick to interact with select which is async
 
@@ -180,9 +180,9 @@ describe('Explore Query Group by Editor component', () => {
   `,
       {
         hostProps: {
-          onChange: onChange
-        }
-      }
+          onChange: onChange,
+        },
+      },
     );
     spectator.tick(); // Needs to tick to interact with select which is async
     expect(onChange).not.toHaveBeenCalled();

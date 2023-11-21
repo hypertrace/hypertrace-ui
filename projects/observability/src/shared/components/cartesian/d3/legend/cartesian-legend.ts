@@ -9,7 +9,7 @@ import { Series, Summary } from '../../chart';
 import {
   CartesianIntervalControlComponent,
   CartesianIntervalData,
-  INTERVAL_DATA
+  INTERVAL_DATA,
 } from './cartesian-interval-control.component';
 import { CartesianSummaryComponent, SUMMARIES_DATA } from './cartesian-summary.component';
 import { FILTER_BUTTON_WRAPPER, FilterButtonWrapperComponent } from '@hypertrace/components';
@@ -39,7 +39,7 @@ export class CartesianLegend<TData> {
     private readonly series: Series<TData>[],
     private readonly injector: Injector,
     private readonly intervalData?: CartesianIntervalData,
-    private readonly summaries: Summary[] = []
+    private readonly summaries: Summary[] = [],
   ) {
     this.isGrouped =
       this.series.length > 0 &&
@@ -135,7 +135,7 @@ export class CartesianLegend<TData> {
   private drawLegendContainer(
     hostElement: Element,
     position: LegendPosition,
-    hasIntervalSelector: boolean
+    hasIntervalSelector: boolean,
   ): Selection<HTMLDivElement, unknown, null, undefined> {
     /*
      * The interval selector is part of the legend, so if they choose to show the interval selector but no legend, we
@@ -153,7 +153,7 @@ export class CartesianLegend<TData> {
 
   private drawLegendEntry(
     element: EnterElement,
-    showFilters?: boolean
+    showFilters?: boolean,
   ): Selection<HTMLDivElement, Series<TData>, null, undefined> {
     const legendEntry = select<EnterElement, Series<TData>>(element).append('div').classed('legend-entry', true);
 
@@ -185,14 +185,14 @@ export class CartesianLegend<TData> {
       select(this.legendElement!)
         .selectAll('.legend-entries')
         .classed(CartesianLegend.ACTIVE_CSS_CLASS, seriesGroup =>
-          this.isThisLegendSeriesGroupActive(seriesGroup as Series<TData>[])
+          this.isThisLegendSeriesGroupActive(seriesGroup as Series<TData>[]),
         );
 
       // Legend entry title
       select(this.legendElement!)
         .selectAll('.legend-entries-title')
         .classed(CartesianLegend.ACTIVE_CSS_CLASS, seriesGroup =>
-          this.isThisLegendSeriesGroupActive(seriesGroup as Series<TData>[])
+          this.isThisLegendSeriesGroupActive(seriesGroup as Series<TData>[]),
         );
     }
 
@@ -200,7 +200,7 @@ export class CartesianLegend<TData> {
     legendElementSelection
       .selectAll('.legend-symbol circle')
       .style('fill', series =>
-        !this.isThisLegendEntryActive(series as Series<TData>) ? Color.Gray3 : (series as Series<TData>).color
+        !this.isThisLegendEntryActive(series as Series<TData>) ? Color.Gray3 : (series as Series<TData>).color,
       );
 
     // Legend entry value text
@@ -209,11 +209,11 @@ export class CartesianLegend<TData> {
       .classed(CartesianLegend.DEFAULT_CSS_CLASS, !this.isSelectionModeOn)
       .classed(
         CartesianLegend.ACTIVE_CSS_CLASS,
-        series => this.isSelectionModeOn && this.isThisLegendEntryActive(series as Series<TData>)
+        series => this.isSelectionModeOn && this.isThisLegendEntryActive(series as Series<TData>),
       )
       .classed(
         CartesianLegend.INACTIVE_CSS_CLASS,
-        series => this.isSelectionModeOn && !this.isThisLegendEntryActive(series as Series<TData>)
+        series => this.isSelectionModeOn && !this.isThisLegendEntryActive(series as Series<TData>),
       );
 
     // Legend filters
@@ -248,12 +248,12 @@ export class CartesianLegend<TData> {
               targetAttribute: this.activeSeries[0].groupBy?.attribute,
               targetAttributeSubpath: this.activeSeries[0].groupBy?.subpath,
               metadata: this.activeSeries[0].groupBy?.allMetadata,
-              value: container.textContent
-            }
-          }
+              value: container.textContent,
+            },
+          },
         ],
-        parent: this.injector
-      })
+        parent: this.injector,
+      }),
     );
   }
 
@@ -265,11 +265,11 @@ export class CartesianLegend<TData> {
         providers: [
           {
             provide: INTERVAL_DATA,
-            useValue: intervalData
-          }
+            useValue: intervalData,
+          },
         ],
-        parent: this.injector
-      })
+        parent: this.injector,
+      }),
     );
   }
 
@@ -281,11 +281,11 @@ export class CartesianLegend<TData> {
         providers: [
           {
             provide: SUMMARIES_DATA,
-            useValue: summaries
-          }
+            useValue: summaries,
+          },
         ],
-        parent: this.injector
-      })
+        parent: this.injector,
+      }),
     );
   }
 

@@ -9,7 +9,7 @@ export class CartesianNoDataMessage {
   public constructor(
     private readonly hostElement: Element,
     private readonly series: Series<unknown>[],
-    private readonly message: string = 'No data to display'
+    private readonly message: string = 'No data to display',
   ) {}
 
   public updateMessage(): void {

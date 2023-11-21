@@ -37,7 +37,7 @@ import { EntityNavigationService } from '../../services/navigation/entity/entity
         <div class="name" data-sensitive-pii>{{ this.name | htDisplayString }}</div>
       </div>
     </ng-template>
-  `
+  `,
 })
 export class EntityRendererComponent implements OnChanges {
   @Input()
@@ -70,7 +70,7 @@ export class EntityRendererComponent implements OnChanges {
 
   public constructor(
     private readonly iconLookupService: EntityIconLookupService,
-    private readonly entityNavService: EntityNavigationService
+    private readonly entityNavService: EntityNavigationService,
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {

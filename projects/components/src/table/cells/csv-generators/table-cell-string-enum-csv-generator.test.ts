@@ -4,7 +4,7 @@ import { DisplayStringEnumPipe } from '@hypertrace/common';
 
 describe('TableCellStringEnumCsvGenerator', () => {
   const createService = createServiceFactory({
-    service: TableCellStringEnumCsvGenerator
+    service: TableCellStringEnumCsvGenerator,
   });
 
   const stringEnumPipe = new DisplayStringEnumPipe();

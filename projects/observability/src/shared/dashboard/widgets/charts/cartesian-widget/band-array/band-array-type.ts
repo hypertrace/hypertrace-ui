@@ -3,7 +3,7 @@ import { isNil } from 'lodash-es';
 
 export const BAND_ARRAY_TYPE: ModelPropertyTypeRegistrationInformation = {
   type: 'band-array',
-  validator: seriesArrayJsonValidation
+  validator: seriesArrayJsonValidation,
 };
 
 export function seriesArrayJsonValidation(value: unknown, allowUndefinedOrNull: boolean): string | undefined {

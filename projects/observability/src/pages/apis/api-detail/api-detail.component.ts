@@ -12,21 +12,21 @@ import { ApiDetailService } from './api-detail.service';
         <router-outlet></router-outlet>
       </div>
     </div>
-  `
+  `,
 })
 export class ApiDetailComponent {
   public readonly tabs: NavigableTab[] = [
     {
       path: 'overview',
-      label: 'Overview'
+      label: 'Overview',
     },
     {
       path: 'traces',
-      label: 'Traces'
+      label: 'Traces',
     },
     {
       path: 'metrics',
-      label: 'Metrics'
-    }
+      label: 'Metrics',
+    },
   ];
 }

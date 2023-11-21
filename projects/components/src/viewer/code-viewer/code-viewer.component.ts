@@ -8,7 +8,7 @@ import {
   OnDestroy,
   QueryList,
   TemplateRef,
-  ViewChildren
+  ViewChildren,
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Color, TypedSimpleChanges } from '@hypertrace/common';
@@ -76,7 +76,7 @@ import { SyntaxHighlighterService } from './syntax-highlighter/syntax-highlighte
         </ng-template>
       </div>
     </div>
-  `
+  `,
 })
 export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input()
@@ -131,11 +131,11 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
   public lineHighlights: boolean[] = [];
 
   private readonly domMutationObserver: MutationObserver = new MutationObserver(mutations =>
-    this.onDomMutation(mutations)
+    this.onDomMutation(mutations),
   );
   private readonly scrollIntoViewOptions: ScrollIntoViewOptions = {
     inline: 'center',
-    block: 'center'
+    block: 'center',
   };
 
   private searchedBackgroundElements: HTMLDivElement[] = [];
@@ -144,7 +144,7 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
 
   public constructor(
     private readonly element: ElementRef,
-    private readonly syntaxHighlighter: SyntaxHighlighterService
+    private readonly syntaxHighlighter: SyntaxHighlighterService,
   ) {}
 
   public ngAfterViewInit(): void {
@@ -161,7 +161,7 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
     if (changes.code || changes.downloadFileName) {
       this.downloadCodeMetadata = {
         dataSource: of(this.code),
-        fileName: this.downloadFileName
+        fileName: this.downloadFileName,
       };
     }
 
@@ -197,7 +197,7 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
 
     // Remove existing child background elements
     this.codeLineBackgroundElements.forEach(
-      codeLineBackgroundElement => (codeLineBackgroundElement.nativeElement.innerHTML = '')
+      codeLineBackgroundElement => (codeLineBackgroundElement.nativeElement.innerHTML = ''),
     );
 
     const searchLen: number = searchText.length;
@@ -298,7 +298,7 @@ export class CodeViewerComponent implements AfterViewInit, OnChanges, OnDestroy 
       subtree: true,
       childList: true,
       attributes: true,
-      attributeFilter: ['class']
+      attributeFilter: ['class'],
     });
   }
 

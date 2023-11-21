@@ -6,6 +6,6 @@ import { LabelTagComponent } from './label-tag.component';
 @NgModule({
   declarations: [LabelTagComponent],
   imports: [CommonModule, IconModule],
-  exports: [LabelTagComponent]
+  exports: [LabelTagComponent],
 })
 export class LabelTagModule {}

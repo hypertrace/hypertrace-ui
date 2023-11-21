@@ -28,9 +28,9 @@ import { NavigationListComponent } from './navigation-list.component';
     BetaTagModule,
     MemoizeModule,
     LinkModule,
-    TooltipModule
+    TooltipModule,
   ],
   declarations: [NavigationListComponent, NavItemComponent],
-  exports: [NavigationListComponent]
+  exports: [NavigationListComponent],
 })
 export class NavigationListModule {}

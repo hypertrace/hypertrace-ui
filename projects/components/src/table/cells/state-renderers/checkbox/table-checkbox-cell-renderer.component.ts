@@ -13,11 +13,11 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
     <div class="row-checkbox-cell">
       <ht-checkbox [checked]="this.value.selected"></ht-checkbox>
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: CoreTableCellRendererType.Checkbox,
   alignment: TableCellAlignmentType.Center,
-  parser: CoreTableCellParserType.State
+  parser: CoreTableCellParserType.State,
 })
 export class TableCheckboxCellRendererComponent extends TableCellRendererBase<TableRowState> {}

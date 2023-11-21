@@ -6,6 +6,6 @@ import { BetaTagComponent } from './beta-tag.component';
 @NgModule({
   declarations: [BetaTagComponent],
   imports: [LabelTagModule, TooltipModule],
-  exports: [BetaTagComponent]
+  exports: [BetaTagComponent],
 })
 export class BetaTagModule {}

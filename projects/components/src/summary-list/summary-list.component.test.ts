@@ -9,7 +9,7 @@ describe('Summary List component', () => {
   const createHost = createHostFactory({
     component: SummaryListComponent,
     shallow: true,
-    declarations: [MockComponent(IconComponent), MockComponent(LabelComponent)]
+    declarations: [MockComponent(IconComponent), MockComponent(LabelComponent)],
   });
 
   beforeEach(() => {
@@ -27,31 +27,31 @@ describe('Summary List component', () => {
           items: [
             {
               label: 'number',
-              value: 0
+              value: 0,
             },
             {
               label: 'Number-Array',
-              value: [0, 1, 2]
+              value: [0, 1, 2],
             },
             {
               label: 'STRING',
-              value: 'zero'
+              value: 'zero',
             },
             {
               label: 'STRING_ARRAY',
-              value: ['zero', 'one', 'two', 'three']
+              value: ['zero', 'one', 'two', 'three'],
             },
             {
               label: 'bOOleAN',
-              value: true
+              value: true,
             },
             {
               label: 'boolean-array',
-              value: [true, false]
-            }
-          ]
-        }
-      }
+              value: [true, false],
+            },
+          ],
+        },
+      },
     );
   });
 
@@ -68,7 +68,7 @@ describe('Summary List component', () => {
       'String',
       'String Array',
       'Boolean',
-      'Boolean Array'
+      'Boolean Array',
     ]);
   });
 

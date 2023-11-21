@@ -8,22 +8,22 @@ export abstract class TopologyEventBehavior {
   public constructor(
     protected readonly d3Utils: D3UtilService,
     protected readonly domRenderer: Renderer2,
-    protected readonly eventScope?: string
+    protected readonly eventScope?: string,
   ) {}
   protected buildLookupMap<T extends RenderableTopologyElement>(
     renderableElements: T[],
-    elementLookupFn: (renderableElements: T) => Element | undefined
+    elementLookupFn: (renderableElements: T) => Element | undefined,
   ): Map<Element, T> {
     return new Map<Element, T>(
       renderableElements
         .map(renderableElement => [elementLookupFn(renderableElement), renderableElement] as const)
-        .filter((elementPair): elementPair is [Element, T] => elementPair[0] !== undefined)
+        .filter((elementPair): elementPair is [Element, T] => elementPair[0] !== undefined),
     );
   }
 
   protected generateValueFunc<T extends RenderableTopologyElement, TResult>(
     action: (renderableElement: T, domElement: Element) => TResult,
-    elementLookupMap: WeakMap<Element, T>
+    elementLookupMap: WeakMap<Element, T>,
   ): ValueFn<Element, unknown, TResult | undefined> {
     return function (this: Element): TResult | undefined {
       const renderableEl = elementLookupMap.get(this);
@@ -52,7 +52,7 @@ export abstract class TopologyEventBehavior {
     eventAndCallbacks.forEach(({ eventName, callback }) => {
       selection.on(
         this.scopeEventName(eventName),
-        this.generateValueFunc(topologyElement => callback(topologyElement, eventSubject), lookupMap)
+        this.generateValueFunc(topologyElement => callback(topologyElement, eventSubject), lookupMap),
       );
     });
 

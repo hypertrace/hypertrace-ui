@@ -3,6 +3,6 @@ import { MemoizePipe } from './memoize.pipe';
 
 @NgModule({
   declarations: [MemoizePipe],
-  exports: [MemoizePipe]
+  exports: [MemoizePipe],
 })
 export class MemoizeModule {}

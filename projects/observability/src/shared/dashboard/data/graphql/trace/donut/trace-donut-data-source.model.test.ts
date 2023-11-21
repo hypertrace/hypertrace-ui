@@ -11,25 +11,25 @@ import { GraphQlTimeRange } from '../../../../../graphql/model/schema/timerange/
 import { ObservabilitySpecificationBuilder } from '../../../../../graphql/request/builders/selections/observability-specification-builder';
 import {
   EXPLORE_GQL_REQUEST,
-  GraphQlExploreResponse
+  GraphQlExploreResponse,
 } from '../../../../../graphql/request/handlers/explore/explore-query';
 import { GraphQlQueryEventService } from '../../graphql-query-event.service';
 import { TraceDonutDataSourceModel } from './trace-donut-data-source.model';
 
 describe('Donut data source model', () => {
   const modelFactory = createModelFactory({
-    providers: [mockProvider(GraphQlQueryEventService)]
+    providers: [mockProvider(GraphQlQueryEventService)],
   });
 
   const specBuilder = new ObservabilitySpecificationBuilder();
   const mockTimeRange = {
     startTime: new Date(1),
-    endTime: new Date(2)
+    endTime: new Date(2),
   };
 
   const getDataForQueryResponse = (
     model: TraceDonutDataSourceModel,
-    response: GraphQlExploreResponse
+    response: GraphQlExploreResponse,
   ): Observable<DonutSeriesResults> => {
     model.query$.pipe(take(1)).subscribe(query => {
       query.responseObserver.next(response);
@@ -44,11 +44,11 @@ describe('Donut data source model', () => {
       properties: {
         metric: specBuilder.metricAggregationSpecForKey('foo', MetricAggregationType.Sum),
         maxResults: 3,
-        groupBy: specBuilder.attributeSpecificationForKey('bar')
+        groupBy: specBuilder.attributeSpecificationForKey('bar'),
       },
       api: {
-        getTimeRange: jest.fn().mockReturnValue(mockTimeRange)
-      }
+        getTimeRange: jest.fn().mockReturnValue(mockTimeRange),
+      },
     });
 
     const receivedQueries = recordObservable(spectator.model.query$.pipe(map(query => query.buildRequest([]))));
@@ -64,16 +64,16 @@ describe('Donut data source model', () => {
           filters: [],
           groupBy: {
             keyExpressions: [{ key: 'bar' }],
-            limit: 3
+            limit: 3,
           },
           limit: 3,
           selections: [
             expect.objectContaining({
               name: 'foo',
-              aggregation: MetricAggregationType.Sum
-            })
-          ]
-        }
+              aggregation: MetricAggregationType.Sum,
+            }),
+          ],
+        },
       });
     });
   });
@@ -82,11 +82,11 @@ describe('Donut data source model', () => {
     const spectator = modelFactory(TraceDonutDataSourceModel, {
       properties: {
         metric: specBuilder.metricAggregationSpecForKey('foo', MetricAggregationType.Sum),
-        groupBy: specBuilder.attributeSpecificationForKey('bar')
+        groupBy: specBuilder.attributeSpecificationForKey('bar'),
       },
       api: {
-        getTimeRange: jest.fn().mockReturnValue(mockTimeRange)
-      }
+        getTimeRange: jest.fn().mockReturnValue(mockTimeRange),
+      },
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -96,39 +96,39 @@ describe('Donut data source model', () => {
             {
               'sum(foo)': {
                 value: 10,
-                type: AttributeMetadataType.Long
+                type: AttributeMetadataType.Long,
               },
               bar: {
                 value: 'first',
-                type: AttributeMetadataType.String
-              }
+                type: AttributeMetadataType.String,
+              },
             },
             {
               'sum(foo)': {
                 value: 15,
-                type: AttributeMetadataType.Long
+                type: AttributeMetadataType.Long,
               },
               bar: {
                 value: 'second',
-                type: AttributeMetadataType.String
-              }
-            }
-          ]
-        })
+                type: AttributeMetadataType.String,
+              },
+            },
+          ],
+        }),
       ).toBe('(x|)', {
         x: {
           series: [
             {
               name: 'first',
-              value: 10
+              value: 10,
             },
             {
               name: 'second',
-              value: 15
-            }
+              value: 15,
+            },
           ],
-          total: 25
-        }
+          total: 25,
+        },
       });
     });
   });

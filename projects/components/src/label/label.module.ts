@@ -7,6 +7,6 @@ import { LabelComponent } from './label.component';
 @NgModule({
   imports: [CommonModule, TooltipModule, LayoutChangeModule],
   declarations: [LabelComponent],
-  exports: [LabelComponent]
+  exports: [LabelComponent],
 })
 export class LabelModule {}

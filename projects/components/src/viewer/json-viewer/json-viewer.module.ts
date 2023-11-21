@@ -7,6 +7,6 @@ import { JsonViewerComponent } from './json-viewer.component';
 @NgModule({
   declarations: [JsonViewerComponent, JsonRecordsPipe],
   imports: [CommonModule, IconModule],
-  exports: [JsonViewerComponent]
+  exports: [JsonViewerComponent],
 })
 export class JsonViewerModule {}

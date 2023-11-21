@@ -7,7 +7,7 @@ import {
   HostListener,
   Input,
   OnDestroy,
-  Output
+  Output,
 } from '@angular/core';
 import { PopoverBackdrop, PopoverPositionType, PopoverRelativePositionLocation } from './popover';
 import { PopoverContentComponent } from './popover-content.component';
@@ -18,7 +18,7 @@ import { PopoverService } from './popover.service';
 @Component({
   selector: 'ht-popover',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <ng-container *ngTemplateOutlet="this.trigger.content"></ng-container> `
+  template: ` <ng-container *ngTemplateOutlet="this.trigger.content"></ng-container> `,
 })
 export class PopoverComponent implements OnDestroy {
   @Input()
@@ -35,7 +35,7 @@ export class PopoverComponent implements OnDestroy {
     PopoverRelativePositionLocation.BelowLeftAligned,
     PopoverRelativePositionLocation.BelowRightAligned,
     PopoverRelativePositionLocation.AboveLeftAligned,
-    PopoverRelativePositionLocation.AboveRightAligned
+    PopoverRelativePositionLocation.AboveRightAligned,
   ];
 
   @Output()
@@ -70,10 +70,10 @@ export class PopoverComponent implements OnDestroy {
       position: {
         type: PopoverPositionType.Relative,
         origin: this.popoverElement,
-        locationPreferences: this.locationPreferences
+        locationPreferences: this.locationPreferences,
       },
       componentOrTemplate: this.content.content,
-      backdrop: PopoverBackdrop.Transparent
+      backdrop: PopoverBackdrop.Transparent,
     });
 
     // Closing can happen internal to the Popover for things like closeOnBackdropClick. Let the consumer know.

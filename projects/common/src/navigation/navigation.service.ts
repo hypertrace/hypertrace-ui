@@ -13,7 +13,7 @@ import {
   Router,
   RoutesRecognized,
   UrlSegment,
-  UrlTree
+  UrlTree,
 } from '@angular/router';
 import { isArray, isEmpty, isString } from 'lodash-es';
 import { from, Observable, of } from 'rxjs';
@@ -26,7 +26,7 @@ import { APP_TITLE, HtRoute } from './ht-route';
 export class NavigationService {
   public readonly navigation$: Observable<ActivatedRoute> = this.event$(NavigationEnd).pipe(
     map(() => this.getCurrentActivatedRoute()),
-    share()
+    share(),
   );
 
   private isFirstNavigation: boolean = true;
@@ -39,7 +39,7 @@ export class NavigationService {
     private readonly location: Location,
     private readonly platformLocation: PlatformLocation,
     private readonly titleService: Title,
-    @Optional() @Inject(APP_TITLE) private readonly appTitle: string
+    @Optional() @Inject(APP_TITLE) private readonly appTitle: string,
   ) {
     this.event$(RoutesRecognized)
       .pipe(
@@ -54,7 +54,7 @@ export class NavigationService {
         }),
         skip(1),
         filter(() => !this.getActiveNavigation()?.extras.skipLocationChange),
-        take(1)
+        take(1),
       )
       .subscribe(() => (this.isFirstNavigation = false));
 
@@ -64,7 +64,7 @@ export class NavigationService {
         tap(routeData => {
           this.pendingQueryParams = {};
           this.titleService.setTitle(routeData.title ? `${this.appTitle} | ${routeData.title}` : this.appTitle);
-        })
+        }),
       )
       .subscribe();
   }
@@ -72,7 +72,7 @@ export class NavigationService {
   public addQueryParametersToUrl(newParams: QueryParamObject): Observable<boolean> {
     this.pendingQueryParams = {
       ...this.pendingQueryParams,
-      ...newParams
+      ...newParams,
     };
 
     return this.navigate({
@@ -80,7 +80,7 @@ export class NavigationService {
       path: [],
       queryParams: this.pendingQueryParams,
       queryParamsHandling: 'merge',
-      replaceCurrentHistory: true
+      replaceCurrentHistory: true,
     });
   }
 
@@ -89,7 +89,7 @@ export class NavigationService {
       navType: NavigationParamsType.InApp,
       path: [],
       queryParams: newParams,
-      replaceCurrentHistory: true
+      replaceCurrentHistory: true,
     });
   }
 
@@ -125,7 +125,7 @@ export class NavigationService {
   }
 
   public buildNavigationParams(
-    paramsOrUrl: NavigationParams | string
+    paramsOrUrl: NavigationParams | string,
   ): { path: NavigationPath; extras?: NavigationExtras } {
     const params = typeof paramsOrUrl === 'string' ? this.convertUrlToNavParams(paramsOrUrl) : paramsOrUrl;
 
@@ -138,12 +138,12 @@ export class NavigationService {
             [ExternalNavigationPathParams.Url]: params.useGlobalParams
               ? this.constructExternalUrl(params.url)
               : params.url,
-            [ExternalNavigationPathParams.WindowHandling]: params.windowHandling
-          }
+            [ExternalNavigationPathParams.WindowHandling]: params.windowHandling,
+          },
         ],
         extras: {
-          skipLocationChange: true // Don't bother showing the updated location, we're going external anyway
-        }
+          skipLocationChange: true, // Don't bother showing the updated location, we're going external anyway
+        },
       };
     }
 
@@ -154,8 +154,8 @@ export class NavigationService {
         queryParams: { ...this.buildQueryParam(), ...(params?.queryParams ?? {}) },
         queryParamsHandling: params?.queryParamsHandling,
         replaceUrl: params?.replaceCurrentHistory,
-        relativeTo: params?.relativeTo
-      }
+        relativeTo: params?.relativeTo,
+      },
     };
   }
 
@@ -164,13 +164,13 @@ export class NavigationService {
   }
 
   public buildNavigationParams$(
-    paramsOrUrl: NavigationParams | string
+    paramsOrUrl: NavigationParams | string,
   ): Observable<{ path: NavigationPath; extras?: NavigationExtras }> {
     return this.navigation$.pipe(
       startWith(this.getCurrentActivatedRoute()),
       switchMap(route => route.queryParams),
       map(() => this.buildNavigationParams(paramsOrUrl)),
-      distinctUntilChanged(isEqualIgnoreFunctions)
+      distinctUntilChanged(isEqualIgnoreFunctions),
     );
   }
 
@@ -181,13 +181,13 @@ export class NavigationService {
   public navigateWithinApp(
     path: NavigationPath,
     relativeTo?: ActivatedRoute,
-    preserveParameters?: string[]
+    preserveParameters?: string[],
   ): Observable<boolean> {
     return this.navigate({
       navType: NavigationParamsType.InApp,
       path: path,
       queryParams: this.buildQueryParam(preserveParameters ?? []),
-      relativeTo: relativeTo
+      relativeTo: relativeTo,
     });
   }
 
@@ -195,9 +195,9 @@ export class NavigationService {
     return [...this.globalQueryParams, ...preserveParameters].reduce<Params>(
       (paramObj, param) => ({
         ...paramObj,
-        [param]: this.currentParamMap.get(param)
+        [param]: this.currentParamMap.get(param),
       }),
-      {}
+      {},
     );
   }
 
@@ -216,13 +216,13 @@ export class NavigationService {
       return {
         navType: NavigationParamsType.External,
         url: url,
-        windowHandling: ExternalNavigationWindowHandling.SameWindow
+        windowHandling: ExternalNavigationWindowHandling.SameWindow,
       };
     }
 
     return {
       navType: NavigationParamsType.InApp,
-      path: url
+      path: url,
     };
   }
 
@@ -241,7 +241,7 @@ export class NavigationService {
     return this.router.events.pipe(
       startWith(),
       map(() => this.router.isActive(urlTree, false)),
-      distinctUntilChanged()
+      distinctUntilChanged(),
     );
   }
 
@@ -260,7 +260,7 @@ export class NavigationService {
    */
   public getRouteConfig(
     path: string[],
-    relativeTo: ActivatedRoute = this.getCurrentActivatedRoute()
+    relativeTo: ActivatedRoute = this.getCurrentActivatedRoute(),
   ): HtRoute | undefined {
     const childRoutes =
       relativeTo === this.rootRoute() ? this.router.config : relativeTo.routeConfig && relativeTo.routeConfig.children;
@@ -283,14 +283,14 @@ export class NavigationService {
   public getUrlTree(urlSegments: UrlSegment[], queryParams?: Params): UrlTree {
     return this.router.createUrlTree(
       urlSegments.map(segment => segment.toString()),
-      { queryParams: queryParams }
+      { queryParams: queryParams },
     );
   }
 
   public getUrlTreeForRouteSnapshot(routeSnapshot: ActivatedRouteSnapshot): UrlTree {
     return this.getUrlTree(
       routeSnapshot.pathFromRoot.flatMap(route => route.url),
-      routeSnapshot.queryParams
+      routeSnapshot.queryParams,
     );
   }
 
@@ -353,7 +353,7 @@ export class NavigationService {
     return this.navigate({
       navType: NavigationParamsType.InApp,
       path: ['error'],
-      replaceCurrentHistory: replaceCurrentHistory
+      replaceCurrentHistory: replaceCurrentHistory,
     });
   }
 
@@ -361,7 +361,7 @@ export class NavigationService {
     return this.navigate({
       navType: NavigationParamsType.InApp,
       path: ['/'],
-      replaceCurrentHistory: replaceCurrentHistory
+      replaceCurrentHistory: replaceCurrentHistory,
     });
   }
 
@@ -390,15 +390,15 @@ export class NavigationService {
           route.path === pathSegment || // Regular match (either full or prefix)
           (route.path?.startsWith(`${pathSegment}/`) && route.pathMatch !== 'full') || // Prefix that continues on
           route.path === '**' || // Wildcard match
-          (route.path === '' && route.pathMatch !== 'full') // Pass through
+          (route.path === '' && route.pathMatch !== 'full'), // Pass through
       )
       .map(
         // Now resolve any pass through matches which may or may not ultimately match
-        match => (match.path === '' ? this.findMatchingRoute(pathSegment, match.children || []) : match)
+        match => (match.path === '' ? this.findMatchingRoute(pathSegment, match.children || []) : match),
       )
       .find(
         // Now take first defined match
-        match => match !== undefined
+        match => match !== undefined,
       );
   }
 }
@@ -429,15 +429,15 @@ export interface ExternalNavigationParams {
 
 export const enum ExternalNavigationPathParams {
   Url = 'url',
-  WindowHandling = 'windowHandling'
+  WindowHandling = 'windowHandling',
 }
 
 export const enum ExternalNavigationWindowHandling {
   SameWindow = 'same_window',
-  NewWindow = 'new_window'
+  NewWindow = 'new_window',
 }
 
 export const enum NavigationParamsType {
   InApp = 'in-app',
-  External = 'external'
+  External = 'external',
 }

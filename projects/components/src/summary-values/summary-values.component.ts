@@ -35,7 +35,7 @@ import { SummaryValueDisplayStyle } from '../summary-value/summary-value.compone
         </span>
       </div>
     </ng-template>
-  `
+  `,
 })
 export class SummaryValuesComponent implements OnChanges {
   @Input()

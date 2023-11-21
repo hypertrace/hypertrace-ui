@@ -10,14 +10,13 @@ import {
   ExploreRequestContext,
   ExploreSeries,
   ExploreVisualizationBuilder,
-  ExploreVisualizationRequest
+  ExploreVisualizationRequest,
 } from './explore-visualization-builder';
 
 @Component({
   selector: 'ht-explore-query-editor',
   styleUrls: ['./explore-query-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ExploreVisualizationBuilder],
   template: `
     <div *ngIf="this.visualizationRequest$ | async as currentVisualization" class="query-editor">
       <ht-explore-query-series-group-editor
@@ -58,7 +57,7 @@ import {
         </div>
         <div class="filters-row">
           <ht-explore-query-order-by-editor
-            *ngIf="!currentVisualization.interval"
+            *ngIf="!currentVisualization.interval && currentVisualization.groupBy"
             class="order-by"
             [orderByExpression]="currentVisualization.orderBy"
             [context]="currentVisualization.context"
@@ -67,7 +66,7 @@ import {
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class ExploreQueryEditorComponent implements OnChanges, OnInit {
   private static readonly DEFAULT_GROUP_LIMIT: number = 5;
@@ -141,7 +140,7 @@ export class ExploreQueryEditorComponent implements OnChanges, OnInit {
       this.visualizationBuilder.groupBy(
         groupBy
           ? { ...groupBy, keyExpressions: [keyExpression] }
-          : { keyExpressions: [keyExpression], limit: ExploreQueryEditorComponent.DEFAULT_GROUP_LIMIT }
+          : { keyExpressions: [keyExpression], limit: ExploreQueryEditorComponent.DEFAULT_GROUP_LIMIT },
       );
     }
   }

@@ -5,7 +5,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  Output
+  Output,
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
@@ -75,7 +75,7 @@ import { PaginationProvider } from './paginator-api';
         <ht-label class="label" label=" per page"></ht-label>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class PaginatorComponent implements OnChanges, PaginationProvider {
   @Input()
@@ -140,7 +140,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
 
   public readonly tabs: ToggleItem<PaginatorButtonType>[] = [
     { label: PaginatorButtonType.Prev },
-    { label: PaginatorButtonType.Next }
+    { label: PaginatorButtonType.Next },
   ];
 
   public constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
@@ -152,7 +152,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
     if (changes.pageIndex || changes.pageSize) {
       this.pageSizeInputSubject.next({
         pageSize: this.pageSize,
-        pageIndex: this.pageIndex
+        pageIndex: this.pageIndex,
       });
     }
   }
@@ -254,7 +254,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   private emitChange(): void {
     this.pageChange.next({
       pageIndex: this.pageIndex,
-      pageSize: this.pageSize
+      pageSize: this.pageSize,
     });
     this.recordsDisplayedChange.emit(Math.min(this.pageSize, this.totalItems));
   }
@@ -262,10 +262,10 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
 
 const enum PaginatorButtonType {
   Next = 'Next',
-  Prev = 'Prev'
+  Prev = 'Prev',
 }
 
 export enum PaginatorTotalCode {
   Unknown = -1,
-  Last = -2
+  Last = -2,
 }

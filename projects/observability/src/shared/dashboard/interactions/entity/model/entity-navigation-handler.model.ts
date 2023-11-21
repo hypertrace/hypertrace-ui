@@ -6,7 +6,7 @@ import { EntityNavigationService } from '../../../../services/navigation/entity/
 import { InteractionHandler } from '../../../interaction/interaction-handler';
 
 @Model({
-  type: 'entity-navigation-handler'
+  type: 'entity-navigation-handler',
 })
 export class EntityNavigationHandlerModel implements InteractionHandler {
   @ModelInject(EntityNavigationService)

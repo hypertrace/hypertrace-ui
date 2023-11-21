@@ -9,14 +9,14 @@ export abstract class ContainerLayout {
   @ModelProperty({
     key: 'enable-style',
     type: BOOLEAN_PROPERTY.type,
-    required: false
+    required: false,
   })
   public enableStyle: boolean = true;
 
   @ModelProperty({
     key: 'grid-gap',
     type: STRING_PROPERTY.type,
-    required: false
+    required: false,
   })
   public gridGap: string = '16px';
 
@@ -27,7 +27,7 @@ export abstract class ContainerLayout {
 
     containerRef.clear();
     containerRef.createComponent(ContainerLayoutComponent, {
-      injector: this.createInjectorForContainer(containerRef, layoutData)
+      injector: this.createInjectorForContainer(containerRef, layoutData),
     });
   }
 
@@ -36,10 +36,10 @@ export abstract class ContainerLayout {
       providers: [
         {
           provide: CONTAINER_LAYOUT,
-          useValue: gridLayoutData
-        }
+          useValue: gridLayoutData,
+        },
       ],
-      parent: containerRef.injector
+      parent: containerRef.injector,
     });
   }
 }

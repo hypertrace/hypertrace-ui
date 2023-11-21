@@ -22,7 +22,7 @@ import { ServiceTraceListModule } from './traces/service-trace-list.module';
     ServiceApisListModule,
     ServiceTraceListModule,
     ServiceMetricsModule,
-    PageHeaderModule
-  ]
+    PageHeaderModule,
+  ],
 })
 export class ServiceDetailModule {}

@@ -11,8 +11,8 @@ import { NumberInputAppearance } from './number-input-appearance';
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: NumberInputComponent
-    }
+      useExisting: NumberInputComponent,
+    },
   ],
   template: `
     <input
@@ -24,7 +24,7 @@ import { NumberInputAppearance } from './number-input-appearance';
       [ngModel]="this.value"
       (ngModelChange)="this.onValueChange($event)"
     />
-  `
+  `,
 })
 export class NumberInputComponent implements ControlValueAccessor {
   @Input()

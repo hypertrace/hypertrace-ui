@@ -7,6 +7,6 @@ import { TopologyComponent } from './topology.component';
 @NgModule({
   declarations: [TopologyComponent, TopologyInteractionControlComponent],
   exports: [TopologyComponent],
-  imports: [CommonModule, IconModule, CheckboxModule, PopoverModule, LayoutChangeModule, SelectModule]
+  imports: [CommonModule, IconModule, CheckboxModule, PopoverModule, LayoutChangeModule, SelectModule],
 })
 export class TopologyModule {}

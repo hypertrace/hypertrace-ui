@@ -22,9 +22,9 @@ describe('Span detail component', () => {
         SpanResponseDetailComponent,
         SpanTagsDetailComponent,
         ToggleGroupComponent,
-        SpanDetailTitleHeaderComponent
-      )
-    ]
+        SpanDetailTitleHeaderComponent,
+      ),
+    ],
   });
 
   test('should display child components', fakeAsync(() => {
@@ -42,13 +42,13 @@ describe('Span detail component', () => {
       responseBody: '[{"data": 5000}]',
       tags: { tag1: 'value1', tag2: 'value2' },
       requestUrl: 'test-url',
-      startTime: 1604567825671
+      startTime: 1604567825671,
     };
 
     spectator = createHost(`<ht-span-detail [spanData]="spanData"></ht-span-detail>`, {
       hostProps: {
-        spanData: spanData
-      }
+        spanData: spanData,
+      },
     });
     spectator.tick();
     expect(spectator.query(ToggleGroupComponent)).toExist();
@@ -70,13 +70,13 @@ describe('Span detail component', () => {
       responseBody: '[{"data": 5000}]',
       tags: { tag1: 'value1', tag2: 'value2' },
       requestUrl: 'test-url',
-      startTime: 1604567825671
+      startTime: 1604567825671,
     };
 
     spectator = createHost(`<ht-span-detail [spanData]="spanData"></ht-span-detail>`, {
       hostProps: {
-        spanData: spanData
-      }
+        spanData: spanData,
+      },
     });
 
     spectator.tick();
@@ -101,13 +101,13 @@ describe('Span detail component', () => {
       responseBody: '[{"data": 5000}]',
       tags: { tag1: 'value1', tag2: 'value2' },
       requestUrl: 'test-url',
-      startTime: 1604567825671
+      startTime: 1604567825671,
     };
 
     spectator = createHost(`<ht-span-detail [spanData]="spanData"></ht-span-detail>`, {
       hostProps: {
-        spanData: spanData
-      }
+        spanData: spanData,
+      },
     });
     spectator.tick();
 
@@ -129,13 +129,13 @@ describe('Span detail component', () => {
       responseBody: '',
       tags: { tag1: 'value1', tag2: 'value2' },
       requestUrl: 'test-url',
-      startTime: 1604567825671
+      startTime: 1604567825671,
     };
 
     spectator = createHost(`<ht-span-detail [spanData]="spanData"></ht-span-detail>`, {
       hostProps: {
-        spanData: spanData
-      }
+        spanData: spanData,
+      },
     });
     spectator.tick();
     expect(spectator.component.tabs.findIndex(tab => tab.value === SpanDetailTab.Response)).toEqual(-1);

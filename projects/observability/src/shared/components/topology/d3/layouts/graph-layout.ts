@@ -35,7 +35,7 @@ export class GraphLayout {
 
   private levelOrderTraversal(
     goingToBeExploredNodes: RenderableTopologyNode[],
-    goingToBeOrAlreadyExploredNodes: Set<RenderableTopologyNode>
+    goingToBeOrAlreadyExploredNodes: Set<RenderableTopologyNode>,
   ): void {
     if (goingToBeExploredNodes.length === 0) {
       return;

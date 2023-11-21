@@ -6,7 +6,7 @@ import {
   TABLE_COLUMN_CONFIG,
   TABLE_COLUMN_INDEX,
   TABLE_DATA_PARSER,
-  TABLE_ROW_DATA
+  TABLE_ROW_DATA,
 } from '../../table-cell-injection';
 import { TableCellParserBase } from '../../table-cell-parser-base';
 import { TableCellRenderer } from '../../table-cell-renderer';
@@ -23,12 +23,12 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
       <span class="duration-text">{{ this.value | htDisplayDuration: this.formatter }}</span>
     </div>
   `,
-  styleUrls: ['./duration-table-cell-renderer.component.scss']
+  styleUrls: ['./duration-table-cell-renderer.component.scss'],
 })
 @TableCellRenderer({
   type: CoreTableCellRendererType.Duration,
   alignment: TableCellAlignmentType.Left,
-  parser: CoreTableCellParserType.NoOp
+  parser: CoreTableCellParserType.NoOp,
 })
 export class DurationTableCellRendererComponent extends TableCellRendererBase<number> {
   public readonly formatter: UnitStringType = UnitStringType.Long;
@@ -38,7 +38,7 @@ export class DurationTableCellRendererComponent extends TableCellRendererBase<nu
     @Inject(TABLE_COLUMN_INDEX) index: number,
     @Inject(TABLE_DATA_PARSER) parser: TableCellParserBase<number, number, unknown>,
     @Inject(TABLE_CELL_DATA) cellData: number,
-    @Inject(TABLE_ROW_DATA) rowData: TableRow
+    @Inject(TABLE_ROW_DATA) rowData: TableRow,
   ) {
     super(columnConfig, index, parser, cellData, rowData);
   }

@@ -10,25 +10,25 @@ describe('Navigation List Component Service', () => {
   const navItems: NavItemConfig[] = [
     {
       type: NavItemType.Header,
-      label: 'header 1'
+      label: 'header 1',
     },
     {
       type: NavItemType.Link,
       icon: 'icon',
       label: 'label-1',
       features: ['feature'],
-      matchPaths: ['']
+      matchPaths: [''],
     },
     {
       type: NavItemType.Link,
       icon: 'icon',
       label: 'label-2',
-      matchPaths: ['']
+      matchPaths: [''],
     },
     {
       type: NavItemType.Header,
-      label: 'header 2'
-    }
+      label: 'header 2',
+    },
   ];
 
   const createService = createServiceFactory({
@@ -36,9 +36,9 @@ describe('Navigation List Component Service', () => {
     providers: [
       mockProvider(FeatureStateResolver, {
         getCombinedFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled)),
-        getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled))
-      })
-    ]
+        getFeatureState: jest.fn().mockReturnValue(of(FeatureState.Enabled)),
+      }),
+    ],
   });
 
   test('should return correct visibility for both headers', () => {
@@ -47,10 +47,10 @@ describe('Navigation List Component Service', () => {
 
     runFakeRxjs(({ expectObservable }) => {
       expectObservable((resolvedItems[0] as NavItemHeaderConfig).isVisible$!).toBe('(x|)', {
-        x: true
+        x: true,
       });
       expectObservable((resolvedItems[3] as NavItemHeaderConfig).isVisible$!).toBe('(x|)', {
-        x: false
+        x: false,
       });
     });
   });

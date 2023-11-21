@@ -13,7 +13,7 @@ export const SUMMARIES_DATA = new InjectionToken<number>('SUMMARIES_DATA');
         {{ summary.value | htDisplayNumber }}
       </div>
     </div>
-  `
+  `,
 })
 export class CartesianSummaryComponent {
   public constructor(@Inject(SUMMARIES_DATA) public readonly summaries: Summary[]) {}

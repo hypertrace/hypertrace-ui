@@ -11,6 +11,6 @@ import { ComboBoxComponent } from './combo-box.component';
 @NgModule({
   imports: [CommonModule, PopoverModule, IconModule, FormsModule, FormattingModule, ButtonModule, TooltipModule],
   declarations: [ComboBoxComponent],
-  exports: [ComboBoxComponent]
+  exports: [ComboBoxComponent],
 })
 export class ComboBoxModule {}

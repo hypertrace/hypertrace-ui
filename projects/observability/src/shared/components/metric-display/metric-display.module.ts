@@ -6,6 +6,6 @@ import { MetricDisplayComponent } from './metric-display.component';
 @NgModule({
   declarations: [MetricDisplayComponent],
   exports: [MetricDisplayComponent],
-  imports: [CommonModule, FormattingModule]
+  imports: [CommonModule, FormattingModule],
 })
 export class MetricDisplayModule {}

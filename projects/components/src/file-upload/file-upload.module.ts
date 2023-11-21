@@ -18,9 +18,9 @@ import { FileUploadComponent } from './file-upload.component';
     ProgressBarModule,
     FormattingModule,
     FileTypePipeModule,
-    MemoizeModule
+    MemoizeModule,
   ],
   declarations: [FileUploadComponent, DropZoneDirective],
-  exports: [FileUploadComponent, DropZoneDirective]
+  exports: [FileUploadComponent, DropZoneDirective],
 })
 export class FileUploadModule {}

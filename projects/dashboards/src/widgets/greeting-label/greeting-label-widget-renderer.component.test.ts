@@ -10,7 +10,7 @@ describe('Greeting label widget renderer component', () => {
   const createComponent = createComponentFactory<GreetingLabelWidgetRendererComponent>({
     component: GreetingLabelWidgetRendererComponent,
     entryComponents: [GreetingLabelComponent],
-    providers: [...mockDashboardWidgetProviders(mockModel)]
+    providers: [...mockDashboardWidgetProviders(mockModel)],
   });
 
   beforeEach(() => {

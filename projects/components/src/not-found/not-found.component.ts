@@ -32,7 +32,7 @@ import { NotificationMode } from '../notification/notification.component';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class NotFoundComponent {
   public constructor(private readonly navService: NavigationService) {}

@@ -6,7 +6,7 @@ import {
   LegendPosition,
   MetricAggregationType,
   ObservabilityTableCellType,
-  TracingTableCellType
+  TracingTableCellType,
 } from '@hypertrace/observability';
 
 /* eslint-disable max-lines */
@@ -21,50 +21,50 @@ export const homeDashboard: DashboardDefaultConfiguration = {
         {
           type: 'dimension-model',
           dimension: 1,
-          unit: 'FR'
+          unit: 'FR',
         },
         {
           type: 'dimension-model',
           dimension: 1,
-          unit: 'FR'
-        }
+          unit: 'FR',
+        },
       ],
       'row-dimensions': [
         {
           type: 'dimension-model',
           dimension: 400,
-          unit: 'PX'
+          unit: 'PX',
         },
         {
           type: 'dimension-model',
           dimension: 58,
-          unit: 'PX'
+          unit: 'PX',
         },
         {
           type: 'dimension-model',
           dimension: 320,
-          unit: 'PX'
+          unit: 'PX',
         },
         {
           type: 'dimension-model',
           dimension: 32,
-          unit: 'PX'
+          unit: 'PX',
         },
         {
           type: 'dimension-model',
           dimension: 284,
-          unit: 'PX'
+          unit: 'PX',
         },
         {
           type: 'dimension-model',
           dimension: 284,
-          unit: 'PX'
+          unit: 'PX',
         },
         {
           type: 'dimension-model',
           dimension: 284,
-          unit: 'PX'
-        }
+          unit: 'PX',
+        },
       ],
       'cell-spans': [
         {
@@ -72,58 +72,58 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           'col-start': 0,
           'col-end': 1,
           'row-start': 0,
-          'row-end': 1
+          'row-end': 1,
         },
         {
           type: 'cell-span-model',
           'col-start': 1,
           'col-end': 2,
           'row-start': 0,
-          'row-end': 1
+          'row-end': 1,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 1,
           'row-start': 1,
-          'row-end': 2
+          'row-end': 2,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 2,
           'row-start': 2,
-          'row-end': 3
+          'row-end': 3,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 1,
           'row-start': 3,
-          'row-end': 4
+          'row-end': 4,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 3,
           'row-start': 4,
-          'row-end': 5
+          'row-end': 5,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 3,
           'row-start': 5,
-          'row-end': 6
+          'row-end': 6,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 3,
           'row-start': 6,
-          'row-end': 7
-        }
-      ]
+          'row-end': 7,
+        },
+      ],
     },
     children: [
       {
@@ -135,30 +135,30 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             {
               type: 'dimension-model',
               dimension: 144,
-              unit: 'PX'
+              unit: 'PX',
             },
             {
               type: 'dimension-model',
               dimension: 32,
-              unit: 'PX'
+              unit: 'PX',
             },
             {
               type: 'dimension-model',
               dimension: 80,
-              unit: 'PX'
+              unit: 'PX',
             },
             {
               type: 'dimension-model',
               dimension: 144,
-              unit: 'PX'
-            }
+              unit: 'PX',
+            },
           ],
           'column-dimensions': [
             {
               type: 'dimension-model',
               dimension: 1,
-              unit: 'FR'
-            }
+              unit: 'FR',
+            },
           ],
           'cell-spans': [
             {
@@ -166,30 +166,30 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               'col-start': 0,
               'col-end': 1,
               'row-start': 0,
-              'row-end': 1
+              'row-end': 1,
             },
             {
               type: 'cell-span-model',
               'col-start': 0,
               'col-end': 1,
               'row-start': 1,
-              'row-end': 2
+              'row-end': 2,
             },
             {
               type: 'cell-span-model',
               'col-start': 0,
               'col-end': 1,
               'row-start': 2,
-              'row-end': 3
+              'row-end': 3,
             },
             {
               type: 'cell-span-model',
               'col-start': 0,
               'col-end': 1,
               'row-start': 3,
-              'row-end': 4
-            }
-          ]
+              'row-end': 4,
+            },
+          ],
         },
         children: [
           {
@@ -197,19 +197,19 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             layout: {
               type: 'auto-container-layout',
               rows: 1,
-              'enable-style': false
-            }
+              'enable-style': false,
+            },
           },
           {
             type: 'greeting-label-widget',
-            'suffix-label': ", here's your trace report:"
+            'suffix-label': ", here's your trace report:",
           },
           {
             type: 'container-widget',
             layout: {
               type: 'auto-container-layout',
               rows: 1,
-              'enable-style': false
+              'enable-style': false,
             },
             children: [
               {
@@ -224,16 +224,16 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                     metric: {
                       type: 'explore-selection',
                       metric: 'calls',
-                      aggregation: MetricAggregationType.Count
+                      aggregation: MetricAggregationType.Count,
                     },
                     filters: [
                       {
                         type: 'graphql-key-value-filter',
                         key: 'duration',
                         operator: GraphQlOperatorType.GreaterThan,
-                        value: 1000
-                      }
-                    ]
+                        value: 1000,
+                      },
+                    ],
                   },
                   denominator: {
                     type: 'metric-aggregation-data-source',
@@ -241,10 +241,10 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                     metric: {
                       type: 'explore-selection',
                       metric: 'calls',
-                      aggregation: MetricAggregationType.Sum
-                    }
-                  }
-                }
+                      aggregation: MetricAggregationType.Sum,
+                    },
+                  },
+                },
               },
               {
                 type: 'metric-display-widget',
@@ -258,16 +258,16 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                     metric: {
                       type: 'explore-selection',
                       metric: 'calls',
-                      aggregation: MetricAggregationType.Count
+                      aggregation: MetricAggregationType.Count,
                     },
                     filters: [
                       {
                         type: 'graphql-key-value-filter',
                         key: 'duration',
                         operator: GraphQlOperatorType.GreaterThan,
-                        value: 500
-                      }
-                    ]
+                        value: 500,
+                      },
+                    ],
                   },
                   denominator: {
                     type: 'metric-aggregation-data-source',
@@ -275,10 +275,10 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                     metric: {
                       type: 'explore-selection',
                       metric: 'calls',
-                      aggregation: MetricAggregationType.Sum
-                    }
-                  }
-                }
+                      aggregation: MetricAggregationType.Sum,
+                    },
+                  },
+                },
               },
               {
                 type: 'metric-display-widget',
@@ -292,8 +292,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                     metric: {
                       type: 'explore-selection',
                       metric: 'errorCount',
-                      aggregation: MetricAggregationType.Sum
-                    }
+                      aggregation: MetricAggregationType.Sum,
+                    },
                   },
                   denominator: {
                     type: 'metric-aggregation-data-source',
@@ -301,22 +301,22 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                     metric: {
                       type: 'explore-selection',
                       metric: 'calls',
-                      aggregation: MetricAggregationType.Sum
-                    }
-                  }
-                }
-              }
-            ]
+                      aggregation: MetricAggregationType.Sum,
+                    },
+                  },
+                },
+              },
+            ],
           },
           {
             type: 'container-widget',
             layout: {
               type: 'auto-container-layout',
               rows: 1,
-              'enable-style': false
-            }
-          }
-        ]
+              'enable-style': false,
+            },
+          },
+        ],
       },
       {
         type: 'radar-widget',
@@ -324,18 +324,18 @@ export const homeDashboard: DashboardDefaultConfiguration = {
         series: {
           type: 'radar-series',
           name: 'Current Time Range',
-          color: Color.Gray7
+          color: Color.Gray7,
         },
         data: {
-          type: 'observe-system-radar-data-source'
-        }
+          type: 'observe-system-radar-data-source',
+        },
       },
       {
         type: 'container-widget',
         layout: {
           type: 'auto-container-layout',
           rows: 1,
-          'enable-style': false
+          'enable-style': false,
         },
         children: [
           {
@@ -348,9 +348,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               metric: {
                 type: 'explore-selection',
                 metric: 'duration',
-                aggregation: MetricAggregationType.P99
-              }
-            }
+                aggregation: MetricAggregationType.P99,
+              },
+            },
           },
           {
             type: 'metric-display-widget',
@@ -362,9 +362,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               metric: {
                 type: 'explore-selection',
                 metric: 'duration',
-                aggregation: MetricAggregationType.P50
-              }
-            }
+                aggregation: MetricAggregationType.P50,
+              },
+            },
           },
           {
             type: 'metric-display-widget',
@@ -375,9 +375,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               metric: {
                 type: 'explore-selection',
                 metric: 'errorCount',
-                aggregation: MetricAggregationType.AvgrateSecond
-              }
-            }
+                aggregation: MetricAggregationType.AvgrateSecond,
+              },
+            },
           },
           {
             type: 'metric-display-widget',
@@ -388,11 +388,11 @@ export const homeDashboard: DashboardDefaultConfiguration = {
               metric: {
                 type: 'explore-selection',
                 metric: 'calls',
-                aggregation: MetricAggregationType.AvgrateSecond
-              }
-            }
-          }
-        ]
+                aggregation: MetricAggregationType.AvgrateSecond,
+              },
+            },
+          },
+        ],
       },
       {
         type: 'container-widget',
@@ -400,7 +400,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           type: 'auto-container-layout',
           rows: 1,
           'enable-style': false,
-          'grid-gap': '48px'
+          'grid-gap': '48px',
         },
         children: [
           {
@@ -410,13 +410,13 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             'selectable-interval': true,
             'x-axis': {
               type: 'cartesian-axis',
-              'show-grid-lines': false
+              'show-grid-lines': false,
             },
             'show-y-axis': true,
             'y-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': true,
-              'min-upper-limit': 25
+              'min-upper-limit': 25,
             },
             'mouse-sync': true,
             'sync-group-id': 'HOME_DASHBOARD',
@@ -432,9 +432,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'explore-selection',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P99
-                  }
-                }
+                    aggregation: MetricAggregationType.P99,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -446,9 +446,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'explore-selection',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P50
-                  }
-                }
+                    aggregation: MetricAggregationType.P50,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -461,9 +461,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'explore-selection',
                     metric: 'calls',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -476,14 +476,14 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'explore-selection',
                     metric: 'errorCount',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
-              }
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
+              },
             ],
             'selection-handler': {
-              type: 'cartesian-explorer-selection-handler'
-            }
+              type: 'cartesian-explorer-selection-handler',
+            },
           },
           {
             type: 'cartesian-widget',
@@ -492,13 +492,13 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             'selectable-interval': true,
             'x-axis': {
               type: 'cartesian-axis',
-              'show-grid-lines': false
+              'show-grid-lines': false,
             },
             'show-y-axis': true,
             'y-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': true,
-              'min-upper-limit': 25
+              'min-upper-limit': 25,
             },
             'mouse-sync': true,
             'sync-group-id': 'HOME_DASHBOARD',
@@ -513,9 +513,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'explore-selection',
                     metric: 'calls',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -528,9 +528,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'explore-selection',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P99
-                  }
-                }
+                    aggregation: MetricAggregationType.P99,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -543,9 +543,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'explore-selection',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P50
-                  }
-                }
+                    aggregation: MetricAggregationType.P50,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -558,14 +558,14 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'explore-selection',
                     metric: 'errorCount',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
-              }
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
+              },
             ],
             'selection-handler': {
-              type: 'cartesian-explorer-selection-handler'
-            }
+              type: 'cartesian-explorer-selection-handler',
+            },
           },
           {
             type: 'cartesian-widget',
@@ -574,13 +574,13 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             'selectable-interval': true,
             'x-axis': {
               type: 'cartesian-axis',
-              'show-grid-lines': false
+              'show-grid-lines': false,
             },
             'show-y-axis': true,
             'y-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': true,
-              'min-upper-limit': 25
+              'min-upper-limit': 25,
             },
             'mouse-sync': true,
             'sync-group-id': 'HOME_DASHBOARD',
@@ -595,9 +595,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'explore-selection',
                     metric: 'errorCount',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -610,9 +610,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'explore-selection',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P99
-                  }
-                }
+                    aggregation: MetricAggregationType.P99,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -625,9 +625,9 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'explore-selection',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P50
-                  }
-                }
+                    aggregation: MetricAggregationType.P50,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -640,20 +640,20 @@ export const homeDashboard: DashboardDefaultConfiguration = {
                   metric: {
                     type: 'explore-selection',
                     metric: 'calls',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
-              }
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
+              },
             ],
             'selection-handler': {
-              type: 'cartesian-explorer-selection-handler'
-            }
-          }
-        ]
+              type: 'cartesian-explorer-selection-handler',
+            },
+          },
+        ],
       },
       {
         type: 'text-widget',
-        text: 'Top Assets'
+        text: 'Top Assets',
       },
       {
         type: 'table-widget',
@@ -663,7 +663,7 @@ export const homeDashboard: DashboardDefaultConfiguration = {
         pageable: false,
         header: {
           type: 'widget-header',
-          title: 'Endpoints'
+          title: 'Endpoints',
         },
         columns: [
           {
@@ -672,8 +672,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             display: ObservabilityTableCellType.Entity,
             width: '30%',
             value: {
-              type: 'entity-specification'
-            }
+              type: 'entity-specification',
+            },
           },
           {
             type: 'table-widget-column',
@@ -682,8 +682,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
-              aggregation: MetricAggregationType.Average
-            }
+              aggregation: MetricAggregationType.Average,
+            },
           },
           {
             type: 'table-widget-column',
@@ -692,8 +692,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
-              aggregation: MetricAggregationType.AvgrateSecond
-            }
+              aggregation: MetricAggregationType.AvgrateSecond,
+            },
           },
           {
             type: 'table-widget-column',
@@ -702,8 +702,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
-              aggregation: MetricAggregationType.Sum
-            }
+              aggregation: MetricAggregationType.Sum,
+            },
           },
           {
             type: 'table-widget-column',
@@ -712,8 +712,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: MetricAggregationType.AvgrateSecond
-            }
+              aggregation: MetricAggregationType.AvgrateSecond,
+            },
           },
           {
             type: 'table-widget-column',
@@ -722,15 +722,15 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: MetricAggregationType.Sum
-            }
-          }
+              aggregation: MetricAggregationType.Sum,
+            },
+          },
         ],
         data: {
           type: 'entity-table-data-source',
           entity: 'API',
-          limit: 5
-        }
+          limit: 5,
+        },
       },
       {
         type: 'table-widget',
@@ -744,8 +744,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           link: {
             type: 'link-widget',
             url: '/services',
-            displayText: 'View All'
-          }
+            displayText: 'View All',
+          },
         },
         columns: [
           {
@@ -754,8 +754,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             display: ObservabilityTableCellType.Entity,
             width: '30%',
             value: {
-              type: 'entity-specification'
-            }
+              type: 'entity-specification',
+            },
           },
           {
             type: 'table-widget-column',
@@ -764,8 +764,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
-              aggregation: MetricAggregationType.Average
-            }
+              aggregation: MetricAggregationType.Average,
+            },
           },
           {
             type: 'table-widget-column',
@@ -774,8 +774,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
-              aggregation: MetricAggregationType.AvgrateSecond
-            }
+              aggregation: MetricAggregationType.AvgrateSecond,
+            },
           },
           {
             type: 'table-widget-column',
@@ -784,8 +784,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
-              aggregation: MetricAggregationType.Sum
-            }
+              aggregation: MetricAggregationType.Sum,
+            },
           },
           {
             type: 'table-widget-column',
@@ -794,8 +794,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: MetricAggregationType.AvgrateSecond
-            }
+              aggregation: MetricAggregationType.AvgrateSecond,
+            },
           },
           {
             type: 'table-widget-column',
@@ -804,15 +804,15 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: MetricAggregationType.Sum
-            }
-          }
+              aggregation: MetricAggregationType.Sum,
+            },
+          },
         ],
         data: {
           type: 'entity-table-data-source',
           entity: 'SERVICE',
-          limit: 5
-        }
+          limit: 5,
+        },
       },
       {
         type: 'table-widget',
@@ -827,8 +827,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
           link: {
             type: 'link-widget',
             url: '/backends',
-            displayText: 'View All'
-          }
+            displayText: 'View All',
+          },
         },
         columns: [
           {
@@ -837,8 +837,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             display: ObservabilityTableCellType.Entity,
             width: '30%',
             value: {
-              type: 'entity-specification'
-            }
+              type: 'entity-specification',
+            },
           },
           {
             type: 'table-widget-column',
@@ -847,8 +847,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
-              aggregation: MetricAggregationType.Average
-            }
+              aggregation: MetricAggregationType.Average,
+            },
           },
           {
             type: 'table-widget-column',
@@ -857,8 +857,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
-              aggregation: MetricAggregationType.AvgrateSecond
-            }
+              aggregation: MetricAggregationType.AvgrateSecond,
+            },
           },
           {
             type: 'table-widget-column',
@@ -867,8 +867,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'errorCount',
-              aggregation: MetricAggregationType.Sum
-            }
+              aggregation: MetricAggregationType.Sum,
+            },
           },
           {
             type: 'table-widget-column',
@@ -877,8 +877,8 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: MetricAggregationType.AvgrateSecond
-            }
+              aggregation: MetricAggregationType.AvgrateSecond,
+            },
           },
           {
             type: 'table-widget-column',
@@ -887,16 +887,16 @@ export const homeDashboard: DashboardDefaultConfiguration = {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: MetricAggregationType.Sum
-            }
-          }
+              aggregation: MetricAggregationType.Sum,
+            },
+          },
         ],
         data: {
           type: 'entity-table-data-source',
           entity: 'BACKEND',
-          limit: 5
-        }
-      }
-    ]
-  }
+          limit: 5,
+        },
+      },
+    ],
+  },
 };

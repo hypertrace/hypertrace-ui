@@ -12,7 +12,7 @@ describe('Panel component', () => {
     declareComponent: false,
     component: PanelComponent,
     providers: [mockProvider(LayoutChangeService), mockProvider(NavigationService)],
-    imports: [PanelModule, HttpClientTestingModule, IconLibraryTestingModule]
+    imports: [PanelModule, HttpClientTestingModule, IconLibraryTestingModule],
   });
 
   test('renders header content', () => {
@@ -26,9 +26,9 @@ describe('Panel component', () => {
       {
         hostProps: {
           title: 'Results',
-          summary: '(508 Records)'
-        }
-      }
+          summary: '(508 Records)',
+        },
+      },
     );
     expect(spectator.query('.title')).toHaveText('Results');
     expect(spectator.query('.summary')).toHaveText('(508 Records)');
@@ -53,9 +53,9 @@ describe('Panel component', () => {
         hostProps: {
           expanded: false,
           title: 'Results',
-          summary: '(508 Records)'
-        }
-      }
+          summary: '(508 Records)',
+        },
+      },
     );
     expect(spectator.query('.title')).toHaveText('Results');
     expect(spectator.query('.summary')).toHaveText('(508 Records)');
@@ -76,9 +76,9 @@ describe('Panel component', () => {
       </ht-panel>`,
       {
         hostProps: {
-          expanded: false
-        }
-      }
+          expanded: false,
+        },
+      },
     );
 
     expect(spectator.query('.body')).toHaveText('Body Content');
@@ -95,9 +95,9 @@ describe('Panel component', () => {
       </ht-panel>`,
       {
         hostProps: {
-          onExpansionChange: onExpansionChange
-        }
-      }
+          onExpansionChange: onExpansionChange,
+        },
+      },
     );
 
     spectator.click('.test');

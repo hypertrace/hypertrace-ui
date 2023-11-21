@@ -21,9 +21,9 @@ describe('Spinner component', () => {
       LabelModule,
       HttpClientTestingModule,
       IconLibraryTestingModule,
-      RouterTestingModule
+      RouterTestingModule,
     ],
-    declareComponent: true
+    declareComponent: true,
   });
 
   test('should show spinner while observable is not complete', fakeAsync(() => {
@@ -31,8 +31,8 @@ describe('Spinner component', () => {
       spectator = createHost(`<ht-spinner [data$]="data$" [loadingLabel]="loadingLabel"></ht-spinner>`, {
         hostProps: {
           data$: NEVER,
-          loadingLabel: 'Loading...'
-        }
+          loadingLabel: 'Loading...',
+        },
       });
 
       expectObservable(spectator.component.state$).toBe('(y)', { y: 'loading' });
@@ -47,9 +47,9 @@ describe('Spinner component', () => {
           hostProps: {
             data$: of(true),
             successLabel: 'Successful',
-            loadingLabel: 'Loading...'
-          }
-        }
+            loadingLabel: 'Loading...',
+          },
+        },
       );
 
       expectObservable(spectator.component.state$).toBe('(x-y|)', { x: 'loading', y: 'success' });
@@ -64,9 +64,9 @@ describe('Spinner component', () => {
           hostProps: {
             data$: throwError(new Error('Internal Error')),
             loadingLabel: 'Loading...',
-            errorLabel: 'Internal Error'
-          }
-        }
+            errorLabel: 'Internal Error',
+          },
+        },
       );
 
       expectObservable(spectator.component.state$).toBe('(x-y|)', { x: 'loading', y: 'error' });

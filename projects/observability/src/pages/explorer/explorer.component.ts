@@ -1,21 +1,16 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import {
-  assertUnreachable,
-  NavigationService,
-  PreferenceService,
-  QueryParamObject,
-  TimeDuration
-} from '@hypertrace/common';
+import { NavigationService, PreferenceService, QueryParamObject, TimeDuration, ValueOrNull } from '@hypertrace/common';
 import { Filter, FilterAttribute, ToggleItem } from '@hypertrace/components';
 import { isEmpty } from 'lodash-es';
-import { concat, EMPTY, Observable, Subject } from 'rxjs';
+import { combineLatest, concat, EMPTY, Observable, of, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import {
   ExploreOrderBy,
   ExploreRequestState,
   ExploreSeries,
-  ExploreVisualizationRequest
+  ExploreVisualizationBuilder,
+  ExploreVisualizationRequest,
 } from '../../shared/components/explore-query-editor/explore-visualization-builder';
 import { IntervalValue } from '../../shared/components/interval-select/interval-select.component';
 import { AttributeExpression } from '../../shared/graphql/model/attribute/attribute-expression';
@@ -28,8 +23,7 @@ import {
   ExplorerDashboardBuilder,
   ExplorerDashboardBuilderFactory,
   ExplorerGeneratedDashboard,
-  ExplorerGeneratedDashboardContext,
-  EXPLORER_DASHBOARD_BUILDER_FACTORY
+  EXPLORER_DASHBOARD_BUILDER_FACTORY,
 } from './explorer-dashboard-builder';
 import { ExplorerUrlParserService } from './explorer-url-parser.service';
 
@@ -37,12 +31,13 @@ import { ExplorerUrlParserService } from './explorer-url-parser.service';
   selector: 'ht-explorer',
   styleUrls: ['./explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ExploreVisualizationBuilder],
   template: `
     <div class="explorer" *htLetAsync="this.currentState$ as currentState">
       <ht-page-header class="explorer-header"></ht-page-header>
       <ht-toggle-group
         class="explorer-data-toggle"
-        [items]="this.contextItems"
+        [items]="currentState.availableContexts"
         [activeItem]="currentState.contextToggle"
         (activeItemChange)="this.onContextUpdated($event.value)"
       ></ht-toggle-group>
@@ -77,7 +72,9 @@ import { ExplorerUrlParserService } from './explorer-url-parser.service';
                 [interval]="currentState.interval"
                 [groupBy]="currentState.groupBy"
                 [orderBy]="currentState.orderBy"
-                (visualizationRequestChange)="this.onVisualizationRequestUpdated($event, attributes)"
+                (visualizationRequestChange)="
+                  this.onVisualizationRequestUpdated($event, attributes, currentState.availableContexts)
+                "
               ></ht-explore-query-editor>
 
               <ht-application-aware-dashboard
@@ -114,40 +111,22 @@ import { ExplorerUrlParserService } from './explorer-url-parser.service';
         </ht-panel>
       </div>
     </div>
-  `
+  `,
 })
-export class ExplorerComponent {
+export class ExplorerComponent implements OnInit {
   private static readonly VISUALIZATION_EXPANDED_PREFERENCE: string = 'explorer.visualizationExpanded';
   private static readonly RESULTS_EXPANDED_PREFERENCE: string = 'explorer.resultsExpanded';
   private readonly explorerDashboardBuilder: ExplorerDashboardBuilder;
   public readonly resultsDashboard$: Observable<ExplorerGeneratedDashboard>;
   public readonly vizDashboard$: Observable<ExplorerGeneratedDashboard>;
   public currentState$!: Observable<InitialExplorerState>;
-  public currentContext$!: Observable<ExplorerGeneratedDashboardContext>;
+  public currentContext$!: Observable<string>;
   public attributes$: Observable<FilterAttribute[]> = EMPTY;
-
-  public readonly contextItems: ContextToggleItem[] = [
-    {
-      label: 'Endpoint Traces',
-      value: {
-        dashboardContext: ObservabilityTraceType.Api,
-        scopeQueryParam: ScopeQueryParam.EndpointTraces
-      }
-    },
-    {
-      label: 'Spans',
-      value: {
-        dashboardContext: SPAN_SCOPE,
-        scopeQueryParam: ScopeQueryParam.Spans
-      }
-    }
-  ];
-
   public filters: Filter[] = [];
   public visualizationExpanded$: Observable<boolean>;
   public resultsExpanded$: Observable<boolean>;
 
-  private readonly contextChangeSubject: Subject<ExplorerGeneratedDashboardContext> = new Subject();
+  private readonly contextChangeSubject: Subject<string> = new Subject();
 
   public constructor(
     private readonly metadataService: MetadataService,
@@ -155,50 +134,55 @@ export class ExplorerComponent {
     private readonly preferenceService: PreferenceService,
     @Inject(EXPLORER_DASHBOARD_BUILDER_FACTORY) explorerDashboardBuilderFactory: ExplorerDashboardBuilderFactory,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly explorerUrlParserService: ExplorerUrlParserService
+    private readonly explorerUrlParserService: ExplorerUrlParserService,
   ) {
     this.explorerDashboardBuilder = explorerDashboardBuilderFactory.build();
     this.visualizationExpanded$ = this.preferenceService.get(ExplorerComponent.VISUALIZATION_EXPANDED_PREFERENCE, true);
     this.resultsExpanded$ = this.preferenceService.get(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, true);
     this.resultsDashboard$ = this.explorerDashboardBuilder.resultsDashboard$;
     this.vizDashboard$ = this.explorerDashboardBuilder.visualizationDashboard$;
+  }
+
+  public ngOnInit(): void {
     this.buildState();
   }
 
   protected buildState(): void {
-    this.currentState$ = this.activatedRoute.queryParamMap.pipe(
+    const contextItems$ = this.buildContextItems();
+    this.currentState$ = combineLatest([this.activatedRoute.queryParamMap, contextItems$]).pipe(
       take(1),
-      map(paramMap => this.mapToInitialState(paramMap))
+      map(([paramMap, availableContexts]) => this.mapToInitialState(paramMap, availableContexts)),
     );
+
     this.currentContext$ = concat(
       this.currentState$.pipe(map(value => value.contextToggle.value.dashboardContext)),
-      this.contextChangeSubject
+      this.contextChangeSubject,
     );
   }
 
-  public onVisualizationRequestUpdated(newRequest: ExploreVisualizationRequest, attributes: FilterAttribute[]): void {
+  public onVisualizationRequestUpdated(
+    newRequest: ExploreVisualizationRequest,
+    attributes: FilterAttribute[],
+    availableContexts: ExplorerContextToggleItem[],
+  ): void {
     const updatedRequest = { ...newRequest, attributes: attributes };
     this.explorerDashboardBuilder.updateForRequest(updatedRequest);
-    this.updateUrlWithVisualizationData(updatedRequest);
+    this.updateUrlWithVisualizationData(updatedRequest, availableContexts);
   }
 
   public onFiltersUpdated(newFilters: Filter[]): void {
     this.filters = [...newFilters];
   }
 
-  private getOrDefaultContextItemFromQueryParam(value?: ScopeQueryParam): ContextToggleItem {
-    return this.contextItems.find(item => value === item.value.scopeQueryParam) || this.contextItems[0];
+  private getOrDefaultContextItemFromQueryParam(
+    contextItems: ExplorerContextToggleItem[],
+    value: ValueOrNull<string>,
+  ): ExplorerContextToggleItem {
+    return contextItems.find(item => value === item.value.scopeQueryParam) || contextItems[0];
   }
 
-  private getQueryParamFromContext(context: ExplorerGeneratedDashboardContext): ScopeQueryParam {
-    switch (context) {
-      case ObservabilityTraceType.Api:
-        return ScopeQueryParam.EndpointTraces;
-      case 'SPAN':
-        return ScopeQueryParam.Spans;
-      default:
-        return assertUnreachable(context);
-    }
+  protected getQueryParamFromContext(context: string, contextItems: ExplorerContextToggleItem[]): string | undefined {
+    return contextItems?.find(contextItem => contextItem.value.dashboardContext === context)?.value.scopeQueryParam;
   }
 
   public onContextUpdated(contextWrapper: ExplorerContextScope): void {
@@ -210,9 +194,9 @@ export class ExplorerComponent {
           units: attribute.units,
           type: toFilterAttributeType(attribute.type),
           onlySupportsAggregation: attribute.onlySupportsAggregation,
-          onlySupportsGrouping: attribute.onlySupportsGrouping
-        }))
-      )
+          onlySupportsGrouping: attribute.onlySupportsGrouping,
+        })),
+      ),
     );
     this.contextChangeSubject.next(contextWrapper.dashboardContext);
   }
@@ -225,23 +209,45 @@ export class ExplorerComponent {
     this.preferenceService.set(ExplorerComponent.RESULTS_EXPANDED_PREFERENCE, expanded);
   }
 
-  private updateUrlWithVisualizationData(request: ExploreRequestState): void {
+  protected buildContextItems(): Observable<ExplorerContextToggleItem[]> {
+    return of([
+      {
+        label: 'Endpoint Traces',
+        value: {
+          dashboardContext: ObservabilityTraceType.Api,
+          scopeQueryParam: ScopeQueryParam.EndpointTraces,
+        },
+      },
+      {
+        label: 'Spans',
+        value: {
+          dashboardContext: SPAN_SCOPE,
+          scopeQueryParam: ScopeQueryParam.Spans,
+        },
+      },
+    ]);
+  }
+
+  private updateUrlWithVisualizationData(
+    request: ExploreRequestState,
+    availableContexts: ExplorerContextToggleItem[],
+  ): void {
     this.navigationService.addQueryParametersToUrl({
-      [ExplorerQueryParam.Scope]: this.getQueryParamFromContext(request.context as ExplorerGeneratedDashboardContext),
+      [ExplorerQueryParam.Scope]: this.getQueryParamFromContext(request.context, availableContexts),
       [ExplorerQueryParam.Interval]: this.encodeInterval(request.interval),
       [ExplorerQueryParam.Series]: request.series.map(series => this.encodeExploreSeries(series)),
       ...this.getOrderByQueryParams(request.orderBy),
-      ...this.getGroupByQueryParams(request.groupBy)
+      ...this.getGroupByQueryParams(request.groupBy),
     });
   }
 
   private getOrderByQueryParams(orderBy?: ExploreOrderBy): QueryParamObject {
     return orderBy === undefined
       ? {
-          [ExplorerQueryParam.Order]: undefined
+          [ExplorerQueryParam.Order]: undefined,
         }
       : {
-          [ExplorerQueryParam.Order]: this.encodeExploreOrderBy(orderBy)
+          [ExplorerQueryParam.Order]: this.encodeExploreOrderBy(orderBy),
         };
   }
 
@@ -252,33 +258,34 @@ export class ExplorerComponent {
         // Clear existing selection
         [ExplorerQueryParam.Group]: undefined,
         [ExplorerQueryParam.OtherGroup]: undefined,
-        [ExplorerQueryParam.GroupLimit]: undefined
+        [ExplorerQueryParam.GroupLimit]: undefined,
       };
     }
 
     return {
       [ExplorerQueryParam.Group]: keyExpressions.map(expression => this.encodeAttributeExpression(expression)),
       [ExplorerQueryParam.OtherGroup]: groupBy?.includeRest || undefined, // No param needed for false
-      [ExplorerQueryParam.GroupLimit]: groupBy?.limit
+      [ExplorerQueryParam.GroupLimit]: groupBy?.limit,
     };
   }
 
-  private mapToInitialState(param: ParamMap): InitialExplorerState {
+  private mapToInitialState(param: ParamMap, availableContexts: ExplorerContextToggleItem[]): InitialExplorerState {
     const explorerState = this.explorerUrlParserService.getExplorerState({
       series: param.getAll(ExplorerQueryParam.Series),
       interval: param.get(ExplorerQueryParam.Interval) ?? undefined,
       groupBy: param.getAll(ExplorerQueryParam.Group),
       includeOtherGroups: param.get(ExplorerQueryParam.OtherGroup) ?? undefined,
       groupLimit: param.get(ExplorerQueryParam.GroupLimit) ?? '5',
-      orderBy: param.getAll(ExplorerQueryParam.Order) ?? undefined
+      orderBy: param.getAll(ExplorerQueryParam.Order) ?? undefined,
     });
 
     return {
-      contextToggle: this.getOrDefaultContextItemFromQueryParam(param.get(ExplorerQueryParam.Scope) as ScopeQueryParam),
+      availableContexts: availableContexts,
+      contextToggle: this.getOrDefaultContextItemFromQueryParam(availableContexts, param.get(ExplorerQueryParam.Scope)),
       groupBy: explorerState.groupBy,
       interval: explorerState.interval,
       series: explorerState.series,
-      orderBy: explorerState.orderBy
+      orderBy: explorerState.orderBy,
     };
   }
 
@@ -309,12 +316,13 @@ export class ExplorerComponent {
     return `${attributeExpression.key}__${attributeExpression.subpath}`;
   }
 }
-interface ContextToggleItem extends ToggleItem<ExplorerContextScope> {
+export interface ExplorerContextToggleItem extends ToggleItem<ExplorerContextScope> {
   value: ExplorerContextScope;
 }
 
 export interface InitialExplorerState {
-  contextToggle: ContextToggleItem;
+  contextToggle: ExplorerContextToggleItem;
+  availableContexts: ExplorerContextToggleItem[];
   series: ExploreSeries[];
   interval?: IntervalValue;
   groupBy?: GraphQlGroupBy;
@@ -322,13 +330,13 @@ export interface InitialExplorerState {
 }
 
 interface ExplorerContextScope {
-  dashboardContext: ExplorerGeneratedDashboardContext;
-  scopeQueryParam: ScopeQueryParam;
+  dashboardContext: string;
+  scopeQueryParam: string;
 }
 
 export const enum ScopeQueryParam {
   EndpointTraces = 'endpoint-traces',
-  Spans = 'spans'
+  Spans = 'spans',
 }
 
 export const enum ExplorerQueryParam {
@@ -339,5 +347,5 @@ export const enum ExplorerQueryParam {
   GroupLimit = 'limit',
   Series = 'series',
   Order = 'order',
-  Filters = 'filter'
+  Filters = 'filter',
 }

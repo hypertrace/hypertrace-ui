@@ -11,17 +11,17 @@ describe('Numeric table cell renderer component', () => {
     providers: [
       ...tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
-        new TableCellNumberParser(undefined!)
-      )
+        new TableCellNumberParser(undefined!),
+      ),
     ],
-    shallow: true
+    shallow: true,
   });
 
   test('should render a plain number', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(36)]
+      providers: [tableCellDataProvider(36)],
     });
 
     expect(spectator.element).toHaveText('36');
@@ -40,10 +40,10 @@ describe('Numeric table cell renderer component', () => {
           id: 'test',
           onClick: () => {
             /* NOOP */
-          }
+          },
         }),
-        tableCellDataProvider(42)
-      ]
+        tableCellDataProvider(42),
+      ],
     });
 
     expect(spectator.query(byText('42'))).toHaveClass('clickable');
@@ -51,7 +51,7 @@ describe('Numeric table cell renderer component', () => {
 
   test('should not add clickable class for columns without a click handler', () => {
     const spectator = buildComponent({
-      providers: [tableCellDataProvider(22)]
+      providers: [tableCellDataProvider(22)],
     });
 
     expect(spectator.query(byText('22'))).not.toHaveClass('clickable');

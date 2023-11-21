@@ -3,14 +3,14 @@ import {
   TableCellNoOpParser,
   tableCellProviders,
   tableCellRowDataProvider,
-  TooltipDirective
+  TooltipDirective,
 } from '@hypertrace/components';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockDirective, MockPipe } from 'ng-mocks';
 import { tableCellDataProvider } from '../../test/cell-providers';
 import {
   RelativeTimestampTableCellRendererComponent,
-  RowData
+  RowData,
 } from './relative-timestamp-table-cell-renderer.component';
 
 describe('relative timestamp table cell renderer component', () => {
@@ -19,21 +19,21 @@ describe('relative timestamp table cell renderer component', () => {
     providers: [
       tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
-        new TableCellNoOpParser(undefined!)
-      )
+        new TableCellNoOpParser(undefined!),
+      ),
     ],
     declarations: [MockDirective(TooltipDirective), MockPipe(DisplayDatePipe)],
-    shallow: true
+    shallow: true,
   });
 
   test('testing component properties', () => {
     const logEvent: RowData = {
-      baseTimestamp: new Date(1619785437887)
+      baseTimestamp: new Date(1619785437887),
     };
     const spectator = buildComponent({
-      providers: [tableCellRowDataProvider(logEvent), tableCellDataProvider(new Date(1619785437887))]
+      providers: [tableCellRowDataProvider(logEvent), tableCellDataProvider(new Date(1619785437887))],
     });
 
     expect(spectator.queryAll('.relative-timestamp')[0]).toContainText('0 ms');

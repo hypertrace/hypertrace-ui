@@ -4,7 +4,7 @@ import { ContentHolder, CONTENT_HOLDER_TEMPLATE } from '../../content/content-ho
 @Component({
   selector: 'ht-panel-header',
   template: CONTENT_HOLDER_TEMPLATE,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PanelHeaderComponent extends ContentHolder {
   @Input()

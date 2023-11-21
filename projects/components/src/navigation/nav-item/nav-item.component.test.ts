@@ -5,7 +5,7 @@ import {
   FeatureStateResolver,
   MemoizeModule,
   NavigationParamsType,
-  NavigationService
+  NavigationService,
 } from '@hypertrace/common';
 import { BetaTagComponent, IconComponent, LinkComponent } from '@hypertrace/components';
 import { createHostFactory, mockProvider, SpectatorHost } from '@ngneat/spectator/jest';
@@ -18,7 +18,7 @@ import { NavItemComponent } from './nav-item.component';
 describe('Navigation Item Component', () => {
   let spectator: SpectatorHost<NavItemComponent>;
   const activatedRoute = {
-    root: {}
+    root: {},
   };
   const createHost = createHostFactory({
     shallow: true,
@@ -30,13 +30,13 @@ describe('Navigation Item Component', () => {
       mockProvider(NavigationService, {
         navigation$: EMPTY,
         navigateWithinApp: jest.fn(),
-        getCurrentActivatedRoute: jest.fn().mockReturnValue(of(activatedRoute))
+        getCurrentActivatedRoute: jest.fn().mockReturnValue(of(activatedRoute)),
       }),
       mockProvider(FeatureStateResolver, {
         getCombinedFeatureState: () => of(FeatureState.Enabled),
-        getFeatureState: () => of(FeatureState.Enabled)
-      })
-    ]
+        getFeatureState: () => of(FeatureState.Enabled),
+      }),
+    ],
   });
 
   test('should update layout when collapsed input is updated', () => {
@@ -45,17 +45,17 @@ describe('Navigation Item Component', () => {
       icon: IconType.TriangleLeft,
       label: 'Foo Label',
       matchPaths: ['foo', 'bar'],
-      featureState$: of(FeatureState.Enabled)
+      featureState$: of(FeatureState.Enabled),
     };
     spectator = createHost(`<ht-nav-item [config]="navItem"></ht-nav-item>`, {
-      hostProps: { navItem: navItem }
+      hostProps: { navItem: navItem },
     });
 
     expect(spectator.query('.label')).not.toExist();
     expect(spectator.query(IconComponent)?.icon).toEqual(IconType.TriangleLeft);
 
     spectator.setInput({
-      collapsed: false
+      collapsed: false,
     });
 
     spectator.detectChanges();
@@ -68,10 +68,10 @@ describe('Navigation Item Component', () => {
       type: NavItemType.Link,
       icon: 'icon',
       label: 'Foo Label',
-      matchPaths: ['foo', 'bar']
+      matchPaths: ['foo', 'bar'],
     };
     spectator = createHost(`<ht-nav-item [config]="navItem"></ht-nav-item>`, {
-      hostProps: { navItem: navItem }
+      hostProps: { navItem: navItem },
     });
 
     const link = spectator.query(LinkComponent);
@@ -80,7 +80,7 @@ describe('Navigation Item Component', () => {
       navType: NavigationParamsType.InApp,
       path: 'foo',
       relativeTo: spectator.inject(ActivatedRoute),
-      replaceCurrentHistory: undefined
+      replaceCurrentHistory: undefined,
     });
   });
 
@@ -90,11 +90,11 @@ describe('Navigation Item Component', () => {
       icon: 'icon',
       label: 'Foo Label',
       matchPaths: ['foo', 'bar'],
-      replaceCurrentHistory: true
+      replaceCurrentHistory: true,
     };
 
     spectator = createHost(`<ht-nav-item [config]="navItem"></ht-nav-item>`, {
-      hostProps: { navItem: navItem }
+      hostProps: { navItem: navItem },
     });
 
     const link = spectator.query(LinkComponent);
@@ -103,7 +103,7 @@ describe('Navigation Item Component', () => {
       navType: NavigationParamsType.InApp,
       path: 'foo',
       relativeTo: spectator.inject(ActivatedRoute),
-      replaceCurrentHistory: true
+      replaceCurrentHistory: true,
     });
   });
 });

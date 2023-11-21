@@ -7,11 +7,11 @@ import { ApplicationFlowComponent, ApplicationFlowModule } from '@hypertrace/obs
 const ROUTE_CONFIG: HtRoute[] = [
   {
     path: '',
-    component: ApplicationFlowComponent
-  }
+    component: ApplicationFlowComponent,
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(ROUTE_CONFIG), ApplicationFlowModule]
+  imports: [RouterModule.forChild(ROUTE_CONFIG), ApplicationFlowModule],
 })
 export class ApplicationFlowRoutingModule {}

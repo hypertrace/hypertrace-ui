@@ -14,15 +14,15 @@ import { backendMetricsDashboard } from './backend-metrics.dashboard';
       [filterConfig]="filterConfig"
     >
     </ht-navigable-dashboard>
-  `
+  `,
 })
 export class BackendMetricsComponent {
   public readonly filterConfig$: ReplayObservable<NavigableDashboardFilterConfig>;
   public constructor(backendDetailService: BackendDetailService) {
     this.filterConfig$ = backendDetailService.entityFilter$.pipe(
       map(filter => ({
-        implicitFilters: [filter]
-      }))
+        implicitFilters: [filter],
+      })),
     );
   }
 }

@@ -2,7 +2,7 @@ import {
   tableCellDataProvider,
   TableCellNoOpParser,
   tableCellProviders,
-  TooltipDirective
+  TooltipDirective,
 } from '@hypertrace/components';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockDirective } from 'ng-mocks';
@@ -14,28 +14,28 @@ describe('Exit Calls table cell renderer component', () => {
     providers: [
       tableCellProviders(
         {
-          id: 'test'
+          id: 'test',
         },
-        new TableCellNoOpParser(undefined!)
-      )
+        new TableCellNoOpParser(undefined!),
+      ),
     ],
     declarations: [MockDirective(TooltipDirective)],
-    shallow: true
+    shallow: true,
   });
 
   test('testing component properties', () => {
     const value = {
       key1: '1',
-      key2: '2'
+      key2: '2',
     };
     const spectator = buildComponent({
-      providers: [tableCellDataProvider({ value: [3, value] })]
+      providers: [tableCellDataProvider({ value: [3, value] })],
     });
 
     expect(spectator.queryAll('.exit-calls-count')[0]).toContainText('3');
     expect(spectator.component.apiCalleeNameEntries).toMatchObject([
       ['key1', '1'],
-      ['key2', '2']
+      ['key2', '2'],
     ]);
     expect(spectator.component.uniqueApiCalleeCount).toBe(2);
     expect(spectator.component.apiExitCalls).toBe(3);

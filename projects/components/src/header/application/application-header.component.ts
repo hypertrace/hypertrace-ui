@@ -26,7 +26,7 @@ import { GlobalHeaderHeightProviderService, NavigationService } from '@hypertrac
         <ng-content select="[right]"></ng-content>
       </div>
     </div>
-  `
+  `,
 })
 export class ApplicationHeaderComponent {
   @Input()
@@ -34,7 +34,7 @@ export class ApplicationHeaderComponent {
 
   public constructor(
     public readonly headerHeightProvider: GlobalHeaderHeightProviderService,
-    private readonly navigationService: NavigationService
+    private readonly navigationService: NavigationService,
   ) {}
 
   public onLogoClick(): void {

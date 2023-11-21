@@ -7,7 +7,7 @@ import {
   TopologyEdge,
   TopologyGroupNode,
   TopologyNode,
-  TopologyNodeRenderer
+  TopologyNodeRenderer,
 } from '../../../topology';
 import { TopologyEventBehavior } from '../topology-event-behavior';
 import { TopologyGroupNodeUtil } from '../../../utils/topology-group-node.util';
@@ -20,7 +20,7 @@ export class TopologyNodeDrag extends TopologyEventBehavior {
   public addDragBehavior(
     topologyData: RenderableTopology<TopologyNode, TopologyEdge>,
     nodeRenderer: TopologyNodeRenderer,
-    supportGroupNode: boolean
+    supportGroupNode: boolean,
   ): Observable<TopologyDragEvent> {
     if (topologyData.nodes.length === 0) {
       return EMPTY;
@@ -36,7 +36,7 @@ export class TopologyNodeDrag extends TopologyEventBehavior {
 
       nodeLookup = this.buildLookupMap(
         topologyData.nodes.filter(n => !childRenderableNodesOfGroup.includes(n)),
-        node => nodeRenderer.getElementForNode(node)
+        node => nodeRenderer.getElementForNode(node),
       );
     }
 
@@ -47,16 +47,16 @@ export class TopologyNodeDrag extends TopologyEventBehavior {
         .subject(this.generateValueFunc(node => node, nodeLookup))
         .on(
           'drag',
-          this.generateValueFunc((node, domElement) => this.onNodeDrag(node, dragSubect, domElement), nodeLookup)
+          this.generateValueFunc((node, domElement) => this.onNodeDrag(node, dragSubect, domElement), nodeLookup),
         )
         .on(
           'start',
-          this.generateValueFunc(node => this.onDragStart(node, dragSubect), nodeLookup)
+          this.generateValueFunc(node => this.onDragStart(node, dragSubect), nodeLookup),
         )
         .on(
           'end',
-          this.generateValueFunc(node => this.onDragEnd(node, dragSubect), nodeLookup)
-        )
+          this.generateValueFunc(node => this.onDragEnd(node, dragSubect), nodeLookup),
+        ),
     );
 
     return dragSubect.asObservable();
@@ -70,13 +70,13 @@ export class TopologyNodeDrag extends TopologyEventBehavior {
   private onNodeDrag(
     node: RenderableTopologyNode,
     dragObserver: Observer<TopologyDragEvent>,
-    domElement: Element
+    domElement: Element,
   ): void {
     node.x = event.x;
     node.y = event.y;
     dragObserver.next({
       type: 'drag',
-      node: node
+      node: node,
     });
     this.d3Utils.select(domElement, this.domRenderer).dispatch(this.getDragEventName());
   }
@@ -84,14 +84,14 @@ export class TopologyNodeDrag extends TopologyEventBehavior {
   private onDragStart(node: RenderableTopologyNode, dragObserver: Observer<TopologyDragEvent>): void {
     dragObserver.next({
       type: 'start',
-      node: node
+      node: node,
     });
   }
 
   private onDragEnd(node: RenderableTopologyNode, dragObserver: Observer<TopologyDragEvent>): void {
     dragObserver.next({
       type: 'end',
-      node: node
+      node: node,
     });
   }
 }

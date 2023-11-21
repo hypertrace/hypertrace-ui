@@ -19,7 +19,7 @@ export class DefaultModalRef extends ModalRef<unknown> {
     this.popoverRef = popoverRef;
     this.popoverRef.closed$.subscribe({
       complete: () => this.closedObserver.complete(),
-      error: err => this.closedObserver.error(err)
+      error: err => this.closedObserver.error(err),
     });
   }
 

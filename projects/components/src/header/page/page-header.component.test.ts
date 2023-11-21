@@ -3,7 +3,7 @@ import {
   FeatureStateResolver,
   NavigationService,
   PreferenceService,
-  SubscriptionLifecycle
+  SubscriptionLifecycle,
 } from '@hypertrace/common';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
@@ -26,16 +26,16 @@ describe('Page Header Component', () => {
       mockProvider(PreferenceService),
       mockProvider(SubscriptionLifecycle),
       mockProvider(FeatureStateResolver, {
-        getCombinedFeatureState: () => of(FeatureState.Disabled)
+        getCombinedFeatureState: () => of(FeatureState.Disabled),
       }),
       mockProvider(BreadcrumbsService, {
         breadcrumbs$: of([
           {
-            label: 'I am Breadcrumb'
-          }
-        ])
-      })
-    ]
+            label: 'I am Breadcrumb',
+          },
+        ]),
+      }),
+    ],
   });
 
   test('should display beta tag', () => {
@@ -52,9 +52,9 @@ describe('Page Header Component', () => {
     spectator = createHost('<ht-page-header></ht-page-header>', {
       providers: [
         mockProvider(FeatureStateResolver, {
-          getCombinedFeatureState: () => of(FeatureState.Enabled)
-        })
-      ]
+          getCombinedFeatureState: () => of(FeatureState.Enabled),
+        }),
+      ],
     });
 
     expect(spectator.query(TimeRangeComponent)).toExist();
@@ -63,13 +63,13 @@ describe('Page Header Component', () => {
   test('should display page time range component when with time range mode is selected', () => {
     spectator = createHost('<ht-page-header [hidePageTimeRange]="hidePageTimeRange"></ht-page-header>', {
       hostProps: {
-        hidePageTimeRange: true
+        hidePageTimeRange: true,
       },
       providers: [
         mockProvider(FeatureStateResolver, {
-          getCombinedFeatureState: () => of(FeatureState.Enabled)
-        })
-      ]
+          getCombinedFeatureState: () => of(FeatureState.Enabled),
+        }),
+      ],
     });
 
     expect(spectator.component.mode).toBe(PageHeaderDisplayMode.Default);
@@ -79,13 +79,13 @@ describe('Page Header Component', () => {
   test('should display page time range component when with time range mode is selected', () => {
     spectator = createHost('<ht-page-header [mode]="mode"></ht-page-header>', {
       hostProps: {
-        mode: PageHeaderDisplayMode.WithTimeRange
+        mode: PageHeaderDisplayMode.WithTimeRange,
       },
       providers: [
         mockProvider(FeatureStateResolver, {
-          getCombinedFeatureState: () => of(FeatureState.Enabled)
-        })
-      ]
+          getCombinedFeatureState: () => of(FeatureState.Enabled),
+        }),
+      ],
     });
 
     expect(spectator.query(TimeRangeComponent)).toExist();
@@ -94,13 +94,13 @@ describe('Page Header Component', () => {
   test('should show the refresh button', () => {
     spectator = createHost('<ht-page-header [mode]="mode"></ht-page-header>', {
       hostProps: {
-        mode: PageHeaderDisplayMode.WithRefreshButton
+        mode: PageHeaderDisplayMode.WithRefreshButton,
       },
       providers: [
         mockProvider(FeatureStateResolver, {
-          getCombinedFeatureState: () => of(FeatureState.Enabled)
-        })
-      ]
+          getCombinedFeatureState: () => of(FeatureState.Enabled),
+        }),
+      ],
     });
     expect(spectator.query('.refresh-only-button')).toExist();
     expect(spectator.query(TimeRangeComponent)).not.toExist();
@@ -109,8 +109,8 @@ describe('Page Header Component', () => {
   test('should not show standalone refresh button when time range is shown', () => {
     spectator = createHost('<ht-page-header [mode]="mode"></ht-page-header>', {
       hostProps: {
-        mode: PageHeaderDisplayMode.WithTimeRange
-      }
+        mode: PageHeaderDisplayMode.WithTimeRange,
+      },
     });
     expect(spectator.query('.refresh-only-button')).not.toExist();
   });

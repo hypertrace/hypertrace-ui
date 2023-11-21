@@ -339,7 +339,7 @@ $font-family: 'Work Sans', sans-serif;
 }
 
 $mat-typography: mat.define-legacy-typography-config(
-  $font-family: $font-family
+  $font-family: $font-family,
 );
 
 @mixin line-clamp($maxLines: 1) {

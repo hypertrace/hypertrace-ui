@@ -7,7 +7,7 @@ import {
   ElementRef,
   Injector,
   Renderer2,
-  Type
+  Type,
 } from '@angular/core';
 import { assertUnreachable, Key } from '@hypertrace/common';
 import { Selection } from 'd3-selection';
@@ -28,7 +28,7 @@ import {
   TopologyNeighborhood,
   TopologyNode,
   TopologyNodeRenderer,
-  TopologyTooltip
+  TopologyTooltip,
 } from '../topology';
 import { TopologyConverter } from '../utils/topology-converter';
 import { TopologyNeighborhoodFinder } from '../utils/topology-neighborhood-finder';
@@ -38,7 +38,7 @@ import { TopologyHover, TopologyHoverEvent } from './interactions/hover/topology
 import { TopologyStateManager } from './interactions/state/topology-state-manager';
 import {
   TopologyInteractionControlComponent,
-  TOPOLOGY_INTERACTION_CONTROL_DATA
+  TOPOLOGY_INTERACTION_CONTROL_DATA,
 } from './interactions/topology-interaction-control.component';
 import { TopologyZoom } from './interactions/zoom/topology-zoom';
 import { CustomTreeLayout } from './layouts/custom-tree-layout';
@@ -80,7 +80,7 @@ export class D3Topology implements Topology {
   public constructor(
     protected readonly hostElement: Element,
     protected readonly injector: Injector,
-    protected readonly config: TopologyConfiguration
+    protected readonly config: TopologyConfiguration,
   ) {
     this.userNodes = config.nodes;
     this.nodeRenderer = config.nodeRenderer;
@@ -94,7 +94,7 @@ export class D3Topology implements Topology {
       this.nodeRenderer,
       this.domRenderer,
       undefined,
-      this.supportGroupNode
+      this.supportGroupNode,
     );
     this.d3Util = injector.get(D3UtilService);
     this.drag = new TopologyNodeDrag(this.d3Util, this.domRenderer);
@@ -203,7 +203,7 @@ export class D3Topology implements Topology {
 
     const data = svg.append('g').classed(D3Topology.DATA_CLASS, true);
     const zoomScrollConfig = {
-      requireModifiers: [Key.Control, Key.Meta]
+      requireModifiers: [Key.Control, Key.Meta],
     };
 
     const zoomPanConfig = {
@@ -214,7 +214,7 @@ export class D3Topology implements Topology {
       target: data,
       scroll: this.config.zoomable ? zoomScrollConfig : undefined,
       pan: this.config.zoomable ? zoomPanConfig : undefined,
-      showBrush: this.config.showBrush
+      showBrush: this.config.showBrush,
     });
 
     this.onDestroy(() => {
@@ -231,7 +231,7 @@ export class D3Topology implements Topology {
   private drawData(
     data: RenderableTopology<TopologyNode, TopologyEdge>,
     nodeRenderer: TopologyNodeRenderer,
-    edgeRenderer: TopologyEdgeRenderer
+    edgeRenderer: TopologyEdgeRenderer,
   ): void {
     const dataGroup = this.select(this.hostElement).select<SVGGElement>(`.${D3Topology.DATA_CLASS}`);
 
@@ -248,7 +248,7 @@ export class D3Topology implements Topology {
     if (this.config.hoverableNodes) {
       const subscription = this.hover
         .addNodeHoverBehavior(data.nodes, nodeRenderer, {
-          endHoverEvents: this.getHoverEndEventsFromConfig()
+          endHoverEvents: this.getHoverEndEventsFromConfig(),
         })
         .subscribe(event => this.onNodeHoverEvent(event));
       this.dataClearCallbacks.push(() => subscription.unsubscribe());
@@ -256,7 +256,7 @@ export class D3Topology implements Topology {
     if (this.config.hoverableEdges) {
       const subscription = this.hover
         .addEdgeHoverBehavior(data.edges, edgeRenderer, {
-          endHoverEvents: this.getHoverEndEventsFromConfig()
+          endHoverEvents: this.getHoverEndEventsFromConfig(),
         })
         .subscribe(event => this.onEdgeHoverEvent(event));
       this.dataClearCallbacks.push(() => subscription.unsubscribe());
@@ -282,7 +282,7 @@ export class D3Topology implements Topology {
       return this.interactionControl;
     }
     const componentResolver = this.injector.get(
-      (ComponentFactoryResolver as unknown) as Type<ComponentFactoryResolver>
+      (ComponentFactoryResolver as unknown) as Type<ComponentFactoryResolver>,
     );
     const applicationRef = this.injector.get(ApplicationRef);
     const domPortalOutlet = new DomPortalOutlet(container, componentResolver, applicationRef, this.injector);
@@ -295,11 +295,11 @@ export class D3Topology implements Topology {
             topologyConfig: this.config,
             layout: () => this.updateLayout(),
             currentTopology: () => this.topologyData,
-            zoom: this.config.zoomable ? this.zoom : undefined
-          }
-        }
+            zoom: this.config.zoomable ? this.zoom : undefined,
+          },
+        },
       ],
-      parent: this.injector
+      parent: this.injector,
     });
     const componentPortal = new ComponentPortal(TopologyInteractionControlComponent, undefined, interactionInjector);
     const componentRef = domPortalOutlet.attach(componentPortal);
@@ -311,7 +311,7 @@ export class D3Topology implements Topology {
     groupElement: SVGGElement,
     topologyData: RenderableTopology<TopologyNode, TopologyEdge>,
     nodeRenderer: TopologyNodeRenderer,
-    edgeRenderer: TopologyEdgeRenderer
+    edgeRenderer: TopologyEdgeRenderer,
   ): void {
     topologyData.nodes.forEach(node => nodeRenderer.drawNode(groupElement, node));
     topologyData.edges.forEach(edge => edgeRenderer.drawEdge(groupElement, edge));
@@ -338,7 +338,7 @@ export class D3Topology implements Topology {
       this.nodeRenderer,
       this.domRenderer,
       this.topologyData,
-      this.supportGroupNode
+      this.supportGroupNode,
     );
     this.layout.layout(this.topologyData, this.width, this.height);
     this.drawData(this.topologyData, this.nodeRenderer, this.edgeRenderer);
@@ -351,7 +351,7 @@ export class D3Topology implements Topology {
     } else {
       this.emphasizeTopologyNeighborhood(
         this.neighborhoodFinder.neighborhoodForNode(hoverEvent.source.userNode),
-        this.neighborhoodFinder.singleNodeNeighborhood(hoverEvent.source.userNode)
+        this.neighborhoodFinder.singleNodeNeighborhood(hoverEvent.source.userNode),
       );
 
       if (!(this.config.nodeInteractionHandler?.disableTooltipOnHover ?? false)) {
@@ -377,34 +377,34 @@ export class D3Topology implements Topology {
     this.stateManager.updateState({
       neighborhood: this.topologyData.neighborhood,
       update: {
-        visibility: TopologyElementVisibility.Normal
-      }
+        visibility: TopologyElementVisibility.Normal,
+      },
     });
   }
 
   private emphasizeTopologyNeighborhood(
     emphasizeNeighborhood: TopologyNeighborhood,
-    focusNeighborhood: TopologyNeighborhood = this.neighborhoodFinder.emptyNeighborhood()
+    focusNeighborhood: TopologyNeighborhood = this.neighborhoodFinder.emptyNeighborhood(),
   ): void {
     this.stateManager.updateState(
       {
         neighborhood: this.topologyData.neighborhood,
         update: {
-          visibility: TopologyElementVisibility.Background
-        }
+          visibility: TopologyElementVisibility.Background,
+        },
       },
       {
         neighborhood: emphasizeNeighborhood,
         update: {
-          visibility: TopologyElementVisibility.Emphasized
-        }
+          visibility: TopologyElementVisibility.Emphasized,
+        },
       },
       {
         neighborhood: focusNeighborhood,
         update: {
-          visibility: TopologyElementVisibility.Focused
-        }
-      }
+          visibility: TopologyElementVisibility.Focused,
+        },
+      },
     );
   }
 
@@ -423,7 +423,7 @@ export class D3Topology implements Topology {
   private onNodeClick(node: RenderableTopologyNode): void {
     this.emphasizeTopologyNeighborhood(
       this.neighborhoodFinder.neighborhoodForNode(node.userNode),
-      this.neighborhoodFinder.singleNodeNeighborhood(node.userNode)
+      this.neighborhoodFinder.singleNodeNeighborhood(node.userNode),
     );
 
     if (this.supportGroupNode) {
@@ -465,7 +465,7 @@ export class D3Topology implements Topology {
       this.nodeRenderer,
       this.domRenderer,
       this.topologyData,
-      this.supportGroupNode
+      this.supportGroupNode,
     );
   }
 
@@ -489,8 +489,8 @@ export class D3Topology implements Topology {
         this.stateManager.updateState({
           nodes: [dragEvent.node.userNode],
           update: {
-            dragging: dragEvent.type === 'start'
-          }
+            dragging: dragEvent.type === 'start',
+          },
         });
         break;
       case 'drag':

@@ -6,7 +6,7 @@ import {
   ButtonStyle,
   IconSize,
   PopoverRef,
-  PopoverRelativePositionLocation
+  PopoverRelativePositionLocation,
 } from '@hypertrace/components';
 
 @Component({
@@ -76,7 +76,7 @@ import {
         </ht-popover>
       </div>
     </ht-event-blocker>
-  `
+  `,
 })
 export class LabelDetailComponent {
   @Input()
@@ -111,5 +111,5 @@ export class LabelDetailComponent {
 
 export const enum LabelDetailView {
   IconOnly = 'icon-only',
-  WithLabel = 'with-label'
+  WithLabel = 'with-label',
 }

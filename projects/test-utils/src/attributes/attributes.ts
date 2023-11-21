@@ -9,8 +9,8 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
       units: '',
       type: FilterAttributeType.Boolean,
       onlySupportsAggregation: false,
-      onlySupportsGrouping: true
-    }
+      onlySupportsGrouping: true,
+    },
   ],
   [
     FilterAttributeType.Number,
@@ -20,8 +20,8 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
       units: 'mooches',
       type: FilterAttributeType.Number,
       onlySupportsAggregation: true,
-      onlySupportsGrouping: false
-    }
+      onlySupportsGrouping: false,
+    },
   ],
   [
     FilterAttributeType.String,
@@ -31,8 +31,8 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
       units: '',
       type: FilterAttributeType.String,
       onlySupportsAggregation: false,
-      onlySupportsGrouping: true
-    }
+      onlySupportsGrouping: true,
+    },
   ],
   [
     FilterAttributeType.StringArray,
@@ -42,8 +42,8 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
       units: '',
       type: FilterAttributeType.StringArray,
       onlySupportsAggregation: false,
-      onlySupportsGrouping: false
-    }
+      onlySupportsGrouping: false,
+    },
   ],
   [
     FilterAttributeType.StringMap,
@@ -53,8 +53,8 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
       units: '',
       type: FilterAttributeType.StringMap,
       onlySupportsAggregation: false,
-      onlySupportsGrouping: false
-    }
+      onlySupportsGrouping: false,
+    },
   ],
   [
     FilterAttributeType.Timestamp,
@@ -64,9 +64,9 @@ const filterAttributeMap: Map<FilterAttributeType, FilterAttribute> = new Map([
       units: '',
       type: FilterAttributeType.Timestamp,
       onlySupportsAggregation: false,
-      onlySupportsGrouping: false
-    }
-  ]
+      onlySupportsGrouping: false,
+    },
+  ],
 ]);
 
 export const getTestFilterAttribute = (type: FilterAttributeType) => filterAttributeMap.get(type)!;

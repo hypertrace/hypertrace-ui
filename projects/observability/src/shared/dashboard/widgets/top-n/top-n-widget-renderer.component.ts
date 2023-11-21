@@ -49,7 +49,7 @@ import { TopNWidgetModel } from './top-n-widget.model';
         </ht-gauge-list>
       </ht-titled-content>
     </div>
-  `
+  `,
 })
 export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<TopNWidgetModel, GaugeItem[]> {
   public metricSpecification!: TopNExploreSelectionSpecificationModel;
@@ -60,7 +60,7 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
     @Inject(RENDERER_API) api: RendererApi<TopNWidgetModel>,
     changeDetector: ChangeDetectorRef,
     private readonly metadataService: MetadataService,
-    private readonly entityNavService: EntityNavigationService
+    private readonly entityNavService: EntityNavigationService,
   ) {
     super(api, changeDetector);
   }
@@ -82,7 +82,7 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
         this.setOptionsObservables(fetcher);
       }),
       switchMap(() => this.buildDataObservable()),
-      map(data => data.sort((first, second) => second.value - first.value))
+      map(data => data.sort((first, second) => second.value - first.value)),
     );
   }
 
@@ -97,8 +97,8 @@ export class TopNWidgetRendererComponent extends InteractiveDataWidgetRenderer<T
         .map(spec =>
           this.metadataService
             .getSpecificationDisplayName(spec.context, spec.metric)
-            .pipe(map(label => ({ label: label, value: spec })))
-        )
+            .pipe(map(label => ({ label: label, value: spec }))),
+        ),
     );
   }
 

@@ -10,7 +10,7 @@ describe('Summary Card Component', () => {
   const createHost = createHostFactory({
     component: SummaryCardComponent,
     declarations: [MockComponent(SummaryValueComponent)],
-    shallow: true
+    shallow: true,
   });
 
   test('should render card', () => {
@@ -26,15 +26,15 @@ describe('Summary Card Component', () => {
               value: 'Summary #1',
               icon: 'Icon #1',
               label: 'Label #1',
-              tooltip: 'Tooltip #1'
+              tooltip: 'Tooltip #1',
             },
             {
               value: 'Summary #2',
-              icon: 'Icon #2'
-            }
-          ]
-        }
-      }
+              icon: 'Icon #2',
+            },
+          ],
+        },
+      },
     );
 
     expect(spectator.query('.card')).toExist();

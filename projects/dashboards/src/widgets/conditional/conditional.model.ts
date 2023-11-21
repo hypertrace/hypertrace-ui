@@ -5,20 +5,20 @@ import { map } from 'rxjs/operators';
 import { ModelTemplatePropertyType } from '../../properties/property-types/model-template-type';
 
 @Model({
-  type: 'conditional'
+  type: 'conditional',
 })
 export class ConditionalModel {
   @ModelProperty({
     key: 'true',
     type: ModelTemplatePropertyType.TYPE,
-    required: true
+    required: true,
   })
   public true!: ModelJson;
 
   @ModelProperty({
     key: 'false',
     type: ModelTemplatePropertyType.TYPE,
-    required: true
+    required: true,
   })
   public false!: ModelJson;
 

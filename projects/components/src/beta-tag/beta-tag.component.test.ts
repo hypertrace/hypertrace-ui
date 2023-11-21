@@ -8,7 +8,7 @@ describe('Beta Tag Component', () => {
   const createHost = createHostFactory({
     component: BetaTagComponent,
     declarations: [LabelTagComponent],
-    shallow: true
+    shallow: true,
   });
 
   test('renders the beta tag with given parameters', () => {

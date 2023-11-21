@@ -43,7 +43,7 @@ import { TimelineCardContainerComponent } from './container/timeline-card-contai
     </ng-template>
   `,
   styleUrls: ['./timeline-card-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimelineCardListComponent implements AfterContentInit {
   @Input()
@@ -56,7 +56,7 @@ export class TimelineCardListComponent implements AfterContentInit {
   public readonly cards!: QueryList<TimelineCardContainerComponent>;
 
   public readonly dateFormat: DateFormatOptions = {
-    mode: DateFormatMode.TimeWithSeconds
+    mode: DateFormatMode.TimeWithSeconds,
   };
 
   public items: TimelineListItem[] = [];
@@ -82,7 +82,7 @@ export class TimelineCardListComponent implements AfterContentInit {
       } else {
         this.items.push({
           card: card,
-          similarCards: []
+          similarCards: [],
         });
         currentItemIndex++;
       }

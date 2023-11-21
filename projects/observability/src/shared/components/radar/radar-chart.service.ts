@@ -18,7 +18,7 @@ export class RadarChartService {
     private readonly radarChartAxisService: RadarChartAxisService,
     private readonly radarSeriesRendererService: RadarSeriesRendererService,
     private readonly radarChartLegendService: RadarChartLegendService,
-    private readonly radarChartTooltipService: RadarChartTooltipService
+    private readonly radarChartTooltipService: RadarChartTooltipService,
   ) {}
 
   public buildChart(chartContainer: HTMLElement, options: RecursivePartial<RadarOptions>): RadarObject {
@@ -72,7 +72,7 @@ export class RadarChartService {
       .attr('height', chartHeight)
       .attr(
         'transform',
-        `translate(${options.chartMargin.left + chartWidth / 2}, ${options.chartMargin.top + chartHeight / 2})`
+        `translate(${options.chartMargin.left + chartWidth / 2}, ${options.chartMargin.top + chartHeight / 2})`,
       );
   }
 
@@ -112,7 +112,7 @@ export class RadarChartService {
 
   private getDefaultSeries(): RecursivePartial<RadarSeries> {
     return {
-      showPoints: true
+      showPoints: true,
     };
   }
 
@@ -125,26 +125,26 @@ export class RadarChartService {
       legendPosition: LegendPosition.Bottom,
       levels: 10,
       tooltipOption: {
-        visible: true
+        visible: true,
       },
       chartMargin: {
         top: 40,
         left: 0,
         bottom: 16,
-        right: 0
+        right: 0,
       },
       plotMargin: {
         top: 24,
         left: 0,
         bottom: 44,
-        right: 0
+        right: 0,
       },
       onPointClicked: () => {
         /** NOOP */
       },
       onSeriesClicked: () => {
         /** NOOP */
-      }
+      },
     };
   }
 }

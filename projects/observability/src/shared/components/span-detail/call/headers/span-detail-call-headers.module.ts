@@ -7,7 +7,7 @@ import {
   LetAsyncModule,
   ListViewModule,
   LoadAsyncModule,
-  TooltipModule
+  TooltipModule,
 } from '@hypertrace/components';
 import { SpanDetailCallHeadersComponent } from './span-detail-call-headers.component';
 
@@ -20,9 +20,9 @@ import { SpanDetailCallHeadersComponent } from './span-detail-call-headers.compo
     LetAsyncModule,
     LoadAsyncModule,
     MemoizeModule,
-    TooltipModule
+    TooltipModule,
   ],
   declarations: [SpanDetailCallHeadersComponent],
-  exports: [SpanDetailCallHeadersComponent]
+  exports: [SpanDetailCallHeadersComponent],
 })
 export class SpanDetailCallHeadersModule {}

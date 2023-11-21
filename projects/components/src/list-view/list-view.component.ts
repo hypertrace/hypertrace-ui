@@ -57,7 +57,7 @@ import { Dictionary } from '@hypertrace/common';
         </ng-container>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class ListViewComponent {
   @Input()
@@ -95,5 +95,5 @@ export interface ListViewRecord<PossibleValues = string | number> {
 export enum ListViewDisplay {
   Plain = 'plain',
   Striped = 'striped',
-  BorderSeparated = 'border-separated'
+  BorderSeparated = 'border-separated',
 }

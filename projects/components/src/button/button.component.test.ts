@@ -16,14 +16,14 @@ describe('Button Component', () => {
     imports: [ButtonModule, RouterTestingModule],
     declarations: [MockDirective(TrackDirective)],
     providers: [],
-    declareComponent: false
+    declareComponent: false,
   });
 
   test('should have correct default style', () => {
     spectator = createHost(`<ht-button [label]="label"></ht-button>`, {
       hostProps: {
-        label: 'Button'
-      }
+        label: 'Button',
+      },
     });
 
     const buttonEl = spectator.query('.button');
@@ -35,8 +35,8 @@ describe('Button Component', () => {
     spectator = createHost(`<ht-button [label]="label" [type]="type"></ht-button>`, {
       hostProps: {
         label: 'Button',
-        type: ButtonType.Submit
-      }
+        type: ButtonType.Submit,
+      },
     });
 
     const buttonEl = spectator.query('.button');
@@ -47,37 +47,37 @@ describe('Button Component', () => {
   test('should have correct style class for selected role', () => {
     spectator = createHost(`<ht-button [label]="label"></ht-button>`, {
       hostProps: {
-        label: 'Button'
-      }
+        label: 'Button',
+      },
     });
 
     // Primary
     spectator.setInput({
-      variant: ButtonVariant.Primary
+      variant: ButtonVariant.Primary,
     });
     expect(spectator.query('.button')).toHaveClass('button small solid primary');
 
     // Secondary
     spectator.setInput({
-      variant: ButtonVariant.Secondary
+      variant: ButtonVariant.Secondary,
     });
     expect(spectator.query('.button')).toHaveClass('button small solid secondary');
 
     // Tertiary
     spectator.setInput({
-      variant: ButtonVariant.Tertiary
+      variant: ButtonVariant.Tertiary,
     });
     expect(spectator.query('.button')).toHaveClass('button small solid tertiary');
 
     // Quaternary
     spectator.setInput({
-      variant: ButtonVariant.Quaternary
+      variant: ButtonVariant.Quaternary,
     });
     expect(spectator.query('.button')).toHaveClass('button small solid quaternary');
 
     // Destructive
     spectator.setInput({
-      variant: ButtonVariant.Destructive
+      variant: ButtonVariant.Destructive,
     });
     expect(spectator.query('.button')).toHaveClass('button small solid destructive');
   });
@@ -85,8 +85,8 @@ describe('Button Component', () => {
   test('should have correct style class for selected size', () => {
     spectator = createHost(`<ht-button [label]="label"></ht-button>`, {
       hostProps: {
-        label: 'Button'
-      }
+        label: 'Button',
+      },
     });
 
     // Default
@@ -95,35 +95,35 @@ describe('Button Component', () => {
 
     // Extra Small
     spectator.setInput({
-      size: ButtonSize.ExtraSmall
+      size: ButtonSize.ExtraSmall,
     });
     expect(spectator.query('.button')).toHaveClass('button secondary solid extra-small');
     expect(spectator.component.getIconSizeClass()).toEqual(IconSize.ExtraSmall);
 
     // Large
     spectator.setInput({
-      size: ButtonSize.Large
+      size: ButtonSize.Large,
     });
     expect(spectator.query('.button')).toHaveClass('button secondary solid large');
     expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Large);
 
     // Small
     spectator.setInput({
-      size: ButtonSize.Small
+      size: ButtonSize.Small,
     });
     expect(spectator.query('.button')).toHaveClass('button secondary solid small');
     expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
 
     // Medium
     spectator.setInput({
-      size: ButtonSize.Medium
+      size: ButtonSize.Medium,
     });
     expect(spectator.query('.button')).toHaveClass('button secondary solid medium');
     expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Medium);
 
     // Tiny
     spectator.setInput({
-      size: ButtonSize.Tiny
+      size: ButtonSize.Tiny,
     });
     expect(spectator.query('.button')).toHaveClass('button secondary solid tiny');
     expect(spectator.component.getIconSizeClass()).toEqual(IconSize.Small);
@@ -132,8 +132,8 @@ describe('Button Component', () => {
   test('should have correct style class for disabled state', () => {
     spectator = createHost(`<ht-button [label]="label"></ht-button>`, {
       hostProps: {
-        label: 'Button'
-      }
+        label: 'Button',
+      },
     });
 
     // Default
@@ -141,7 +141,7 @@ describe('Button Component', () => {
 
     // Disable
     spectator.setInput({
-      disabled: true
+      disabled: true,
     });
     expect(spectator.query('.button')).toBe(spectator.query('.disabled'));
   });
@@ -154,31 +154,31 @@ describe('Button Component', () => {
 
     // Outline
     spectator.setInput({
-      display: ButtonStyle.Bordered
+      display: ButtonStyle.Bordered,
     });
     expect(spectator.query('.button')).toHaveClass('button secondary small bordered');
 
     // Outlined Text
     spectator.setInput({
-      display: ButtonStyle.Outlined
+      display: ButtonStyle.Outlined,
     });
     expect(spectator.query('.button')).toHaveClass('button secondary small outlined');
 
     // Text
     spectator.setInput({
-      display: ButtonStyle.Text
+      display: ButtonStyle.Text,
     });
     expect(spectator.query('.button')).toHaveClass('button secondary small text');
 
     // Text
     spectator.setInput({
-      display: ButtonStyle.PlainText
+      display: ButtonStyle.PlainText,
     });
     expect(spectator.query('.button')).toHaveClass('button secondary small plain-text');
 
     // Solid
     spectator.setInput({
-      display: ButtonStyle.Solid
+      display: ButtonStyle.Solid,
     });
     expect(spectator.query('.button')).toHaveClass('button secondary small solid');
   });
@@ -186,8 +186,8 @@ describe('Button Component', () => {
   test('should render Icons and label correctly', () => {
     spectator = createHost(`<ht-button [icon]="icon"></ht-button>`, {
       hostProps: {
-        icon: IconType.Add
-      }
+        icon: IconType.Add,
+      },
     });
 
     expect(spectator.query('.icon.leading')).toExist();
@@ -196,7 +196,7 @@ describe('Button Component', () => {
 
     // Set Label
     spectator.setInput({
-      label: 'Button'
+      label: 'Button',
     });
     expect(spectator.query('.icon.leading')).toExist();
     expect(spectator.query('.icon.trailing')).not.toExist();
@@ -205,7 +205,7 @@ describe('Button Component', () => {
 
     // Set Label
     spectator.setInput({
-      trailingIcon: IconType.Add
+      trailingIcon: IconType.Add,
     });
 
     expect(spectator.query('.icon.trailing')).toExist();
@@ -216,7 +216,7 @@ describe('Button Component', () => {
 
     // Set Label
     spectator.setInput({
-      icon: undefined
+      icon: undefined,
     });
 
     expect(spectator.query('.icon.trailing')).toExist();

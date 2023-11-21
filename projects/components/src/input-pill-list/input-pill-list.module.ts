@@ -10,6 +10,6 @@ import { EventBlockerModule } from '../event-blocker/event-blocker.module';
 @NgModule({
   declarations: [InputPillListComponent],
   imports: [CommonModule, InputModule, IconModule, ReactiveFormsModule, FormFieldModule, EventBlockerModule],
-  exports: [InputPillListComponent]
+  exports: [InputPillListComponent],
 })
 export class InputPillListModule {}

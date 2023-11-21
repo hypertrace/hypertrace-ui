@@ -20,7 +20,7 @@ describe('Bar Gauge component', () => {
           width: 33,
           x: 0,
           y: 0,
-          toJSON: () => ''
+          toJSON: () => '',
         };
       case 'max-value-bar':
       default:
@@ -33,7 +33,7 @@ describe('Bar Gauge component', () => {
           width: 100,
           x: 0,
           y: 0,
-          toJSON: () => ''
+          toJSON: () => '',
         };
     }
   };
@@ -44,13 +44,13 @@ describe('Bar Gauge component', () => {
     imports: [FormattingModule, LoadAsyncModule],
     providers: [
       MockProvider(DomElementMeasurerService, {
-        measureHtmlElement: setMeasureHtmlElement(33)
+        measureHtmlElement: setMeasureHtmlElement(33),
       }),
       mockProvider(ColorService, {
         getColorPalette: () => ({
-          forNColors: () => ['first-color', 'second-color', 'third-color']
-        })
-      })
+          forNColors: () => ['first-color', 'second-color', 'third-color'],
+        }),
+      }),
     ],
     template: `
       <ht-bar-gauge
@@ -59,7 +59,7 @@ describe('Bar Gauge component', () => {
         [maxValue]="maxValue"
         [isUnlimited]="isUnlimited"
       ></ht-bar-gauge>
-    `
+    `,
   });
 
   test('assigns correct values when not full', fakeAsync(() => {
@@ -69,17 +69,17 @@ describe('Bar Gauge component', () => {
           {
             value: 33,
             color: 'red',
-            label: 'test-segment-red'
+            label: 'test-segment-red',
           },
           {
             value: 33,
             color: 'yellow',
-            label: 'test-segment-yellow'
-          }
+            label: 'test-segment-yellow',
+          },
         ],
         maxValue: 100,
-        isUnlimited: false
-      }
+        isUnlimited: false,
+      },
     });
     spectator.tick();
 
@@ -91,14 +91,14 @@ describe('Bar Gauge component', () => {
         color: 'red',
         label: 'test-segment-red',
         percentage: 33,
-        value: 33
+        value: 33,
       },
       {
         color: 'yellow',
         label: 'test-segment-yellow',
         percentage: 33,
-        value: 33
-      }
+        value: 33,
+      },
     ]);
     expect(spectator.component.isUnlimited).toEqual(false);
   }));
@@ -107,29 +107,29 @@ describe('Bar Gauge component', () => {
     spectator = createHost(undefined, {
       providers: [
         MockProvider(DomElementMeasurerService, {
-          measureHtmlElement: setMeasureHtmlElement(99)
-        })
+          measureHtmlElement: setMeasureHtmlElement(99),
+        }),
       ],
       hostProps: {
         segments: [
           {
             value: 33,
             color: 'red',
-            label: 'test-segment-red'
+            label: 'test-segment-red',
           },
           {
             value: 33,
             color: 'yellow',
-            label: 'test-segment-yellow'
+            label: 'test-segment-yellow',
           },
           {
             value: 33,
             color: 'green',
-            label: 'test-segment-green'
-          }
+            label: 'test-segment-green',
+          },
         ],
-        maxValue: 100
-      }
+        maxValue: 100,
+      },
     });
     spectator.tick();
 
@@ -141,20 +141,20 @@ describe('Bar Gauge component', () => {
         color: 'red',
         label: 'test-segment-red',
         percentage: 33,
-        value: 33
+        value: 33,
       },
       {
         color: 'yellow',
         label: 'test-segment-yellow',
         percentage: 33,
-        value: 33
+        value: 33,
       },
       {
         color: 'green',
         label: 'test-segment-green',
         percentage: 33,
-        value: 33
-      }
+        value: 33,
+      },
     ]);
   }));
 
@@ -162,34 +162,34 @@ describe('Bar Gauge component', () => {
     spectator = createHost(undefined, {
       providers: [
         MockProvider(DomElementMeasurerService, {
-          measureHtmlElement: setMeasureHtmlElement(100)
-        })
+          measureHtmlElement: setMeasureHtmlElement(100),
+        }),
       ],
       hostProps: {
         segments: [
           {
             value: 33,
             color: 'red',
-            label: 'test-segment-red'
+            label: 'test-segment-red',
           },
           {
             value: 33,
             color: 'yellow',
-            label: 'test-segment-yellow'
+            label: 'test-segment-yellow',
           },
           {
             value: 33,
             color: 'green',
-            label: 'test-segment-green'
+            label: 'test-segment-green',
           },
           {
             value: 33,
             color: 'blue',
-            label: 'test-segment-blue'
-          }
+            label: 'test-segment-blue',
+          },
         ],
-        maxValue: 100
-      }
+        maxValue: 100,
+      },
     });
     spectator.tick();
 
@@ -201,26 +201,26 @@ describe('Bar Gauge component', () => {
         color: 'red',
         label: 'test-segment-red',
         percentage: 33,
-        value: 33
+        value: 33,
       },
       {
         color: 'yellow',
         label: 'test-segment-yellow',
         percentage: 33,
-        value: 33
+        value: 33,
       },
       {
         color: 'green',
         label: 'test-segment-green',
         percentage: 33,
-        value: 33
+        value: 33,
       },
       {
         color: 'blue',
         label: 'test-segment-blue',
         percentage: 33,
-        value: 33
-      }
+        value: 33,
+      },
     ]);
     expect(spectator.query('.unlimited-symbol')).not.toExist();
   }));
@@ -229,20 +229,20 @@ describe('Bar Gauge component', () => {
     spectator = createHost(undefined, {
       providers: [
         MockProvider(DomElementMeasurerService, {
-          measureHtmlElement: setMeasureHtmlElement(100)
-        })
+          measureHtmlElement: setMeasureHtmlElement(100),
+        }),
       ],
       hostProps: {
         segments: [
           {
             value: 100,
             color: 'red',
-            label: 'test-segment-red'
-          }
+            label: 'test-segment-red',
+          },
         ],
         maxValue: 100,
-        isUnlimited: true
-      }
+        isUnlimited: true,
+      },
     });
     spectator.tick();
     expect(spectator.component.totalValue).toEqual(100);
@@ -251,8 +251,8 @@ describe('Bar Gauge component', () => {
         value: 100,
         color: 'red',
         percentage: 100,
-        label: 'test-segment-red'
-      }
+        label: 'test-segment-red',
+      },
     ]);
     expect(spectator.query('.unlimited-symbol')).toExist();
   }));

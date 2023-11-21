@@ -19,7 +19,7 @@ import { BackendDetailService } from '../backend-detail.service';
       (dashboardReady)="this.onDashboardReady($event)"
     >
     </ht-navigable-dashboard>
-  `
+  `,
 })
 export class BackendOverviewComponent {
   public readonly location: string = 'BACKEND_OVERVIEW';
@@ -31,35 +31,35 @@ export class BackendOverviewComponent {
         {
           type: 'dimension-model',
           dimension: 1,
-          unit: 'FR'
+          unit: 'FR',
         },
         {
           type: 'dimension-model',
           dimension: 1,
-          unit: 'FR'
+          unit: 'FR',
         },
         {
           type: 'dimension-model',
           dimension: 1,
-          unit: 'FR'
-        }
+          unit: 'FR',
+        },
       ],
       'row-dimensions': [
         {
           type: 'dimension-model',
           dimension: 88,
-          unit: 'PX'
+          unit: 'PX',
         },
         {
           type: 'dimension-model',
           dimension: 1,
-          unit: 'FR'
+          unit: 'FR',
         },
         {
           type: 'dimension-model',
           dimension: 1,
-          unit: 'FR'
-        }
+          unit: 'FR',
+        },
       ],
       'cell-spans': [
         {
@@ -67,37 +67,37 @@ export class BackendOverviewComponent {
           'col-start': 0,
           'col-end': 1,
           'row-start': 0,
-          'row-end': 1
+          'row-end': 1,
         },
         {
           type: 'cell-span-model',
           'col-start': 1,
           'col-end': 2,
           'row-start': 0,
-          'row-end': 1
+          'row-end': 1,
         },
         {
           type: 'cell-span-model',
           'col-start': 2,
           'col-end': 3,
           'row-start': 0,
-          'row-end': 1
+          'row-end': 1,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 3,
           'row-start': 1,
-          'row-end': 2
+          'row-end': 2,
         },
         {
           type: 'cell-span-model',
           'col-start': 0,
           'col-end': 3,
           'row-start': 2,
-          'row-end': 3
-        }
-      ]
+          'row-end': 3,
+        },
+      ],
     },
     children: [
       {
@@ -105,7 +105,7 @@ export class BackendOverviewComponent {
         layout: {
           type: 'auto-container-layout',
           rows: 1,
-          'enable-style': false
+          'enable-style': false,
         },
         children: [
           {
@@ -117,9 +117,9 @@ export class BackendOverviewComponent {
               metric: {
                 type: 'metric-aggregation',
                 metric: 'duration',
-                aggregation: MetricAggregationType.P99
-              }
-            }
+                aggregation: MetricAggregationType.P99,
+              },
+            },
           },
           {
             type: 'metric-display-widget',
@@ -130,18 +130,18 @@ export class BackendOverviewComponent {
               metric: {
                 type: 'metric-aggregation',
                 metric: 'duration',
-                aggregation: MetricAggregationType.P50
-              }
-            }
-          }
-        ]
+                aggregation: MetricAggregationType.P50,
+              },
+            },
+          },
+        ],
       },
       {
         type: 'container-widget',
         layout: {
           type: 'auto-container-layout',
           rows: 1,
-          'enable-style': false
+          'enable-style': false,
         },
         children: [
           {
@@ -152,9 +152,9 @@ export class BackendOverviewComponent {
               metric: {
                 type: 'metric-aggregation',
                 metric: 'errorCount',
-                aggregation: MetricAggregationType.AvgrateSecond
-              }
-            }
+                aggregation: MetricAggregationType.AvgrateSecond,
+              },
+            },
           },
           {
             type: 'metric-display-widget',
@@ -164,18 +164,18 @@ export class BackendOverviewComponent {
               metric: {
                 type: 'metric-aggregation',
                 metric: 'errorCount',
-                aggregation: MetricAggregationType.Sum
-              }
-            }
-          }
-        ]
+                aggregation: MetricAggregationType.Sum,
+              },
+            },
+          },
+        ],
       },
       {
         type: 'container-widget',
         layout: {
           type: 'auto-container-layout',
           rows: 1,
-          'enable-style': false
+          'enable-style': false,
         },
         children: [
           {
@@ -186,9 +186,9 @@ export class BackendOverviewComponent {
               metric: {
                 type: 'metric-aggregation',
                 metric: 'numCalls',
-                aggregation: MetricAggregationType.AvgrateSecond
-              }
-            }
+                aggregation: MetricAggregationType.AvgrateSecond,
+              },
+            },
           },
           {
             type: 'metric-display-widget',
@@ -198,11 +198,11 @@ export class BackendOverviewComponent {
               metric: {
                 type: 'metric-aggregation',
                 metric: 'numCalls',
-                aggregation: MetricAggregationType.Sum
-              }
-            }
-          }
-        ]
+                aggregation: MetricAggregationType.Sum,
+              },
+            },
+          },
+        ],
       },
       {
         type: 'container-widget',
@@ -210,7 +210,7 @@ export class BackendOverviewComponent {
           type: 'auto-container-layout',
           rows: 1,
           'enable-style': false,
-          'grid-gap': '48px'
+          'grid-gap': '48px',
         },
         children: [
           {
@@ -220,13 +220,13 @@ export class BackendOverviewComponent {
             'legend-position': LegendPosition.None,
             'x-axis': {
               type: 'cartesian-axis',
-              'show-grid-lines': false
+              'show-grid-lines': false,
             },
             'show-y-axis': true,
             'y-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': true,
-              'min-upper-limit': 25
+              'min-upper-limit': 25,
             },
             'max-series-data-points': 150,
             series: [
@@ -240,9 +240,9 @@ export class BackendOverviewComponent {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P99
-                  }
-                }
+                    aggregation: MetricAggregationType.P99,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -254,9 +254,9 @@ export class BackendOverviewComponent {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P50
-                  }
-                }
+                    aggregation: MetricAggregationType.P50,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -269,9 +269,9 @@ export class BackendOverviewComponent {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'errorCount',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -284,14 +284,14 @@ export class BackendOverviewComponent {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'numCalls',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
-              }
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
+              },
             ],
             'selection-handler': {
-              type: 'cartesian-explorer-selection-handler'
-            }
+              type: 'cartesian-explorer-selection-handler',
+            },
           },
           {
             type: 'cartesian-widget',
@@ -300,13 +300,13 @@ export class BackendOverviewComponent {
             'legend-position': LegendPosition.None,
             'x-axis': {
               type: 'cartesian-axis',
-              'show-grid-lines': false
+              'show-grid-lines': false,
             },
             'show-y-axis': true,
             'y-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': true,
-              'min-upper-limit': 25
+              'min-upper-limit': 25,
             },
             'max-series-data-points': 150,
             series: [
@@ -320,9 +320,9 @@ export class BackendOverviewComponent {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'errorCount',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -335,9 +335,9 @@ export class BackendOverviewComponent {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P99
-                  }
-                }
+                    aggregation: MetricAggregationType.P99,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -350,9 +350,9 @@ export class BackendOverviewComponent {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P50
-                  }
-                }
+                    aggregation: MetricAggregationType.P50,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -365,14 +365,14 @@ export class BackendOverviewComponent {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'numCalls',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
-              }
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
+              },
             ],
             'selection-handler': {
-              type: 'cartesian-explorer-selection-handler'
-            }
+              type: 'cartesian-explorer-selection-handler',
+            },
           },
           {
             type: 'cartesian-widget',
@@ -381,13 +381,13 @@ export class BackendOverviewComponent {
             'legend-position': LegendPosition.None,
             'x-axis': {
               type: 'cartesian-axis',
-              'show-grid-lines': false
+              'show-grid-lines': false,
             },
             'show-y-axis': true,
             'y-axis': {
               type: 'cartesian-axis',
               'show-grid-lines': true,
-              'min-upper-limit': 25
+              'min-upper-limit': 25,
             },
             'max-series-data-points': 150,
             series: [
@@ -401,9 +401,9 @@ export class BackendOverviewComponent {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'numCalls',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -416,9 +416,9 @@ export class BackendOverviewComponent {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P99
-                  }
-                }
+                    aggregation: MetricAggregationType.P99,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -431,9 +431,9 @@ export class BackendOverviewComponent {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'duration',
-                    aggregation: MetricAggregationType.P50
-                  }
-                }
+                    aggregation: MetricAggregationType.P50,
+                  },
+                },
               },
               {
                 type: 'series',
@@ -446,16 +446,16 @@ export class BackendOverviewComponent {
                   metric: {
                     type: 'metric-timeseries',
                     metric: 'errorCount',
-                    aggregation: MetricAggregationType.Sum
-                  }
-                }
-              }
+                    aggregation: MetricAggregationType.Sum,
+                  },
+                },
+              },
             ],
             'selection-handler': {
-              type: 'cartesian-explorer-selection-handler'
-            }
-          }
-        ]
+              type: 'cartesian-explorer-selection-handler',
+            },
+          },
+        ],
       },
       {
         type: 'table-widget',
@@ -463,7 +463,7 @@ export class BackendOverviewComponent {
         style: TableStyle.Embedded,
         header: {
           type: 'widget-header',
-          title: 'Services'
+          title: 'Services',
         },
         pageable: false,
         columns: [
@@ -474,8 +474,8 @@ export class BackendOverviewComponent {
             value: {
               type: 'neighbor-entity-specification',
               'neighbor-direction': 'upstream',
-              'neighbor-type': 'SERVICE'
-            }
+              'neighbor-type': 'SERVICE',
+            },
           },
           {
             type: 'table-widget-column',
@@ -485,8 +485,8 @@ export class BackendOverviewComponent {
             value: {
               type: 'metric-aggregation',
               metric: 'numCalls',
-              aggregation: MetricAggregationType.Sum
-            }
+              aggregation: MetricAggregationType.Sum,
+            },
           },
           {
             type: 'table-widget-column',
@@ -496,20 +496,20 @@ export class BackendOverviewComponent {
             value: {
               type: 'metric-aggregation',
               metric: 'duration',
-              aggregation: MetricAggregationType.Average
-            }
-          }
+              aggregation: MetricAggregationType.Average,
+            },
+          },
         ],
         data: {
-          type: 'interactions-table-data-source'
-        }
-      }
-    ]
+          type: 'interactions-table-data-source',
+        },
+      },
+    ],
   };
 
   public constructor(
     private readonly backendDetailService: BackendDetailService,
-    private readonly subscriptionLifecycle: SubscriptionLifecycle
+    private readonly subscriptionLifecycle: SubscriptionLifecycle,
   ) {}
 
   public onDashboardReady(dashboard: Dashboard): void {

@@ -5,6 +5,6 @@ import { BackendListComponent } from './backend-list.component';
 
 @NgModule({
   imports: [ObservabilityDashboardModule, PageHeaderModule],
-  declarations: [BackendListComponent]
+  declarations: [BackendListComponent],
 })
 export class BackendListModule {}

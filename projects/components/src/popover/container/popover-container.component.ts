@@ -18,7 +18,7 @@ export const POPOVER_CONTAINER_DATA = new InjectionToken<PopoverContainerData>('
       <ng-container *ngTemplateOutlet="this.containerData.popoverRenderer; context: this.templateContext">
       </ng-container>
     </ng-template>
-  `
+  `,
 })
 export class PopoverContainerComponent {
   public readonly isComponentRenderer: boolean;
@@ -27,7 +27,7 @@ export class PopoverContainerComponent {
   public constructor(
     @Inject(POPOVER_CONTAINER_DATA)
     public readonly containerData: PopoverContainerData,
-    layoutChangeService: LayoutChangeService
+    layoutChangeService: LayoutChangeService,
   ) {
     this.isComponentRenderer = !(containerData.popoverRenderer instanceof TemplateRef);
     this.templateContext = this.containerData.popoverInjector.get(POPOVER_DATA, null);
@@ -36,10 +36,10 @@ export class PopoverContainerComponent {
       providers: [
         {
           provide: LayoutChangeService,
-          useValue: layoutChangeService
-        }
+          useValue: layoutChangeService,
+        },
       ],
-      parent: this.containerData.popoverInjector
+      parent: this.containerData.popoverInjector,
     });
   }
 }

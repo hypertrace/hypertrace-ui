@@ -15,7 +15,7 @@ describe('Table Controls component', () => {
     declarations: [
       MockComponent(SearchBoxComponent),
       MockComponent(MultiSelectComponent),
-      MockComponent(ToggleGroupComponent)
+      MockComponent(ToggleGroupComponent),
     ],
     template: `
       <ht-table-controls
@@ -28,15 +28,15 @@ describe('Table Controls component', () => {
         (viewChange)="viewChange($event)"
       >
       </ht-table-controls>
-    `
+    `,
   });
 
   test('should pass custom placeholder to search box', () => {
     const spectator = createHost(undefined, {
       hostProps: {
         searchEnabled: true,
-        searchPlaceholder: 'Custom'
-      }
+        searchPlaceholder: 'Custom',
+      },
     });
 
     expect(spectator.query(SearchBoxComponent)?.placeholder).toEqual('Custom');
@@ -49,8 +49,8 @@ describe('Table Controls component', () => {
     const spectator = createHost(undefined, {
       hostProps: {
         searchEnabled: true,
-        searchChange: onChangeSpy
-      }
+        searchChange: onChangeSpy,
+      },
     });
 
     spectator.triggerEventHandler(SearchBoxComponent, 'valueChange', 'testing');
@@ -67,16 +67,16 @@ describe('Table Controls component', () => {
             options: [
               {
                 label: 'first1',
-                metaValue: 'first-1'
+                metaValue: 'first-1',
               },
               {
                 label: 'second1',
-                metaValue: 'second-1'
-              }
-            ]
-          }
-        ]
-      }
+                metaValue: 'second-1',
+              },
+            ],
+          },
+        ],
+      },
     });
 
     expect(spectator.query(MultiSelectComponent)?.placeholder).toEqual('test1');
@@ -94,24 +94,24 @@ describe('Table Controls component', () => {
             options: [
               {
                 label: 'first1',
-                value: 'first-1'
+                value: 'first-1',
               },
               {
                 label: 'second1',
-                value: 'second-1'
-              }
-            ]
-          }
+                value: 'second-1',
+              },
+            ],
+          },
         ],
-        selectChange: onChangeSpy
-      }
+        selectChange: onChangeSpy,
+      },
     });
 
     spectator.triggerEventHandler(MultiSelectComponent, 'selectedChange', [
       {
         label: 'first1',
-        value: 'first-1'
-      }
+        value: 'first-1',
+      },
     ]);
 
     expect(onChangeSpy).toHaveBeenCalled();
@@ -123,14 +123,14 @@ describe('Table Controls component', () => {
         viewItems: [
           {
             label: 'test1',
-            value: 'TEST1'
+            value: 'TEST1',
           },
           {
             label: 'test2',
-            value: 'TEST2'
-          }
-        ]
-      }
+            value: 'TEST2',
+          },
+        ],
+      },
     });
 
     expect(spectator.query(ToggleGroupComponent)?.items?.length).toEqual(2);
@@ -144,20 +144,20 @@ describe('Table Controls component', () => {
         viewItems: [
           {
             label: 'test1',
-            value: 'TEST1'
+            value: 'TEST1',
           },
           {
             label: 'test2',
-            value: 'TEST2'
-          }
+            value: 'TEST2',
+          },
         ],
-        viewChange: onChangeSpy
-      }
+        viewChange: onChangeSpy,
+      },
     });
 
     spectator.triggerEventHandler(ToggleGroupComponent, 'activeItemChange', {
       label: 'test1',
-      value: 'Test1'
+      value: 'Test1',
     });
 
     expect(onChangeSpy).toHaveBeenCalled();

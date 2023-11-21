@@ -17,8 +17,8 @@ import { WaterfallChartComponent } from './waterfall-chart.component';
     TooltipModule,
     IconModule,
     FormattingModule,
-    MarkerTooltipModule
+    MarkerTooltipModule,
   ],
-  exports: [WaterfallChartComponent]
+  exports: [WaterfallChartComponent],
 })
 export class WaterfallChartModule {}
