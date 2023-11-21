@@ -56,6 +56,10 @@ export class TableCdkDataSource implements DataSource<TableRow> {
    ****************************/
 
   public connect(): Observable<ReadonlyArray<TableRow>> {
+    const loadingTrigger = this.tableDataSourceProvider.data?.loadingTrigger;
+
+    loadingTrigger?.subscribe(() => this.loadingStateSubject.next({ loading$: NEVER }));
+
     this.changeSubscription = this.buildChangeObservable()
       .pipe(
         tap(() => this.loadingStateSubject.next({ loading$: NEVER })),
