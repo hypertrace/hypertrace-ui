@@ -61,6 +61,7 @@ export const enum IconType {
   External = 'svg:external',
   ExternalApi = 'svg:external-api',
   Eye = 'svg:eye',
+  EyeVisibilityOff = 'svg:visibility_off',
   Favorite = 'favorite_border',
   FileCode = 'svg:file-code',
   Filter = 'svg:filter',
