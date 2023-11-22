@@ -58,7 +58,7 @@ const iconsRootPath = 'assets/icons';
         { key: IconType.External, url: `${iconsRootPath}/external.svg` },
         { key: IconType.ExternalApi, url: `${iconsRootPath}/external-api.svg` },
         { key: IconType.Eye, url: `${iconsRootPath}/eye.svg` },
-        { key: IconType.EyeVisibilityOff, url: `${iconsRootPath}/visibility-off.svg` },
+        { key: IconType.EyeVisibilityOff, url: `${iconsRootPath}/eye-visibility-off.svg` },
         { key: IconType.FileCode, url: `${iconsRootPath}/file-code.svg` },
         { key: IconType.Filter, url: `${iconsRootPath}/filter.svg` },
         { key: IconType.Go, url: `${iconsRootPath}/go.svg` },
