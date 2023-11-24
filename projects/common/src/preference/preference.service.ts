@@ -82,6 +82,10 @@ export class PreferenceService {
     this.preferenceStorage(type).set(this.asStorageKey(key), val);
   }
 
+  public delete(key: PreferenceKey, type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE): void {
+    this.preferenceStorage(type).delete(this.asStorageKey(key));
+  }
+
   private asStorageKey(key: PreferenceKey): PreferenceStorageKey {
     return `${PreferenceService.PREFERENCE_STORAGE_NAMESPACE}${PreferenceService.SEPARATOR_CHAR}${key}`;
   }
