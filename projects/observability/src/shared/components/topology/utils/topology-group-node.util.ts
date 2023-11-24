@@ -4,7 +4,7 @@ import {
   TopologyEdge,
   TopologyGroupNode,
   TopologyInternalNodeType,
-  TopologyNode
+  TopologyNode,
 } from '../topology';
 
 export abstract class TopologyGroupNodeUtil {
@@ -17,7 +17,7 @@ export abstract class TopologyGroupNodeUtil {
 
   public static getUpdatedNodesOnGroupNodeClick(
     userNode: TopologyGroupNode,
-    userNodes: TopologyNode[]
+    userNodes: TopologyNode[],
   ): TopologyNode[] {
     const childNodes = userNode.children;
     userNode.expanded = !userNode.expanded;
@@ -31,7 +31,7 @@ export abstract class TopologyGroupNodeUtil {
 
   public static updateLayoutForGroupNode(
     topology: RenderableTopology<TopologyNode, TopologyEdge>,
-    groupNode: TopologyGroupNode
+    groupNode: TopologyGroupNode,
   ): void {
     const renderableGroupNode = topology.nodes.find(n => n.userNode === groupNode);
     const renderableChildNodes = topology.nodes.filter(n => groupNode.children.includes(n.userNode));
@@ -84,7 +84,7 @@ export abstract class TopologyGroupNodeUtil {
 
   public static updateLayoutOnGroupNodeDrag(
     dragEvent: TopologyDragEvent,
-    topologyData: RenderableTopology<TopologyNode, TopologyEdge>
+    topologyData: RenderableTopology<TopologyNode, TopologyEdge>,
   ): void {
     const userNode = dragEvent.node.userNode;
     if (this.isTopologyGroupNode(userNode)) {
@@ -103,7 +103,7 @@ export abstract class TopologyGroupNodeUtil {
 
   public static collapseGroupNodes(userNodes: TopologyNode[]): TopologyNode[] {
     const groupNodes = userNodes.filter((userNode): userNode is TopologyGroupNode =>
-      this.isTopologyGroupNode(userNode)
+      this.isTopologyGroupNode(userNode),
     );
     let updatedNodes: TopologyNode[] = userNodes;
 

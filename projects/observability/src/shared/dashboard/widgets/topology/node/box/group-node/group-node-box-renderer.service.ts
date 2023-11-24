@@ -6,7 +6,7 @@ import {
   TopologyElementVisibility,
   TopologyGroupNode,
   TopologyNode,
-  TopologyNodeState
+  TopologyNodeState,
 } from '../../../../../../components/topology/topology';
 import { D3UtilService } from '../../../../../../components/utils/d3/d3-util.service';
 import { Color } from '../../../../../../../../../common/src/public-api';
@@ -32,7 +32,7 @@ export class GroupNodeBoxRendererService implements TopologyNodeRendererDelegate
     nodeElement: SVGGElement,
     node: TopologyGroupNode,
     _state: TopologyNodeState,
-    domElementRenderer: Renderer2
+    domElementRenderer: Renderer2,
   ): void {
     const nodeSelection = this.d3Utils
       .select(nodeElement, domElementRenderer)
@@ -60,20 +60,20 @@ export class GroupNodeBoxRendererService implements TopologyNodeRendererDelegate
     if (this.isAnglePerpendicularlyAbove(angle)) {
       return {
         x: this.boxWidth() / 2,
-        y: 0
+        y: 0,
       };
     }
 
     if (this.isAnglePerpendicularlyBelow(angle)) {
       return {
         x: this.boxWidth() / 2,
-        y: this.boxHeight()
+        y: this.boxHeight(),
       };
     }
 
     return {
       x: this.isAngleInIVQuadrant(angle) || this.isAngleInIQuadrant(angle) ? this.boxWidth() : 0,
-      y: this.getCenterY()
+      y: this.getCenterY(),
     };
   }
 
@@ -81,7 +81,7 @@ export class GroupNodeBoxRendererService implements TopologyNodeRendererDelegate
     element: SVGGElement,
     _node: TopologyGroupNode,
     state: TopologyNodeState,
-    domElementRenderer: Renderer2
+    domElementRenderer: Renderer2,
   ): void {
     const nodeSelection = this.d3Utils.select(element, domElementRenderer);
 
@@ -109,7 +109,7 @@ export class GroupNodeBoxRendererService implements TopologyNodeRendererDelegate
 
   private drawBackgroundRect(
     nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
-    node: TopologyGroupNode
+    node: TopologyGroupNode,
   ): void {
     if (!node.expanded) {
       nodeSelection
@@ -142,7 +142,7 @@ export class GroupNodeBoxRendererService implements TopologyNodeRendererDelegate
 
   private drawTotalCountText(
     nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
-    node: TopologyGroupNode
+    node: TopologyGroupNode,
   ): void {
     nodeSelection
       .append('text')
@@ -156,7 +156,7 @@ export class GroupNodeBoxRendererService implements TopologyNodeRendererDelegate
 
   private drawPrefixIcon(
     nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
-    domElementRenderer: Renderer2
+    domElementRenderer: Renderer2,
   ): void {
     this.d3Utils
       .buildIcon(IconType.Folder, domElementRenderer)
@@ -169,14 +169,14 @@ export class GroupNodeBoxRendererService implements TopologyNodeRendererDelegate
           .attr('width', this.nodeIconWidth())
           .attr('height', this.nodeIconHeight())
           .attr('x', this.boxPaddingLeft())
-          .attr('y', this.getCenterY() - this.nodeIconHeight() / 2)
+          .attr('y', this.getCenterY() - this.nodeIconHeight() / 2),
       );
   }
 
   private drawSuffixIcon(
     nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
     node: TopologyGroupNode,
-    domElementRenderer: Renderer2
+    domElementRenderer: Renderer2,
   ): void {
     if (node.data.suffixIcon) {
       this.d3Utils
@@ -190,14 +190,14 @@ export class GroupNodeBoxRendererService implements TopologyNodeRendererDelegate
             .attr('width', this.nodeIconWidth())
             .attr('height', this.nodeIconHeight())
             .attr('x', this.boxWidth() - this.boxPaddingRight() - this.nodeIconWidth())
-            .attr('y', this.getCenterY() - this.nodeIconHeight() / 2)
+            .attr('y', this.getCenterY() - this.nodeIconHeight() / 2),
         );
     }
   }
 
   private drawNodeTitle(
     nodeSelection: Selection<SVGGElement, unknown, null, undefined>,
-    node: TopologyGroupNode
+    node: TopologyGroupNode,
   ): void {
     const titleStartX = this.boxPaddingLeft() + this.titleOffsetLeft() + this.nodeIconWidth();
     const titleEndX =
@@ -231,7 +231,7 @@ export class GroupNodeBoxRendererService implements TopologyNodeRendererDelegate
       element,
       this.dropShadowFilterId,
       domElementRenderer,
-      Color.Gray2
+      Color.Gray2,
     );
   }
 
