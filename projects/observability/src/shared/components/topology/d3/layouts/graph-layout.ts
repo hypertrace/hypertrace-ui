@@ -5,6 +5,7 @@ export class GraphLayout {
     [0, []],
   ]);
   protected readonly nodeToLevelMap: Map<RenderableTopologyNode, number> = new Map<RenderableTopologyNode, number>();
+  private readonly layoutConfig: TopologyGraphLayoutConfig = this.getLayoutConfig();
 
   public layout(topology: RenderableTopology<TopologyNode, TopologyEdge>): void {
     this.initialize();
@@ -63,19 +64,24 @@ export class GraphLayout {
   }
 
   protected assignCoordinatesToNodes(): void {
-    let curX = 1;
+    let curX = this.layoutConfig.startX;
 
     Array.from(this.levelToNodesMap.values()).forEach(nodes => {
-      let curY = 1;
+      let curY = this.layoutConfig.startY;
       let maxWidth = 0;
       nodes.forEach(node => {
         node.x = curX;
         node.y = curY;
-        curY += (node.renderedData()?.getBoudingBox()?.height ?? 36) + 20;
-        maxWidth = Math.max(maxWidth, node.renderedData()?.getBoudingBox()?.width ?? 400);
+        curY +=
+          (node.renderedData()?.getBoudingBox()?.height ?? this.layoutConfig.defaultNodeHeight) +
+          this.layoutConfig.verticalNodeGap;
+        maxWidth = Math.max(
+          maxWidth,
+          node.renderedData()?.getBoudingBox()?.width ?? this.layoutConfig.defaultNodeWidth,
+        );
       });
 
-      curX += maxWidth + 240;
+      curX += maxWidth + this.layoutConfig.horizontalNodeGap;
     });
   }
 
@@ -89,4 +95,24 @@ export class GraphLayout {
       });
     });
   }
+
+  protected getLayoutConfig(): TopologyGraphLayoutConfig {
+    return {
+      horizontalNodeGap: 240,
+      verticalNodeGap: 20,
+      startX: 1,
+      startY: 1,
+      defaultNodeWidth: 240,
+      defaultNodeHeight: 36,
+    };
+  }
+}
+
+export interface TopologyGraphLayoutConfig {
+  horizontalNodeGap: number;
+  verticalNodeGap: number;
+  startX: number;
+  startY: number;
+  defaultNodeWidth: number;
+  defaultNodeHeight: number;
 }
