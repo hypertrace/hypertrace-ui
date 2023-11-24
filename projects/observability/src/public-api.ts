@@ -297,6 +297,7 @@ export * from './shared/components/topology/renderers/node/topology-node-rendere
 export * from './shared/components/topology/renderers/tooltip/topology-tooltip-renderer.service';
 export * from './shared/components/topology/topology.component';
 export * from './shared/components/topology/topology.module';
+export * from './shared/components/topology/d3/layouts/graph-layout';
 export * from './shared/dashboard/data/graphql/topology/topology-data-source.model';
 export * from './shared/dashboard/data/graphql/topology/metrics/topology-metric-category.model';
 export * from './shared/dashboard/data/graphql/topology/metrics/topology-metric-with-category.model';
