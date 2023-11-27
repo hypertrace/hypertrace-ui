@@ -54,8 +54,8 @@ export abstract class TopologyGroupNodeUtil {
 
       return (
         !groupNode.children.includes(n.userNode) &&
-        ((nodeBox.left > boundingBox.left && nodeBox.left < boundingBox.right) ||
-          (nodeBox.right > boundingBox.left && nodeBox.right < boundingBox.right)) &&
+        ((nodeBox.left >= boundingBox.left && nodeBox.left <= boundingBox.right) ||
+          (nodeBox.right >= boundingBox.left && nodeBox.right <= boundingBox.right)) &&
         nodeBox.top > boundingBox.bottom
       );
     });
