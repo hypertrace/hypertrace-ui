@@ -217,7 +217,9 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
     }
 
     if (this.totalItems === PaginatorTotalCode.Last) {
-      return 'last';
+      const approxTotal = (this.pageIndex + 1) * this.pageSize;
+
+      return approxTotal.toString();
     }
 
     return this.totalItems.toString();

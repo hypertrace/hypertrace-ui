@@ -61,7 +61,7 @@ export class TracesTableDataSourceModel extends TableDataSourceModel {
       // Provide the `unknown` code otherwise
       totalCount: this.ignoreTotal
         ? response.results.length < request.position.limit
-          ? PaginatorTotalCode.Last
+          ? response.results.length
           : PaginatorTotalCode.Unknown
         : response.total,
     };
