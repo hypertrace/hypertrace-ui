@@ -170,7 +170,7 @@ describe('Paginator component', () => {
       },
     });
 
-    expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of last');
+    expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of 50');
     expect(spectator.component.hasNextPage()).toBe(false);
   });
 
