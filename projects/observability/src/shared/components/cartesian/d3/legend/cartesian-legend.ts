@@ -41,14 +41,6 @@ export class CartesianLegend<TData> {
     private readonly intervalData?: CartesianIntervalData,
     private readonly summaries: Summary[] = [],
   ) {
-    // this.isGrouped =
-    //   this.series.length > 0 &&
-    //   this.series.every(seriesEntry => !isEmpty(seriesEntry.groupName) && seriesEntry.groupName !== seriesEntry.name);
-    //   this.isGrouped = true;
-    // this.groupedSeries = this.isGrouped ? groupBy(this.series, seriesEntry => seriesEntry.groupName) : this.series.map(s => ({[s.name]: [{...s, groupName: s.name}]})).reduce((p, c) => ({...p, ...c}), {});
-
-    // const legendData = this.buildLegendData();
-
     const isGroupedSeries =
       this.series.length > 0 &&
       this.series.every(seriesEntry => !isEmpty(seriesEntry.groupName) && seriesEntry.groupName !== seriesEntry.name);
@@ -109,15 +101,6 @@ export class CartesianLegend<TData> {
 
   private drawLegendEntries(container: ContainerElement): void {
     const containerSelection = select(container);
-    // if (!this.isGrouped) {
-    //   containerSelection
-    //     .append('div')
-    //     .classed('legend-entries', true)
-    //     .selectAll('.legend-entry')
-    //     .data(this.series.filter(series => !series.hide))
-    //     .enter()
-    //     .each((_, index, elements) => this.drawLegendEntry(elements[index]));
-    // } else {
     containerSelection
       .selectAll('.legend-entries')
       .data(Object.values(this.legendGroups))
@@ -125,7 +108,6 @@ export class CartesianLegend<TData> {
       .append('div')
       .classed('legend-entries', true)
       .each((seriesGroup, index, elements) => this.drawLegendEntriesTitleAndValues(seriesGroup, elements[index]));
-    //  }
   }
 
   private drawLegendEntriesTitleAndValues(seriesGroup: LegendGroupData<TData>, element: HTMLDivElement): void {
@@ -318,14 +300,15 @@ export class CartesianLegend<TData> {
   }
 
   private updateActiveSeriesGroup(seriesGroup: LegendEntryData<TData>[]): void {
+    const legendEntrySeries = seriesGroup.map(s => s.series);
     if (!this.isSelectionModeOn) {
-      this.activeSeries = [...seriesGroup.map(s => s.series)];
+      this.activeSeries = [...legendEntrySeries];
       this.isSelectionModeOn = true;
-    } else if (!this.isThisLegendSeriesGroupActive(seriesGroup.map(s => s.series))) {
-      this.activeSeries = this.activeSeries.filter(series => !seriesGroup.map(s => s.series).includes(series));
+    } else if (!this.isThisLegendSeriesGroupActive(legendEntrySeries)) {
+      this.activeSeries = this.activeSeries.filter(series => !legendEntrySeries.includes(series));
       this.activeSeries.push(...seriesGroup.map(s => s.series));
     } else {
-      this.activeSeries = this.activeSeries.filter(series => !seriesGroup.map(s => s.series).includes(series)); // TODO: FIx this
+      this.activeSeries = this.activeSeries.filter(series => !legendEntrySeries.includes(series));
     }
     this.updateLegendClassesAndStyle();
     this.updateResetElementVisibility(!this.isSelectionModeOn);
