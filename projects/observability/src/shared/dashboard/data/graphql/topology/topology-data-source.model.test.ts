@@ -115,6 +115,7 @@ describe('topology data source model', () => {
         metricSpecifications: [
           expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
         ],
+        otherSpecifications: [],
       },
       rootNodeFilters: [],
       edgeFilters: [],
@@ -128,6 +129,7 @@ describe('topology data source model', () => {
             metricSpecifications: [
               expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
             ],
+            otherSpecifications: [],
           },
         ],
         [
@@ -137,6 +139,7 @@ describe('topology data source model', () => {
             metricSpecifications: [
               expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
             ],
+            otherSpecifications: [],
           },
         ],
       ]),
@@ -148,6 +151,7 @@ describe('topology data source model', () => {
             metricSpecifications: [
               expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
             ],
+            otherSpecifications: [],
           },
         ],
       ]),
@@ -173,6 +177,7 @@ describe('topology data source model', () => {
         metricSpecifications: [
           expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
         ],
+        otherSpecifications: [],
       },
       rootNodeFilters: [filters[0]],
       edgeFilters: [filters[1]],
@@ -186,6 +191,7 @@ describe('topology data source model', () => {
             metricSpecifications: [
               expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
             ],
+            otherSpecifications: [],
           },
         ],
       ]),
