@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { DateCoercer, DateFormatter, SubscriptionLifecycle, TimeRange } from '@hypertrace/common';
 
-import { defaults } from 'lodash-es';
+import { defaults, groupBy } from 'lodash-es';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
@@ -204,20 +204,27 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   }
 
   private convertToDefaultTooltipRenderData(
-    data: MouseLocationData<TData, Series<TData>>[],
+    locationData: MouseLocationData<TData, Series<TData>>[],
   ): DefaultChartTooltipRenderData | undefined {
-    if (data.length === 0) {
+    if (locationData.length === 0) {
       return undefined;
     }
 
+    const tooltipGroups = Object.entries(groupBy(locationData, datum => datum.context.groupName)).map(
+      ([title, groupedData]) => ({
+        title: title,
+        labeledValues: groupedData.map(singleValue => ({
+          label: singleValue.context.name,
+          value: defaultYDataAccessor<number | string>(singleValue.dataPoint),
+          units: singleValue.context.units,
+          color: singleValue.context.getColor?.(singleValue.dataPoint) ?? singleValue.context.color,
+        })),
+      }),
+    );
+
     return {
-      title: this.resolveTooltipTitle(data[0]),
-      labeledValues: data.map(singleValue => ({
-        label: singleValue.context.name,
-        value: defaultYDataAccessor<number | string>(singleValue.dataPoint),
-        units: singleValue.context.units,
-        color: singleValue.context.getColor?.(singleValue.dataPoint) ?? singleValue.context.color,
-      })),
+      title: this.resolveTooltipTitle(locationData[0]),
+      groups: tooltipGroups,
     };
   }
 

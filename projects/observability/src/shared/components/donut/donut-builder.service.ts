@@ -192,11 +192,16 @@ export class DonutBuilderService extends D3VisualizationBuilderService<
   ): DefaultChartTooltipRenderData | undefined {
     return {
       title: title,
-      labeledValues: data.map(datum => ({
-        label: datum.dataPoint.name,
-        value: datum.dataPoint.value,
-        color: datum.dataPoint.color!,
-      })),
+      groups: [
+        {
+          title: title,
+          labeledValues: data.map(datum => ({
+            label: datum.dataPoint.name,
+            value: datum.dataPoint.value,
+            color: datum.dataPoint.color!,
+          })),
+        },
+      ],
     };
   }
 }
