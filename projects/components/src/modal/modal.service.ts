@@ -64,7 +64,9 @@ export class ModalService {
       backdrop: PopoverBackdrop.Opaque,
     });
 
-    popover.closeOnNavigation();
+    if (!modalContainerData.config.persistOnNavigate) {
+      popover.closeOnNavigation();
+    }
 
     return popover;
   }
