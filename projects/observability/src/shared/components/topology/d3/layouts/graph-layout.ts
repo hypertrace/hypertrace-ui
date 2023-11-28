@@ -1,8 +1,11 @@
 import { RenderableTopology, RenderableTopologyNode, TopologyEdge, TopologyNode } from '../../topology';
 
 export class GraphLayout {
-  private levelToNodesMap: Map<number, RenderableTopologyNode[]> = new Map<number, RenderableTopologyNode[]>([[0, []]]);
-  private readonly nodeToLevelMap: Map<RenderableTopologyNode, number> = new Map<RenderableTopologyNode, number>();
+  protected levelToNodesMap: Map<number, RenderableTopologyNode[]> = new Map<number, RenderableTopologyNode[]>([
+    [0, []],
+  ]);
+  protected readonly nodeToLevelMap: Map<RenderableTopologyNode, number> = new Map<RenderableTopologyNode, number>();
+  private readonly layoutConfig: TopologyGraphLayoutConfig = this.getLayoutConfig();
 
   public layout(topology: RenderableTopology<TopologyNode, TopologyEdge>): void {
     this.initialize();
@@ -12,12 +15,12 @@ export class GraphLayout {
     this.verticallyCenterAlignNodes();
   }
 
-  private initialize(): void {
+  protected initialize(): void {
     this.levelToNodesMap = new Map([[0, []]]);
     this.nodeToLevelMap.clear();
   }
 
-  private findRootNodes(topology: RenderableTopology<TopologyNode, TopologyEdge>): void {
+  protected findRootNodes(topology: RenderableTopology<TopologyNode, TopologyEdge>): void {
     topology.nodes.forEach(node => {
       if (node.incoming.length === 0) {
         this.nodeToLevelMap.set(node, 0);
@@ -26,14 +29,14 @@ export class GraphLayout {
     });
   }
 
-  private fillNodeAndLevelMaps(): void {
+  protected fillNodeAndLevelMaps(): void {
     const goingToBeExploredNodes = [...(this.levelToNodesMap.get(0) ?? [])];
     const goingToBeOrAlreadyExploredNodes = new Set<RenderableTopologyNode>([...goingToBeExploredNodes]);
 
     this.levelOrderTraversal(goingToBeExploredNodes, goingToBeOrAlreadyExploredNodes);
   }
 
-  private levelOrderTraversal(
+  protected levelOrderTraversal(
     goingToBeExploredNodes: RenderableTopologyNode[],
     goingToBeOrAlreadyExploredNodes: Set<RenderableTopologyNode>,
   ): void {
@@ -60,31 +63,59 @@ export class GraphLayout {
     this.levelOrderTraversal(goingToBeExploredNodes, goingToBeOrAlreadyExploredNodes);
   }
 
-  private assignCoordinatesToNodes(): void {
-    let curX = 1;
+  protected assignCoordinatesToNodes(): void {
+    let curX = this.layoutConfig.startX;
 
     Array.from(this.levelToNodesMap.values()).forEach(nodes => {
-      let curY = 1;
+      let curY = this.layoutConfig.startY;
       let maxWidth = 0;
       nodes.forEach(node => {
         node.x = curX;
         node.y = curY;
-        curY += (node.renderedData()?.getBoudingBox()?.height ?? 36) + 20;
-        maxWidth = Math.max(maxWidth, node.renderedData()?.getBoudingBox()?.width ?? 400);
+        curY +=
+          (node.renderedData()?.getBoudingBox()?.height ?? this.layoutConfig.defaultNodeHeight) +
+          this.layoutConfig.verticalNodeGap;
+        maxWidth = Math.max(
+          maxWidth,
+          node.renderedData()?.getBoudingBox()?.width ?? this.layoutConfig.defaultNodeWidth,
+        );
       });
 
-      curX += maxWidth + 240;
+      curX += maxWidth + this.layoutConfig.horizontalNodeGap;
     });
   }
 
-  private verticallyCenterAlignNodes(): void {
+  protected verticallyCenterAlignNodes(): void {
     const longestLevelLength = Math.max(...Array.from(this.levelToNodesMap.values()).map(nodes => nodes.length));
 
     Array.from(this.levelToNodesMap.values()).forEach(nodes => {
       nodes.forEach(node => {
         node.y +=
-          ((longestLevelLength - nodes.length) * ((node.renderedData()?.getBoudingBox()?.height ?? 36) + 20)) / 2;
+          ((longestLevelLength - nodes.length) *
+            ((node.renderedData()?.getBoudingBox()?.height ?? this.layoutConfig.defaultNodeHeight) +
+              this.layoutConfig.verticalNodeGap)) /
+          2;
       });
     });
   }
+
+  protected getLayoutConfig(): TopologyGraphLayoutConfig {
+    return {
+      horizontalNodeGap: 240,
+      verticalNodeGap: 20,
+      startX: 1,
+      startY: 1,
+      defaultNodeWidth: 240,
+      defaultNodeHeight: 36,
+    };
+  }
+}
+
+export interface TopologyGraphLayoutConfig {
+  horizontalNodeGap: number;
+  verticalNodeGap: number;
+  startX: number;
+  startY: number;
+  defaultNodeWidth: number;
+  defaultNodeHeight: number;
 }
