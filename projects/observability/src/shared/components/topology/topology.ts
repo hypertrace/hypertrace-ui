@@ -97,6 +97,10 @@ export interface TopologyConfiguration {
   edgeInteractionHandler?: TopologyEdgeInteractionHandler;
 
   layoutType?: TopologyLayoutType;
+
+  customLayout?: TopologyLayout;
+
+  supportGroupNode?: boolean;
 }
 
 export interface TopologyNode {
@@ -111,6 +115,23 @@ export interface TopologyEdge {
 export interface TopologyNeighborhood {
   nodes: TopologyNode[];
   edges: TopologyEdge[];
+}
+
+export const enum TopologyInternalNodeType {
+  GroupNode = 'group-node',
+}
+
+export interface TopologyGroupNode {
+  nodeType: TopologyInternalNodeType.GroupNode;
+  edges: TopologyEdge[];
+  expanded: boolean;
+  data: TopologyGroupNodeData;
+  children: TopologyNode[];
+}
+
+export interface TopologyGroupNodeData {
+  title: string;
+  suffixIcon?: string;
 }
 
 export interface TopologyNodeRenderer {
