@@ -56,7 +56,7 @@ import { SplitterCellDimension, SplitterContentDirective } from './splitter-cont
 })
 export class SplitterComponent implements OnChanges, AfterContentInit {
   @Input()
-  public readonly disabled?: boolean = true;
+  public readonly disabled?: boolean = false;
 
   @Input()
   public readonly direction?: SplitterDirection = SplitterDirection.Horizontal;
@@ -149,6 +149,10 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
   }
 
   protected onGutterMouseUp(event: MouseEvent): void {
+    if (this.disabled) {
+      return;
+    }
+
     this.resize(event);
     this.unbindMouseListeners();
   }
