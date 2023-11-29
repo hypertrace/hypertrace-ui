@@ -42,6 +42,7 @@ import { SplitterCellDimension, SplitterContentDirective } from './splitter-cont
           *ngIf="this.direction === '${SplitterDirection.Horizontal}' ? index !== contents.length - 1 : true"
           [ngClass]="[this.direction | lowercase]"
           [ngStyle]="this.splitterSizeStyle"
+          [class.disabled]="this.disabled"
           (mousedown)="this.onGutterMouseDown($event, index)"
           (mouseup)="this.onGutterMouseUp($event)"
         >
@@ -54,6 +55,9 @@ import { SplitterCellDimension, SplitterContentDirective } from './splitter-cont
   `,
 })
 export class SplitterComponent implements OnChanges, AfterContentInit {
+  @Input()
+  public readonly disabled?: boolean = true;
+
   @Input()
   public readonly direction?: SplitterDirection = SplitterDirection.Horizontal;
 
@@ -135,12 +139,16 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     return content;
   }
 
-  protected onGutterMouseDown(event: MouseEvent, index: number) {
+  protected onGutterMouseDown(event: MouseEvent, index: number): void {
+    if (this.disabled) {
+      return;
+    }
+
     this.resizeStart(event, index);
     this.bindMouseListeners();
   }
 
-  protected onGutterMouseUp(event: MouseEvent) {
+  protected onGutterMouseUp(event: MouseEvent): void {
     this.resize(event);
     this.unbindMouseListeners();
   }
