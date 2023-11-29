@@ -166,7 +166,7 @@ describe('Paginator component', () => {
   test('should work as expected for `last` total count', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
-        totalItems: PaginatorTotalCode.Last,
+        totalItems: 50,
       },
     });
 
