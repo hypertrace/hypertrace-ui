@@ -26,6 +26,7 @@ import { TopologyMetricsData, TopologyMetricsModel } from './metrics/topology-me
 import { GraphQlFieldFilter } from '../../../../graphql/model/schema/filter/field/graphql-field-filter';
 import { AttributeExpression } from '../../../../graphql/model/attribute/attribute-expression';
 import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
+import { AttributeSpecificationModel, MetricAggregationSpecificationModel } from '../../../../../public-api';
 
 @Model({
   type: 'topology-data-source',
@@ -91,13 +92,35 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
   })
   public edgeFilterConfig?: TopologyEdgeFilterConfig;
 
+  @ModelProperty({
+    key: 'node-entity-specifications',
+    type: {
+      key: PLAIN_OBJECT_PROPERTY.type,
+    },
+  })
+  public nodeEntitySpecifications?: Record<
+    string,
+    (MetricAggregationSpecificationModel | AttributeSpecificationModel)[]
+  >;
+
+  @ModelProperty({
+    key: 'edge-entity-specifications',
+    type: {
+      key: PLAIN_OBJECT_PROPERTY.type,
+    },
+  })
+  public edgeEntitySpecifications?: Record<
+    string,
+    (MetricAggregationSpecificationModel | AttributeSpecificationModel)[]
+  >;
+
   private readonly specBuilder: SpecificationBuilder = new SpecificationBuilder();
   public readonly requestOptions: GraphQlRequestOptions = {
     cacheability: GraphQlRequestCacheability.Cacheable,
     isolated: true,
   };
   public getData(): Observable<TopologyData> {
-    const rootEntitySpec = this.buildEntitySpec();
+    const rootEntitySpec = this.buildEntitySpec(this.entityType);
     const edgeSpec = {
       metricSpecifications: this.getAllMetricSpecifications(this.edgeMetricsModel),
     };
@@ -119,6 +142,9 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
         upstreamNodeSpecifications: this.buildUpstreamSpecifications(requiredEdgeEntityTypes),
         downstreamNodeSpecifications: this.buildDownstreamSpecifications(requiredEdgeEntityTypes),
         timeRange: this.getTimeRangeOrThrow(),
+        edgeEntitySpecifications: this.edgeEntitySpecifications
+          ? new Map(Object.keys(this.edgeEntitySpecifications).map(key => [key, this.edgeEntitySpecifications![key]]))
+          : undefined,
       };
     }, this.requestOptions).pipe(
       map(nodes => ({
@@ -175,7 +201,7 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     return new Map(
       this.defaultedEntityTypeArray(this.downstreamEntityTypes)
         .filter(entityType => (requiredEntityTypes === undefined ? true : requiredEntityTypes.includes(entityType)))
-        .map(type => [type, this.buildEntitySpec()]),
+        .map(type => [type, this.buildEntitySpec(type)]),
     );
   }
 
@@ -188,15 +214,16 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     return new Map(
       this.defaultedEntityTypeArray(this.upstreamEntityTypes)
         .filter(entityType => (requiredEntityTypes === undefined ? true : requiredEntityTypes.includes(entityType)))
-        .map(type => [type, this.buildEntitySpec()]),
+        .map(type => [type, this.buildEntitySpec(type)]),
     );
   }
 
-  private buildEntitySpec(): TopologyNodeSpecification {
+  private buildEntitySpec(entityType: string): TopologyNodeSpecification {
     // TODO support different specs for different node types
     return {
       metricSpecifications: this.getAllMetricSpecifications(this.nodeMetricsModel),
       titleSpecification: this.specBuilder.attributeSpecificationForKey('name'),
+      otherSpecifications: this.nodeEntitySpecifications?.[entityType] ?? [],
     };
   }
 
