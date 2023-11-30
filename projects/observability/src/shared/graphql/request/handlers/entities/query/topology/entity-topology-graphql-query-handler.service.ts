@@ -79,7 +79,12 @@ export class EntityTopologyGraphQlQueryHandlerService
     return Array.from(this.getSpecMapForDirection(edgeDirection, request).entries()).map(([entityType, spec]) => ({
       path: this.getEdgeQueryKey(edgeDirection),
       alias: this.buildEdgeAlias(edgeDirection, entityType),
-      arguments: [this.argBuilder.forNeighborType(entityType), ...this.argBuilder.forFilters(request.edgeFilters)],
+      arguments: [
+        this.argBuilder.forNeighborType(entityType),
+        ...this.argBuilder.forFilters(
+          [request.edgeFilters ?? [], request.edgeEntityFilters?.get(entityType) ?? []].flat(),
+        ),
+      ],
       children: [
         {
           path: 'results',
@@ -277,7 +282,11 @@ export interface GraphQlEntityTopologyRequest {
   rootNodeType: ObservabilityEntityType;
   rootNodeSpecification: TopologyNodeSpecification;
   rootNodeFilters?: GraphQlFilter[];
+  /**
+   * @deprecated Use `edgeEntityFilters` instead.
+   */
   edgeFilters?: GraphQlFilter[];
+  edgeEntityFilters?: Map<string, GraphQlFilter[]>;
   rootNodeLimit: number; // TODO should downstream/upstream nodes of same type match root spec?
   downstreamNodeSpecifications: Map<ObservabilityEntityType, TopologyNodeSpecification>;
   upstreamNodeSpecifications: Map<ObservabilityEntityType, TopologyNodeSpecification>;
