@@ -177,7 +177,7 @@ export const enum PageHeaderContentAlignment {
 }
 
 export const enum PageHeaderDisplayMode {
-  //Default mode with no time range or refresh button
+  // Default mode with no time range or refresh button
   Default = 'default',
   WithTimeRange = 'with-time-range',
   WithRefreshButton = 'with-refresh',
