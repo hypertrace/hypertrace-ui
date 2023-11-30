@@ -40,7 +40,7 @@ describe('Traces Table Data Source Model', () => {
       ).toBe('(x|)', {
         x: {
           data: [],
-          totalCount: -2,
+          totalCount: 0,
         },
       });
     });
