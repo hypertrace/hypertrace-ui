@@ -27,6 +27,7 @@
     .body-viewer {
       width: 100%;
       flex: 1 1 auto;
+      overflow: auto;
       margin-top: 16px;
       padding: 16px;
       border: 1px solid $gray-2;
