@@ -168,8 +168,9 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
 
     filters.forEach(gqlFilter => {
       // Edge filter only supported for `GraphQlFieldFilter` for now
-      const field = this.isFieldFilter(gqlFilter) ? this.getFieldFromExpression(gqlFilter.keyOrExpression) : '';
-      if (edgeFilterFields.includes(field)) {
+      const field = this.isFieldFilter(gqlFilter) ? this.getFieldFromExpression(gqlFilter.keyOrExpression) : undefined;
+
+      if (field !== undefined && edgeFilterFields.includes(field)) {
         const entityType =
           this.edgeFilterConfig?.entityConfigs.find(config => config.fields.includes(field))?.entityType ?? '';
         const filtersForEntity = [edgeFilters.get(entityType) ?? [], gqlFilter].flat();
