@@ -67,6 +67,7 @@ export class ExplorerDashboardBuilder {
         'selectable-interval': false,
         'series-from-data': true,
         'legend-position': LegendPosition.Bottom,
+        'show-y-axis': true,
         'selection-handler': {
           type: 'cartesian-explorer-selection-handler',
           'show-context-menu': false,

@@ -36,6 +36,8 @@ import { CartesianIntervalData } from '../legend/cartesian-interval-control.comp
 import { CartesianLegend } from '../legend/cartesian-legend';
 import { ScaleBounds } from '../scale/cartesian-scale';
 import { CartesianScaleBuilder } from '../scale/cartesian-scale-builder';
+import { defaultXDataAccessor, defaultYDataAccessor } from '../scale/default-data-accessors';
+import { CartesianBar } from '../data/series/cartesian-bar';
 
 export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   public static DATA_SERIES_CLASS: string = 'data-series';
@@ -163,6 +165,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
 
   public withSeries(...series: Series<TData>[]): this {
     this.series.length = 0;
+
     this.series.push(...series);
     this.activeSeries = [...series];
 
@@ -342,14 +345,24 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
   }
 
   private updateData(): void {
-    this.drawLegend();
     this.drawVisualizations();
+    this.drawLegend();
   }
 
   private drawVisualizations(): void {
-    this.buildVisualizations();
+    // Flip axis if a Bar Chart is present
+    if (this.series.some(s => s.type === CartesianSeriesVisualizationType.Bar)) {
+      // Should only toggle once.
+      this.axisDimension.yAxisWidth = 300;
+      this.requestedAxes.forEach(a => (a.type === AxisType.X ? (a.type = AxisType.Y) : (a.type = AxisType.X)));
+      this.scaleBuilder = this.scaleBuilder.withXDataAccessor(defaultYDataAccessor);
+      this.scaleBuilder = this.scaleBuilder.withYDataAccessor(defaultXDataAccessor);
+    }
+
     this.drawChartBackground();
     this.drawAxes();
+    this.buildVisualizations();
+
     this.drawData();
     this.addNoDataMessageIfNeeded();
     this.moveDataOnTopOfAxes();
@@ -563,6 +576,8 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         return new CartesianArea(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
       case CartesianSeriesVisualizationType.Scatter:
         return new CartesianPoints(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
+      case CartesianSeriesVisualizationType.Bar:
+        return new CartesianBar(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
       case CartesianSeriesVisualizationType.Column:
         return new CartesianColumn(series, this.scaleBuilder, this.getTooltipTrackingStrategy());
       case CartesianSeriesVisualizationType.DashedLine:

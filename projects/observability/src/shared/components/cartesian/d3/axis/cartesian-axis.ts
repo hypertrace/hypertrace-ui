@@ -86,11 +86,11 @@ export class CartesianAxis<TData = {}> {
     if (this.configuration.location === AxisLocation.Bottom || this.configuration.location === AxisLocation.Top) {
       const maxTextTickTextLength = this.getMaxTickTextLength(selection);
 
-      if (this.configuration.labelOverflow === LabelOverflow.Rotate) {
+      if (this.configuration.labelOverflow === LabelOverflow.Wrap) {
+        this.tickTextWrap(selection, maxTextTickTextLength);
+      } else {
         const isLabelRotated = this.rotateAxisTicks(selection, maxTextTickTextLength);
         this.removeOverflowedTicks(selection, maxTextTickTextLength, isLabelRotated);
-      } else {
-        this.tickTextWrap(selection, maxTextTickTextLength);
       }
     } else {
       this.maybeTruncateAxisTicks(selection);
@@ -216,7 +216,7 @@ export class CartesianAxis<TData = {}> {
       return this.configuration.tickCount;
     }
 
-    return 6;
+    return 16;
   }
 
   private addGridLinesIfNeeded(): void {
