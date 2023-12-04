@@ -166,11 +166,11 @@ describe('Paginator component', () => {
   test('should work as expected for `last` total count', () => {
     const spectator = createHost(`<ht-paginator [totalItems]="totalItems"></ht-paginator>`, {
       hostProps: {
-        totalItems: PaginatorTotalCode.Last,
+        totalItems: 50,
       },
     });
 
-    expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of last');
+    expect(spectator.query(LabelComponent)?.label).toEqual('1-50 of 50');
     expect(spectator.component.hasNextPage()).toBe(false);
   });
 

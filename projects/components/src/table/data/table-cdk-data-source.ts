@@ -353,7 +353,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
   private fetchCachedData(request: TableDataRequest): Observable<StatefulTableRow[]> {
     if (this.cachedData.rows.length < request.position.limit) {
-      return of([]);
+      return of(this.cachedData.rows);
     }
 
     const offsetWithinCachedRows = this.calcOffsetWithinCachedRows(request);

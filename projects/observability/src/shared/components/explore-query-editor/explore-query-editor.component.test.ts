@@ -19,7 +19,7 @@ import { MetricAggregationType } from '../../graphql/model/metrics/metric-aggreg
 import { ObservabilityTraceType } from '../../graphql/model/schema/observability-traces';
 import { ExploreQueryEditorComponent } from './explore-query-editor.component';
 import { ExploreQueryEditorModule } from './explore-query-editor.module';
-import { ExploreVisualizationRequest } from './explore-visualization-builder';
+import { ExploreVisualizationBuilder, ExploreVisualizationRequest } from './explore-visualization-builder';
 
 describe('Explore query editor', () => {
   const defaultTimeRange = new FixedTimeRange(
@@ -80,6 +80,7 @@ describe('Explore query editor', () => {
   const hostBuilder = createHostFactory({
     component: ExploreQueryEditorComponent,
     imports: [ExploreQueryEditorModule, HttpClientTestingModule, IconLibraryTestingModule],
+    componentProviders: [ExploreVisualizationBuilder],
     providers: [
       mockProvider(TimeRangeService, {
         getTimeRangeAndChanges: () => of(defaultTimeRange),

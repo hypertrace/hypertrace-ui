@@ -68,6 +68,7 @@ export class EntityTopologyGraphQlQueryHandlerService
       ...this.selectionBuilder.fromSpecifications([nodeSpec.titleSpecification]),
       ...this.selectionBuilder.fromSpecifications(this.buildEntityTypeSpecificSpecs(entityType)),
       ...this.selectionBuilder.fromSpecifications(nodeSpec.metricSpecifications),
+      ...this.selectionBuilder.fromSpecifications(nodeSpec.otherSpecifications ?? []),
     ];
   }
 
@@ -78,12 +79,18 @@ export class EntityTopologyGraphQlQueryHandlerService
     return Array.from(this.getSpecMapForDirection(edgeDirection, request).entries()).map(([entityType, spec]) => ({
       path: this.getEdgeQueryKey(edgeDirection),
       alias: this.buildEdgeAlias(edgeDirection, entityType),
-      arguments: [this.argBuilder.forNeighborType(entityType), ...this.argBuilder.forFilters(request.edgeFilters)],
+      arguments: [
+        this.argBuilder.forNeighborType(entityType),
+        ...this.argBuilder.forFilters(
+          [request.edgeFilters ?? [], request.edgeEntityFilters?.get(entityType) ?? []].flat(),
+        ),
+      ],
       children: [
         {
           path: 'results',
           children: [
             ...this.buildTopologyEdgeSelections(request.edgeSpecification),
+            ...this.selectionBuilder.fromSpecifications(request.edgeEntitySpecifications?.get(entityType) ?? []),
             {
               path: 'neighbor',
               children: this.buildTopologyNodeSelections(spec, entityType),
@@ -182,6 +189,7 @@ export class EntityTopologyGraphQlQueryHandlerService
           nodeSpec.titleSpecification,
           ...nodeSpec.metricSpecifications,
           ...this.buildEntityTypeSpecificSpecs(entityType),
+          ...(nodeSpec.otherSpecifications ?? []),
         ],
         serverResult,
       ),
@@ -194,12 +202,16 @@ export class EntityTopologyGraphQlQueryHandlerService
     neighborNode: EntityNode,
     serverEdge: TopologyEdge,
     edgeSpec: TopologySpecification,
+    edgeEntitySpecs?: Specification[],
   ): EntityEdge {
     return {
       fromNode: direction === EdgeDirection.Outgoing ? node : neighborNode,
       toNode: direction === EdgeDirection.Incoming ? node : neighborNode,
       specification: edgeSpec,
-      data: this.extractSpecsFromServerResult(edgeSpec.metricSpecifications, serverEdge),
+      data: this.extractSpecsFromServerResult(
+        [edgeSpec.metricSpecifications, edgeEntitySpecs ?? []].flat(),
+        serverEdge,
+      ),
     };
   }
 
@@ -217,7 +229,14 @@ export class EntityTopologyGraphQlQueryHandlerService
         return edges.map(edge => {
           const neighborNode = this.getOrCreateNode(neighborType, neighborSpec, nodeMap, edge.neighbor);
 
-          return this.buildEdge(direction, node, neighborNode, edge, request.edgeSpecification);
+          return this.buildEdge(
+            direction,
+            node,
+            neighborNode,
+            edge,
+            request.edgeSpecification,
+            request.edgeEntitySpecifications?.get(neighborType),
+          );
         });
       },
     );
@@ -263,11 +282,16 @@ export interface GraphQlEntityTopologyRequest {
   rootNodeType: ObservabilityEntityType;
   rootNodeSpecification: TopologyNodeSpecification;
   rootNodeFilters?: GraphQlFilter[];
+  /**
+   * @deprecated Use `edgeEntityFilters` instead.
+   */
   edgeFilters?: GraphQlFilter[];
+  edgeEntityFilters?: Map<string, GraphQlFilter[]>;
   rootNodeLimit: number; // TODO should downstream/upstream nodes of same type match root spec?
   downstreamNodeSpecifications: Map<ObservabilityEntityType, TopologyNodeSpecification>;
   upstreamNodeSpecifications: Map<ObservabilityEntityType, TopologyNodeSpecification>;
   edgeSpecification: TopologySpecification;
+  edgeEntitySpecifications?: Map<string, Specification[]>;
 }
 
 interface TopologySpecification {
@@ -278,6 +302,7 @@ export type TopologyEdgeSpecification = TopologySpecification;
 
 export interface TopologyNodeSpecification extends TopologySpecification {
   titleSpecification: Specification;
+  otherSpecifications?: Specification[];
 }
 
 export interface EntityNode {
