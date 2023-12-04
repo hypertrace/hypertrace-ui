@@ -249,7 +249,7 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: SPAN_SCOPE,
-        limit: 1000,
+        limit: 500,
         interval: new TimeDuration(1, TimeUnit.Minute),
       }),
       undefined,
@@ -260,7 +260,7 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: SPANS_GQL_REQUEST,
         filters: [],
-        limit: 100,
+        limit: 50,
       }),
       undefined,
     );
@@ -299,7 +299,7 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: EXPLORE_GQL_REQUEST,
         context: SPAN_SCOPE,
-        limit: 1000,
+        limit: 500,
         interval: new TimeDuration(1, TimeUnit.Minute),
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')],
       }),
@@ -310,7 +310,7 @@ describe('Explorer component', () => {
       2,
       expect.objectContaining({
         requestType: SPANS_GQL_REQUEST,
-        limit: 100,
+        limit: 50,
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')],
       }),
       undefined,
