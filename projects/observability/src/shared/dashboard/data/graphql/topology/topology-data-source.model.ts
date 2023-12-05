@@ -26,6 +26,7 @@ import { TopologyMetricsData, TopologyMetricsModel } from './metrics/topology-me
 import { GraphQlFieldFilter } from '../../../../graphql/model/schema/filter/field/graphql-field-filter';
 import { AttributeExpression } from '../../../../graphql/model/attribute/attribute-expression';
 import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
+import { AttributeSpecificationModel, MetricAggregationSpecificationModel } from '../../../../../public-api';
 
 @Model({
   type: 'topology-data-source',
@@ -91,22 +92,43 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
   })
   public edgeFilterConfig?: TopologyEdgeFilterConfig;
 
+  @ModelProperty({
+    key: 'node-entity-specifications',
+    type: {
+      key: PLAIN_OBJECT_PROPERTY.type,
+    },
+  })
+  public nodeEntitySpecifications?: Record<
+    string,
+    (MetricAggregationSpecificationModel | AttributeSpecificationModel)[]
+  >;
+
+  @ModelProperty({
+    key: 'edge-entity-specifications',
+    type: {
+      key: PLAIN_OBJECT_PROPERTY.type,
+    },
+  })
+  public edgeEntitySpecifications?: Record<
+    string,
+    (MetricAggregationSpecificationModel | AttributeSpecificationModel)[]
+  >;
+
   private readonly specBuilder: SpecificationBuilder = new SpecificationBuilder();
   public readonly requestOptions: GraphQlRequestOptions = {
     cacheability: GraphQlRequestCacheability.Cacheable,
     isolated: true,
   };
   public getData(): Observable<TopologyData> {
-    const rootEntitySpec = this.buildEntitySpec();
+    const rootEntitySpec = this.buildEntitySpec(this.entityType);
     const edgeSpec = {
       metricSpecifications: this.getAllMetricSpecifications(this.edgeMetricsModel),
     };
 
     return this.query<EntityTopologyGraphQlQueryHandlerService>(filters => {
       const topologyFilters = this.getTopologyFilters(filters);
-      const edgeFilterEntityType = this.edgeFilterConfig?.entityType;
-      const requiredEdgeEntityTypes =
-        topologyFilters.edges.length > 0 && edgeFilterEntityType !== undefined ? [edgeFilterEntityType] : undefined;
+      const edgeFilterEntityType = this.getRequiredEdgeEntityTypeFromFilters(filters);
+      const requiredEdgeEntityTypes = edgeFilterEntityType !== undefined ? [edgeFilterEntityType] : undefined;
 
       return {
         requestType: ENTITY_TOPOLOGY_GQL_REQUEST,
@@ -115,10 +137,13 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
         rootNodeSpecification: rootEntitySpec,
         rootNodeFilters: topologyFilters.nodes,
         edgeSpecification: edgeSpec,
-        edgeFilters: topologyFilters.edges,
+        edgeEntityFilters: topologyFilters.edges,
         upstreamNodeSpecifications: this.buildUpstreamSpecifications(requiredEdgeEntityTypes),
         downstreamNodeSpecifications: this.buildDownstreamSpecifications(requiredEdgeEntityTypes),
         timeRange: this.getTimeRangeOrThrow(),
+        edgeEntitySpecifications: this.edgeEntitySpecifications
+          ? new Map(Object.keys(this.edgeEntitySpecifications).map(key => [key, this.edgeEntitySpecifications![key]]))
+          : undefined,
       };
     }, this.requestOptions).pipe(
       map(nodes => ({
@@ -137,20 +162,20 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
   }
 
   private getTopologyFilters(filters: GraphQlFilter[]): TopologyFilters {
-    const edgeFilterFields = this.edgeFilterConfig?.fields ?? [];
-    const edgeFilters: GraphQlFilter[] = [];
+    const edgeFilterFields = this.edgeFilterConfig?.entityConfigs.flatMap(info => info.fields) ?? [];
+    const edgeFilters: Map<string, GraphQlFilter[]> = new Map();
     const nodeFilters: GraphQlFilter[] = [];
-
-    const isFieldFilter = (gqlFilter: GraphQlFilter): gqlFilter is GraphQlFieldFilter =>
-      'keyOrExpression' in gqlFilter && 'operator' in gqlFilter && 'value' in gqlFilter;
 
     filters.forEach(gqlFilter => {
       // Edge filter only supported for `GraphQlFieldFilter` for now
-      if (
-        isFieldFilter(gqlFilter) &&
-        edgeFilterFields.includes(this.getFieldFromExpression(gqlFilter.keyOrExpression))
-      ) {
-        edgeFilters.push(gqlFilter);
+      const field = this.isFieldFilter(gqlFilter) ? this.getFieldFromExpression(gqlFilter.keyOrExpression) : undefined;
+
+      if (field !== undefined && edgeFilterFields.includes(field)) {
+        const entityType =
+          this.edgeFilterConfig?.entityConfigs.find(config => config.fields.includes(field))?.entityType ?? '';
+        const filtersForEntity = [edgeFilters.get(entityType) ?? [], gqlFilter].flat();
+
+        edgeFilters.set(entityType, filtersForEntity);
       } else {
         nodeFilters.push(gqlFilter);
       }
@@ -162,8 +187,23 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     };
   }
 
+  private isFieldFilter(gqlFilter: GraphQlFilter): gqlFilter is GraphQlFieldFilter {
+    return 'keyOrExpression' in gqlFilter && 'operator' in gqlFilter && 'value' in gqlFilter;
+  }
+
   private getFieldFromExpression(keyOrExpression: string | AttributeExpression): string {
     return typeof keyOrExpression === 'string' ? keyOrExpression : keyOrExpression.key;
+  }
+
+  private getRequiredEdgeEntityTypeFromFilters(filters: GraphQlFilter[]): string | undefined {
+    const fieldsForRequiredEntity =
+      this.edgeFilterConfig?.entityConfigs.filter(config => config.required).flatMap(info => info.fields) ?? [];
+    const gqlFilter = filters
+      .filter((f): f is GraphQlFieldFilter => this.isFieldFilter(f))
+      .find(f => fieldsForRequiredEntity.includes(this.getFieldFromExpression(f.keyOrExpression)));
+    const field = gqlFilter ? this.getFieldFromExpression(gqlFilter.keyOrExpression) : '';
+
+    return this.edgeFilterConfig?.entityConfigs.find(config => config.fields.includes(field))?.entityType;
   }
 
   /**
@@ -175,7 +215,7 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     return new Map(
       this.defaultedEntityTypeArray(this.downstreamEntityTypes)
         .filter(entityType => (requiredEntityTypes === undefined ? true : requiredEntityTypes.includes(entityType)))
-        .map(type => [type, this.buildEntitySpec()]),
+        .map(type => [type, this.buildEntitySpec(type)]),
     );
   }
 
@@ -188,15 +228,16 @@ export class TopologyDataSourceModel extends GraphQlDataSourceModel<TopologyData
     return new Map(
       this.defaultedEntityTypeArray(this.upstreamEntityTypes)
         .filter(entityType => (requiredEntityTypes === undefined ? true : requiredEntityTypes.includes(entityType)))
-        .map(type => [type, this.buildEntitySpec()]),
+        .map(type => [type, this.buildEntitySpec(type)]),
     );
   }
 
-  private buildEntitySpec(): TopologyNodeSpecification {
+  private buildEntitySpec(entityType: string): TopologyNodeSpecification {
     // TODO support different specs for different node types
     return {
       metricSpecifications: this.getAllMetricSpecifications(this.nodeMetricsModel),
       titleSpecification: this.specBuilder.attributeSpecificationForKey('name'),
+      otherSpecifications: this.nodeEntitySpecifications?.[entityType] ?? [],
     };
   }
 
@@ -225,11 +266,17 @@ export interface TopologyData {
 }
 
 export interface TopologyEdgeFilterConfig {
+  entityConfigs: TopologyEdgeEntityFilterConfig[];
+}
+
+interface TopologyEdgeEntityFilterConfig {
   entityType: string;
   fields: string[];
+  // If `true` then only this entity's edge will be fetched given that filters from the `fields` are applied.
+  required?: boolean;
 }
 
 interface TopologyFilters {
   nodes: GraphQlFilter[];
-  edges: GraphQlFilter[];
+  edges: Map<string, GraphQlFilter[]>;
 }

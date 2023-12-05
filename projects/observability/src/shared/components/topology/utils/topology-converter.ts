@@ -10,6 +10,7 @@ import {
   TopologyNodeRenderer,
   TopologyNodeState,
 } from '../topology';
+import { TopologyGroupNodeUtil } from './topology-group-node.util';
 
 export class TopologyConverter {
   public convertTopology(
@@ -18,6 +19,7 @@ export class TopologyConverter {
     nodeRenderer: TopologyNodeRenderer,
     domRenderer: Renderer2,
     oldTopology?: RenderableTopology<TopologyNode, TopologyEdge>,
+    supportGroupNode: boolean = false,
   ): RenderableTopology<TopologyNode, TopologyEdge> {
     const renderableNodeMap = this.buildRenderableNodeMap(
       nodes,
@@ -30,7 +32,13 @@ export class TopologyConverter {
 
     return {
       nodes: Array.from(renderableNodeMap.values()),
-      edges: this.convertEdgesToRenderableEdges(uniqueEdges, renderableNodeMap, domRenderer, stateManager),
+      edges: this.convertEdgesToRenderableEdges(
+        uniqueEdges,
+        renderableNodeMap,
+        domRenderer,
+        stateManager,
+        supportGroupNode,
+      ),
       neighborhood: {
         nodes: nodes,
         edges: uniqueEdges,
@@ -89,13 +97,33 @@ export class TopologyConverter {
     nodeMap: Map<TopologyNode, RenderableTopologyNode>,
     domRenderer: Renderer2,
     stateManager: TopologyStateManager,
+    supportGroupNode: boolean = false,
   ): RenderableTopologyEdge[] {
-    return edges.map(edge => {
+    let filteredEdges = edges;
+
+    if (supportGroupNode) {
+      filteredEdges = edges
+        .filter(edge => nodeMap.get(edge.fromNode) !== undefined && nodeMap.get(edge.toNode) !== undefined)
+        .filter(edge => this.handleEdgeFilteringBasedOnGroupNode(edge));
+    }
+
+    return filteredEdges.map(edge => {
       const sourceNode = nodeMap.get(edge.fromNode)!;
       const targetNode = nodeMap.get(edge.toNode)!;
 
       return this.buildNewTopologyEdge(edge, sourceNode, targetNode, stateManager.getEdgeState(edge), domRenderer);
     });
+  }
+
+  private handleEdgeFilteringBasedOnGroupNode(edge: TopologyEdge): boolean {
+    if (
+      (TopologyGroupNodeUtil.isTopologyGroupNode(edge.fromNode) && edge.fromNode.expanded) ||
+      (TopologyGroupNodeUtil.isTopologyGroupNode(edge.toNode) && edge.toNode.expanded)
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   private buildNewTopologyNode(

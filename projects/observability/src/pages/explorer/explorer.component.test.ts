@@ -260,7 +260,7 @@ describe('Explorer component', () => {
       expect.objectContaining({
         requestType: SPANS_GQL_REQUEST,
         filters: [],
-        limit: 100,
+        limit: 50,
       }),
       undefined,
     );
@@ -310,7 +310,7 @@ describe('Explorer component', () => {
       2,
       expect.objectContaining({
         requestType: SPANS_GQL_REQUEST,
-        limit: 100,
+        limit: 50,
         filters: [new GraphQlFieldFilter({ key: 'first' }, GraphQlOperatorType.Equals, 'foo')],
       }),
       undefined,

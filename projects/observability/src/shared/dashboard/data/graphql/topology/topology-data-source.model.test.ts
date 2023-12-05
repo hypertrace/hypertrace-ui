@@ -89,7 +89,9 @@ describe('topology data source model', () => {
     model.entityType = ObservabilityEntityType.Service;
     model.nodeMetricsModel = createTopologyMetricsModel('numCalls', MetricAggregationType.Average);
     model.edgeMetricsModel = createTopologyMetricsModel('duration', MetricAggregationType.Average);
-    model.edgeFilterConfig = { entityType: ObservabilityEntityType.Backend, fields: ['backend_id'] };
+    model.edgeFilterConfig = {
+      entityConfigs: [{ entityType: ObservabilityEntityType.Backend, fields: ['backend_id'], required: true }],
+    };
 
     model.api = mockApi as ModelApi;
     model.query$.subscribe(query => {
@@ -115,9 +117,10 @@ describe('topology data source model', () => {
         metricSpecifications: [
           expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
         ],
+        otherSpecifications: [],
       },
       rootNodeFilters: [],
-      edgeFilters: [],
+      edgeEntityFilters: new Map(),
       rootNodeLimit: 100,
       timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
       downstreamNodeSpecifications: new Map<ObservabilityEntityType, TopologyNodeSpecification>([
@@ -128,6 +131,7 @@ describe('topology data source model', () => {
             metricSpecifications: [
               expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
             ],
+            otherSpecifications: [],
           },
         ],
         [
@@ -137,6 +141,7 @@ describe('topology data source model', () => {
             metricSpecifications: [
               expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
             ],
+            otherSpecifications: [],
           },
         ],
       ]),
@@ -148,6 +153,7 @@ describe('topology data source model', () => {
             metricSpecifications: [
               expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
             ],
+            otherSpecifications: [],
           },
         ],
       ]),
@@ -173,9 +179,10 @@ describe('topology data source model', () => {
         metricSpecifications: [
           expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
         ],
+        otherSpecifications: [],
       },
       rootNodeFilters: [filters[0]],
-      edgeFilters: [filters[1]],
+      edgeEntityFilters: new Map([[ObservabilityEntityType.Backend, [filters[1]]]]),
       rootNodeLimit: 100,
       timeRange: new GraphQlTimeRange(testTimeRange.startTime, testTimeRange.endTime),
       downstreamNodeSpecifications: new Map<ObservabilityEntityType, TopologyNodeSpecification>([
@@ -186,6 +193,7 @@ describe('topology data source model', () => {
             metricSpecifications: [
               expect.objectContaining({ metric: 'numCalls', aggregation: MetricAggregationType.Average }),
             ],
+            otherSpecifications: [],
           },
         ],
       ]),

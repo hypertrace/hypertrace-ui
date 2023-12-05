@@ -67,7 +67,11 @@ import { PaginationProvider } from './paginator-api';
           (selectedChange)="this.onPageSizeChange($event)"
           [showBorder]="true"
         >
-          <ht-select-option *ngFor="let pageSize of this.pageSizeOptions" [value]="pageSize" [label]="pageSize">
+          <ht-select-option
+            *ngFor="let pageSize of this.pageSizeOptions"
+            [value]="pageSize"
+            [label]="pageSize.toString()"
+          >
           </ht-select-option>
         </ht-select>
       </div>
@@ -158,11 +162,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
   }
 
   public shouldDisplayTotal(): boolean {
-    return (
-      this.totalItems >= this.minItemsBeforeDisplay ||
-      this.totalItems === PaginatorTotalCode.Unknown ||
-      this.totalItems === PaginatorTotalCode.Last
-    );
+    return this.totalItems >= this.minItemsBeforeDisplay || this.totalItems === PaginatorTotalCode.Unknown;
   }
 
   public onPageSizeChange(pageSize: number): void {
@@ -216,10 +216,6 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
       return 'many';
     }
 
-    if (this.totalItems === PaginatorTotalCode.Last) {
-      return 'last';
-    }
-
     return this.totalItems.toString();
   }
 
@@ -232,7 +228,7 @@ export class PaginatorComponent implements OnChanges, PaginationProvider {
       return this.pageSize;
     }
 
-    if (this.totalItems === PaginatorTotalCode.Unknown || this.totalItems === PaginatorTotalCode.Last) {
+    if (this.totalItems === PaginatorTotalCode.Unknown) {
       return this.pageSize;
     }
 
@@ -267,5 +263,4 @@ const enum PaginatorButtonType {
 
 export enum PaginatorTotalCode {
   Unknown = -1,
-  Last = -2,
 }

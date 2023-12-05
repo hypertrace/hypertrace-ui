@@ -263,6 +263,8 @@ export * from './paginator/paginator.module';
 
 // Panel
 export * from './panel/panel.component';
+export * from './panel/header/title/panel-title.component';
+export * from './panel/header/panel-header.component';
 export * from './panel/panel.module';
 
 // Popover
