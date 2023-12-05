@@ -844,7 +844,7 @@ export class TableComponent
 
   private initializeData(): void {
     this.loadingStateTrigger?.subscribe(() => {
-      this.loadingStateSubject.next({loading$: NEVER});
+      this.loadingStateSubject.next({ loading$: NEVER });
     });
 
     if (!this.canBuildDataSource()) {
