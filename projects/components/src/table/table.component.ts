@@ -38,7 +38,7 @@ import {
   TypedSimpleChanges,
 } from '@hypertrace/common';
 import { isNil, without } from 'lodash-es';
-import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, NEVER, Observable, of, Subject } from 'rxjs';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
@@ -46,7 +46,7 @@ import { PageEvent } from '../paginator/page.event';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { CoreTableCellRendererType } from './cells/types/core-table-cell-renderer-type';
 import { TableCdkColumnUtil } from './data/table-cdk-column-util';
-import { TableCdkDataSource } from './data/table-cdk-data-source';
+import { TableCdkDataSource, TableLoadingState } from './data/table-cdk-data-source';
 import {
   ColumnConfigProvider,
   ColumnStateChangeProvider,
@@ -247,7 +247,7 @@ import { CsvFileName } from '../download-file/service/file-download.service';
       </cdk-table>
 
       <!-- State Watcher -->
-      <ng-container *ngIf="this.dataSource?.loadingStateChange$ | async as loadingState">
+      <ng-container *ngIf="this.loadingStateChange$ | async as loadingState">
         <!-- eslint-disable @angular-eslint/template/cyclomatic-complexity -->
         <div class="state-watcher" *ngIf="!loadingState.hide">
           <ng-container
@@ -388,6 +388,9 @@ export class TableComponent
   @Input()
   public maxRowHeight?: string;
 
+  @Input()
+  public loadingStateTrigger?: Observable<unknown>;
+
   @Output()
   public readonly rowClicked: EventEmitter<StatefulTableRow> = new EventEmitter<StatefulTableRow>();
 
@@ -504,6 +507,12 @@ export class TableComponent
   private resizeStartX: number = 0;
   private columnResizeHandler?: HTMLDivElement;
   private resizedColumn?: ColumnInfo;
+
+  private readonly loadingStateSubject: Subject<TableLoadingState> = new BehaviorSubject<TableLoadingState>({
+    loading$: NEVER,
+  });
+
+  public loadingStateChange$: Observable<TableLoadingState>;
   public indeterminateRowsSelected?: boolean;
   /**
    *  This is to select all rows on the current page, we do not support selecting entirety of the data
@@ -535,6 +544,8 @@ export class TableComponent
         filter((sort): sort is Required<SortedColumn<TableColumnConfigExtended>> => sort !== undefined),
       )
       .subscribe(sort => this.updateSort(sort));
+
+    this.loadingStateChange$ = this.loadingStateSubject.asObservable();
   }
 
   public onLayoutChange(): void {
@@ -832,6 +843,10 @@ export class TableComponent
   }
 
   private initializeData(): void {
+    this.loadingStateTrigger?.subscribe(() => {
+      this.loadingStateSubject.next({loading$: NEVER});
+    });
+
     if (!this.canBuildDataSource()) {
       this.dataSource = undefined;
 
@@ -840,6 +855,10 @@ export class TableComponent
 
     this.dataSource?.disconnect();
     this.dataSource = this.buildDataSource();
+
+    if (this.dataSource) {
+      this.loadingStateChange$ = merge(this.dataSource.loadingStateChange$, this.loadingStateSubject.asObservable());
+    }
 
     this.dataSource?.loadingStateChange$.subscribe(() => {
       this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
