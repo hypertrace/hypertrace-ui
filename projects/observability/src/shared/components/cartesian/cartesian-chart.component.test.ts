@@ -209,7 +209,7 @@ describe('Cartesian Chart component', () => {
     const legendEntriesTitleElement = chart.query('.legend-entries-title') as Element;
     chart.click(legendEntriesTitleElement);
     tick();
-    expect(chart.queryAll('.legend-text.active').length).toBe(2);
+    expect(chart.queryAll('.legend-text.active').length).toBe(1);
 
     chart.click(legendEntriesTitleElement);
     tick();

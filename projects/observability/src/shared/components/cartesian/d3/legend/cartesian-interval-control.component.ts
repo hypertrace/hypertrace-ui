@@ -38,6 +38,7 @@ export class CartesianIntervalControlComponent {
 }
 
 export interface CartesianIntervalData {
+  selectableInterval: boolean;
   options: IntervalValue[];
   initial: IntervalValue;
   changeObserver: Observer<IntervalValue>;

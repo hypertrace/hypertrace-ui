@@ -106,6 +106,9 @@ export class PageHeaderComponent implements OnInit {
   @Output()
   public readonly refresh: EventEmitter<void> = new EventEmitter<void>();
 
+  @Output()
+  public readonly tabChange: EventEmitter<string> = new EventEmitter<string>();
+
   public breadcrumbs$: Observable<Breadcrumb[] | undefined> = this.breadcrumbsService.breadcrumbs$.pipe(
     map(breadcrumbs => (breadcrumbs.length > 0 ? breadcrumbs : undefined)),
   );
@@ -146,6 +149,7 @@ export class PageHeaderComponent implements OnInit {
 
   public onTabChange(path?: string): void {
     this.setPreferences(path);
+    this.tabChange.emit(path);
   }
 
   private getPreferences(): Observable<PageHeaderPreferences> {
@@ -172,10 +176,8 @@ export const enum PageHeaderContentAlignment {
   Row = 'row-alignment',
 }
 
-/**
- * @param Default - Default mode with no time range or refresh button
- */
 export const enum PageHeaderDisplayMode {
+  // Default mode with no time range or refresh button
   Default = 'default',
   WithTimeRange = 'with-time-range',
   WithRefreshButton = 'with-refresh',

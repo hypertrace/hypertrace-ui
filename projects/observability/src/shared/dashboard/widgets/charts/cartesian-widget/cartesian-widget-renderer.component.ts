@@ -28,6 +28,7 @@ import { CartesianDataFetcher, CartesianResult, CartesianWidgetModel } from './c
         [showYAxis]="this.model.showYAxis"
         [timeRange]="this.timeRange"
         [rangeSelectionEnabled]="!!this.model.selectionHandler"
+        [selectableInterval]="this.model.selectableInterval"
         [selectedInterval]="this.selectedInterval"
         [intervalOptions]="this.intervalOptions"
         [legend]="this.model.legendPosition"
@@ -43,17 +44,18 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
   CartesianWidgetModel<TSeriesInterval>,
   CartesianData<TSeriesInterval>
 > {
+  public selectedInterval?: IntervalValue;
+  public intervalOptions?: IntervalValue[];
+  private fetcher?: CartesianDataFetcher<TSeriesInterval>;
+
   public constructor(
     @Inject(RENDERER_API) api: RendererApi<CartesianWidgetModel<TSeriesInterval>>,
     changeDetector: ChangeDetectorRef,
     private readonly intervalDurationService: IntervalDurationService,
   ) {
     super(api, changeDetector);
+    this.selectedInterval = this.model.defaultInterval?.getDuration();
   }
-
-  public selectedInterval?: IntervalValue;
-  public intervalOptions?: IntervalValue[];
-  private fetcher?: CartesianDataFetcher<TSeriesInterval>;
 
   public onIntervalChange(interval: IntervalValue): void {
     this.selectedInterval = interval;
@@ -79,7 +81,8 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
           this.selectedInterval = this.getBestIntervalMatch(intervalOptions, this.selectedInterval ?? defaultInterval);
           this.intervalOptions = intervalOptions; // The only thing this flag controls is whether options are available (and thus, the selector)
         } else {
-          this.selectedInterval = this.getBestIntervalMatch(intervalOptions, defaultInterval);
+          // TODO: why do we need to set this if interval is not supported.
+          //  this.selectedInterval = this.getBestIntervalMatch(intervalOptions, defaultInterval);
         }
       }),
       switchMap(() => this.buildDataObservable()),

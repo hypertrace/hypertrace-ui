@@ -459,6 +459,7 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         this.legend = new CartesianLegend<TData>(
           this.activeSeries,
           this.injector,
+          this.scaleBuilder.getDataAccessorForDomain(AxisType.X),
           this.intervalData,
           this.seriesSummaries,
         ).draw(this.chartContainerElement, this.legendPosition);
@@ -469,10 +470,13 @@ export class DefaultCartesianChart<TData> implements CartesianChart<TData> {
         });
       } else {
         // The legend also contains the interval selector, so even without a legend we need to create an element for that
-        this.legend = new CartesianLegend<TData>([], this.injector, this.intervalData, this.seriesSummaries).draw(
-          this.chartContainerElement,
-          LegendPosition.None,
-        );
+        this.legend = new CartesianLegend<TData>(
+          [],
+          this.injector,
+          this.scaleBuilder.getDataAccessorForDomain(AxisType.X),
+          this.intervalData,
+          this.seriesSummaries,
+        ).draw(this.chartContainerElement, LegendPosition.None);
       }
     }
 

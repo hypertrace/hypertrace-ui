@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { Injectable, InjectionToken } from '@angular/core';
-import { isEqualIgnoreFunctions } from '@hypertrace/common';
+import { TimeDuration, isEqualIgnoreFunctions } from '@hypertrace/common';
 import {
   CoreTableCellRendererType,
   FilterBuilderLookupService,
@@ -68,6 +68,14 @@ export class ExplorerDashboardBuilder {
         'series-from-data': true,
         'legend-position': LegendPosition.Bottom,
         'show-y-axis': true,
+        'default-interval':
+          request.interval instanceof TimeDuration
+            ? {
+                type: 'time-duration',
+                value: request.interval.value,
+                unit: request.interval.unit,
+              }
+            : undefined,
         'selection-handler': {
           type: 'cartesian-explorer-selection-handler',
           'show-context-menu': false,
