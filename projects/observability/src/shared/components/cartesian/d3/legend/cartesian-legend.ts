@@ -13,7 +13,6 @@ import {
 } from './cartesian-interval-control.component';
 import { CartesianSummaryComponent, SUMMARIES_DATA } from './cartesian-summary.component';
 import { FILTER_BUTTON_WRAPPER, FilterButtonWrapperComponent } from '@hypertrace/components';
-import { defaultXDataAccessor } from '../scale/default-data-accessors';
 
 export class CartesianLegend<TData> {
   private static readonly CSS_CLASS: string = 'legend';
@@ -34,24 +33,37 @@ export class CartesianLegend<TData> {
   private activeSeries: Series<TData>[];
   private intervalControl?: ComponentRef<unknown>;
   private summaryControl?: ComponentRef<unknown>;
+  private readonly isGroupedSeries: boolean;
+  private readonly hasInterval: boolean;
 
   public constructor(
     private readonly series: Series<TData>[],
     private readonly injector: Injector,
+    private readonly xDataAccessor: (data: TData) => string,
     private readonly intervalData?: CartesianIntervalData,
     private readonly summaries: Summary[] = [],
   ) {
-    const isGroupedSeries =
+    this.isGroupedSeries =
       this.series.length > 0 &&
       this.series.every(seriesEntry => !isEmpty(seriesEntry.groupName) && seriesEntry.groupName !== seriesEntry.name);
-    this.legendGroups = isGroupedSeries
+    this.hasInterval = this.intervalData !== undefined;
+
+    this.legendGroups = this.isGroupedSeries
       ? Object.entries(groupBy(this.series, seriesEntry => seriesEntry.groupName)).map(([title, data]) => ({
           title: title,
           data: data.map(d => ({ text: d.name, series: d })),
         }))
+      : this.hasInterval
+      ? this.series.map(s => ({
+          title: s.name,
+          data: s.data.map(d => ({
+            text: isEmpty(this.xDataAccessor(d)?.toString()) ? s.name : this.xDataAccessor(d)!.toString(),
+            series: s,
+          })),
+        }))
       : this.series.map(s => ({
           title: s.name,
-          data: s.data.map(d => ({ text: defaultXDataAccessor(d), series: s })),
+          data: [{ text: s.name, series: s }],
         }));
 
     this.activeSeries = [...this.series];
@@ -69,7 +81,7 @@ export class CartesianLegend<TData> {
     this.drawLegendEntries(this.legendElement);
     this.drawReset(this.legendElement);
 
-    if (this.intervalData) {
+    if (this.intervalData?.selectableInterval) {
       this.intervalControl = this.drawIntervalControl(this.legendElement, this.intervalData);
     }
 
@@ -165,15 +177,17 @@ export class CartesianLegend<TData> {
       .text(entry => entry.text)
       .on('click', entry => (this.series.length > 1 ? this.updateActiveSeries(entry.series) : undefined));
 
-    this.drawFilterControl(legendEntry.node()!).location.nativeElement.classList.add('filter');
+    if (this.isGroupedSeries || this.hasInterval) {
+      this.drawFilterControl(legendEntry.node()!).location.nativeElement.classList.add('filter');
+
+      if (showFilters) {
+        legendEntry
+          .on('mouseover', () => legendEntry.select('.filter').style('visibility', 'visible'))
+          .on('mouseout', () => legendEntry.select('.filter').style('visibility', 'hidden'));
+      }
+    }
 
     this.updateLegendClassesAndStyle();
-
-    if (showFilters) {
-      legendEntry
-        .on('mouseover', () => legendEntry.select('.filter').style('visibility', 'visible'))
-        .on('mouseout', () => legendEntry.select('.filter').style('visibility', 'hidden'));
-    }
 
     return legendEntry;
   }

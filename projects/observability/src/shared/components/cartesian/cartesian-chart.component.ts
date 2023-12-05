@@ -63,6 +63,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public rangeSelectionEnabled: boolean = false;
 
   @Input()
+  public selectableInterval?: boolean;
+
+  @Input()
   public intervalOptions?: IntervalValue[];
 
   @Input()
@@ -160,10 +163,11 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       this.chart.withLegend(this.legend);
     }
 
-    if (this.intervalOptions !== undefined && this.selectedInterval !== undefined) {
+    if (this.selectedInterval !== undefined) {
       this.chart.withIntervalData({
+        selectableInterval: this.selectableInterval ?? false,
         initial: this.selectedInterval,
-        options: this.intervalOptions,
+        options: this.intervalOptions ?? [this.selectedInterval],
         changeObserver: this.selectedIntervalChange,
       });
     }
