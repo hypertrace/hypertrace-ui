@@ -48,23 +48,32 @@ export class CartesianLegend<TData> {
       this.series.every(seriesEntry => !isEmpty(seriesEntry.groupName) && seriesEntry.groupName !== seriesEntry.name);
     this.hasInterval = this.intervalData !== undefined;
 
-    this.legendGroups = this.isGroupedSeries
-      ? Object.entries(groupBy(this.series, seriesEntry => seriesEntry.groupName)).map(([title, data]) => ({
-          title: title,
-          data: data.map(d => ({ text: d.name, series: d })),
-        }))
-      : this.hasInterval
-      ? this.series.map(s => ({
+    this.legendGroups = [];
+    if (this.isGroupedSeries) {
+      if (this.hasInterval) {
+        // show series for a single group together
+        this.legendGroups = Object.entries(groupBy(this.series, seriesEntry => seriesEntry.groupName)).map(
+          ([title, data]) => ({
+            title: title,
+            data: data.map(d => ({ text: d.name, series: d })),
+          }),
+        );
+      } else {
+        // Convert x values into legend entries
+        this.legendGroups = this.series.map(s => ({
           title: s.name,
           data: s.data.map(d => ({
             text: isEmpty(this.xDataAccessor(d)?.toString()) ? s.name : this.xDataAccessor(d)!.toString(),
             series: s,
           })),
-        }))
-      : this.series.map(s => ({
-          title: s.name,
-          data: [{ text: s.name, series: s }],
         }));
+      }
+    } else {
+      this.legendGroups = this.series.map(s => ({
+        title: s.name,
+        data: [{ text: s.name, series: s }],
+      }));
+    }
 
     this.activeSeries = [...this.series];
     this.initialSeries = [...this.series];
