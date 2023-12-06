@@ -54,7 +54,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
     private readonly intervalDurationService: IntervalDurationService,
   ) {
     super(api, changeDetector);
-    this.selectedInterval = this.model.defaultInterval?.getDuration();
+    this.selectedInterval = this.getDefaultInterval();
   }
 
   public onIntervalChange(interval: IntervalValue): void {
@@ -74,7 +74,7 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
     return this.model.getDataFetcher().pipe(
       tap(fetcher => {
         this.fetcher = fetcher;
-        const defaultInterval = this.model.defaultInterval?.getDuration();
+        const defaultInterval = this.getDefaultInterval();
         const intervalOptions = this.buildIntervalOptions();
 
         if (this.intervalSupported()) {
@@ -130,6 +130,10 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
       );
 
     return match || 'AUTO';
+  }
+
+  private getDefaultInterval(): IntervalValue | undefined {
+    return this.model.defaultInterval?.getDuration();
   }
 }
 
