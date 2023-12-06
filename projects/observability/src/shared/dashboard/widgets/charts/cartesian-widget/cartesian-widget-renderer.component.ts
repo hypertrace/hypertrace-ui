@@ -80,9 +80,6 @@ export class CartesianWidgetRendererComponent<TSeriesInterval, TData> extends In
         if (this.intervalSupported()) {
           this.selectedInterval = this.getBestIntervalMatch(intervalOptions, this.selectedInterval ?? defaultInterval);
           this.intervalOptions = intervalOptions; // The only thing this flag controls is whether options are available (and thus, the selector)
-        } else {
-          // TODO: why do we need to set this if interval is not supported.
-          //  this.selectedInterval = this.getBestIntervalMatch(intervalOptions, defaultInterval);
         }
       }),
       switchMap(() => this.buildDataObservable()),
