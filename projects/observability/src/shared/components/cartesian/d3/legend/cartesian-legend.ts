@@ -204,21 +204,19 @@ export class CartesianLegend<TData> {
 
   private updateLegendClassesAndStyle(): void {
     const legendElementSelection = select(this.legendElement!);
-    if (true) {
-      // Legend entries
-      select(this.legendElement!)
-        .selectAll('.legend-entries')
-        .classed(CartesianLegend.ACTIVE_CSS_CLASS, legendGroup =>
-          this.isThisLegendSeriesGroupActive((legendGroup as LegendGroupData<TData>).data.map(d => d.series)),
-        );
+    // Legend entries
+    select(this.legendElement!)
+      .selectAll('.legend-entries')
+      .classed(CartesianLegend.ACTIVE_CSS_CLASS, legendGroup =>
+        this.isThisLegendSeriesGroupActive((legendGroup as LegendGroupData<TData>).data.map(d => d.series)),
+      );
 
-      // Legend entry title
-      select(this.legendElement!)
-        .selectAll('.legend-entries-title')
-        .classed(CartesianLegend.ACTIVE_CSS_CLASS, legendGroup =>
-          this.isThisLegendSeriesGroupActive((legendGroup as LegendGroupData<TData>).data.map(d => d.series)),
-        );
-    }
+    // Legend entry title
+    select(this.legendElement!)
+      .selectAll('.legend-entries-title')
+      .classed(CartesianLegend.ACTIVE_CSS_CLASS, legendGroup =>
+        this.isThisLegendSeriesGroupActive((legendGroup as LegendGroupData<TData>).data.map(d => d.series)),
+      );
 
     // Legend entry symbol
     legendElementSelection
