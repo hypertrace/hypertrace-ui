@@ -603,6 +603,13 @@ export class TableComponent
     ) {
       this.toggleRowSelections(this.selections);
     }
+
+
+    if (changes.loadingStateTrigger) {
+      this.loadingStateTrigger?.subscribe(() => {
+        this.loadingStateSubject.next({ loading$: NEVER });
+      });
+    }
   }
 
   public ngAfterViewInit(): void {
@@ -843,10 +850,6 @@ export class TableComponent
   }
 
   private initializeData(): void {
-    this.loadingStateTrigger?.subscribe(() => {
-      this.loadingStateSubject.next({ loading$: NEVER });
-    });
-
     if (!this.canBuildDataSource()) {
       this.dataSource = undefined;
 
