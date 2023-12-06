@@ -1,6 +1,6 @@
 <div class="tooltip-container" *ngIf="data$ | async as data">
   <div class="groups" *ngFor="let group of data.groups">
-    <div class="title" *ngIf="group.title !== group.labeledValues?.[0].label ">{{ group.title }} :</div>
+    <div class="title" *ngIf="group.title && group.title !== group.labeledValues?.[0].label ">{{ group.title }} :</div>
     <table class="table">
       <tr *ngFor="let labeledValue of group.labeledValues">
         <!-- Label Column -->

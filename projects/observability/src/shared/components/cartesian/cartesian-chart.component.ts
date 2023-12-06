@@ -214,17 +214,17 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       return undefined;
     }
 
-    const tooltipGroups = Object.entries(groupBy(locationData, datum => datum.context.groupName)).map(
-      ([title, groupedData]) => ({
-        title: title,
-        labeledValues: groupedData.map(singleValue => ({
-          label: singleValue.context.name,
-          value: defaultYDataAccessor<number | string>(singleValue.dataPoint),
-          units: singleValue.context.units,
-          color: singleValue.context.getColor?.(singleValue.dataPoint) ?? singleValue.context.color,
-        })),
-      }),
-    );
+    const tooltipGroups = Object.entries(
+      groupBy(locationData, datum => datum.context.groupName ?? datum.context.name),
+    ).map(([title, groupedData]) => ({
+      title: title,
+      labeledValues: groupedData.map(singleValue => ({
+        label: singleValue.context.name,
+        value: defaultYDataAccessor<number | string>(singleValue.dataPoint),
+        units: singleValue.context.units,
+        color: singleValue.context.getColor?.(singleValue.dataPoint) ?? singleValue.context.color,
+      })),
+    }));
 
     return {
       title: this.resolveTooltipTitle(locationData[0]),
