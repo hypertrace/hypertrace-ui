@@ -225,7 +225,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     this.subscriptionLifecycle.unsubscribe();
     this.subscriptionLifecycle.add(
       combineLatest([this.debouncedValueSubject, this.getDebounceTime()])
-        .pipe(debounce(([_, debounceTime]) => timer(debounceTime)))
+        .pipe(debounce(([_, valueDebounceTime]) => timer(valueDebounceTime)))
         .subscribe(([value, _]) => this.valueChange.emit(value)),
     );
   }
