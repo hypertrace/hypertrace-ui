@@ -38,7 +38,7 @@ import {
   TypedSimpleChanges,
 } from '@hypertrace/common';
 import { isNil, without } from 'lodash-es';
-import { BehaviorSubject, combineLatest, merge, NEVER, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, NEVER, Observable, of, Subject, Subscription } from 'rxjs';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { FilterAttribute } from '../filtering/filter/filter-attribute';
 import { LoadAsyncConfig } from '../load-async/load-async.service';
@@ -514,6 +514,8 @@ export class TableComponent
 
   public loadingStateChange$: Observable<TableLoadingState>;
   public indeterminateRowsSelected?: boolean;
+
+  private loadingStateTriggerSubscription: Subscription | undefined;
   /**
    *  This is to select all rows on the current page, we do not support selecting entirety of the data
    */
@@ -606,7 +608,8 @@ export class TableComponent
 
 
     if (changes.loadingStateTrigger) {
-      this.loadingStateTrigger?.subscribe(() => {
+      this.loadingStateTriggerSubscription?.unsubscribe();
+      this.loadingStateTriggerSubscription = this.loadingStateTrigger?.subscribe(() => {
         this.loadingStateSubject.next({ loading$: NEVER });
       });
     }
@@ -859,9 +862,7 @@ export class TableComponent
     this.dataSource?.disconnect();
     this.dataSource = this.buildDataSource();
 
-    if (this.dataSource) {
-      this.loadingStateChange$ = merge(this.dataSource.loadingStateChange$, this.loadingStateSubject.asObservable());
-    }
+    this.loadingStateChange$ = merge(this.dataSource.loadingStateChange$, this.loadingStateSubject.asObservable());
 
     this.dataSource?.loadingStateChange$.subscribe(() => {
       this.tableService.updateFilterValues(this.columnConfigsSubject.value, this.dataSource!); // Mutation! Ew!
