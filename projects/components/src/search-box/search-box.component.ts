@@ -21,7 +21,7 @@ import {
   TypedSimpleChanges,
 } from '@hypertrace/common';
 import { combineLatest, Observable, Subject, timer } from 'rxjs';
-import { debounce, map } from 'rxjs/operators';
+import { debounce, debounceTime, map } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { PopoverService } from '../popover/popover.service';
 import { PopoverRef } from '../popover/popover-ref';
@@ -111,10 +111,13 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   public searchMode: SearchBoxEmitMode = SearchBoxEmitMode.Incremental;
 
   @Input()
-  public enableSearchHistory: boolean = false; // Experimental
+  public enableSearchHistory: boolean = true; // Experimental
 
   @Input()
   public collapsable: boolean = false;
+
+  @Input()
+  public searchHistoryDebounceTime: number | undefined;
 
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
@@ -261,11 +264,14 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     );
 
     this.subscriptionLifecycle.add(
-      this.valueChange.asObservable().subscribe(emittedValue => {
-        if (!isEmpty(emittedValue)) {
-          this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
-        }
-      }),
+      this.valueChange
+        .asObservable()
+        .pipe(debounceTime(this.searchHistoryDebounceTime ?? 400))
+        .subscribe(emittedValue => {
+          if (!isEmpty(emittedValue)) {
+            this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
+          }
+        }),
     );
   }
 
@@ -296,7 +302,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   }
 
   private handleSearchHistoryOnInputBlur(): void {
-    this.searchHistory = [...uniq(this.lastEmittedValues), ...this.searchHistory];
+    this.searchHistory = uniq([...this.lastEmittedValues, ...this.searchHistory]);
     this.filteredSearchHistory = [...this.searchHistory];
     this.lastEmittedValues = [];
   }
