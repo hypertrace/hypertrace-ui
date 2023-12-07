@@ -57,11 +57,16 @@ export class RadarChartTooltipService implements OnDestroy {
   ): DefaultChartTooltipRenderData {
     return {
       title: '',
-      labeledValues: data.map(datum => ({
-        label: datum.dataPoint.axis,
-        value: datum.dataPoint.value,
-        color: datum.context.color,
-      })),
+      groups: [
+        {
+          title: '',
+          labeledValues: data.map(datum => ({
+            label: datum.dataPoint.axis,
+            value: datum.dataPoint.value,
+            color: datum.context.color,
+          })),
+        },
+      ],
     };
   }
 }

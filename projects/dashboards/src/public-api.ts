@@ -1,5 +1,6 @@
 // Models
 export * from './model/time-duration/time-duration.model';
+export * from './model/time-duration/auto-time-duration.model';
 
 // Types
 export * from './properties/arrays/array-property-type';

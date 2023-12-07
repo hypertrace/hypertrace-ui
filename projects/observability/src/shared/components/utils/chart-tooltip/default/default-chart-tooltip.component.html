@@ -1,29 +1,33 @@
 <div class="tooltip-container" *ngIf="data$ | async as data">
-  <table>
-    <tr *ngFor="let labeledValue of data.labeledValues">
-      <!-- Label Column -->
-      <td>
-        <div class="tooltip-data-label-container">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" class="tooltip-data-color">
-            <circle cx="50%" cy="50%" r="50%" [attr.fill]="labeledValue.color"></circle>
-          </svg>
-          <ht-label [label]="labeledValue.label"></ht-label>
-        </div>
-      </td>
-      <!-- Value Column -->
-      <td>
-        <div class="tooltip-data-value">
-          {{ labeledValue.value | htDisplayNumber }}
-        </div>
-      </td>
-      <!-- Units Column -->
-      <td>
-        <div *ngIf="labeledValue.units" class="tooltip-data-units">
-          {{ labeledValue.units }}
-        </div>
-      </td>
-    </tr>
-  </table>
+  <div class="groups" *ngFor="let group of data.groups">
+    <div class="title" *ngIf="group.title && group.title !== group.labeledValues?.[0].label ">{{ group.title }} :</div>
+    <table class="table">
+      <tr *ngFor="let labeledValue of group.labeledValues">
+        <!-- Label Column -->
+        <td>
+          <div class="tooltip-data-label-container">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" class="tooltip-data-color">
+              <circle cx="50%" cy="50%" r="50%" [attr.fill]="labeledValue.color"></circle>
+            </svg>
+            <ht-label [label]="labeledValue.label"></ht-label>
+          </div>
+        </td>
+        <!-- Value Column -->
+        <td>
+          <div class="tooltip-data-value">
+            {{ labeledValue.value | htDisplayNumber }}
+          </div>
+        </td>
+        <!-- Units Column -->
+        <td>
+          <div *ngIf="labeledValue.units" class="tooltip-data-units">
+            {{ labeledValue.units }}
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
   <div class="tooltip-timestamp">
     {{ data.title }}
   </div>
