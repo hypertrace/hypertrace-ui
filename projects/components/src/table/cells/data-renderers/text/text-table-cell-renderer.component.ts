@@ -13,7 +13,7 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
     <div
       [ngClass]="{ clickable: this.clickable, 'first-column': this.isFirstColumn }"
       class="text-cell"
-      [htTooltip]="this.value"
+      [htTooltip]="this.tooltip"
     >
       {{ this.value | htDisplayString }}
     </div>
@@ -24,4 +24,20 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   alignment: TableCellAlignmentType.Left,
   parser: CoreTableCellParserType.String,
 })
-export class TextTableCellRendererComponent extends TableCellRendererBase<string> {}
+export class TextTableCellRendererComponent extends TableCellRendererBase<
+  string,
+  string,
+  TextTableCellRendererOptions
+> {
+  public get tooltip(): string {
+    if (typeof this.columnConfigOptions?.tooltip === 'function') {
+      return this.columnConfigOptions.tooltip(this.value);
+    }
+
+    return this.columnConfigOptions?.tooltip ?? this.value;
+  }
+}
+
+export interface TextTableCellRendererOptions {
+  tooltip?: string | ((value: string) => string);
+}
