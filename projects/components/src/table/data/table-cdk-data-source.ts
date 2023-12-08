@@ -92,7 +92,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
   private cacheNewData(total: number, rows: StatefulTableRow[], request?: TableDataRequest): void {
     this.cachedData = {
-      request: cloneDeep(request),
+      request: request,
       rows: rows.map(TableCdkRowUtil.cloneRow),
       total: total,
     };
@@ -292,6 +292,8 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       return true;
     }
 
+    // Check if references are equal
+    // Only checks if the array of columns has been modified. Not the columns themselves.
     return !isEqual(request.columns, this.cachedData.request.columns);
   }
 
