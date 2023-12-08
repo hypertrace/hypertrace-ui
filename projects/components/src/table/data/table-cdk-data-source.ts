@@ -1,6 +1,6 @@
 import { DataSource } from '@angular/cdk/collections';
 import { Dictionary, forkJoinSafeEmpty, isEqualIgnoreFunctions, RequireBy, sortUnknown } from '@hypertrace/common';
-import { cloneDeep, isEqual, isNil } from 'lodash-es';
+import { isEqual, isNil } from 'lodash-es';
 import { BehaviorSubject, combineLatest, NEVER, Observable, of, Subject, Subscription, throwError } from 'rxjs';
 import { catchError, debounceTime, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 import { PageEvent } from '../../paginator/page.event';
