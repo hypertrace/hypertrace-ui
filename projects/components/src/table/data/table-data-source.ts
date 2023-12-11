@@ -1,8 +1,12 @@
 import { Observable } from 'rxjs';
 import { TableColumnConfig, TableFilter, TableSortDirection } from '../table-api';
 
-export interface TableDataSource<TResult, TCol extends TableColumnConfig = TableColumnConfig> {
-  getData(request: TableDataRequest<TCol>): Observable<TableDataResponse<TResult>>;
+export interface TableDataSource<TResult, TCol extends TableColumnConfig = TableColumnConfig, TDataTriggers = unknown> {
+  secondaryDataTriggers$?: Observable<TDataTriggers>; // TBD
+  getData(
+    request: TableDataRequest<TCol>,
+    secondaryDataTriggers?: TDataTriggers,
+  ): Observable<TableDataResponse<TResult>>;
   getScope?(): string | undefined;
 }
 
