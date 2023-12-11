@@ -27,10 +27,31 @@ export const enum MetricAggregationType {
   DistinctArray = 'distinct_array',
 }
 
+export const isMetricAggregationType = (value: unknown): value is MetricAggregationType => {
+  switch (value) {
+    case MetricAggregationType.Sum:
+    case MetricAggregationType.Average:
+    case MetricAggregationType.P99:
+    case MetricAggregationType.P90:
+    case MetricAggregationType.P95:
+    case MetricAggregationType.P50:
+    case MetricAggregationType.Min:
+    case MetricAggregationType.Max:
+    case MetricAggregationType.AvgrateSecond:
+    case MetricAggregationType.AvgrateMinute:
+    case MetricAggregationType.Count:
+    case MetricAggregationType.DistinctCount:
+    case MetricAggregationType.DistinctArray:
+      return true;
+    default:
+      return false;
+  }
+};
+
 export const getAggregationDisplayName = (aggregation: MetricAggregationType): string => {
   switch (aggregation) {
     case MetricAggregationType.Average:
-      return 'Avg.';
+      return 'Avg';
     case MetricAggregationType.P99:
       return 'p99';
     case MetricAggregationType.P95:
@@ -40,15 +61,15 @@ export const getAggregationDisplayName = (aggregation: MetricAggregationType): s
     case MetricAggregationType.P50:
       return 'p50';
     case MetricAggregationType.Min:
-      return 'Min.';
+      return 'Min';
     case MetricAggregationType.Max:
-      return `Max.`;
+      return `Max`;
     case MetricAggregationType.Sum:
       return `Sum`;
     case MetricAggregationType.AvgrateMinute:
-      return `Rate (min.)`;
+      return `Rate (min)`;
     case MetricAggregationType.AvgrateSecond:
-      return `Rate (sec.)`;
+      return `Rate (sec)`;
     case MetricAggregationType.Count:
       return 'Count';
     case MetricAggregationType.DistinctCount:
