@@ -2,7 +2,7 @@ import { DataSource } from '@angular/cdk/collections';
 import { Dictionary, forkJoinSafeEmpty, isEqualIgnoreFunctions, RequireBy, sortUnknown } from '@hypertrace/common';
 import { isEqual, isNil } from 'lodash-es';
 import { BehaviorSubject, combineLatest, NEVER, Observable, of, Subject, Subscription, throwError } from 'rxjs';
-import { catchError, debounceTime, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, map, mergeMap, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { PageEvent } from '../../paginator/page.event';
 import { PaginationProvider } from '../../paginator/paginator-api';
 import { RowStateChange, StatefulTableRow, StatefulTreeTableRow, TableFilter, TableRow } from '../table-api';
@@ -25,6 +25,7 @@ type WatchedObservables = [
   Dictionary<unknown>,
   TableColumnConfigExtended | undefined,
   StatefulTableRow | undefined,
+  unknown | undefined,
 ];
 
 export class TableCdkDataSource implements DataSource<TableRow> {
@@ -63,8 +64,17 @@ export class TableCdkDataSource implements DataSource<TableRow> {
          * Below debounce is needed to handle multiple emission from buildChangeObservable.
          */
         debounceTime(100),
-        mergeMap(([columnConfigs, pageEvent, filters, queryProperties, changedColumn, changedRow]) =>
-          this.buildDataObservable(columnConfigs, pageEvent, filters, queryProperties, changedColumn, changedRow),
+        mergeMap(
+          ([columnConfigs, pageEvent, filters, queryProperties, changedColumn, changedRow, secondaryDataTriggers]) =>
+            this.buildDataObservable(
+              columnConfigs,
+              pageEvent,
+              filters,
+              queryProperties,
+              changedColumn,
+              changedRow,
+              secondaryDataTriggers,
+            ),
         ),
       )
       .subscribe(this.rowsChange$);
@@ -174,7 +184,12 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       this.filtersProvider.queryProperties$,
       this.columnStateChangeProvider.columnState$,
       this.rowStateChangeProvider.rowState$,
-    ]).pipe(map(values => this.detectRowStateChanges(...values)));
+    ]).pipe(
+      switchMap(values =>
+        combineLatest([of(values), this.tableDataSourceProvider.data?.secondaryDataTriggers$ ?? of(undefined)]),
+      ),
+      map(([values, triggers]) => this.detectRowStateChanges(...values, triggers)),
+    );
   }
 
   private columnConfigChange(): Observable<TableColumnConfigExtended[]> {
@@ -204,8 +219,17 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     queryProperties: Dictionary<unknown>,
     changedColumn: TableColumnConfigExtended | undefined,
     changedRow: StatefulTableRow | undefined,
+    secondaryDataTriggers?: unknown,
   ): WatchedObservables {
-    return [columnConfigs, pageEvent, filters, queryProperties, changedColumn, this.buildRowStateChange(changedRow)];
+    return [
+      columnConfigs,
+      pageEvent,
+      filters,
+      queryProperties,
+      changedColumn,
+      this.buildRowStateChange(changedRow),
+      secondaryDataTriggers,
+    ];
   }
 
   private buildRowStateChange(changedRow: StatefulTableRow | undefined): StatefulTableRow | undefined {
@@ -232,6 +256,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     queryProperties: Dictionary<unknown>,
     changedColumn: TableColumnConfigExtended | undefined,
     changedRow: StatefulTableRow | undefined,
+    secondaryDataTriggers?: unknown,
   ): Observable<StatefulTableRow[]> {
     if (changedRow !== undefined) {
       return of(this.cachedData.rows).pipe(
@@ -246,7 +271,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       TableCdkColumnUtil.unsortOtherColumns(changedColumn, columnConfigs);
     }
 
-    return this.fetchData(columnConfigs, pageEvent, filters, queryProperties);
+    return this.fetchData(columnConfigs, pageEvent, filters, queryProperties, secondaryDataTriggers);
   }
 
   private fetchAndAppendNewChildren(stateChanges: RowStateChange[]): Observable<StatefulTableRow[]> {
@@ -277,6 +302,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     pageEvent: PageEvent,
     filters: TableFilter[],
     queryProperties: Dictionary<unknown>,
+    secondaryDataTriggers?: unknown,
   ): Observable<StatefulTableRow[]> {
     if (this.tableDataSourceProvider.data === undefined) {
       return of([]);
@@ -284,7 +310,9 @@ export class TableCdkDataSource implements DataSource<TableRow> {
 
     const request = this.buildRequest(columnConfigs, pageEvent, filters, queryProperties);
 
-    return this.hasCacheForRequest(request) ? this.fetchCachedData(request) : this.fetchNewData(request);
+    return this.hasCacheForRequest(request)
+      ? this.fetchCachedData(request)
+      : this.fetchNewData(request, secondaryDataTriggers);
   }
 
   private haveColumConfigsChanged(request: TableDataRequest): boolean {
@@ -296,6 +324,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
   }
 
   private hasCacheForRequest(request: TableDataRequest): boolean {
+    return false; //TBD: why do we need this method?
     if (
       !isEqual(this.cachedData.request?.sort, request.sort) ||
       !isEqual(this.cachedData.request?.filters, request.filters) ||
@@ -325,14 +354,15 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     return currentOffset - cachedOffset;
   }
 
-  private fetchNewData(request: TableDataRequest): Observable<StatefulTableRow[]> {
+  private fetchNewData(request: TableDataRequest, secondaryDataTriggers?: unknown): Observable<StatefulTableRow[]> {
     if (this.tableDataSourceProvider.data === undefined) {
       return of([]);
     }
 
     let total = 0;
 
-    return this.tableDataSourceProvider.data.getData(request).pipe(
+    return this.tableDataSourceProvider.data.getData(request, secondaryDataTriggers).pipe(
+      take(1),
       tap(response => (total = response.totalCount)),
       tap(response => this.updatePaginationTotalCount(response.totalCount)),
       map(response => response.data),
