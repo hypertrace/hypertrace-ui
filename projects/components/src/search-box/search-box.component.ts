@@ -111,7 +111,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   public searchMode: SearchBoxEmitMode = SearchBoxEmitMode.Incremental;
 
   @Input()
-  public enableSearchHistory: boolean = true; // Experimental
+  public enableSearchHistory: boolean = true; 
 
   @Input()
   public collapsable: boolean = false;
