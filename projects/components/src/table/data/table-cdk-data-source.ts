@@ -2,7 +2,7 @@ import { DataSource } from '@angular/cdk/collections';
 import { Dictionary, forkJoinSafeEmpty, isEqualIgnoreFunctions, RequireBy, sortUnknown } from '@hypertrace/common';
 import { isEqual, isNil } from 'lodash-es';
 import { BehaviorSubject, combineLatest, NEVER, Observable, of, Subject, Subscription, throwError } from 'rxjs';
-import { catchError, debounceTime, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, map, mergeMap, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { PageEvent } from '../../paginator/page.event';
 import { PaginationProvider } from '../../paginator/paginator-api';
 import { RowStateChange, StatefulTableRow, StatefulTreeTableRow, TableFilter, TableRow } from '../table-api';
@@ -362,6 +362,7 @@ export class TableCdkDataSource implements DataSource<TableRow> {
     let total = 0;
 
     return this.tableDataSourceProvider.data.getData(request, secondaryDataTriggers).pipe(
+      take(1),
       tap(response => (total = response.totalCount)),
       tap(response => this.updatePaginationTotalCount(response.totalCount)),
       map(response => response.data),
