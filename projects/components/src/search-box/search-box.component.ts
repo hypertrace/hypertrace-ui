@@ -264,9 +264,17 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     );
 
     this.subscriptionLifecycle.add(
+      this.debounceTime && this.debounceTime > 0 ?
       this.valueChange
         .asObservable()
-        .pipe(debounceTime(this.searchHistoryDebounceTime ?? 400))
+        .subscribe(emittedValue => {
+          if (!isEmpty(emittedValue)) {
+            this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
+          }
+        }) : 
+      this.valueChange
+        .asObservable()
+        .pipe(debounceTime(400))
         .subscribe(emittedValue => {
           if (!isEmpty(emittedValue)) {
             this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
