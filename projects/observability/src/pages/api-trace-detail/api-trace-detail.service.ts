@@ -11,7 +11,7 @@ import { Trace, traceIdKey, TraceType, traceTypeKey } from '../../shared/graphql
 import { SpecificationBuilder } from '../../shared/graphql/request/builders/specification/specification-builder';
 import {
   TraceGraphQlQueryHandlerService,
-  TRACE_GQL_REQUEST
+  TRACE_GQL_REQUEST,
 } from '../../shared/graphql/request/handlers/traces/trace-graphql-query-handler.service';
 import { LogEventsService } from '../../shared/services/log-events/log-events.service';
 import { MetadataService } from '../../shared/services/metadata/metadata.service';
@@ -32,15 +32,15 @@ export class ApiTraceDetailService implements OnDestroy {
     route: ActivatedRoute,
     private readonly metadataService: MetadataService,
     private readonly graphQlQueryService: GraphQlRequestService,
-    private readonly logEventsService: LogEventsService
+    private readonly logEventsService: LogEventsService,
   ) {
     this.routeIds$ = route.paramMap.pipe(
       map(paramMap => ({
         traceId: paramMap.get(ApiTraceDetailService.TRACE_ID_PARAM_NAME)!,
-        startTime: paramMap.get(ApiTraceDetailService.START_TIME_PARAM_NAME) as string | undefined
+        startTime: paramMap.get(ApiTraceDetailService.START_TIME_PARAM_NAME) as string | undefined,
       })),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 
@@ -59,10 +59,10 @@ export class ApiTraceDetailService implements OnDestroy {
       switchMap(trace =>
         this.metadataService
           .getAttribute(trace[traceTypeKey], 'duration')
-          .pipe(map(durationAttribute => this.constructTraceDetails(trace, durationAttribute)))
+          .pipe(map(durationAttribute => this.constructTraceDetails(trace, durationAttribute))),
       ),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 
@@ -72,12 +72,12 @@ export class ApiTraceDetailService implements OnDestroy {
         this.logEventsService.getLogEventsGqlResponseForTrace(
           routeIds.traceId,
           routeIds.startTime,
-          ObservabilityTraceType.Api
-        )
+          ObservabilityTraceType.Api,
+        ),
       ),
       map(trace => this.logEventsService.mapLogEvents(trace)),
       takeUntil(this.destroyed$),
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 
@@ -88,7 +88,7 @@ export class ApiTraceDetailService implements OnDestroy {
       startTime: trace.startTime as string,
       type: ObservabilityTraceType.Api,
       timeString: this.buildTimeString(trace, durationAttribute.units),
-      titleString: this.buildTitleString(trace)
+      titleString: this.buildTitleString(trace),
     };
   }
 
@@ -100,13 +100,13 @@ export class ApiTraceDetailService implements OnDestroy {
       timestamp: this.dateCoercer.coerce(startTime),
       traceProperties: this.getAttributes().map(key => this.specificationBuilder.attributeSpecificationForKey(key)),
       spanProperties: [],
-      spanLimit: 1
+      spanLimit: 1,
     });
   }
 
   protected buildTimeString(trace: Trace, units: string): string {
     const formattedStartTime = new DateFormatter({ mode: DateFormatMode.DateAndTimeWithSeconds }).format(
-      trace.startTime as number
+      trace.startTime as number,
     );
 
     return `${formattedStartTime} for ${trace.duration as string} ${units}`;

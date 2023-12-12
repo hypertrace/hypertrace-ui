@@ -11,9 +11,9 @@ import { apiOverviewDashboard } from './api-overview.dashboard';
     ObservabilityDashboardModule,
     CommonModule,
     LoadAsyncModule,
-    NavigableDashboardModule.withDefaultDashboards(apiOverviewDashboard)
+    NavigableDashboardModule.withDefaultDashboards(apiOverviewDashboard),
   ],
   declarations: [ApiOverviewComponent],
-  exports: [ApiOverviewComponent]
+  exports: [ApiOverviewComponent],
 })
 export class ApiOverviewModule {}

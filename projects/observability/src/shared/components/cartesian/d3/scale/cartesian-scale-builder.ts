@@ -79,10 +79,14 @@ export class CartesianScaleBuilder<TData> {
     return {
       ...this.resolveMinMax(axisType),
       bounds: this.bounds,
-      dataAccessor: this.getDataAccessor(axisType) as <TDomain>(data: TData) => TDomain,
+      dataAccessor: this.getDataAccessorForDomain(axisType),
       allSeriesAndBandSeries: this.allSeriesAndBandSeries,
-      seriesState: seriesState
+      seriesState: seriesState,
     };
+  }
+
+  public getDataAccessorForDomain(axisType: AxisType): <TDomain>(data: TData) => TDomain {
+    return this.getDataAccessor(axisType) as <TDomain>(data: TData) => TDomain;
   }
 
   private getDataAccessor(axisType: AxisType): (data: TData) => unknown {
@@ -161,7 +165,7 @@ export class CartesianScaleBuilder<TData> {
 
     return {
       min: requestedMin !== undefined ? requestedMin : defaultMinMax && defaultMinMax.min,
-      max: requestedMax !== undefined ? requestedMax : defaultMinMax && defaultMinMax.max
+      max: requestedMax !== undefined ? requestedMax : defaultMinMax && defaultMinMax.max,
     };
   }
 
@@ -185,7 +189,7 @@ export class CartesianScaleBuilder<TData> {
       startX: 0,
       endX: 0,
       startY: 0,
-      endY: 0
+      endY: 0,
     };
   }
 
@@ -212,7 +216,7 @@ export class CartesianScaleBuilder<TData> {
   private cloneWith(stateChange: Partial<ScaleState<TData, unknown>>): this {
     return new CartesianScaleBuilder({
       ...this.scaleState,
-      ...stateChange
+      ...stateChange,
     }) as this;
   }
 }

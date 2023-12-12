@@ -3,17 +3,17 @@ import { EnumPropertyTypeInstance, ENUM_TYPE } from '../../../../../properties/e
 
 export enum DimensionUnit {
   Px = 'PX',
-  Fr = 'FR'
+  Fr = 'FR',
 }
 
 @Model({
-  type: 'dimension-model'
+  type: 'dimension-model',
 })
 export class DimensionModel implements CellDimension {
   @ModelProperty({
     key: 'dimension',
     type: NUMBER_PROPERTY.type,
-    required: true
+    required: true,
   })
   public dimension!: number;
 
@@ -22,15 +22,15 @@ export class DimensionModel implements CellDimension {
     required: true,
     type: {
       key: ENUM_TYPE.type,
-      values: [DimensionUnit.Px, DimensionUnit.Fr]
-    } as EnumPropertyTypeInstance
+      values: [DimensionUnit.Px, DimensionUnit.Fr],
+    } as EnumPropertyTypeInstance,
   })
   public unit!: DimensionUnit;
 
   @ModelProperty({
     key: 'min-dimension',
     type: NUMBER_PROPERTY.type,
-    required: false
+    required: false,
   })
   public minDimension: number = 50;
 
@@ -39,8 +39,8 @@ export class DimensionModel implements CellDimension {
     required: false,
     type: {
       key: ENUM_TYPE.type,
-      values: [DimensionUnit.Px]
-    } as EnumPropertyTypeInstance
+      values: [DimensionUnit.Px],
+    } as EnumPropertyTypeInstance,
   })
   public minDimensionUnit: DimensionUnit = DimensionUnit.Px;
 

@@ -17,7 +17,7 @@ export class TraceStatusSpecificationBuilder {
       name: TraceStatusSpecificationBuilder.STATUS_CODE_FIELD,
       asGraphQlSelections: () => this.buildGraphQlSelections(),
       extractFromServerData: serverData => this.extractFromServerData(serverData),
-      asGraphQlOrderByFragment: () => ({ expression: { key: TraceStatusSpecificationBuilder.STATUS_CODE_FIELD } })
+      asGraphQlOrderByFragment: () => ({ expression: { key: TraceStatusSpecificationBuilder.STATUS_CODE_FIELD } }),
     };
   }
 
@@ -26,18 +26,18 @@ export class TraceStatusSpecificationBuilder {
       {
         path: 'attribute',
         alias: TraceStatusSpecificationBuilder.STATUS_FIELD,
-        arguments: [this.argBuilder.forAttributeKey(TraceStatusSpecificationBuilder.STATUS_FIELD)]
+        arguments: [this.argBuilder.forAttributeKey(TraceStatusSpecificationBuilder.STATUS_FIELD)],
       },
       {
         path: 'attribute',
         alias: TraceStatusSpecificationBuilder.STATUS_CODE_FIELD,
-        arguments: [this.argBuilder.forAttributeKey(TraceStatusSpecificationBuilder.STATUS_CODE_FIELD)]
+        arguments: [this.argBuilder.forAttributeKey(TraceStatusSpecificationBuilder.STATUS_CODE_FIELD)],
       },
       {
         path: 'attribute',
         alias: TraceStatusSpecificationBuilder.STATUS_MESSAGE_FIELD,
-        arguments: [this.argBuilder.forAttributeKey(TraceStatusSpecificationBuilder.STATUS_MESSAGE_FIELD)]
-      }
+        arguments: [this.argBuilder.forAttributeKey(TraceStatusSpecificationBuilder.STATUS_MESSAGE_FIELD)],
+      },
     ];
   }
 
@@ -45,7 +45,7 @@ export class TraceStatusSpecificationBuilder {
     return {
       status: serverData[TraceStatusSpecificationBuilder.STATUS_FIELD] as TraceStatusType,
       statusCode: serverData[TraceStatusSpecificationBuilder.STATUS_CODE_FIELD] as string,
-      statusMessage: serverData[TraceStatusSpecificationBuilder.STATUS_MESSAGE_FIELD] as string
+      statusMessage: serverData[TraceStatusSpecificationBuilder.STATUS_MESSAGE_FIELD] as string,
     };
   }
 }

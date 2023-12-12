@@ -1,5 +1,4 @@
-@import 'font';
-@import 'color-palette';
+@use 'mixins' as m;
 
 .group-by-container {
   display: flex;
@@ -11,17 +10,20 @@
     flex-direction: column;
 
     .group-by-label {
-      @include body-1-medium($gray-9);
+      @include m.body-1-medium(m.$gray-9);
+      @include m.ellipsis-overflow();
       height: 32px;
       line-height: 32px;
       margin-bottom: 12px;
+      white-space: nowrap;
+      width: 192px;
     }
 
     .group-by-path-wrapper {
-      width: 100px;
+      width: 100%;
 
       .group-by-path-input {
-        @include body-2-regular($gray-9);
+        @include m.body-2-regular(m.$gray-9);
         width: 100%;
         height: 100%;
         line-height: 32px;

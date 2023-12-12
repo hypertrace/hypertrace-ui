@@ -4,11 +4,11 @@ import { Model, ModelProperty, STRING_PROPERTY, UNKNOWN_PROPERTY } from '@hypert
 import {
   GraphQlFilter,
   GraphQlFilterType,
-  GraphQlOperatorType
+  GraphQlOperatorType,
 } from '../../../../graphql/model/schema/filter/graphql-filter';
 
 @Model({
-  type: 'graphql-id-scope-filter'
+  type: 'graphql-id-scope-filter',
 })
 export class GraphqlIdScopeFilterModel implements GraphQlFilter {
   public readonly key: string = 'id';
@@ -16,7 +16,7 @@ export class GraphqlIdScopeFilterModel implements GraphQlFilter {
   @ModelProperty({
     key: 'scope',
     type: STRING_PROPERTY.type,
-    required: true
+    required: true,
   })
   public scope!: string;
 
@@ -32,16 +32,16 @@ export class GraphqlIdScopeFilterModel implements GraphQlFilter {
         GraphQlOperatorType.GreaterThanOrEqualTo,
         GraphQlOperatorType.LessThan,
         GraphQlOperatorType.LessThanOrEqualTo,
-        GraphQlOperatorType.Like
-      ]
-    } as EnumPropertyTypeInstance
+        GraphQlOperatorType.Like,
+      ],
+    } as EnumPropertyTypeInstance,
   })
   public operator!: GraphQlOperatorType;
 
   @ModelProperty({
     key: 'value',
     required: true,
-    type: UNKNOWN_PROPERTY.type
+    type: UNKNOWN_PROPERTY.type,
   })
   public value!: GraphQlArgumentValue;
 
@@ -51,8 +51,8 @@ export class GraphqlIdScopeFilterModel implements GraphQlFilter {
         type: new GraphQlEnumArgument(GraphQlFilterType.Id),
         idType: new GraphQlEnumArgument(this.scope),
         operator: new GraphQlEnumArgument(this.operator),
-        value: this.value
-      }
+        value: this.value,
+      },
     ];
   }
 }

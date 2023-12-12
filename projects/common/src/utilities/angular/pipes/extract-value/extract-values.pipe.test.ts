@@ -9,21 +9,21 @@ describe('ExtractValuesPipe', () => {
         [
           { a: 1, b: 2 },
           { a: 3, b: 4 },
-          { a: 3, b: 6 }
+          { a: 3, b: 6 },
         ],
-        'a'
-      )
+        'a',
+      ),
     ).toEqual([1, 3]);
     expect(
       pipe.transform(
         [
           { a: 1, b: 2 },
           { a: 3, b: 4 },
-          { a: 3, b: 6 }
+          { a: 3, b: 6 },
         ],
         'a',
-        false
-      )
+        false,
+      ),
     ).toEqual([1, 3, 3]);
     expect(pipe.transform(['unsupported-input'], 'a')).toEqual([undefined]);
   });

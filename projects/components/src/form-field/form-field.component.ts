@@ -1,3 +1,4 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { Color } from '@hypertrace/common';
@@ -38,12 +39,21 @@ import { IconSize } from '../icon/icon-size';
       ></ht-label>
       <!-- For Backward Compatibility: End -->
 
-      <div class="error" *ngIf="this.showFormError && this.errorLabel">
+      <div @fadeSlideInOut class="error" *ngIf="this.showFormError && this.errorLabel">
         <ht-icon icon="${IconType.Error}" size="${IconSize.Small}"></ht-icon>
         <ht-label class="error-label" [label]="this.errorLabel"></ht-label>
       </div>
     </section>
-  `
+  `,
+  animations: [
+    trigger('fadeSlideInOut', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-10px)' }),
+        animate('300ms', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
+      transition(':leave', [animate('200ms', style({ opacity: 0, transform: 'translateY(-10px)' }))]),
+    ]),
+  ],
 })
 export class FormFieldComponent {
   @Input()

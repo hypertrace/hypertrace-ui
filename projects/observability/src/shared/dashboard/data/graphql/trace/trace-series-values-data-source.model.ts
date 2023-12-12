@@ -7,7 +7,7 @@ import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/h
 import {
   EXPLORE_GQL_REQUEST,
   GraphQlExploreRequest,
-  GraphQlExploreResult
+  GraphQlExploreResult,
 } from '../../../../graphql/request/handlers/explore/explore-query';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 import { GraphQlFilter } from './../../../../graphql/model/schema/filter/graphql-filter';
@@ -17,7 +17,7 @@ export abstract class TraceSeriesValuesDataSourceModel<TData> extends GraphQlDat
 
   protected fetchSpecificationData(interval: TimeDuration): Observable<GraphQlExploreResult[]> {
     return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
-      this.buildRequest(interval, inheritedFilters)
+      this.buildRequest(interval, inheritedFilters),
     ).pipe(map(response => response.results));
   }
 
@@ -29,7 +29,7 @@ export abstract class TraceSeriesValuesDataSourceModel<TData> extends GraphQlDat
       interval: interval,
       filters: [...inheritedFilters],
       limit: 10000,
-      selections: [this.specification]
+      selections: [this.specification],
     };
   }
 }

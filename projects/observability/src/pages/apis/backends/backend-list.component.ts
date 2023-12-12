@@ -9,7 +9,7 @@ import { backendListDashboard } from './backend-list.dashboard';
       <ht-page-header></ht-page-header>
       <ht-navigable-dashboard [navLocation]="this.location" [defaultJson]="this.defaultJson"> </ht-navigable-dashboard>
     </div>
-  `
+  `,
 })
 export class BackendListComponent {
   public readonly location: string = backendListDashboard.location;

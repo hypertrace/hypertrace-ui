@@ -12,8 +12,8 @@ import { IconSize } from '../icon/icon-size';
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: ColorPickerComponent
-    }
+      useExisting: ColorPickerComponent,
+    },
   ],
   template: `
     <div class="color-picker">
@@ -40,7 +40,7 @@ import { IconSize } from '../icon/icon-size';
         </ht-popover-content>
       </ht-popover>
     </div>
-  `
+  `,
 })
 export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
   @Input()
@@ -63,7 +63,7 @@ export class ColorPickerComponent implements ControlValueAccessor, OnChanges {
     Color.Orange3,
     Color.Purple3,
     Color.Red3,
-    Color.Yellow3
+    Color.Yellow3,
   ]);
   public paletteColors: string[] = Array.from(this.paletteSet);
 

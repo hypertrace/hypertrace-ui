@@ -12,7 +12,7 @@ describe('GraphQL Request Builder', () => {
     const requestString = builder
       .withSelects({
         path: 'container',
-        children: [{ path: 'firstKey' }, { path: 'secondKey' }]
+        children: [{ path: 'firstKey' }, { path: 'secondKey' }],
       })
       .build();
 
@@ -22,19 +22,19 @@ describe('GraphQL Request Builder', () => {
   test('can combine multiple selects', () => {
     const firstSelect = {
       path: 'first',
-      children: [{ path: 'firstA' }, { path: 'firstB' }]
+      children: [{ path: 'firstA' }, { path: 'firstB' }],
     };
 
     const secondSelect = {
       path: 'second',
       children: [{ path: 'secondA' }],
-      arguments: []
+      arguments: [],
     };
 
     const thirdSelect = {
       path: 'first',
       children: [{ path: 'firstA' }, { path: 'firstC' }],
-      arguments: []
+      arguments: [],
     };
 
     const requestString = builder.withSelects(firstSelect, secondSelect, thirdSelect).build();
@@ -53,27 +53,27 @@ describe('GraphQL Request Builder', () => {
           arguments: [
             {
               name: 'boolean',
-              value: false
+              value: false,
             },
             {
               name: 'numeric',
-              value: 42
+              value: 42,
             },
             {
               name: 'date',
-              value: new Date('2019-04-06T04:27:30.016Z')
+              value: new Date('2019-04-06T04:27:30.016Z'),
             },
             {
               name: 'array',
-              value: [42, ['test'], { key: new Date('2019-04-06T04:27:30.016Z') }]
+              value: [42, ['test'], { key: new Date('2019-04-06T04:27:30.016Z') }],
             },
             {
               name: 'object',
-              value: { key: 42, key2: { subkey: 'subkeyval' }, key3: [42] }
-            }
-          ]
-        }
-      ]
+              value: { key: 42, key2: { subkey: 'subkeyval' }, key3: [42] },
+            },
+          ],
+        },
+      ],
     };
 
     const requestString = builder.withSelects(firstSelect).build();
@@ -81,7 +81,7 @@ describe('GraphQL Request Builder', () => {
     expect(requestString).toBe(
       '{ my(arg0: "firstval") { first(boolean: false, numeric: 42, date: "2019-04-06T04:27:30.016Z", ' +
         'array: [42, ["test"], {key: "2019-04-06T04:27:30.016Z"}], object: {key: 42, key2: {subkey: "subkeyval"}, ' +
-        'key3: [42]}) { firstA firstB } } }'
+        'key3: [42]}) { firstA firstB } } }',
     );
   });
 
@@ -95,17 +95,17 @@ describe('GraphQL Request Builder', () => {
           arguments: [
             {
               name: 'time',
-              value: 40
-            }
-          ]
-        }
+              value: 40,
+            },
+          ],
+        },
       ],
       arguments: [
         {
           name: 'filter',
-          value: ['first']
-        }
-      ]
+          value: ['first'],
+        },
+      ],
     };
 
     const secondSelect: GraphQlSelection = {
@@ -117,17 +117,17 @@ describe('GraphQL Request Builder', () => {
           arguments: [
             {
               name: 'time',
-              value: 41
-            }
-          ]
-        }
+              value: 41,
+            },
+          ],
+        },
       ],
       arguments: [
         {
           name: 'filter',
-          value: ['first']
-        }
-      ]
+          value: ['first'],
+        },
+      ],
     };
 
     const thirdSelect: GraphQlSelection = {
@@ -136,15 +136,15 @@ describe('GraphQL Request Builder', () => {
       arguments: [
         {
           name: 'time',
-          value: 42
-        }
-      ]
+          value: 42,
+        },
+      ],
     };
 
     const requestString = builder.withSelects(firstSelect, secondSelect, thirdSelect).build();
 
     expect(requestString).toBe(
-      '{ select(filter: ["first"]) { other(time: 40) { foo } other1: other(time: 41) { bar } } select1: select(time: 42) { other } }'
+      '{ select(filter: ["first"]) { other(time: 40) { foo } other1: other(time: 41) { bar } } select1: select(time: 42) { other } }',
     );
   });
 
@@ -156,9 +156,9 @@ describe('GraphQL Request Builder', () => {
       arguments: [
         {
           name: 'time',
-          value: 41
-        }
-      ]
+          value: 41,
+        },
+      ],
     };
     const secondSelect: GraphQlSelection = {
       path: 'select',
@@ -166,9 +166,9 @@ describe('GraphQL Request Builder', () => {
       arguments: [
         {
           name: 'time',
-          value: 42
-        }
-      ]
+          value: 42,
+        },
+      ],
     };
 
     const requestString = builder.withSelects(firstSelect, secondSelect).build();
@@ -184,9 +184,9 @@ describe('GraphQL Request Builder', () => {
       arguments: [
         {
           name: 'time',
-          value: 41
-        }
-      ]
+          value: 41,
+        },
+      ],
     };
     const secondSelect: GraphQlSelection = {
       path: 'select',
@@ -194,9 +194,9 @@ describe('GraphQL Request Builder', () => {
       arguments: [
         {
           name: 'time',
-          value: 42
-        }
-      ]
+          value: 42,
+        },
+      ],
     };
     const thirdSelect: GraphQlSelection = {
       path: 'select',
@@ -204,9 +204,9 @@ describe('GraphQL Request Builder', () => {
       arguments: [
         {
           name: 'time',
-          value: 43
-        }
-      ]
+          value: 43,
+        },
+      ],
     };
     const fourthSelect: GraphQlSelection = {
       path: 'select',
@@ -214,15 +214,15 @@ describe('GraphQL Request Builder', () => {
       arguments: [
         {
           name: 'time',
-          value: 44
-        }
-      ]
+          value: 44,
+        },
+      ],
     };
 
     builder.withSelects(firstSelect, secondSelect, thirdSelect, fourthSelect);
 
     expect(builder.build()).toBe(
-      '{ firstSelect: select(time: 41) { first } select(time: 42) { second } select1: select(time: 43) { third } select2: select(time: 44) { fourth } }'
+      '{ firstSelect: select(time: 41) { first } select(time: 42) { second } select1: select(time: 43) { third } select2: select(time: 44) { fourth } }',
     );
 
     expect(builder.getKeyForSelection(firstSelect)).toBe('firstSelect');
@@ -236,15 +236,15 @@ describe('GraphQL Request Builder', () => {
       path: 'foo',
       children: [
         { path: 'baz', alias: 'a' },
-        { path: 'baz', alias: 'b' }
+        { path: 'baz', alias: 'b' },
       ],
-      arguments: []
+      arguments: [],
     };
 
     const secondSelect = {
       path: 'foo',
       children: [{ path: 'baz', alias: 'c' }, { path: 'baz' }],
-      arguments: []
+      arguments: [],
     };
 
     const requestString = builder.withSelects(firstSelect, secondSelect).build();
@@ -262,11 +262,11 @@ describe('GraphQL Request Builder', () => {
           arguments: [
             {
               name: 'arg',
-              value: 'value'
-            }
-          ]
-        }
-      ]
+              value: 'value',
+            },
+          ],
+        },
+      ],
     };
 
     const requestString = builder.withSelects(select).build();
@@ -280,7 +280,7 @@ describe('GraphQL Request Builder', () => {
     const select = {
       path: 'foo',
       children: [aliasedBar, plainBaz],
-      arguments: []
+      arguments: [],
     };
 
     const requestString = builder.withSelects(select).build();
@@ -296,20 +296,20 @@ describe('GraphQL Request Builder', () => {
     const firstSelect = {
       path: 'a',
       arguments: [{ name: 'arg', value: 'foo' }],
-      children: [{ path: 'child1' }]
+      children: [{ path: 'child1' }],
     };
     const secondSelect = {
       path: 'a',
-      children: [{ path: 'child2' }]
+      children: [{ path: 'child2' }],
     };
     const thirdSelect = {
       path: 'a',
       arguments: [{ name: 'arg', value: 'foo' }],
-      children: [{ path: 'child3' }]
+      children: [{ path: 'child3' }],
     };
     const fourthSelect = {
       path: 'a',
-      children: [{ path: 'child4' }]
+      children: [{ path: 'child4' }],
     };
 
     const requestString = builder.withSelects(firstSelect, secondSelect, thirdSelect, fourthSelect).build();

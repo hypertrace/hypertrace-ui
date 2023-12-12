@@ -6,7 +6,7 @@ import { TooltipContentContainerComponent } from '../tooltip-content-container.c
 
 @Directive({
   selector: '[htActionableTooltip]',
-  providers: [PopoverHoverTriggerService]
+  providers: [PopoverHoverTriggerService],
 })
 export class ActionableTooltipDirective implements OnDestroy {
   @Input('htActionableTooltip')
@@ -46,9 +46,9 @@ export class ActionableTooltipDirective implements OnDestroy {
           PopoverRelativePositionLocation.BelowCentered,
           PopoverRelativePositionLocation.AboveCentered,
           PopoverRelativePositionLocation.RightCentered,
-          PopoverRelativePositionLocation.LeftCentered
-        ]
-      }
+          PopoverRelativePositionLocation.LeftCentered,
+        ],
+      },
     });
   }
 

@@ -5,7 +5,7 @@ import {
   LetAsyncModule,
   PageHeaderModule,
   PanelModule,
-  ToggleGroupModule
+  ToggleGroupModule,
 } from '@hypertrace/components';
 import { ExploreQueryEditorModule } from '../../shared/components/explore-query-editor/explore-query-editor.module';
 import { ObservabilityDashboardModule } from '../../shared/dashboard/observability-dashboard.module';
@@ -21,10 +21,10 @@ import { ExplorerComponent } from './explorer.component';
     PanelModule,
     PageHeaderModule,
     ToggleGroupModule,
-    LetAsyncModule
+    LetAsyncModule,
   ],
   declarations: [ExplorerComponent],
-  exports: [ExplorerComponent]
+  exports: [ExplorerComponent],
 })
 export class ExplorerModule {
   public static withDashboardBuilderFactory(builderFactory: FactorySansProvider): ModuleWithProviders<ExplorerModule> {
@@ -35,10 +35,10 @@ export class ExplorerModule {
           provide: EXPLORER_DASHBOARD_BUILDER_FACTORY,
           deps: builderFactory.deps,
           useFactory: (...deps: unknown[]) => ({
-            build: () => builderFactory.useFactory(...deps)
-          })
-        }
-      ]
+            build: () => builderFactory.useFactory(...deps),
+          }),
+        },
+      ],
     };
   }
 }

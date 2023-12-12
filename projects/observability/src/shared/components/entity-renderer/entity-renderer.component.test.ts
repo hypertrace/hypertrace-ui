@@ -19,23 +19,23 @@ describe('Entity Renderer Component', () => {
       mockProvider(EntityNavigationService, {
         buildEntityDetailNavigationParams: jest.fn().mockReturnValue({
           navType: NavigationParamsType.InApp,
-          path: ['/endpoint', 'test-id']
-        })
+          path: ['/endpoint', 'test-id'],
+        }),
       }),
       mockProvider(NavigationService),
       mockProvider(EntityIconLookupService, {
-        forEntity: jest.fn().mockReturnValue(ObservabilityIconType.Api)
-      })
+        forEntity: jest.fn().mockReturnValue(ObservabilityIconType.Api),
+      }),
     ],
     shallow: true,
-    declarations: [MockComponent(IconComponent), MockComponent(LinkComponent)]
+    declarations: [MockComponent(IconComponent), MockComponent(LinkComponent)],
   });
 
   test('renders a basic entity without navigation', () => {
     const entity = {
       [entityIdKey]: 'test-id',
       [entityTypeKey]: ObservabilityEntityType.Api,
-      name: 'test api'
+      name: 'test api',
     };
 
     spectator = createHost(
@@ -45,9 +45,9 @@ describe('Entity Renderer Component', () => {
         hostProps: {
           entity: entity,
           navigable: false,
-          showIcon: true
-        }
-      }
+          showIcon: true,
+        },
+      },
     );
 
     const entityNavService = spectator.inject(EntityNavigationService);
@@ -65,7 +65,7 @@ describe('Entity Renderer Component', () => {
     const entity = {
       [entityIdKey]: 'test-id',
       [entityTypeKey]: ObservabilityEntityType.Api,
-      name: 'test api'
+      name: 'test api',
     };
 
     spectator = createHost(
@@ -75,9 +75,9 @@ describe('Entity Renderer Component', () => {
         hostProps: {
           entity: entity,
           navigable: true,
-          showIcon: true
-        }
-      }
+          showIcon: true,
+        },
+      },
     );
 
     expect(spectator.query('.name')).toHaveText('test api');
@@ -85,12 +85,12 @@ describe('Entity Renderer Component', () => {
 
     expect(spectator.inject(EntityNavigationService).buildEntityDetailNavigationParams).toHaveBeenCalledWith(
       entity,
-      false
+      false,
     );
 
     expect(spectator.query(LinkComponent)?.paramsOrUrl).toEqual({
       navType: NavigationParamsType.InApp,
-      path: ['/endpoint', 'test-id']
+      path: ['/endpoint', 'test-id'],
     });
   });
 
@@ -98,7 +98,7 @@ describe('Entity Renderer Component', () => {
     const entity = {
       [entityIdKey]: 'test-id',
       [entityTypeKey]: ObservabilityEntityType.Api,
-      name: 'test api'
+      name: 'test api',
     };
 
     spectator = createHost(
@@ -106,9 +106,9 @@ describe('Entity Renderer Component', () => {
       </ht-entity-renderer>`,
       {
         hostProps: {
-          entity: entity
-        }
-      }
+          entity: entity,
+        },
+      },
     );
 
     expect(spectator.query('.name')).toHaveText('test api');
@@ -119,7 +119,7 @@ describe('Entity Renderer Component', () => {
     const entity = {
       [entityIdKey]: 'test-id',
       [entityTypeKey]: ObservabilityEntityType.Api,
-      name: 'test api'
+      name: 'test api',
     };
 
     spectator = createHost(
@@ -129,16 +129,16 @@ describe('Entity Renderer Component', () => {
         hostProps: {
           entity: entity,
           icon: IconType.Add,
-          showIcon: false
-        }
-      }
+          showIcon: false,
+        },
+      },
     );
 
     expect(spectator.query('.name')).toHaveText('test api');
     expect(spectator.query(IconComponent)).not.toExist();
 
     spectator.setHostInput({
-      showIcon: true
+      showIcon: true,
     });
     expect(spectator.query(IconComponent)?.icon).toEqual(IconType.Add);
   });
@@ -147,7 +147,7 @@ describe('Entity Renderer Component', () => {
     const entity = {
       [entityIdKey]: 'test-id',
       [entityTypeKey]: ObservabilityEntityType.Api,
-      name: 'test api'
+      name: 'test api',
     };
 
     spectator = createHost(
@@ -156,16 +156,16 @@ describe('Entity Renderer Component', () => {
       {
         hostProps: {
           entity: entity,
-          inheritTextStyle: false
-        }
-      }
+          inheritTextStyle: false,
+        },
+      },
     );
 
     expect(spectator.query('.default-text-style')).toExist();
     expect(spectator.query('.ht-entity-renderer')).toBe(spectator.query('.default-text-style'));
 
     spectator.setHostInput({
-      inheritTextStyle: true
+      inheritTextStyle: true,
     });
     expect(spectator.query('.default-text-style')).not.toExist();
 

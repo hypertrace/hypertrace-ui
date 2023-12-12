@@ -18,9 +18,9 @@ describe('InputPillListComponent', () => {
     providers: [
       FormBuilder,
       mockProvider(PopoverService, {
-        drawPopover: jest.fn().mockReturnValue({ close: jest.fn(), closeOnBackdropClick: jest.fn() })
-      })
-    ]
+        drawPopover: jest.fn().mockReturnValue({ close: jest.fn(), closeOnBackdropClick: jest.fn() }),
+      }),
+    ],
   });
 
   const getPillValues = (spectatorInstance: SpectatorHost<InputPillListComponent>): string[] =>
@@ -43,8 +43,8 @@ describe('InputPillListComponent', () => {
   test('should initialize with input, as expected', () => {
     spectator = createHost(`<ht-input-pill-list [values]="values"></ht-input-pill-list>`, {
       hostProps: {
-        values: ['test-1', 'test-2']
-      }
+        values: ['test-1', 'test-2'],
+      },
     });
     // Header section
     expect(spectator.query('.header')).toExist();
@@ -62,9 +62,9 @@ describe('InputPillListComponent', () => {
       {
         hostProps: {
           values: ['test-1', 'test-2'],
-          dropdownValues: ['drop-1']
-        }
-      }
+          dropdownValues: ['drop-1'],
+        },
+      },
     );
 
     const valueChangeEmitterSpy = jest.spyOn(spectator.component.valueChange, 'next');
@@ -94,7 +94,7 @@ describe('InputPillListComponent', () => {
     // Update a pill in place. Verify emit and pill list on valueChange.
     const secondPill = spectator.debugElement.queryAll(By.css('.secondary-input'))[1];
     ((spectator.component.form.get('pillControls') as FormArray)?.at(1) as FormGroup).patchValue({
-      value: 'i-am-test-2-now'
+      value: 'i-am-test-2-now',
     });
     spectator.triggerEventHandler(secondPill, 'valueChange', undefined);
 

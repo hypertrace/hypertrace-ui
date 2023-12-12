@@ -1,4 +1,4 @@
-import { isEqualWith } from 'lodash-es';
+import { isEqualWith, mapValues } from 'lodash-es';
 
 /**
  * Useful in a place like the default case of a switch statement where each enum value is a case. If a new enum
@@ -7,14 +7,14 @@ import { isEqualWith } from 'lodash-es';
  */
 export const assertUnreachable = (
   value: never,
-  message: string = `Unexpectedly reached unreachable code with value: ${value}`
+  message: string = `Unexpectedly reached unreachable code with value: ${value}`,
 ): never => {
   throw Error(message);
 };
 
 export const throwIfNil = <T>(
   value: T | undefined | null,
-  message: string = `Unexpectedly found undefined value`
+  message: string = `Unexpectedly found undefined value`,
 ): T => {
   if (value === undefined || value === null) {
     throw Error(message);
@@ -37,3 +37,14 @@ export const isNonEmptyString = (str: string | undefined | null): str is string 
 export const hasOwnProperty = <X extends {}, Y extends PropertyKey>(obj: X, prop: Y): obj is X & Record<Y, unknown> =>
   // Since Typescript doesn't know how to type guard native hasOwnProperty, we wrap it here.
   obj.hasOwnProperty(prop);
+
+export const nullToUndefined = <T>(input: T): T => {
+  if (input instanceof Array) {
+    return input.map(nullToUndefined) as T;
+  }
+  if (typeof input === 'object' && input !== null) {
+    return mapValues(input, nullToUndefined) as T;
+  }
+
+  return input ?? (undefined as T);
+};

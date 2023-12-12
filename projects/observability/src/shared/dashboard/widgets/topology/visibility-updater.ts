@@ -7,21 +7,21 @@ export class VisibilityUpdater {
     [TopologyElementVisibility.Emphasized, 'emphasized'],
     [TopologyElementVisibility.Hidden, 'hidden'],
     [TopologyElementVisibility.Background, 'background'],
-    [TopologyElementVisibility.Focused, 'focused']
+    [TopologyElementVisibility.Focused, 'focused'],
   ]);
   private readonly allClassesString: string;
   public constructor(
     private readonly visibilityClassMap: ReadonlyMap<
       TopologyElementVisibility,
       string
-    > = VisibilityUpdater.DEFAULT_VISIBILITY_MAP
+    > = VisibilityUpdater.DEFAULT_VISIBILITY_MAP,
   ) {
     this.allClassesString = Array.from(visibilityClassMap.values()).join(' ');
   }
 
   public updateVisibility<TElement extends Element>(
     elementSelection: Selection<TElement, unknown, null, undefined>,
-    visibility: TopologyElementVisibility
+    visibility: TopologyElementVisibility,
   ): void {
     elementSelection
       .classed(this.allClassesString, false) // Remove all existing

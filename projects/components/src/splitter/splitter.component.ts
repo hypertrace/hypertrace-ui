@@ -11,7 +11,7 @@ import {
   OnChanges,
   Output,
   QueryList,
-  Renderer2
+  Renderer2,
 } from '@angular/core';
 import { assertUnreachable, LayoutChangeService, queryListAndChanges$, TypedSimpleChanges } from '@hypertrace/common';
 import { debounce, isEmpty } from 'lodash-es';
@@ -42,6 +42,7 @@ import { SplitterCellDimension, SplitterContentDirective } from './splitter-cont
           *ngIf="this.direction === '${SplitterDirection.Horizontal}' ? index !== contents.length - 1 : true"
           [ngClass]="[this.direction | lowercase]"
           [ngStyle]="this.splitterSizeStyle"
+          [class.disabled]="this.disabled"
           (mousedown)="this.onGutterMouseDown($event, index)"
           (mouseup)="this.onGutterMouseUp($event)"
         >
@@ -51,9 +52,12 @@ import { SplitterCellDimension, SplitterContentDirective } from './splitter-cont
         </div>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class SplitterComponent implements OnChanges, AfterContentInit {
+  @Input()
+  public readonly disabled?: boolean = false;
+
   @Input()
   public readonly direction?: SplitterDirection = SplitterDirection.Horizontal;
 
@@ -78,13 +82,13 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
 
   private normalizationParameters: NormalizationParameters = {
     itemCount: 0,
-    pxPerItem: 0
+    pxPerItem: 0,
   };
 
   private resizeStartParameters: ResizeStartParameters = {
     startPositionPx: 0,
     prevContentStartSizePx: 0,
-    nextContentStartSizePx: 0
+    nextContentStartSizePx: 0,
   };
 
   private readonly debounceResize = debounce(this.resize, this.debounceTime);
@@ -93,7 +97,7 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly element: ElementRef<HTMLElement>,
     private readonly layoutChangeService: LayoutChangeService,
-    private readonly renderer: Renderer2
+    private readonly renderer: Renderer2,
   ) {}
 
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
@@ -114,7 +118,7 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
 
     return {
       itemCount: contents.length,
-      pxPerItem: pxPerItem
+      pxPerItem: pxPerItem,
     };
   }
 
@@ -128,19 +132,27 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     if (content.dimension.unit === 'FR') {
       content.dimension = {
         unit: 'PX',
-        value: content.dimension.value * this.normalizationParameters.pxPerItem
+        value: content.dimension.value * this.normalizationParameters.pxPerItem,
       };
     }
 
     return content;
   }
 
-  protected onGutterMouseDown(event: MouseEvent, index: number) {
+  protected onGutterMouseDown(event: MouseEvent, index: number): void {
+    if (this.disabled) {
+      return;
+    }
+
     this.resizeStart(event, index);
     this.bindMouseListeners();
   }
 
-  protected onGutterMouseUp(event: MouseEvent) {
+  protected onGutterMouseUp(event: MouseEvent): void {
+    if (this.disabled) {
+      return;
+    }
+
     this.resize(event);
     this.unbindMouseListeners();
   }
@@ -176,14 +188,14 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
       prevContentStartSizePx: prevContent?.dimension.value ?? 0,
       nextContentStartSizePx: nextContent?.dimension.value ?? 0,
       prevContent: prevContent,
-      nextContent: nextContent
+      nextContent: nextContent,
     };
   }
 
   private subscribeToQueryListChanges(): void {
     this.contents$ = queryListAndChanges$(this.contents ?? EMPTY).pipe(
       map(contents => contents.toArray()),
-      map(contents => this.normalizeContentsDimensions(contents))
+      map(contents => this.normalizeContentsDimensions(contents)),
     );
   }
 
@@ -224,12 +236,12 @@ export class SplitterComponent implements OnChanges, AfterContentInit {
     switch (this.direction) {
       case SplitterDirection.Horizontal:
         this.splitterSizeStyle = {
-          width: `${this.splitterSize}px`
+          width: `${this.splitterSize}px`,
         };
         break;
       case SplitterDirection.Vertical:
         this.splitterSizeStyle = {
-          height: `${this.splitterSize}px`
+          height: `${this.splitterSize}px`,
         };
         break;
       case undefined:

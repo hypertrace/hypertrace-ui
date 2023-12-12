@@ -18,7 +18,7 @@ import { ObservabilitySpecificationBuilder } from '../../../builders/selections/
 import {
   EntitiesGraphQlQueryHandlerService,
   ENTITIES_GQL_REQUEST,
-  GraphQlEntitiesQueryRequest
+  GraphQlEntitiesQueryRequest,
 } from './entities-graphql-query-handler.service';
 
 describe('Entities graphql query handler', () => {
@@ -35,29 +35,29 @@ describe('Entities graphql query handler', () => {
             scope: scope,
             onlySupportsAggregation: false,
             onlySupportsGrouping: false,
-            allowedAggregations: []
+            allowedAggregations: [],
           }),
         buildSpecificationResultWithUnits: (rawResult: Dictionary<unknown>, specifications: Specification[]) =>
-          of(new Map(specifications.map(spec => [spec, spec.extractFromServerData(rawResult)])))
+          of(new Map(specifications.map(spec => [spec, spec.extractFromServerData(rawResult)]))),
       }),
       {
         provide: ENTITY_METADATA,
         useValue: new Map([
           [ObservabilityEntityType.Api, {}],
-          [ObservabilityEntityType.Service, { volatile: true }]
-        ])
-      }
-    ]
+          [ObservabilityEntityType.Service, { volatile: true }],
+        ]),
+      },
+    ],
   });
 
   const testTimeRange = GraphQlTimeRange.fromTimeRange(
-    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141))
+    new FixedTimeRange(new Date(1568907645141), new Date(1568911245141)),
   );
   const specBuilder = new ObservabilitySpecificationBuilder();
   const buildRequest = (
     entityType: ObservabilityEntityType = ObservabilityEntityType.Service,
     limit: number = 30,
-    includeInactive?: boolean
+    includeInactive?: boolean,
   ): GraphQlEntitiesQueryRequest => ({
     requestType: ENTITIES_GQL_REQUEST,
     entityType: entityType,
@@ -65,13 +65,13 @@ describe('Entities graphql query handler', () => {
     properties: [specBuilder.attributeSpecificationForKey('name')],
     limit: limit,
     includeTotal: true,
-    includeInactive: includeInactive
+    includeInactive: includeInactive,
   });
 
   const buildRequestGraphqlSelection = (
     entityType: ObservabilityEntityType = ObservabilityEntityType.Service,
     limit: number = 30,
-    includeInactive?: boolean
+    includeInactive?: boolean,
   ): GraphQlSelection => ({
     path: 'entities',
     arguments: [
@@ -81,10 +81,10 @@ describe('Entities graphql query handler', () => {
         name: 'between',
         value: {
           startTime: new Date(testTimeRange.from),
-          endTime: new Date(testTimeRange.to)
-        }
+          endTime: new Date(testTimeRange.to),
+        },
       },
-      ...(includeInactive !== undefined ? [{ name: 'includeInactive', value: includeInactive }] : [])
+      ...(includeInactive !== undefined ? [{ name: 'includeInactive', value: includeInactive }] : []),
     ],
     children: [
       {
@@ -94,12 +94,12 @@ describe('Entities graphql query handler', () => {
           {
             path: 'attribute',
             alias: 'name',
-            arguments: [{ name: 'expression', value: { key: 'name' } }]
-          }
-        ]
+            arguments: [{ name: 'expression', value: { key: 'name' } }],
+          },
+        ],
       },
-      { path: 'total' }
-    ]
+      { path: 'total' },
+    ],
   });
 
   test('matches entities request', () => {
@@ -121,7 +121,7 @@ describe('Entities graphql query handler', () => {
     const graphqlSelection = buildRequestGraphqlSelection(ObservabilityEntityType.Api, 1);
     graphqlSelection.arguments!.push({
       name: 'filterBy',
-      value: new GraphQlEntityFilter('test-id', ObservabilityEntityType.Api).asArgumentObjects()
+      value: new GraphQlEntityFilter('test-id', ObservabilityEntityType.Api).asArgumentObjects(),
     });
 
     expect(spectator.service.convertRequest(apiEntityRequest)).toEqual(graphqlSelection);
@@ -136,15 +136,15 @@ describe('Entities graphql query handler', () => {
   test('adds includeInactive param when required', () => {
     const spectator = createService();
     expect(spectator.service.convertRequest(buildRequest(ObservabilityEntityType.Api, 30, true))).toEqual(
-      buildRequestGraphqlSelection(ObservabilityEntityType.Api, 30, true)
+      buildRequestGraphqlSelection(ObservabilityEntityType.Api, 30, true),
     );
 
     expect(spectator.service.convertRequest(buildRequest(ObservabilityEntityType.Api, 30, false))).toEqual(
-      buildRequestGraphqlSelection(ObservabilityEntityType.Api, 30, false)
+      buildRequestGraphqlSelection(ObservabilityEntityType.Api, 30, false),
     );
 
     expect(spectator.service.convertRequest(buildRequest(ObservabilityEntityType.Api, 30))).toEqual(
-      buildRequestGraphqlSelection(ObservabilityEntityType.Api, 30)
+      buildRequestGraphqlSelection(ObservabilityEntityType.Api, 30),
     );
   });
 
@@ -154,14 +154,14 @@ describe('Entities graphql query handler', () => {
       results: [
         {
           entityId: '1',
-          name: 'first'
+          name: 'first',
         },
         {
           entityId: '2',
-          name: 'second'
-        }
+          name: 'second',
+        },
       ],
-      total: 2
+      total: 2,
     };
 
     runFakeRxjs(({ expectObservable }) => {
@@ -171,16 +171,16 @@ describe('Entities graphql query handler', () => {
             {
               [entityIdKey]: '1',
               [entityTypeKey]: ObservabilityEntityType.Service,
-              name: 'first'
+              name: 'first',
             },
             {
               [entityIdKey]: '2',
               [entityTypeKey]: ObservabilityEntityType.Service,
-              name: 'second'
-            }
+              name: 'second',
+            },
           ],
-          total: 2
-        }
+          total: 2,
+        },
       });
     });
   }));
@@ -192,8 +192,8 @@ describe('Entities graphql query handler', () => {
       ...buildRequest(),
       properties: [
         specBuilder.metricAggregationSpecForKey('some_metric', MetricAggregationType.AvgrateMinute),
-        specBuilder.metricAggregationSpecForKey('some_metric', MetricAggregationType.AvgrateSecond)
-      ]
+        specBuilder.metricAggregationSpecForKey('some_metric', MetricAggregationType.AvgrateSecond),
+      ],
     };
 
     expect(spectator.service.convertRequest(requestWithAvgrates)).toEqual({
@@ -205,9 +205,9 @@ describe('Entities graphql query handler', () => {
           name: 'between',
           value: {
             startTime: new Date(testTimeRange.from),
-            endTime: new Date(testTimeRange.to)
-          }
-        }
+            endTime: new Date(testTimeRange.to),
+          },
+        },
       ],
       children: [
         {
@@ -225,11 +225,11 @@ describe('Entities graphql query handler', () => {
                   path: 'avgrate',
                   arguments: [
                     { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
-                    { name: 'size', value: 1 }
+                    { name: 'size', value: 1 },
                   ],
-                  children: [{ path: 'value' }]
-                }
-              ]
+                  children: [{ path: 'value' }],
+                },
+              ],
             },
             {
               path: 'metric',
@@ -241,16 +241,16 @@ describe('Entities graphql query handler', () => {
                   path: 'avgrate',
                   arguments: [
                     { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Seconds) },
-                    { name: 'size', value: 1 }
+                    { name: 'size', value: 1 },
                   ],
-                  children: [{ path: 'value' }]
-                }
-              ]
-            }
-          ]
+                  children: [{ path: 'value' }],
+                },
+              ],
+            },
+          ],
         },
-        { path: 'total' }
-      ]
+        { path: 'total' },
+      ],
     });
 
     const serverResponse = {
@@ -259,15 +259,15 @@ describe('Entities graphql query handler', () => {
           entityId: '1',
           some_metric: {
             avgrate_min: {
-              value: 60
+              value: 60,
             },
             avgrate_sec: {
-              value: 1
-            }
-          }
-        }
+              value: 1,
+            },
+          },
+        },
       ],
-      total: 1
+      total: 1,
     };
 
     runFakeRxjs(({ expectObservable }) => {
@@ -279,16 +279,16 @@ describe('Entities graphql query handler', () => {
               [entityTypeKey]: ObservabilityEntityType.Service,
               'avgrate_min(some_metric)': {
                 value: 60,
-                health: MetricHealth.NotSpecified
+                health: MetricHealth.NotSpecified,
               },
               'avgrate_sec(some_metric)': {
                 value: 1,
-                health: MetricHealth.NotSpecified
-              }
-            }
+                health: MetricHealth.NotSpecified,
+              },
+            },
           ],
-          total: 1
-        }
+          total: 1,
+        },
       });
     });
   });
@@ -297,14 +297,14 @@ describe('Entities graphql query handler', () => {
     const spectator = createService();
     expect(spectator.service.getRequestOptions(buildRequest(ObservabilityEntityType.Service))).toEqual(
       expect.objectContaining({
-        cacheability: GraphQlRequestCacheability.NotCacheable
-      })
+        cacheability: GraphQlRequestCacheability.NotCacheable,
+      }),
     );
 
     expect(spectator.service.getRequestOptions(buildRequest(ObservabilityEntityType.Api))).toEqual(
       expect.objectContaining({
-        cacheability: GraphQlRequestCacheability.Cacheable
-      })
+        cacheability: GraphQlRequestCacheability.Cacheable,
+      }),
     );
   });
 
@@ -318,8 +318,8 @@ describe('Entities graphql query handler', () => {
       properties: [
         specBuilder.metricTimeseriesSpec('a_metric', MetricAggregationType.Min, new TimeDuration(1, TimeUnit.Minute)),
         specBuilder.metricTimeseriesSpec('a_metric', MetricAggregationType.Max, new TimeDuration(1, TimeUnit.Minute)),
-        specBuilder.metricTimeseriesSpec('a_metric', MetricAggregationType.Min, new TimeDuration(5, TimeUnit.Minute))
-      ]
+        specBuilder.metricTimeseriesSpec('a_metric', MetricAggregationType.Min, new TimeDuration(5, TimeUnit.Minute)),
+      ],
     };
 
     expect(spectator.service.convertRequest(requestWithAvgrates)).toEqual({
@@ -331,9 +331,9 @@ describe('Entities graphql query handler', () => {
           name: 'between',
           value: {
             startTime: new Date(testTimeRange.from),
-            endTime: new Date(testTimeRange.to)
-          }
-        }
+            endTime: new Date(testTimeRange.to),
+          },
+        },
       ],
       children: [
         {
@@ -350,14 +350,14 @@ describe('Entities graphql query handler', () => {
                   path: 'series',
                   arguments: [
                     { name: 'size', value: 1 },
-                    { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) }
+                    { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
                   ],
                   children: [
                     { path: 'startTime' },
-                    { path: 'min', arguments: [], alias: undefined, children: [{ path: 'value' }] }
-                  ]
-                }
-              ]
+                    { path: 'min', arguments: [], alias: undefined, children: [{ path: 'value' }] },
+                  ],
+                },
+              ],
             },
             {
               path: 'metric',
@@ -369,14 +369,14 @@ describe('Entities graphql query handler', () => {
                   path: 'series',
                   arguments: [
                     { name: 'size', value: 1 },
-                    { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) }
+                    { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
                   ],
                   children: [
                     { path: 'startTime' },
-                    { path: 'max', arguments: [], alias: undefined, children: [{ path: 'value' }] }
-                  ]
-                }
-              ]
+                    { path: 'max', arguments: [], alias: undefined, children: [{ path: 'value' }] },
+                  ],
+                },
+              ],
             },
 
             {
@@ -389,19 +389,19 @@ describe('Entities graphql query handler', () => {
                   path: 'series',
                   arguments: [
                     { name: 'size', value: 5 },
-                    { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) }
+                    { name: 'units', value: new GraphQlEnumArgument(GraphQlIntervalUnit.Minutes) },
                   ],
                   children: [
                     { path: 'startTime' },
-                    { path: 'min', arguments: [], alias: undefined, children: [{ path: 'value' }] }
-                  ]
-                }
-              ]
-            }
-          ]
+                    { path: 'min', arguments: [], alias: undefined, children: [{ path: 'value' }] },
+                  ],
+                },
+              ],
+            },
+          ],
         },
-        { path: 'total' }
-      ]
+        { path: 'total' },
+      ],
     });
 
     const serverResponse = {
@@ -412,49 +412,49 @@ describe('Entities graphql query handler', () => {
             min_series_1m: [
               {
                 min: {
-                  value: 1
+                  value: 1,
                 },
-                startTime: firstDataPointTime.toISOString()
+                startTime: firstDataPointTime.toISOString(),
               },
               {
                 min: {
-                  value: 2
+                  value: 2,
                 },
-                startTime: secondDataPointTime.toISOString()
-              }
+                startTime: secondDataPointTime.toISOString(),
+              },
             ],
             max_series_1m: [
               {
                 max: {
-                  value: 10
+                  value: 10,
                 },
-                startTime: firstDataPointTime.toISOString()
+                startTime: firstDataPointTime.toISOString(),
               },
               {
                 max: {
-                  value: 20
+                  value: 20,
                 },
-                startTime: secondDataPointTime.toISOString()
-              }
+                startTime: secondDataPointTime.toISOString(),
+              },
             ],
             min_series_5m: [
               {
                 min: {
-                  value: 0
+                  value: 0,
                 },
-                startTime: firstDataPointTime.toISOString()
+                startTime: firstDataPointTime.toISOString(),
               },
               {
                 min: {
-                  value: 1
+                  value: 1,
                 },
-                startTime: secondDataPointTime.toISOString()
-              }
-            ]
-          }
-        }
+                startTime: secondDataPointTime.toISOString(),
+              },
+            ],
+          },
+        },
       ],
-      total: 1
+      total: 1,
     };
 
     runFakeRxjs(({ expectObservable }) => {
@@ -468,24 +468,24 @@ describe('Entities graphql query handler', () => {
                 { timestamp: firstDataPointTime, value: 1 },
                 {
                   timestamp: secondDataPointTime,
-                  value: 2
-                }
+                  value: 2,
+                },
               ],
               'max(a_metric,1m)': [
                 { timestamp: firstDataPointTime, value: 10 },
-                { timestamp: secondDataPointTime, value: 20 }
+                { timestamp: secondDataPointTime, value: 20 },
               ],
               'min(a_metric,5m)': [
                 { timestamp: firstDataPointTime, value: 0 },
                 {
                   timestamp: secondDataPointTime,
-                  value: 1
-                }
-              ]
-            }
+                  value: 1,
+                },
+              ],
+            },
           ],
-          total: 1
-        }
+          total: 1,
+        },
       });
     });
   });

@@ -8,11 +8,11 @@ import {
   OnDestroy,
   Output,
   Renderer2,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { DateCoercer, DateFormatter, SubscriptionLifecycle, TimeRange } from '@hypertrace/common';
 
-import { defaults } from 'lodash-es';
+import { defaults, groupBy } from 'lodash-es';
 import { IntervalValue } from '../interval-select/interval-select.component';
 import { LegendPosition } from '../legend/legend.component';
 import { ChartTooltipBuilderService } from '../utils/chart-tooltip/chart-tooltip-builder.service';
@@ -29,7 +29,7 @@ import { defaultXDataAccessor, defaultYDataAccessor } from './d3/scale/default-d
   styleUrls: ['./cartesian-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SubscriptionLifecycle],
-  template: `<div #chartContainer class="fill-container" (htLayoutChange)="this.redraw()"></div> `
+  template: `<div #chartContainer class="fill-container" (htLayoutChange)="this.redraw()"></div> `,
 })
 export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   @Input()
@@ -63,6 +63,9 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
   public rangeSelectionEnabled: boolean = false;
 
   @Input()
+  public selectableInterval?: boolean;
+
+  @Input()
   public intervalOptions?: IntervalValue[];
 
   @Input()
@@ -91,7 +94,7 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
     private readonly chartTooltipBuilderService: ChartTooltipBuilderService,
     private readonly renderer: Renderer2,
     private readonly chartSyncService: ChartSyncService<TData>,
-    private readonly subscriptionLifeCycle: SubscriptionLifecycle
+    private readonly subscriptionLifeCycle: SubscriptionLifecycle,
   ) {}
 
   public ngOnChanges(): void {
@@ -108,8 +111,8 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       .withSeries(...this.series)
       .withTooltip(
         this.chartTooltipBuilderService.constructTooltip<TData, Series<TData>>(data =>
-          this.convertToDefaultTooltipRenderData(data)
-        )
+          this.convertToDefaultTooltipRenderData(data),
+        ),
       )
       .withEventListener(ChartEvent.Hover, data => {
         this.chartSyncService.mouseLocationChange(data!, this.groupId, this);
@@ -130,13 +133,13 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       this.subscriptionLifeCycle.add(
         this.chartSyncService?.getLocationChangesForGroup(this.groupId, this).subscribe(data => {
           this.chart?.showCrosshair(data);
-        })
+        }),
       );
 
       this.subscriptionLifeCycle.add(
         this.chartSyncService?.getMouseLeave(this.groupId, this).subscribe(() => {
           this.chart?.hideCrosshair();
-        })
+        }),
       );
     }
 
@@ -160,11 +163,12 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       this.chart.withLegend(this.legend);
     }
 
-    if (this.intervalOptions !== undefined && this.selectedInterval !== undefined) {
+    if (this.selectedInterval !== undefined) {
       this.chart.withIntervalData({
+        selectableInterval: this.selectableInterval ?? false,
         initial: this.selectedInterval,
-        options: this.intervalOptions,
-        changeObserver: this.selectedIntervalChange
+        options: this.intervalOptions ?? [this.selectedInterval],
+        changeObserver: this.selectedIntervalChange,
       });
     }
 
@@ -189,8 +193,8 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       axisLine: true,
       gridLines: true,
       crosshair: {
-        snap: true
-      }
+        snap: true,
+      },
     });
   }
 
@@ -199,25 +203,32 @@ export class CartesianChartComponent<TData> implements OnChanges, OnDestroy {
       type: AxisType.Y,
       location: AxisLocation.Left,
       tickLabels: true,
-      axisLine: false
+      axisLine: false,
     });
   }
 
   private convertToDefaultTooltipRenderData(
-    data: MouseLocationData<TData, Series<TData>>[]
+    locationData: MouseLocationData<TData, Series<TData>>[],
   ): DefaultChartTooltipRenderData | undefined {
-    if (data.length === 0) {
+    if (locationData.length === 0) {
       return undefined;
     }
 
-    return {
-      title: this.resolveTooltipTitle(data[0]),
-      labeledValues: data.map(singleValue => ({
+    const tooltipGroups = Object.entries(
+      groupBy(locationData, datum => datum.context.groupName ?? datum.context.name),
+    ).map(([title, groupedData]) => ({
+      title: title,
+      labeledValues: groupedData.map(singleValue => ({
         label: singleValue.context.name,
         value: defaultYDataAccessor<number | string>(singleValue.dataPoint),
         units: singleValue.context.units,
-        color: singleValue.context.getColor?.(singleValue.dataPoint) ?? singleValue.context.color
-      }))
+        color: singleValue.context.getColor?.(singleValue.dataPoint) ?? singleValue.context.color,
+      })),
+    }));
+
+    return {
+      title: this.resolveTooltipTitle(locationData[0]),
+      groups: tooltipGroups,
     };
   }
 

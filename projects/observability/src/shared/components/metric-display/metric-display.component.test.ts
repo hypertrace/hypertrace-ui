@@ -9,14 +9,14 @@ describe('Metric display component', () => {
   const createHost = createHostFactory({
     component: MetricDisplayComponent,
     imports: [MetricDisplayModule],
-    declareComponent: false
+    declareComponent: false,
   });
 
   test('shows provided title', () => {
     spectator = createHost(`<ht-metric-display [metricTitle]="title"></ht-metric-display>`, {
       hostProps: {
-        title: 'Metric title'
-      }
+        title: 'Metric title',
+      },
     });
 
     expect(spectator.query('.metric-title')).toHaveText('Metric title');
@@ -25,8 +25,8 @@ describe('Metric display component', () => {
   test('shows provided value and unit', () => {
     spectator = createHost(`<ht-metric-display [value]="value"></ht-metric-display>`, {
       hostProps: {
-        value: '100'
-      }
+        value: '100',
+      },
     });
 
     expect(spectator.query('.value')).toHaveText('100');
@@ -36,8 +36,8 @@ describe('Metric display component', () => {
     spectator = createHost(`<ht-metric-display [value]="value" [health]="health"></ht-metric-display>`, {
       hostProps: {
         value: '100',
-        health: MetricHealth.Critical
-      }
+        health: MetricHealth.Critical,
+      },
     });
 
     expect(spectator.query('.critical')).not.toBeNull();
@@ -50,9 +50,9 @@ describe('Metric display component', () => {
         hostProps: {
           value: '100',
           health: MetricHealth.Critical,
-          superscript: 'Out'
-        }
-      }
+          superscript: 'Out',
+        },
+      },
     );
 
     expect(spectator.query('.superscript')).toHaveText('Out');

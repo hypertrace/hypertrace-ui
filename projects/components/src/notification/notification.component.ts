@@ -31,7 +31,7 @@ import { IconSize } from '../icon/icon-size';
         <div class="text">{{ this.data.message }}</div>
       </ng-template>
     </div>
-  `
+  `,
 })
 export class NotificationComponent {
   public constructor(@Inject(MAT_SNACK_BAR_DATA) public readonly data: NotificationData) {}
@@ -65,7 +65,7 @@ export class NotificationComponent {
 export const enum NotificationMode {
   Success = 'success',
   Failure = 'failure',
-  Info = 'info'
+  Info = 'info',
 }
 
 export interface NotificationData {

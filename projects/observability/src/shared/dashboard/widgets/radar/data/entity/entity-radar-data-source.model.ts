@@ -11,24 +11,24 @@ import { GraphQlTimeRange } from '../../../../../graphql/model/schema/timerange/
 import {
   EntityGraphQlQueryHandlerService,
   ENTITY_GQL_REQUEST,
-  GraphQlEntityRequest
+  GraphQlEntityRequest,
 } from '../../../../../graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { RadarDataSourceModel } from '../radar-data-source.model';
 
 @Model({
-  type: 'entity-radar-data-source'
+  type: 'entity-radar-data-source',
 })
 export class EntityRadarDataSourceModel extends RadarDataSourceModel {
   @ModelProperty({
     key: 'metrics',
     type: ARRAY_PROPERTY.type,
-    required: false
+    required: false,
   })
   public metricSpecifications: Specification[] = [];
 
   protected fetchData(timeRange: GraphQlTimeRange): Observable<RadarPoint[]> {
     return this.query<EntityGraphQlQueryHandlerService, Entity>(filters => this.buildRequest(timeRange, filters)).pipe(
-      map(entity => this.buildDataPointsFromEntity(entity))
+      map(entity => this.buildDataPointsFromEntity(entity)),
     );
   }
 
@@ -40,14 +40,14 @@ export class EntityRadarDataSourceModel extends RadarDataSourceModel {
       timeRange: timeRange,
       properties: this.metricSpecifications,
       entityType: entityFilter.type,
-      id: entityFilter.id
+      id: entityFilter.id,
     };
   }
 
   private buildDataPointsFromEntity(entity: Entity): RadarPoint[] {
     return this.metricSpecifications.map(specification => ({
       axis: specification.displayName ?? specification.name,
-      value: (entity[specification.resultAlias()] as MetricAggregation).value
+      value: (entity[specification.resultAlias()] as MetricAggregation).value,
     }));
   }
 }

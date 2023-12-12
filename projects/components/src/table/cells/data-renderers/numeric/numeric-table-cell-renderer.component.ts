@@ -13,12 +13,12 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
     <div [ngClass]="{ clickable: this.clickable }" class="numeric-cell" [htTooltip]="this.value">
       {{ this.value | htDisplayNumber }}
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: CoreTableCellRendererType.Number,
   alignment: TableCellAlignmentType.Right,
-  parser: CoreTableCellParserType.Number
+  parser: CoreTableCellParserType.Number,
 })
 export class NumericTableCellRendererComponent extends TableCellRendererBase<CellData, Value> {}
 

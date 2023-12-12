@@ -3,6 +3,6 @@ import { DividerComponent } from './divider.component';
 
 @NgModule({
   declarations: [DividerComponent],
-  exports: [DividerComponent]
+  exports: [DividerComponent],
 })
 export class DividerModule {}

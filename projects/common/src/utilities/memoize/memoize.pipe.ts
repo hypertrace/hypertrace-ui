@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'htMemoize'
+  name: 'htMemoize',
 })
 export class MemoizePipe implements PipeTransform {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

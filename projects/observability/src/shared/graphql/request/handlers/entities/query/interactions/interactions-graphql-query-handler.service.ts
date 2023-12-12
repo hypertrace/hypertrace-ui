@@ -13,7 +13,7 @@ import { EntitiesGraphqlQueryBuilderService } from '../entities-graphql-query-bu
 import {
   EntityGraphQlQueryHandlerService,
   ENTITY_GQL_REQUEST,
-  GraphQlEntityRequest
+  GraphQlEntityRequest,
 } from '../entity/entity-graphql-query-handler.service';
 
 @Injectable({ providedIn: 'root' })
@@ -27,7 +27,7 @@ export class InteractionsGraphQlQueryHandlerService
   public constructor(
     private readonly entityGraphQlQueryHandler: EntityGraphQlQueryHandlerService,
     private readonly entitiesGraphqlQueryBuilderService: EntitiesGraphqlQueryBuilderService,
-    private readonly metaDataService: MetadataService
+    private readonly metaDataService: MetadataService,
   ) {}
 
   public matchesRequest(request: unknown): request is GraphQlInteractionsRequest {
@@ -48,15 +48,15 @@ export class InteractionsGraphQlQueryHandlerService
 
   public convertResponse(
     response: EntitiesServerResponse,
-    request: GraphQlInteractionsRequest
+    request: GraphQlInteractionsRequest,
   ): Observable<InteractionsResponse> {
     const edges = response.results[0].incomingEdges;
 
     return forkJoinSafeEmpty(edges.results.map(result => this.buildInteraction(result, request))).pipe(
       map(results => ({
         total: edges.total,
-        results: results
-      }))
+        results: results,
+      })),
     );
   }
 
@@ -67,7 +67,7 @@ export class InteractionsGraphQlQueryHandlerService
       entityType: request.entityType,
       properties: [],
       timeRange: request.timeRange,
-      includeInactive: false
+      includeInactive: false,
     };
   }
 
@@ -91,40 +91,40 @@ export class InteractionsGraphQlQueryHandlerService
               path: 'neighbor',
               children: [
                 { path: 'id', alias: 'entityId' },
-                ...this.selectionBuilder.fromSpecifications(request.neighborSpecifications)
-              ]
-            }
-          ]
+                ...this.selectionBuilder.fromSpecifications(request.neighborSpecifications),
+              ],
+            },
+          ],
         },
-        { path: 'total' }
-      ]
+        { path: 'total' },
+      ],
     };
   }
 
   private buildInteraction(
     serverInteraction: InteractionServerResponse,
-    request: GraphQlInteractionsRequest
+    request: GraphQlInteractionsRequest,
   ): Observable<Interaction> {
     return combineLatest([
       this.entitiesGraphqlQueryBuilderService.normalizeEntity(serverInteraction.neighbor, {
         entityType: request.neighborType,
-        properties: request.neighborSpecifications
+        properties: request.neighborSpecifications,
       }),
       this.metaDataService.buildSpecificationResultWithUnits(
         serverInteraction,
         request.interactionSpecifications,
-        INTERACTION_SCOPE
-      )
+        INTERACTION_SCOPE,
+      ),
     ]).pipe(
       map(([neighbor, mappedResult]) => {
         const interaction: Interaction = {
-          neighbor: neighbor
+          neighbor: neighbor,
         };
 
         mappedResult.forEach((data, specification) => (interaction[specification.resultAlias()] = data));
 
         return interaction;
-      })
+      }),
     );
   }
 }
@@ -153,7 +153,7 @@ type EntitiesServerResponse = DeepReadonly<{
         results: InteractionServerResponse[];
         total: number;
       };
-    }
+    },
   ];
 }>;
 

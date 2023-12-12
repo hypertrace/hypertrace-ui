@@ -22,9 +22,9 @@ import { NavigationModule } from './shared/navigation/navigation.module';
     HttpClientModule,
     ApplicationFrameModule,
     ObservabilityDashboardModule,
-    UserTelemetryModule.forRoot([])
+    UserTelemetryModule.forRoot([]),
   ],
   declarations: [RootComponent],
-  bootstrap: [RootComponent]
+  bootstrap: [RootComponent],
 })
 export class RootModule {}

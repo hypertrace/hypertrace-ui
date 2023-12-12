@@ -12,7 +12,7 @@ import { applicationFlowDefaultJson } from './application-flow.dashboard';
       <ht-navigable-dashboard [navLocation]="this.defaultJson.location" [variables]="this.variables">
       </ht-navigable-dashboard>
     </div>
-  `
+  `,
 })
 export class ApplicationFlowComponent {
   public readonly defaultJson: DashboardDefaultConfiguration = applicationFlowDefaultJson;

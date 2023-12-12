@@ -15,11 +15,11 @@ import { MaybeInactiveEntity } from './entity-table-cell-parser';
         [navigable]="true"
       ></ht-entity-renderer>
     </div>
-  `
+  `,
 })
 @TableCellRenderer({
   type: ObservabilityTableCellType.Entity,
   alignment: TableCellAlignmentType.Left,
-  parser: ObservabilityTableCellType.Entity
+  parser: ObservabilityTableCellType.Entity,
 })
 export class EntityTableCellRendererComponent extends TableCellRendererBase<MaybeInactiveEntity | undefined> {}

@@ -17,7 +17,7 @@ export abstract class WidgetRenderer<TModel extends object, TData = unknown> imp
 
   public constructor(
     @Inject(RENDERER_API) public readonly api: RendererApi<TModel>,
-    protected readonly changeDetector: ChangeDetectorRef
+    protected readonly changeDetector: ChangeDetectorRef,
   ) {
     this.model = api.model;
     const dashboardTimeRange = api.getTimeRange();
@@ -61,7 +61,7 @@ export abstract class WidgetRenderer<TModel extends object, TData = unknown> imp
     this.data$ = this.fetchData().pipe(
       shareReplay(),
       takeUntil(this.destroyed$),
-      tap(() => this.changeDetector.markForCheck())
+      tap(() => this.changeDetector.markForCheck()),
     );
 
     // Mark for check because the observable data$ has been reassigned

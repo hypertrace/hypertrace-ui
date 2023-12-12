@@ -17,7 +17,7 @@ export const patchRouterNavigateForTest = (spectator: { inject: Spectator<unknow
       tick();
 
       return returned;
-    })
+    }),
   );
 };
 

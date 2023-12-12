@@ -27,12 +27,14 @@ describe('Api detail breadcrumb resolver', () => {
             [entityIdKey]: 'test-id',
             name: 'test api',
             serviceName: 'test service',
-            serviceId: 'test-service-id'
-          })
-        )
+            serviceId: 'test-service-id',
+          }),
+        ),
       }),
       mockProvider(TimeRangeService, {
-        getTimeRangeAndChanges: jest.fn().mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))))
+        getTimeRangeAndChanges: jest
+          .fn()
+          .mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)))),
       }),
       {
         provide: ENTITY_METADATA,
@@ -43,8 +45,8 @@ describe('Api detail breadcrumb resolver', () => {
               entityType: ObservabilityEntityType.Api,
               icon: ObservabilityIconType.Api,
               detailPath: (id: string, sourceRoute?: string) => [sourceRoute ?? '', 'endpoint', id],
-              sourceRoutes: ['services']
-            }
+              sourceRoutes: ['services'],
+            },
           ],
           [
             ObservabilityEntityType.Service,
@@ -54,20 +56,20 @@ describe('Api detail breadcrumb resolver', () => {
               detailPath: (id: string) => ['services', 'service', id],
               apisListPath: (id: string) => ['services', 'service', id, 'endpoints'],
               listPath: ['services'],
-              typeDisplayName: 'Service'
-            }
-          ]
-        ])
-      }
+              typeDisplayName: 'Service',
+            },
+          ],
+        ]),
+      },
     ],
     imports: [
       RouterTestingModule.withRoutes([
         {
           path: 'api/:id',
-          children: []
-        }
-      ])
-    ]
+          children: [],
+        },
+      ]),
+    ],
   });
 
   beforeEach(() => {
@@ -91,12 +93,12 @@ describe('Api detail breadcrumb resolver', () => {
             [entityTypeKey]: ObservabilityEntityType.Service,
             label: 'test service',
             icon: ObservabilityIconType.Service,
-            url: ['services', 'service', 'test-service-id']
+            url: ['services', 'service', 'test-service-id'],
           },
           b: {
             label: 'Endpoints',
             icon: ObservabilityIconType.Api,
-            url: ['services', 'service', 'test-service-id', 'endpoints']
+            url: ['services', 'service', 'test-service-id', 'endpoints'],
           },
           c: {
             [entityIdKey]: 'test-id',
@@ -108,17 +110,17 @@ describe('Api detail breadcrumb resolver', () => {
             parentId: 'test-service-id',
             parentName: 'test service',
             serviceName: 'test service',
-            serviceId: 'test-service-id'
-          }
+            serviceId: 'test-service-id',
+          },
         });
 
         expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
           expect.objectContaining({
             requestType: ENTITY_GQL_REQUEST,
             entityType: ObservabilityEntityType.Api,
-            id: 'test-id'
+            id: 'test-id',
           }),
-          { cacheability: GraphQlRequestCacheability.Cacheable }
+          { cacheability: GraphQlRequestCacheability.Cacheable },
         );
       });
     });
@@ -143,17 +145,17 @@ describe('Api detail breadcrumb resolver', () => {
             url: ['api', 'test-id'],
             name: 'test api',
             serviceName: 'test service',
-            serviceId: 'test-service-id'
-          }
+            serviceId: 'test-service-id',
+          },
         });
 
         expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
           expect.objectContaining({
             requestType: ENTITY_GQL_REQUEST,
             entityType: ObservabilityEntityType.Api,
-            id: 'test-id'
+            id: 'test-id',
           }),
-          { cacheability: GraphQlRequestCacheability.Cacheable }
+          { cacheability: GraphQlRequestCacheability.Cacheable },
         );
       });
     });

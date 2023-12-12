@@ -3,7 +3,7 @@ import { GraphQlHandlerType, GraphQlQueryHandler, GraphQlSelection } from '@hype
 import { AttributeMetadata, AttributeMetadataType } from '../../../graphql/model/metadata/attribute-metadata';
 import {
   convertFromGraphQlMetricAggregationType,
-  GraphQlMetricAggregationType
+  GraphQlMetricAggregationType,
 } from '../../../graphql/model/schema/metrics/graphql-metric-aggregation-type';
 
 @Injectable({ providedIn: 'root' })
@@ -32,8 +32,8 @@ export class MetadataGraphQlQueryHandlerService
         { path: 'onlySupportsGrouping' },
         { path: 'supportedAggregations' },
         { path: 'groupable' },
-        { path: 'isCustom' }
-      ]
+        { path: 'isCustom' },
+      ],
     };
   }
 
@@ -48,7 +48,7 @@ export class MetadataGraphQlQueryHandlerService
       onlySupportsGrouping: result.onlySupportsGrouping,
       allowedAggregations: result.supportedAggregations.flatMap(convertFromGraphQlMetricAggregationType),
       groupable: result.groupable,
-      isCustom: result.isCustom
+      isCustom: result.isCustom,
     }));
   }
 }

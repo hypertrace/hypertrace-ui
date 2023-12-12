@@ -7,6 +7,6 @@ import { ExpanderToggleComponent } from './expander-toggle.component';
 @NgModule({
   imports: [CommonModule, TooltipModule, IconModule],
   declarations: [ExpanderToggleComponent],
-  exports: [ExpanderToggleComponent]
+  exports: [ExpanderToggleComponent],
 })
 export class ExpanderToggleModule {}

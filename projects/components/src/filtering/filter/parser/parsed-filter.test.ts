@@ -6,32 +6,32 @@ describe('Filter Parsing utilities', () => {
   const testStatusAttribute: FilterAttribute = {
     name: 'status',
     displayName: 'Status',
-    type: FilterAttributeType.String
+    type: FilterAttributeType.String,
   };
 
   const testStatusCodeAttribute: FilterAttribute = {
     name: 'statusCode',
     displayName: 'Status Code',
-    type: FilterAttributeType.String
+    type: FilterAttributeType.String,
   };
 
   test('should match if full name match', () => {
     expect(tryParseStringForAttribute(testStatusAttribute, 'status', ['name'])).toEqual({
-      attribute: testStatusAttribute
+      attribute: testStatusAttribute,
     });
 
     expect(tryParseStringForAttribute(testStatusAttribute, 'status ', ['name'])).toEqual({
-      attribute: testStatusAttribute
+      attribute: testStatusAttribute,
     });
 
     expect(tryParseStringForAttribute(testStatusCodeAttribute, 'statusCode', ['name'])).toEqual({
-      attribute: testStatusCodeAttribute
+      attribute: testStatusCodeAttribute,
     });
   });
 
   test('should match if followed by beginning of operator', () => {
     expect(tryParseStringForAttribute(testStatusAttribute, 'status !', ['name'])).toEqual({
-      attribute: testStatusAttribute
+      attribute: testStatusAttribute,
     });
   });
 

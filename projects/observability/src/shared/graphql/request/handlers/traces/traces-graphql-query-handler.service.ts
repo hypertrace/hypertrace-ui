@@ -21,7 +21,7 @@ export class TracesGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
 
   public constructor(
     private readonly metadataService: MetadataService,
-    private readonly globalGraphQlFilterService: GlobalGraphQlFilterService
+    private readonly globalGraphQlFilterService: GlobalGraphQlFilterService,
   ) {}
 
   public matchesRequest(request: unknown): request is GraphQlTracesRequest {
@@ -42,22 +42,22 @@ export class TracesGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
         ...this.argBuilder.forOffset(request.offset),
         ...this.argBuilder.forOrderBy(request.sort),
         ...this.argBuilder.forFilters(
-          this.globalGraphQlFilterService.mergeGlobalFilters(resolveTraceType(request.traceType), request.filters)
-        )
+          this.globalGraphQlFilterService.mergeGlobalFilters(resolveTraceType(request.traceType), request.filters),
+        ),
       ],
       children: [
         {
           path: 'results',
-          children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.properties)]
+          children: [{ path: 'id' }, ...this.selectionBuilder.fromSpecifications(request.properties)],
         },
         ...(request.ignoreTotal ?? false
           ? []
           : [
               {
-                path: 'total'
-              }
-            ])
-      ]
+                path: 'total',
+              },
+            ]),
+      ],
     };
   }
 
@@ -65,8 +65,8 @@ export class TracesGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
     return forkJoinSafeEmpty(response.results.map(traceResult => this.normalizeTrace(traceResult, request))).pipe(
       map(results => ({
         total: response.total ?? 0,
-        results: results
-      }))
+        results: results,
+      })),
     );
   }
 
@@ -79,21 +79,21 @@ export class TracesGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
         return this.resultUnits(spec, request.traceType!).pipe(
           map(units => ({
             alias: alias,
-            data: units !== undefined && !this.hasUnits(data) ? { units: units, value: data } : data
-          }))
+            data: units !== undefined && !this.hasUnits(data) ? { units: units, value: data } : data,
+          })),
         );
-      })
+      }),
     ).pipe(
       map(results => {
         const trace: Trace = {
           [traceIdKey]: rawResult.id as string,
-          [traceTypeKey]: resolveTraceType(request.traceType)
+          [traceTypeKey]: resolveTraceType(request.traceType),
         };
 
         results.forEach(result => (trace[result.alias] = result.data));
 
         return trace;
-      })
+      }),
     );
   }
 
@@ -104,7 +104,7 @@ export class TracesGraphQlQueryHandlerService implements GraphQlQueryHandler<Gra
   private resultUnits(specification: Specification, scope: string): Observable<string | undefined> {
     return this.metadataService.getAttribute(scope, specification.name).pipe(
       map(attribute => (attribute.units !== '' ? attribute.units : undefined)),
-      defaultIfEmpty<string | undefined>(undefined)
+      defaultIfEmpty<string | undefined>(undefined),
     );
   }
 }

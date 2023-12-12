@@ -19,7 +19,7 @@ export class MixPanelTelemetry<InitConfig extends TelemetryProviderConfig>
       licenseTier: userTraits.licenseTier,
       licenseExpiration: userTraits.licenseExpiration,
       isPlayground: userTraits.isPlayground,
-      accountEmail: userTraits.accountEmail
+      accountEmail: userTraits.accountEmail,
     });
   }
 

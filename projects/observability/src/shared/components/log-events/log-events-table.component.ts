@@ -9,7 +9,7 @@ import {
   TableDataResponse,
   TableDataSource,
   TableMode,
-  TableRow
+  TableRow,
 } from '@hypertrace/components';
 import { isEmpty } from 'lodash-es';
 import { Observable, of } from 'rxjs';
@@ -18,7 +18,7 @@ import { LogEvent } from '../../dashboard/widgets/waterfall/waterfall/waterfall-
 
 export const enum LogEventsTableViewType {
   Condensed = 'condensed',
-  Detailed = 'detailed'
+  Detailed = 'detailed',
 }
 
 @Component({
@@ -46,7 +46,7 @@ export const enum LogEventsTableViewType {
         ></ht-list-view>
       </div>
     </ng-template>
-  `
+  `,
 })
 export class LogEventsTableComponent implements OnChanges {
   @Input()
@@ -70,7 +70,7 @@ export class LogEventsTableComponent implements OnChanges {
     if (!isEmpty(attributes)) {
       return Object.entries(attributes).map(([key, value]) => ({
         key: key,
-        value: value as string | number
+        value: value as string | number,
       }));
     }
 
@@ -84,11 +84,11 @@ export class LogEventsTableComponent implements OnChanges {
           data: this.logEvents.map((logEvent: LogEvent) => ({
             ...logEvent,
             timestamp: this.dateCoercer.coerce(logEvent.timestamp),
-            baseTimestamp: this.dateCoercer.coerce(logEvent.spanStartTime)
+            baseTimestamp: this.dateCoercer.coerce(logEvent.spanStartTime),
           })),
-          totalCount: this.logEvents.length
+          totalCount: this.logEvents.length,
         }),
-      getScope: () => undefined
+      getScope: () => undefined,
     };
   }
 
@@ -104,7 +104,7 @@ export class LogEventsTableComponent implements OnChanges {
             visible: true,
             width: '150px',
             sortable: false,
-            filterable: false
+            filterable: false,
           },
           {
             id: 'summary',
@@ -112,8 +112,8 @@ export class LogEventsTableComponent implements OnChanges {
             title: 'Summary',
             visible: true,
             sortable: false,
-            filterable: false
-          }
+            filterable: false,
+          },
         ];
       case LogEventsTableViewType.Detailed:
         return [
@@ -124,14 +124,14 @@ export class LogEventsTableComponent implements OnChanges {
             visible: true,
             width: '120px',
             sortable: false,
-            filterable: false
+            filterable: false,
           },
           {
             id: 'summary',
             title: 'Summary',
             visible: true,
             sortable: false,
-            filterable: false
+            filterable: false,
           },
           {
             id: '$$spanName',
@@ -140,7 +140,7 @@ export class LogEventsTableComponent implements OnChanges {
             visible: true,
             width: '20%',
             sortable: false,
-            filterable: false
+            filterable: false,
           },
           {
             id: 'spanId',
@@ -148,8 +148,8 @@ export class LogEventsTableComponent implements OnChanges {
             visible: true,
             width: '15%',
             sortable: false,
-            filterable: false
-          }
+            filterable: false,
+          },
         ];
       default:
         return [];

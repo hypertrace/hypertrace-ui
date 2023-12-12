@@ -4,11 +4,12 @@ import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { DEFAULT_COLOR_PALETTE, NavigationService } from '@hypertrace/common';
 import { getMockFlexLayoutProviders } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider } from '@ngneat/spectator/jest';
-import { EMPTY } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { SpanType } from '../../../../graphql/model/schema/span';
 import { WaterfallData } from './waterfall-chart';
 import { WaterfallChartComponent } from './waterfall-chart.component';
 import { WaterfallChartModule } from './waterfall-chart.module';
+import { FileDownloadService, NotificationService } from '@hypertrace/components';
 
 describe('Waterfall Chart component', () => {
   const data: WaterfallData[] = [
@@ -20,7 +21,7 @@ describe('Waterfall Chart component', () => {
       endTime: 1571339873680,
       duration: {
         value: 1,
-        units: 'ms'
+        units: 'ms',
       },
       apiName: 'Span Name 1',
       serviceName: 'Service Name 1',
@@ -32,7 +33,7 @@ describe('Waterfall Chart component', () => {
       responseBody: 'Response Body',
       tags: {},
       errorCount: 0,
-      logEvents: []
+      logEvents: [],
     },
     {
       id: 'second-id',
@@ -42,7 +43,7 @@ describe('Waterfall Chart component', () => {
       endTime: 1571339873680,
       duration: {
         value: 2,
-        units: 'ms'
+        units: 'ms',
       },
       apiName: 'Span Name 2',
       serviceName: 'Service Name 2',
@@ -54,7 +55,7 @@ describe('Waterfall Chart component', () => {
       responseBody: '',
       tags: {},
       errorCount: 0,
-      logEvents: []
+      logEvents: [],
     },
     {
       id: 'third-id',
@@ -64,7 +65,7 @@ describe('Waterfall Chart component', () => {
       endTime: 1571339873680,
       duration: {
         value: 2,
-        units: 'ms'
+        units: 'ms',
       },
       apiName: 'Span Name 3',
       serviceName: 'Service Name 1',
@@ -76,8 +77,8 @@ describe('Waterfall Chart component', () => {
       responseBody: '',
       tags: {},
       errorCount: 0,
-      logEvents: []
-    }
+      logEvents: [],
+    },
   ];
 
   const createHost = createHostFactory<WaterfallChartComponent>({
@@ -87,24 +88,30 @@ describe('Waterfall Chart component', () => {
         provide: DEFAULT_COLOR_PALETTE,
         useValue: {
           name: 'default',
-          colors: []
-        }
+          colors: [],
+        },
       },
       mockProvider(ActivatedRoute, {
-        queryParamMap: EMPTY
+        queryParamMap: EMPTY,
       }),
-      ...getMockFlexLayoutProviders()
+      mockProvider(FileDownloadService, {
+        downloadAsCsv: jest.fn().mockReturnValue(of(undefined)),
+      }),
+      mockProvider(NotificationService, {
+        createInfoToast: jest.fn(),
+      }),
+      ...getMockFlexLayoutProviders(),
     ],
     mocks: [NavigationService],
     declareComponent: false,
-    imports: [WaterfallChartModule, IconLibraryTestingModule]
+    imports: [WaterfallChartModule, IconLibraryTestingModule],
   });
 
   test('renders the chart', fakeAsync(() => {
     const spectator = createHost('<ht-waterfall-chart [data]="data"></ht-waterfall-chart>', {
       hostProps: {
-        data: data
-      }
+        data: data,
+      },
     });
 
     spectator.tick(200);
@@ -124,8 +131,8 @@ describe('Waterfall Chart component', () => {
   test('gets callback when collapsing all', fakeAsync(() => {
     const spectator = createHost('<ht-waterfall-chart [data]="data"></ht-waterfall-chart>', {
       hostProps: {
-        data: data
-      }
+        data: data,
+      },
     });
     spectator.tick();
 
@@ -139,8 +146,8 @@ describe('Waterfall Chart component', () => {
   test('gets callback when expanding all', fakeAsync(() => {
     const spectator = createHost('<ht-waterfall-chart [data]="data"></ht-waterfall-chart>', {
       hostProps: {
-        data: data
-      }
+        data: data,
+      },
     });
     spectator.tick();
 
@@ -154,8 +161,8 @@ describe('Waterfall Chart component', () => {
   test('assign color based on service names', fakeAsync(() => {
     const spectator = createHost('<ht-waterfall-chart [data]="data"></ht-waterfall-chart>', {
       hostProps: {
-        data: data
-      }
+        data: data,
+      },
     });
 
     spectator.tick(200);

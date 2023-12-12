@@ -14,10 +14,10 @@ export class RadarChartTooltipService implements OnDestroy {
 
   public constructor(
     private readonly radarChartAxisService: RadarChartAxisService,
-    private readonly chartTooltipBuilderService: ChartTooltipBuilderService
+    private readonly chartTooltipBuilderService: ChartTooltipBuilderService,
   ) {
     this.tooltipRef = this.chartTooltipBuilderService.constructTooltip<RadarPoint, RadarSeries>(data =>
-      this.convertToDefaultTooltipRenderData(data)
+      this.convertToDefaultTooltipRenderData(data),
     );
   }
 
@@ -29,7 +29,7 @@ export class RadarChartTooltipService implements OnDestroy {
     if (options.tooltipOption.visible) {
       const lookupStrategy = new RadialDataLookupStrategy(
         options.series,
-        Array.from(this.radarChartAxisService.getAxisDataMap(chartSelection).values())
+        Array.from(this.radarChartAxisService.getAxisDataMap(chartSelection).values()),
       );
 
       const plotSelection = chartSelection.select(`.${RadarLayoutStyleClass.Plot}`);
@@ -53,15 +53,20 @@ export class RadarChartTooltipService implements OnDestroy {
   }
 
   private convertToDefaultTooltipRenderData(
-    data: MouseLocationData<RadarPoint, RadarSeries>[]
+    data: MouseLocationData<RadarPoint, RadarSeries>[],
   ): DefaultChartTooltipRenderData {
     return {
       title: '',
-      labeledValues: data.map(datum => ({
-        label: datum.dataPoint.axis,
-        value: datum.dataPoint.value,
-        color: datum.context.color
-      }))
+      groups: [
+        {
+          title: '',
+          labeledValues: data.map(datum => ({
+            label: datum.dataPoint.axis,
+            value: datum.dataPoint.value,
+            color: datum.context.color,
+          })),
+        },
+      ],
     };
   }
 }

@@ -6,9 +6,9 @@ describe('Memoize pipe', () => {
   const createHost = createHostFactory({
     component: Component({
       selector: 'pipe-holder',
-      template: '<ng-content></ng-content>'
+      template: '<ng-content></ng-content>',
     })(class {}), // A bit weird, jest doesn't have support for testing pipes
-    declarations: [MemoizePipe]
+    declarations: [MemoizePipe],
   });
   test('should call the function only once', () => {
     const mockFn = jest.fn(() => 'text');
@@ -19,9 +19,9 @@ describe('Memoize pipe', () => {
     </pipe-holder>`,
       {
         hostProps: {
-          hostFn: mockFn
-        }
-      }
+          hostFn: mockFn,
+        },
+      },
     );
     // Add in a second change detection - an impure pipe would be called again
     spectator.detectChanges();
@@ -40,21 +40,21 @@ describe('Memoize pipe', () => {
         hostProps: {
           hostFn: mockFn,
           arg1: 'foo',
-          arg2: 'alpha'
-        }
-      }
+          arg2: 'alpha',
+        },
+      },
     );
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(spectator.query(byText('foo,alpha'))).toExist();
 
     spectator.setHostInput({
-      arg1: 'bar'
+      arg1: 'bar',
     });
     expect(mockFn).toHaveBeenCalledTimes(2);
     expect(spectator.query(byText('bar,alpha'))).toExist();
 
     spectator.setHostInput({
-      arg2: 'beta'
+      arg2: 'beta',
     });
     expect(mockFn).toHaveBeenCalledTimes(3);
     expect(spectator.query(byText('bar,beta'))).toExist();

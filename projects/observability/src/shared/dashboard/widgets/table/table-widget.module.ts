@@ -6,7 +6,7 @@ import {
   TableControlsModule,
   TableModule,
   TitledContentModule,
-  TooltipModule
+  TooltipModule,
 } from '@hypertrace/components';
 import { WidgetHeaderModel } from '@hypertrace/dashboards';
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
@@ -34,10 +34,10 @@ import { TableWidgetModel } from './table-widget.model';
         TableWidgetControlMultiSelectOptionModel,
         WidgetHeaderModel,
         TableWidgetViewToggleModel,
-        TableWidgetViewModel
+        TableWidgetViewModel,
       ],
       renderers: [TableWidgetRendererComponent],
-      propertyTypes: []
+      propertyTypes: [],
     }),
     CommonModule,
     TableModule,
@@ -47,7 +47,7 @@ import { TableWidgetModel } from './table-widget.model';
     FormattingModule,
     IconModule,
     MemoizeModule,
-    TitledContentModule
-  ]
+    TitledContentModule,
+  ],
 })
 export class TableWidgetModule {}

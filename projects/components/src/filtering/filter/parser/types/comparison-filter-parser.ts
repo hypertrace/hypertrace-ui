@@ -11,7 +11,7 @@ export class ComparisonFilterParser extends AbstractFilterParser<PossibleValuesT
       FilterAttributeType.Number,
       FilterAttributeType.String,
       FilterAttributeType.StringMap,
-      FilterAttributeType.StringArray
+      FilterAttributeType.StringArray,
     ];
   }
 
@@ -23,7 +23,7 @@ export class ComparisonFilterParser extends AbstractFilterParser<PossibleValuesT
       FilterOperator.LessThanOrEqualTo,
       FilterOperator.GreaterThan,
       FilterOperator.GreaterThanOrEqualTo,
-      FilterOperator.Like
+      FilterOperator.Like,
     ];
   }
 

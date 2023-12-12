@@ -9,6 +9,6 @@ import { SheetOverlayComponent } from './sheet-overlay.component';
 @NgModule({
   imports: [CommonModule, ButtonModule, TooltipModule, IconModule, OpenInNewTabModule],
   declarations: [SheetOverlayComponent],
-  exports: [SheetOverlayComponent]
+  exports: [SheetOverlayComponent],
 })
 export class SheetOverlayModule {}

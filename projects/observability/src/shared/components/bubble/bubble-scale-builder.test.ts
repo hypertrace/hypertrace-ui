@@ -19,21 +19,21 @@ describe('Bubble Scale Builder Test', () => {
     {
       x: -1,
       y: 10,
-      r: 5
+      r: 5,
     },
     {
       x: 5,
       y: 2,
-      r: 10
-    }
+      r: 10,
+    },
   ];
 
   const scaledLayout: ScaledLayout = {
     rect: {
       width: 200,
-      height: 500
+      height: 500,
     },
-    scaleFactor: 1.5
+    scaleFactor: 1.5,
   };
 
   beforeEach(() => {

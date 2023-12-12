@@ -5,7 +5,7 @@ export const enum SummaryCardColor {
   Gray = 'gray',
   Purple = 'purple',
   Orange = 'orange',
-  Yellow = 'yellow'
+  Yellow = 'yellow',
 }
 
 export interface SummaryValue {

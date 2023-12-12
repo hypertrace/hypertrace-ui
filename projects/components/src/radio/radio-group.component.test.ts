@@ -12,16 +12,16 @@ describe('Radio component', () => {
   const createHost = createHostFactory({
     component: RadioGroupComponent,
     imports: [TraceRadioModule, RouterTestingModule],
-    declareComponent: false
+    declareComponent: false,
   });
 
   test('should warn when title is not provided', () => {
     spectator = createHost(`<ht-radio-group></ht-radio-group>`, {
       providers: [
         mockProvider(LoggerService, {
-          warn: jest.fn()
-        })
-      ]
+          warn: jest.fn(),
+        }),
+      ],
     });
     expect(spectator.inject(LoggerService).warn).toHaveBeenCalled();
   });
@@ -29,13 +29,13 @@ describe('Radio component', () => {
   test('should not warn when title is provided', () => {
     spectator = createHost(`<ht-radio-group [title]="title"></ht-radio-group>`, {
       hostProps: {
-        title: 'TEST'
+        title: 'TEST',
       },
       providers: [
         mockProvider(LoggerService, {
-          warn: jest.fn()
-        })
-      ]
+          warn: jest.fn(),
+        }),
+      ],
     });
 
     expect(spectator.inject(LoggerService).warn).not.toHaveBeenCalled();
@@ -49,14 +49,14 @@ describe('Radio component', () => {
           {
             label: 'TEST1',
             value: 'test1',
-            description: 'description-1'
+            description: 'description-1',
           },
           {
             label: 'TEST2',
-            value: 'test2'
-          }
-        ]
-      }
+            value: 'test2',
+          },
+        ],
+      },
     });
 
     expect(spectator.queryAll('.radio-button-description').length).toBe(1);
@@ -67,8 +67,8 @@ describe('Radio component', () => {
     spectator = createHost(`<ht-radio-group [title]="title" [disabled]="disabled"></ht-radio-group>`, {
       hostProps: {
         title: 'TEST',
-        disabled: true
-      }
+        disabled: true,
+      },
     });
 
     const disabled: string | null = spectator.query('mat-radio-group')!.getAttribute('ng-reflect-disabled');
@@ -86,15 +86,15 @@ describe('Radio component', () => {
           options: [
             {
               label: 'TEST1',
-              value: 'test1'
+              value: 'test1',
             },
             {
               label: 'TEST2',
-              value: 'test2'
-            }
-          ]
-        }
-      }
+              value: 'test2',
+            },
+          ],
+        },
+      },
     );
 
     const selected = spectator.queryAll('mat-radio-button');
@@ -111,25 +111,25 @@ describe('Radio component', () => {
           disabled: false,
           selected: {
             label: 'TEST2',
-            value: 'test2'
+            value: 'test2',
           },
           options: [
             {
               label: 'TEST1',
-              value: 'test1'
+              value: 'test1',
             },
             {
               label: 'TEST2',
-              value: 'test2'
-            }
-          ]
-        }
-      }
+              value: 'test2',
+            },
+          ],
+        },
+      },
     );
 
     const expected: RadioOption = {
       label: 'TEST1',
-      value: 'test1'
+      value: 'test1',
     };
 
     spectator.click(spectator.query('input')!);

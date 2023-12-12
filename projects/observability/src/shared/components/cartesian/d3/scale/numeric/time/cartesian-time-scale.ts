@@ -8,10 +8,10 @@ import { CartesianNumericScale } from '../cartesian-numeric-scale';
 export class CartesianTimeScale<TData> extends CartesianNumericScale<TData> {
   public d3Implementation!: D3ScaleForType<ScaleType.Time, Numeric>;
   private readonly timeFormatter: DateFormatter = new DateFormatter({
-    mode: DateFormatMode.TimeOnly
+    mode: DateFormatMode.TimeOnly,
   });
   private readonly dateFormatter: DateFormatter = new DateFormatter({
-    mode: DateFormatMode.MonthAndDayOnly
+    mode: DateFormatMode.MonthAndDayOnly,
   });
 
   public transformDomain(value: Numeric): number {

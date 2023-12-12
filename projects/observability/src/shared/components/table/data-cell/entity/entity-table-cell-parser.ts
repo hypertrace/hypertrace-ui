@@ -4,7 +4,7 @@ import { ObservabilityTableCellType } from '../../observability-table-cell-type'
 import { isInactiveEntity, parseEntityFromTableRow } from './entity-table-cell-renderer-util';
 
 @TableCellParser({
-  type: ObservabilityTableCellType.Entity
+  type: ObservabilityTableCellType.Entity,
 })
 export class EntityTableCellParser extends TableCellParserBase<CellData, CellData, string | undefined> {
   public parseValue(cellData: CellData, row: TableRow): CellData {
@@ -16,7 +16,7 @@ export class EntityTableCellParser extends TableCellParserBase<CellData, CellDat
 
     return {
       ...entity,
-      isInactive: isInactiveEntity(row) === true
+      isInactive: isInactiveEntity(row) === true,
     };
   }
 

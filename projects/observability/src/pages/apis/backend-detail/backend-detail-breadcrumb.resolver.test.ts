@@ -10,7 +10,7 @@ import {
   BackendType,
   entityIdKey,
   entityTypeKey,
-  ObservabilityEntityType
+  ObservabilityEntityType,
 } from '../../../shared/graphql/model/schema/entity';
 import { ENTITY_GQL_REQUEST } from '../../../shared/graphql/request/handlers/entities/query/entity/entity-graphql-query-handler.service';
 import { ObservabilityIconType } from '../../../shared/icons/observability-icon-type';
@@ -29,25 +29,27 @@ describe('Backend detail breadcrumb resolver', () => {
             [entityTypeKey]: ObservabilityEntityType.Backend,
             [entityIdKey]: 'test-id',
             name: 'test backend',
-            type: BackendType.Mysql
-          })
-        )
+            type: BackendType.Mysql,
+          }),
+        ),
       }),
       mockProvider(EntityIconLookupService, {
-        forBackendEntity: jest.fn().mockReturnValue(ObservabilityIconType.Mysql)
+        forBackendEntity: jest.fn().mockReturnValue(ObservabilityIconType.Mysql),
       }),
       mockProvider(TimeRangeService, {
-        getTimeRangeAndChanges: jest.fn().mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))))
-      })
+        getTimeRangeAndChanges: jest
+          .fn()
+          .mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)))),
+      }),
     ],
     imports: [
       RouterTestingModule.withRoutes([
         {
           path: 'backend/:id',
-          children: []
-        }
-      ])
-    ]
+          children: [],
+        },
+      ]),
+    ],
   });
 
   beforeEach(() => {
@@ -66,16 +68,16 @@ describe('Backend detail breadcrumb resolver', () => {
           x: {
             label: 'test backend',
             icon: ObservabilityIconType.Mysql,
-            alwaysShowIcon: true
-          }
+            alwaysShowIcon: true,
+          },
         });
 
         expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
           expect.objectContaining({
             requestType: ENTITY_GQL_REQUEST,
             entityType: ObservabilityEntityType.Backend,
-            id: 'test-id'
-          })
+            id: 'test-id',
+          }),
         );
       });
     });

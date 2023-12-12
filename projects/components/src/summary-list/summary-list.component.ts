@@ -30,7 +30,7 @@ import { SummaryItem } from './summary-list-api';
         </ul>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class SummaryListComponent {
   @Input()

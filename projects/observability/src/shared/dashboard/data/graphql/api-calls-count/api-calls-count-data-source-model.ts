@@ -8,12 +8,12 @@ import { ExploreSpecificationBuilder } from '../../../../graphql/request/builder
 import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/handlers/explore/explore-graphql-query-handler.service';
 import {
   EXPLORE_GQL_REQUEST,
-  GraphQlExploreResponse
+  GraphQlExploreResponse,
 } from '../../../../graphql/request/handlers/explore/explore-query';
 import { GraphQlDataSourceModel } from '../graphql-data-source.model';
 
 @Model({
-  type: 'api-calls-count-data-source'
+  type: 'api-calls-count-data-source',
 })
 export class ApiCallsCountDataSourceModel extends GraphQlDataSourceModel<MetricAggregation> {
   public getData(): Observable<MetricAggregation> {
@@ -21,14 +21,14 @@ export class ApiCallsCountDataSourceModel extends GraphQlDataSourceModel<MetricA
       map(data => ({
         value: data,
         health: MetricHealth.NotSpecified,
-        units: ''
-      }))
+        units: '',
+      })),
     );
   }
 
   private readonly numCallsSpec: ExploreSpecification = new ExploreSpecificationBuilder().exploreSpecificationForKey(
     'numCalls',
-    MetricAggregationType.Sum
+    MetricAggregationType.Sum,
   );
 
   private fetchCallCount(): Observable<number> {
@@ -37,10 +37,10 @@ export class ApiCallsCountDataSourceModel extends GraphQlDataSourceModel<MetricA
       context: 'API',
       limit: 1,
       selections: [this.numCallsSpec],
-      timeRange: this.getTimeRangeOrThrow()
+      timeRange: this.getTimeRangeOrThrow(),
     }).pipe(
       map(response => response.results[0]),
-      map(result => result[this.numCallsSpec.resultAlias()]?.value as number)
+      map(result => result[this.numCallsSpec.resultAlias()]?.value as number),
     );
   }
 }

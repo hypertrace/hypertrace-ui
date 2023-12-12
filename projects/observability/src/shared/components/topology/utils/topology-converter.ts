@@ -8,8 +8,9 @@ import {
   TopologyEdgeState,
   TopologyNode,
   TopologyNodeRenderer,
-  TopologyNodeState
+  TopologyNodeState,
 } from '../topology';
+import { TopologyGroupNodeUtil } from './topology-group-node.util';
 
 export class TopologyConverter {
   public convertTopology(
@@ -17,24 +18,31 @@ export class TopologyConverter {
     stateManager: TopologyStateManager,
     nodeRenderer: TopologyNodeRenderer,
     domRenderer: Renderer2,
-    oldTopology?: RenderableTopology<TopologyNode, TopologyEdge>
+    oldTopology?: RenderableTopology<TopologyNode, TopologyEdge>,
+    supportGroupNode: boolean = false,
   ): RenderableTopology<TopologyNode, TopologyEdge> {
     const renderableNodeMap = this.buildRenderableNodeMap(
       nodes,
       stateManager,
       nodeRenderer,
       domRenderer,
-      oldTopology && oldTopology.nodes
+      oldTopology && oldTopology.nodes,
     );
     const uniqueEdges = this.findUniqueEdges(nodes);
 
     return {
       nodes: Array.from(renderableNodeMap.values()),
-      edges: this.convertEdgesToRenderableEdges(uniqueEdges, renderableNodeMap, domRenderer, stateManager),
+      edges: this.convertEdgesToRenderableEdges(
+        uniqueEdges,
+        renderableNodeMap,
+        domRenderer,
+        stateManager,
+        supportGroupNode,
+      ),
       neighborhood: {
         nodes: nodes,
-        edges: uniqueEdges
-      }
+        edges: uniqueEdges,
+      },
     };
   }
 
@@ -43,7 +51,7 @@ export class TopologyConverter {
     stateManager: TopologyStateManager,
     nodeRenderer: TopologyNodeRenderer,
     domRenderer: Renderer2,
-    oldRenderableNodes: RenderableTopologyNode[] = []
+    oldRenderableNodes: RenderableTopologyNode[] = [],
   ): Map<TopologyNode, RenderableTopologyNode> {
     const oldNodeMap = new WeakMap(oldRenderableNodes.map(oldNode => [oldNode.userNode, oldNode]));
     const nodeMap = new Map<TopologyNode, RenderableTopologyNode>();
@@ -56,8 +64,8 @@ export class TopologyConverter {
           stateManager.getNodeState(userNode),
           nodeRenderer,
           domRenderer,
-          oldNodeMap.get(userNode)
-        )
+          oldNodeMap.get(userNode),
+        ),
       );
     });
 
@@ -88,9 +96,18 @@ export class TopologyConverter {
     edges: TopologyEdge[],
     nodeMap: Map<TopologyNode, RenderableTopologyNode>,
     domRenderer: Renderer2,
-    stateManager: TopologyStateManager
+    stateManager: TopologyStateManager,
+    supportGroupNode: boolean = false,
   ): RenderableTopologyEdge[] {
-    return edges.map(edge => {
+    let filteredEdges = edges;
+
+    if (supportGroupNode) {
+      filteredEdges = edges
+        .filter(edge => nodeMap.get(edge.fromNode) !== undefined && nodeMap.get(edge.toNode) !== undefined)
+        .filter(edge => this.handleEdgeFilteringBasedOnGroupNode(edge));
+    }
+
+    return filteredEdges.map(edge => {
       const sourceNode = nodeMap.get(edge.fromNode)!;
       const targetNode = nodeMap.get(edge.toNode)!;
 
@@ -98,12 +115,23 @@ export class TopologyConverter {
     });
   }
 
+  private handleEdgeFilteringBasedOnGroupNode(edge: TopologyEdge): boolean {
+    if (
+      (TopologyGroupNodeUtil.isTopologyGroupNode(edge.fromNode) && edge.fromNode.expanded) ||
+      (TopologyGroupNodeUtil.isTopologyGroupNode(edge.toNode) && edge.toNode.expanded)
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
   private buildNewTopologyNode(
     node: TopologyNode,
     state: TopologyNodeState,
     nodeRenderer: TopologyNodeRenderer,
     domRenderer: Renderer2,
-    oldNode?: RenderableTopologyNode
+    oldNode?: RenderableTopologyNode,
   ): RenderableTopologyNode {
     const renderableNode = {
       incoming: [],
@@ -113,7 +141,7 @@ export class TopologyConverter {
       y: oldNode ? oldNode.y : 0,
       userNode: node,
       renderedData: () => nodeRenderer.getRenderedNodeData(renderableNode),
-      domElementRenderer: domRenderer
+      domElementRenderer: domRenderer,
     };
 
     return renderableNode;
@@ -124,14 +152,14 @@ export class TopologyConverter {
     sourceNode: RenderableTopologyNode,
     targetNode: RenderableTopologyNode,
     state: TopologyEdgeState,
-    domElementRenderer: Renderer2
+    domElementRenderer: Renderer2,
   ): RenderableTopologyEdge {
     const renderableEdge = {
       source: sourceNode,
       target: targetNode,
       userEdge: edge,
       state: state,
-      domElementRenderer: domElementRenderer
+      domElementRenderer: domElementRenderer,
     };
 
     sourceNode.outgoing.push(renderableEdge);

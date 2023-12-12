@@ -1,5 +1,5 @@
 import { ComponentRef, Injector } from '@angular/core';
-import { Color, Dictionary, DynamicComponentService } from '@hypertrace/common';
+import { Color, DynamicComponentService } from '@hypertrace/common';
 import { ContainerElement, EnterElement, select, Selection } from 'd3-selection';
 import { groupBy, isEmpty } from 'lodash-es';
 import { Observable, Subject } from 'rxjs';
@@ -9,7 +9,7 @@ import { Series, Summary } from '../../chart';
 import {
   CartesianIntervalControlComponent,
   CartesianIntervalData,
-  INTERVAL_DATA
+  INTERVAL_DATA,
 } from './cartesian-interval-control.component';
 import { CartesianSummaryComponent, SUMMARIES_DATA } from './cartesian-summary.component';
 import { FILTER_BUTTON_WRAPPER, FilterButtonWrapperComponent } from '@hypertrace/components';
@@ -26,25 +26,54 @@ export class CartesianLegend<TData> {
   public readonly activeSeries$: Observable<Series<TData>[]>;
   private readonly activeSeriesSubject: Subject<Series<TData>[]> = new Subject();
   private readonly initialSeries: Series<TData>[];
-  private readonly groupedSeries: Dictionary<Series<TData>[]>;
+  private readonly legendGroups: LegendGroupData<TData>[];
 
-  private readonly isGrouped: boolean = true;
   private isSelectionModeOn: boolean = false;
   private legendElement?: HTMLDivElement;
   private activeSeries: Series<TData>[];
   private intervalControl?: ComponentRef<unknown>;
   private summaryControl?: ComponentRef<unknown>;
+  private readonly isGroupedSeries: boolean;
+  private readonly hasInterval: boolean;
 
   public constructor(
     private readonly series: Series<TData>[],
     private readonly injector: Injector,
+    private readonly xDataAccessor: (data: TData) => string,
     private readonly intervalData?: CartesianIntervalData,
-    private readonly summaries: Summary[] = []
+    private readonly summaries: Summary[] = [],
   ) {
-    this.isGrouped =
-      this.series.length > 0 &&
-      this.series.every(seriesEntry => !isEmpty(seriesEntry.groupName) && seriesEntry.groupName !== seriesEntry.name);
-    this.groupedSeries = this.isGrouped ? groupBy(this.series, seriesEntry => seriesEntry.groupName) : {};
+    this.isGroupedSeries = this.series.length > 0 && this.series.every(seriesEntry => !!seriesEntry.groupBy?.attribute);
+    this.hasInterval = this.intervalData !== undefined;
+
+    this.legendGroups = [];
+    if (this.isGroupedSeries) {
+      if (this.hasInterval) {
+        // show series for a single group together
+        this.legendGroups = Object.entries(groupBy(this.series, seriesEntry => seriesEntry.groupName)).map(
+          ([title, data]) => ({
+            title: title,
+            data: data.map(d => ({ text: d.name, series: d })),
+          }),
+        );
+      } else {
+        // Convert x values into legend entries
+        this.legendGroups = this.series.map(s => ({
+          title: s.name,
+          data: s.data.map(d => ({
+            text: isEmpty(this.xDataAccessor(d)?.toString()) ? s.name : this.xDataAccessor(d)!.toString(),
+            series: s,
+          })),
+        }));
+      }
+    } else {
+      this.legendGroups = [
+        {
+          title: '',
+          data: this.series.map(s => ({ text: s.name, series: s })),
+        },
+      ];
+    }
 
     this.activeSeries = [...this.series];
     this.initialSeries = [...this.series];
@@ -61,7 +90,7 @@ export class CartesianLegend<TData> {
     this.drawLegendEntries(this.legendElement);
     this.drawReset(this.legendElement);
 
-    if (this.intervalData) {
+    if (this.intervalData?.selectableInterval) {
       this.intervalControl = this.drawIntervalControl(this.legendElement, this.intervalData);
     }
 
@@ -93,41 +122,32 @@ export class CartesianLegend<TData> {
 
   private drawLegendEntries(container: ContainerElement): void {
     const containerSelection = select(container);
-    if (!this.isGrouped) {
-      containerSelection
-        .append('div')
-        .classed('legend-entries', true)
-        .selectAll('.legend-entry')
-        .data(this.series.filter(series => !series.hide))
-        .enter()
-        .each((_, index, elements) => this.drawLegendEntry(elements[index]));
-    } else {
-      containerSelection
-        .selectAll('.legend-entries')
-        .data(Object.values(this.groupedSeries))
-        .enter()
-        .append('div')
-        .classed('legend-entries', true)
-        .each((seriesGroup, index, elements) => this.drawLegendEntriesTitleAndValues(seriesGroup, elements[index]));
-    }
-  }
-
-  private drawLegendEntriesTitleAndValues(seriesGroup: Series<TData>[], element: HTMLDivElement): void {
-    const legendEntriesSelection = select(element);
-    legendEntriesSelection
-      .selectAll('.legend-entries-title')
-      .data([seriesGroup])
+    containerSelection
+      .selectAll('.legend-entries')
+      .data(Object.values(this.legendGroups))
       .enter()
       .append('div')
-      .classed('legend-entries-title', true)
-      .text(group => `${group[0].groupName}:`)
-      .on('click', () => this.updateActiveSeriesGroup(seriesGroup));
+      .classed('legend-entries', true)
+      .each((seriesGroup, index, elements) => this.drawLegendEntriesTitleAndValues(seriesGroup, elements[index]));
+  }
+
+  private drawLegendEntriesTitleAndValues(seriesGroup: LegendGroupData<TData>, element: HTMLDivElement): void {
+    const legendEntriesSelection = select(element);
+
+    if (this.isGroupedSeries) {
+      legendEntriesSelection
+        .selectAll('.legend-entries-title')
+        .data([seriesGroup])
+        .enter()
+        .append('div')
+        .classed('legend-entries-title', true)
+        .text(group => `${group.title}:`)
+        .on('click', group => this.updateActiveSeriesGroup(group.data));
+    }
 
     legendEntriesSelection
-      .append('div')
-      .classed('legend-entry-values', true)
       .selectAll('.legend-entry')
-      .data(seriesGroup)
+      .data(seriesGroup.data)
       .enter()
       .each((_, index, elements) => this.drawLegendEntry(elements[index], true));
   }
@@ -135,7 +155,7 @@ export class CartesianLegend<TData> {
   private drawLegendContainer(
     hostElement: Element,
     position: LegendPosition,
-    hasIntervalSelector: boolean
+    hasIntervalSelector: boolean,
   ): Selection<HTMLDivElement, unknown, null, undefined> {
     /*
      * The interval selector is part of the legend, so if they choose to show the interval selector but no legend, we
@@ -148,59 +168,63 @@ export class CartesianLegend<TData> {
       .append('div')
       .classed(CartesianLegend.CSS_CLASS, true)
       .classed(`position-${legendPosition}`, true)
-      .classed('grouped', this.isGrouped);
+      .classed('grouped', this.isGroupedSeries);
   }
 
   private drawLegendEntry(
     element: EnterElement,
-    showFilters?: boolean
-  ): Selection<HTMLDivElement, Series<TData>, null, undefined> {
-    const legendEntry = select<EnterElement, Series<TData>>(element).append('div').classed('legend-entry', true);
+    showFilters?: boolean,
+  ): Selection<HTMLDivElement, LegendEntryData<TData>, null, undefined> {
+    const legendEntry = select<EnterElement, LegendEntryData<TData>>(element)
+      .append('div')
+      .classed('legend-entry', true);
 
     this.appendLegendSymbol(legendEntry);
     legendEntry
       .append('span')
       .classed('legend-text', true)
       .classed(CartesianLegend.SELECTABLE_CSS_CLASS, this.series.length > 1)
-      .text(series => series.name)
-      .on('click', series => (this.series.length > 1 ? this.updateActiveSeries(series) : undefined));
+      .text(entry => entry.text)
+      .on('click', entry => (this.series.length > 1 ? this.updateActiveSeries(entry.series) : undefined));
 
-    this.drawFilterControl(legendEntry.node()!).location.nativeElement.classList.add('filter');
+    if (this.isGroupedSeries) {
+      this.drawFilterControl(legendEntry.node()!).location.nativeElement.classList.add('filter');
+
+      if (showFilters) {
+        legendEntry
+          .on('mouseover', () => legendEntry.select('.filter').style('visibility', 'visible'))
+          .on('mouseout', () => legendEntry.select('.filter').style('visibility', 'hidden'));
+      }
+    }
 
     this.updateLegendClassesAndStyle();
-
-    if (showFilters) {
-      legendEntry
-        .on('mouseover', () => legendEntry.select('.filter').style('visibility', 'visible'))
-        .on('mouseout', () => legendEntry.select('.filter').style('visibility', 'hidden'));
-    }
 
     return legendEntry;
   }
 
   private updateLegendClassesAndStyle(): void {
     const legendElementSelection = select(this.legendElement!);
-    if (this.isGrouped) {
-      // Legend entries
-      select(this.legendElement!)
-        .selectAll('.legend-entries')
-        .classed(CartesianLegend.ACTIVE_CSS_CLASS, seriesGroup =>
-          this.isThisLegendSeriesGroupActive(seriesGroup as Series<TData>[])
-        );
+    // Legend entries
+    select(this.legendElement!)
+      .selectAll('.legend-entries')
+      .classed(CartesianLegend.ACTIVE_CSS_CLASS, legendGroup =>
+        this.isThisLegendSeriesGroupActive((legendGroup as LegendGroupData<TData>).data.map(d => d.series)),
+      );
 
-      // Legend entry title
-      select(this.legendElement!)
-        .selectAll('.legend-entries-title')
-        .classed(CartesianLegend.ACTIVE_CSS_CLASS, seriesGroup =>
-          this.isThisLegendSeriesGroupActive(seriesGroup as Series<TData>[])
-        );
-    }
+    // Legend entry title
+    select(this.legendElement!)
+      .selectAll('.legend-entries-title')
+      .classed(CartesianLegend.ACTIVE_CSS_CLASS, legendGroup =>
+        this.isThisLegendSeriesGroupActive((legendGroup as LegendGroupData<TData>).data.map(d => d.series)),
+      );
 
     // Legend entry symbol
     legendElementSelection
       .selectAll('.legend-symbol circle')
-      .style('fill', series =>
-        !this.isThisLegendEntryActive(series as Series<TData>) ? Color.Gray3 : (series as Series<TData>).color
+      .style('fill', entry =>
+        !this.isThisLegendEntryActive((entry as LegendEntryData<TData>).series)
+          ? Color.Gray3
+          : (entry as LegendEntryData<TData>).series.color,
       );
 
     // Legend entry value text
@@ -209,11 +233,11 @@ export class CartesianLegend<TData> {
       .classed(CartesianLegend.DEFAULT_CSS_CLASS, !this.isSelectionModeOn)
       .classed(
         CartesianLegend.ACTIVE_CSS_CLASS,
-        series => this.isSelectionModeOn && this.isThisLegendEntryActive(series as Series<TData>)
+        entry => this.isSelectionModeOn && this.isThisLegendEntryActive((entry as LegendEntryData<TData>).series),
       )
       .classed(
         CartesianLegend.INACTIVE_CSS_CLASS,
-        series => this.isSelectionModeOn && !this.isThisLegendEntryActive(series as Series<TData>)
+        entry => this.isSelectionModeOn && !this.isThisLegendEntryActive((entry as LegendEntryData<TData>).series),
       );
 
     // Legend filters
@@ -225,7 +249,7 @@ export class CartesianLegend<TData> {
       .style('visibility', 'hidden');
   }
 
-  private appendLegendSymbol(selection: Selection<HTMLDivElement, Series<TData>, null, undefined>): void {
+  private appendLegendSymbol(selection: Selection<HTMLDivElement, LegendEntryData<TData>, null, undefined>): void {
     selection
       .append('svg')
       .classed('legend-symbol', true)
@@ -233,7 +257,7 @@ export class CartesianLegend<TData> {
       .attr('r', 6)
       .attr('cx', 10)
       .attr('cy', 10)
-      .style('fill', series => series.color);
+      .style('fill', entry => entry.series.color);
   }
 
   private drawFilterControl(container: ContainerElement): ComponentRef<unknown> {
@@ -248,12 +272,12 @@ export class CartesianLegend<TData> {
               targetAttribute: this.activeSeries[0].groupBy?.attribute,
               targetAttributeSubpath: this.activeSeries[0].groupBy?.subpath,
               metadata: this.activeSeries[0].groupBy?.allMetadata,
-              value: container.textContent
-            }
-          }
+              value: container.textContent,
+            },
+          },
         ],
-        parent: this.injector
-      })
+        parent: this.injector,
+      }),
     );
   }
 
@@ -265,11 +289,11 @@ export class CartesianLegend<TData> {
         providers: [
           {
             provide: INTERVAL_DATA,
-            useValue: intervalData
-          }
+            useValue: intervalData,
+          },
         ],
-        parent: this.injector
-      })
+        parent: this.injector,
+      }),
     );
   }
 
@@ -281,11 +305,11 @@ export class CartesianLegend<TData> {
         providers: [
           {
             provide: SUMMARIES_DATA,
-            useValue: summaries
-          }
+            useValue: summaries,
+          },
         ],
-        parent: this.injector
-      })
+        parent: this.injector,
+      }),
     );
   }
 
@@ -297,15 +321,16 @@ export class CartesianLegend<TData> {
     this.activeSeriesSubject.next(this.activeSeries);
   }
 
-  private updateActiveSeriesGroup(seriesGroup: Series<TData>[]): void {
+  private updateActiveSeriesGroup(seriesGroup: LegendEntryData<TData>[]): void {
+    const legendEntrySeries = seriesGroup.map(s => s.series);
     if (!this.isSelectionModeOn) {
-      this.activeSeries = [...seriesGroup];
+      this.activeSeries = [...legendEntrySeries];
       this.isSelectionModeOn = true;
-    } else if (!this.isThisLegendSeriesGroupActive(seriesGroup)) {
-      this.activeSeries = this.activeSeries.filter(series => !seriesGroup.includes(series));
-      this.activeSeries.push(...seriesGroup);
+    } else if (!this.isThisLegendSeriesGroupActive(legendEntrySeries)) {
+      this.activeSeries = this.activeSeries.filter(series => !legendEntrySeries.includes(series));
+      this.activeSeries.push(...seriesGroup.map(s => s.series));
     } else {
-      this.activeSeries = this.activeSeries.filter(series => !seriesGroup.includes(series));
+      this.activeSeries = this.activeSeries.filter(series => !legendEntrySeries.includes(series));
     }
     this.updateLegendClassesAndStyle();
     this.updateResetElementVisibility(!this.isSelectionModeOn);
@@ -333,4 +358,14 @@ export class CartesianLegend<TData> {
   private isThisLegendSeriesGroupActive(seriesGroup: Series<TData>[]): boolean {
     return !this.isSelectionModeOn ? false : seriesGroup.every(series => this.activeSeries.includes(series));
   }
+}
+
+interface LegendGroupData<TData> {
+  title: string;
+  data: LegendEntryData<TData>[];
+}
+
+interface LegendEntryData<TData> {
+  text: string;
+  series: Series<TData>;
 }

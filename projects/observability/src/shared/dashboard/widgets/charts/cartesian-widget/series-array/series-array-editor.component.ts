@@ -22,7 +22,7 @@ import { SERIES_ARRAY_TYPE } from './series-array-type';
         </ht-button>
       </div>
     </div>
-  `
+  `,
 })
 export class SeriesArrayEditorComponent {
   public currentSeries: ModelJson[];
@@ -41,7 +41,7 @@ export class SeriesArrayEditorComponent {
     this.currentSeries.push({
       type: 'series',
       name: `Series ${this.currentSeries.length + 1}`,
-      color: 'orangered'
+      color: 'orangered',
     });
 
     this.propagateChange();

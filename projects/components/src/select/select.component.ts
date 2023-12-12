@@ -8,7 +8,7 @@ import {
   Input,
   OnChanges,
   Output,
-  QueryList
+  QueryList,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconType } from '@hypertrace/assets-library';
@@ -35,8 +35,8 @@ import { SelectSize } from './select-size';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: SelectComponent,
-      multi: true
-    }
+      multi: true,
+    },
   ],
   template: `
     <div
@@ -175,6 +175,7 @@ import { SelectSize } from './select-size';
               (click)="this.onSelectionChange(item)"
               class="select-option"
               [ngClass]="this.getStyleClassesForSelectItem | htMemoize: this.size:item"
+              [htTooltip]="item?.tooltip"
             >
               <ng-container
                 *ngTemplateOutlet="item.selectOptionRenderer?.getTemplateRef() ?? defaultSelectOptionTemplate; context: {$implicit: item}"
@@ -207,7 +208,7 @@ import { SelectSize } from './select-size';
         </ht-popover-content>
       </ht-popover>
     </div>
-  `
+  `,
 })
 export class SelectComponent<V> implements ControlValueAccessor, AfterContentInit, OnChanges {
   @Input()
@@ -286,13 +287,13 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
     this.allOptions$ = this.allOptionsList !== undefined ? queryListAndChanges$(this.allOptionsList) : EMPTY;
     this.filteredOptions$ = this.allOptions$.pipe(
       map(options => options.toArray()),
-      switchMap(reorderedOptions => this.getFilteredOptions(reorderedOptions))
+      switchMap(reorderedOptions => this.getFilteredOptions(reorderedOptions)),
     );
 
     this.selected$ = this.buildObservableOfSelected();
     if (this.controlItems !== undefined) {
       this.topControlItems$ = queryListAndChanges$(this.controlItems).pipe(
-        map(items => items.filter(item => item.position === SelectControlOptionPosition.Top))
+        map(items => items.filter(item => item.position === SelectControlOptionPosition.Top)),
       );
     }
   }
@@ -339,15 +340,15 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
       map(([options, searchText]) =>
         isEmpty(searchText)
           ? options
-          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase()))
-      )
+          : options.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase())),
+      ),
     );
   }
 
   private buildObservableOfSelected(): Observable<SelectOption<V> | undefined> {
     return this.allOptions$.pipe(
       switchMap(items => merge(of(undefined), ...items.map(option => option.optionChange$))),
-      map(() => this.findItem(this.selected))
+      map(() => this.findItem(this.selected)),
     );
   }
 
@@ -422,11 +423,11 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
 export const enum SelectTriggerDisplayMode {
   MenuWithBorder = 'menu-with-border',
   MenuWithBackground = 'menu-with-background',
-  Icon = 'icon'
+  Icon = 'icon',
 }
 
 export const enum SelectSearchMode {
   Disabled = 'disabled', // Search is not available
   CaseInsensitive = 'case-insensitive', // Current available values are filtered in a case insensitive way and an emit is triggered
-  EmitOnly = 'emit-only' // Current available values not filtered, but an emit still triggered
+  EmitOnly = 'emit-only', // Current available values not filtered, but an emit still triggered
 }

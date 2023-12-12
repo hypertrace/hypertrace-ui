@@ -3,7 +3,7 @@ import {
   ExternalNavigationWindowHandling,
   GlobalHeaderHeightProviderService,
   LayoutChangeService,
-  NavigationParamsType
+  NavigationParamsType,
 } from '@hypertrace/common';
 import { OpenInNewTabComponent, POPOVER_DATA } from '@hypertrace/components';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
@@ -17,12 +17,12 @@ import { SheetOverlayComponent } from './sheet-overlay.component';
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'test-sheet-content',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<div class="test-modal-content">Test Component Content</div> `
+  template: `<div class="test-modal-content">Test Component Content</div> `,
 })
 class TestComponent {
   public constructor(
     public readonly injector: Injector,
-    @Optional() @Inject(SHEET_DATA) public readonly data: unknown
+    @Optional() @Inject(SHEET_DATA) public readonly data: unknown,
   ) {}
 }
 
@@ -39,10 +39,10 @@ describe('Sheet Overlay component', () => {
     `,
     providers: [
       mockProvider(GlobalHeaderHeightProviderService, {
-        globalHeaderHeight: '56px'
+        globalHeaderHeight: '56px',
       }),
-      mockProvider(LayoutChangeService)
-    ]
+      mockProvider(LayoutChangeService),
+    ],
   });
 
   const createConfiguredHost = (configOverrides: Partial<SheetOverlayConfig> = {}) =>
@@ -53,8 +53,8 @@ describe('Sheet Overlay component', () => {
           useValue: {
             height: jest.fn(),
             width: jest.fn(),
-            close: jest.fn()
-          }
+            close: jest.fn(),
+          },
         },
         {
           provide: POPOVER_DATA,
@@ -66,26 +66,26 @@ describe('Sheet Overlay component', () => {
               content: TestComponent,
               size: SheetSize.Small,
               closeOnEscapeKey: true,
-              ...configOverrides
+              ...configOverrides,
             },
             injector: Injector.create({
               providers: [
                 {
                   provide: SHEET_DATA,
-                  useValue: configOverrides.data
-                }
+                  useValue: configOverrides.data,
+                },
               ],
               // Normally, this would be a root injector when this is invoked from a service
-              parent: injector
-            })
-          })
-        }
-      ]
+              parent: injector,
+            }),
+          }),
+        },
+      ],
     });
 
   test('should display the title', () => {
     spectator = createConfiguredHost({
-      title: 'expected title'
+      title: 'expected title',
     });
 
     expect(spectator.query('.header')).toHaveText('expected title');
@@ -93,35 +93,35 @@ describe('Sheet Overlay component', () => {
 
   test('uses the requested size for small', () => {
     spectator = createConfiguredHost({
-      size: SheetSize.Small
+      size: SheetSize.Small,
     });
     expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('320px');
   });
 
   test('uses the requested size for medium', () => {
     spectator = createConfiguredHost({
-      size: SheetSize.Medium
+      size: SheetSize.Medium,
     });
     expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('600px');
   });
 
   test('uses the requested size for large', () => {
     spectator = createConfiguredHost({
-      size: SheetSize.Large
+      size: SheetSize.Large,
     });
     expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('840px');
   });
 
   test('uses the requested size for extra large', () => {
     spectator = createConfiguredHost({
-      size: SheetSize.ExtraLarge
+      size: SheetSize.ExtraLarge,
     });
     expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('1280px');
   });
 
   test('uses the requested size for responsive extra large', () => {
     spectator = createConfiguredHost({
-      size: SheetSize.ResponsiveExtraLarge
+      size: SheetSize.ResponsiveExtraLarge,
     });
     expect(spectator.inject(PopoverRef)?.width).toHaveBeenCalledWith('60%');
   });
@@ -150,7 +150,7 @@ describe('Sheet Overlay component', () => {
 
   test('exposes correct data to content', () => {
     spectator = createConfiguredHost({
-      data: 42
+      data: 42,
     });
 
     expect(spectator.query(TestComponent)?.data).toBe(42);
@@ -161,14 +161,14 @@ describe('Sheet Overlay component', () => {
       pageNavParams: {
         navType: NavigationParamsType.External,
         url: '/test',
-        windowHandling: ExternalNavigationWindowHandling.NewWindow
-      }
+        windowHandling: ExternalNavigationWindowHandling.NewWindow,
+      },
     });
 
     expect(spectator.query(OpenInNewTabComponent)?.paramsOrUrl).toEqual({
       navType: NavigationParamsType.External,
       url: '/test',
-      windowHandling: ExternalNavigationWindowHandling.NewWindow
+      windowHandling: ExternalNavigationWindowHandling.NewWindow,
     });
   });
 

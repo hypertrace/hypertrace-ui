@@ -166,9 +166,9 @@
       gap: 12px;
 
       .legend-entries {
-        flex-direction: row;
         display: flex;
-        gap: 20px;
+        flex-flow: row wrap;
+        justify-content: flex-start;
         border: 1px solid $gray-2;
         border-radius: 8px;
         padding: 8px 20px;
@@ -213,6 +213,10 @@
 
     .interval-control {
       padding: 0 8px;
+    }
+
+    ht-cartesian-interval-control {
+      align-self: flex-end;
     }
   }
 }

@@ -34,7 +34,7 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
     </div>
   `,
   styleUrls: ['./gauge.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GaugeComponent implements OnChanges {
   private static readonly GAUGE_RING_WIDTH: number = 15;
@@ -62,7 +62,7 @@ export class GaugeComponent implements OnChanges {
 
   public constructor(
     public readonly elementRef: ElementRef,
-    private readonly domElementMeasurerService: DomElementMeasurerService
+    private readonly domElementMeasurerService: DomElementMeasurerService,
   ) {}
 
   public ngOnChanges(): void {
@@ -86,7 +86,7 @@ export class GaugeComponent implements OnChanges {
       origin: this.buildOrigin(boundingBox.width, radius),
       radius: radius,
       backgroundArc: this.buildBackgroundArc(radius),
-      data: this.buildGaugeData(radius, inputData)
+      data: this.buildGaugeData(radius, inputData),
     };
   }
 
@@ -95,7 +95,7 @@ export class GaugeComponent implements OnChanges {
       innerRadius: radius - GaugeComponent.GAUGE_RING_WIDTH,
       outerRadius: radius,
       startAngle: -Math.PI / 2 - GaugeComponent.EXTRA_ARC_ANGLE,
-      endAngle: Math.PI / 2 + GaugeComponent.EXTRA_ARC_ANGLE
+      endAngle: Math.PI / 2 + GaugeComponent.EXTRA_ARC_ANGLE,
     })!;
   }
 
@@ -106,7 +106,7 @@ export class GaugeComponent implements OnChanges {
 
     return {
       valueArc: this.buildValueArc(radius, inputData),
-      ...inputData
+      ...inputData,
     };
   }
 
@@ -117,7 +117,7 @@ export class GaugeComponent implements OnChanges {
       innerRadius: radius - GaugeComponent.GAUGE_RING_WIDTH,
       outerRadius: radius,
       startAngle: startAngle,
-      endAngle: startAngle + 2 * (inputData.value / inputData.maxValue) * -startAngle
+      endAngle: startAngle + 2 * (inputData.value / inputData.maxValue) * -startAngle,
     })!;
   }
 
@@ -151,21 +151,21 @@ export class GaugeComponent implements OnChanges {
   private buildOrigin(width: number, radius: number): Point {
     return {
       x: width / 2,
-      y: radius
+      y: radius,
     };
   }
 
   private calculateInputData(): GaugeInputData | undefined {
     if (this.value !== undefined && this.maxValue !== undefined && this.maxValue > 0) {
       const currentThreshold = this.thresholds.find(
-        threshold => this.value! >= threshold.start && this.value! <= threshold.end
+        threshold => this.value! >= threshold.start && this.value! <= threshold.end,
       );
 
       return {
         value: this.value,
         maxValue: this.maxValue,
         label: currentThreshold?.label ?? this.defaultLabel ?? '',
-        color: currentThreshold?.color ?? this.defaultColor ?? GaugeComponent.DEFAULT_COLOR
+        color: currentThreshold?.color ?? this.defaultColor ?? GaugeComponent.DEFAULT_COLOR,
       };
     }
   }

@@ -1,5 +1,5 @@
 import { ColorPaletteKey, ColorService, forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
-import { EnumPropertyTypeInstance, ENUM_TYPE, TimeDurationModel } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE, TimeDurationModel, AutoTimeDurationModel } from '@hypertrace/dashboards';
 import {
   BOOLEAN_PROPERTY,
   Model,
@@ -8,7 +8,7 @@ import {
   ModelProperty,
   ModelPropertyType,
   NUMBER_PROPERTY,
-  STRING_PROPERTY
+  STRING_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable, of } from 'rxjs';
@@ -26,81 +26,81 @@ import { MetricSeries, MetricSeriesDataFetcher, SeriesModel } from './series.mod
 
 @Model({
   type: 'cartesian-widget',
-  displayName: 'Cartesian Widget'
+  displayName: 'Cartesian Widget',
 })
 export class CartesianWidgetModel<TInterval> {
   @ModelProperty({
     key: 'title',
     displayName: 'Title',
     type: STRING_PROPERTY.type,
-    required: false
+    required: false,
   })
   public title?: string;
 
   @ModelProperty({
     key: 'series',
     displayName: 'Series',
-    type: SERIES_ARRAY_TYPE.type
+    type: SERIES_ARRAY_TYPE.type,
   })
   public series: SeriesModel<TInterval>[] = [];
 
   @ModelProperty({
     key: 'bands',
-    type: BAND_ARRAY_TYPE.type
+    type: BAND_ARRAY_TYPE.type,
   })
   public bands: BandModel<TInterval>[] = [];
 
   @ModelProperty({
     key: 'show-bands',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public showBands: boolean = false;
 
   @ModelProperty({
     key: 'color-palette',
     displayName: 'Color Palette',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public colorPaletteKey?: ColorPaletteKey;
 
   @ModelProperty({
     key: 'series-from-data',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public seriesFromData?: boolean = false;
 
   @ModelProperty({
     key: 'x-axis',
     displayName: 'X Axis',
-    type: ModelPropertyType.TYPE
+    type: ModelPropertyType.TYPE,
   })
   public xAxis?: CartesianAxisModel;
 
   @ModelProperty({
     key: 'y-axis',
     displayName: 'Y Axis',
-    type: ModelPropertyType.TYPE
+    type: ModelPropertyType.TYPE,
   })
   public yAxis?: CartesianAxisModel;
 
   @ModelProperty({
     key: 'show-x-axis',
     displayName: 'Show X Axis',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public showXAxis: boolean = true;
 
   @ModelProperty({
     key: 'show-y-axis',
     displayName: 'Show Y Axis',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public showYAxis: boolean = false;
 
   @ModelProperty({
     key: 'selectable-interval',
     displayName: 'Selectable Interval',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public selectableInterval: boolean = true;
 
@@ -108,15 +108,15 @@ export class CartesianWidgetModel<TInterval> {
     key: 'default-interval',
     required: false,
     type: {
-      key: ModelPropertyType.TYPE
-    } as ModelModelPropertyTypeInstance
+      key: ModelPropertyType.TYPE,
+    } as ModelModelPropertyTypeInstance,
   })
-  public defaultInterval?: TimeDurationModel;
+  public defaultInterval?: TimeDurationModel | AutoTimeDurationModel;
 
   @ModelProperty({
     key: 'show-summary',
     displayName: 'Show Summary',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public showSummary: boolean = false;
 
@@ -131,9 +131,9 @@ export class CartesianWidgetModel<TInterval> {
         LegendPosition.TopRight,
         LegendPosition.Bottom,
         LegendPosition.Right,
-        LegendPosition.None
-      ]
-    } as EnumPropertyTypeInstance
+        LegendPosition.None,
+      ],
+    } as EnumPropertyTypeInstance,
   })
   public legendPosition: LegendPosition = LegendPosition.TopRight;
 
@@ -141,20 +141,20 @@ export class CartesianWidgetModel<TInterval> {
     key: 'max-series-data-points',
     required: false,
     displayName: 'Maximum Data Points',
-    type: NUMBER_PROPERTY.type
+    type: NUMBER_PROPERTY.type,
   })
   public maxSeriesDataPoints?: number;
 
   @ModelProperty({
     key: 'sync-group-id',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public syncGroupId?: string;
 
   @ModelProperty({
     key: 'selection-handler',
     displayName: 'Selection Handler',
-    type: ModelPropertyType.TYPE
+    type: ModelPropertyType.TYPE,
   })
   public selectionHandler?: InteractionHandler;
 
@@ -171,44 +171,44 @@ export class CartesianWidgetModel<TInterval> {
 
     return forkJoinSafeEmpty({
       series: this.getDecoratedSeriesDataFetchers(),
-      bands: this.getDecoratedBandsDataFetchers()
+      bands: this.getDecoratedBandsDataFetchers(),
     }).pipe(map((decoratedFetchers: DataFetchers<TInterval>) => this.combineDataFetchers(decoratedFetchers)));
   }
 
   private combineDataFetchers(decoratedFetchers: DataFetchers<TInterval>): CartesianDataFetcher<TInterval> {
     return {
       getData: (interval: TimeDuration) =>
-        this.getCombinedData(interval, decoratedFetchers.series, decoratedFetchers.bands)
+        this.getCombinedData(interval, decoratedFetchers.series, decoratedFetchers.bands),
     };
   }
 
   private getCombinedData(
     interval: TimeDuration,
     series: DecoratedSeriesDataFetcher<TInterval>[],
-    bands: DecoratedBandDataFetcher<TInterval>[]
+    bands: DecoratedBandDataFetcher<TInterval>[],
   ): Observable<CartesianResult<TInterval>> {
     return forkJoinSafeEmpty({
       series: this.fetchAllSeries(series, interval),
-      bands: this.fetchAllBands(bands, interval)
+      bands: this.fetchAllBands(bands, interval),
     }).pipe(
       map((result: CombinedResult<TInterval>) => ({
         series: [
           ...result.series.map((s: MetricSeries<TInterval>, index: number) =>
-            this.mapToSeries(series[index].seriesModel, s, index)
+            this.mapToSeries(series[index].seriesModel, s, index),
           ),
           ...result.bands.map((b: MetricBand<TInterval>, index: number) =>
-            this.mapToBaseline(bands[index].bandModel, b)
-          )
+            this.mapToBaseline(bands[index].bandModel, b),
+          ),
         ],
-        bands: result.bands.map((b: MetricBand<TInterval>, index: number) => this.mapToBand(bands[index].bandModel, b))
-      }))
+        bands: result.bands.map((b: MetricBand<TInterval>, index: number) => this.mapToBand(bands[index].bandModel, b)),
+      })),
     );
   }
 
   private mapToSeries(
     model: SeriesModel<TInterval>,
     metricSeries: MetricSeries<TInterval>,
-    index: number
+    index: number,
   ): Series<TInterval> {
     return {
       data: metricSeries.intervals,
@@ -223,7 +223,7 @@ export class CartesianWidgetModel<TInterval> {
       name: model.name,
       type: this.getSeriesVizTypeFromModel(model),
       stacking: model.stacking,
-      hide: model.hide
+      hide: model.hide,
     };
   }
 
@@ -234,7 +234,7 @@ export class CartesianWidgetModel<TInterval> {
       color: model.color,
       name: model.name,
       type: CartesianSeriesVisualizationType.DashedLine,
-      hide: model.hide
+      hide: model.hide,
     };
   }
 
@@ -250,13 +250,13 @@ export class CartesianWidgetModel<TInterval> {
             (interval: MetricTimeseriesBandInterval) =>
               ({
                 ...interval,
-                value: interval.upperBound
-              } as unknown)
+                value: interval.upperBound,
+              } as unknown),
           )
           .map(interval => interval as TInterval),
         type: CartesianSeriesVisualizationType.DashedLine,
         color: model.bandColor,
-        name: model.upperBoundName
+        name: model.upperBoundName,
       },
       lower: {
         data: metricSeries.intervals
@@ -265,27 +265,27 @@ export class CartesianWidgetModel<TInterval> {
             (interval: MetricTimeseriesBandInterval) =>
               ({
                 ...interval,
-                value: interval.lowerBound
-              } as unknown)
+                value: interval.lowerBound,
+              } as unknown),
           )
           .map(interval => interval as TInterval),
         type: CartesianSeriesVisualizationType.DashedLine,
         color: model.bandColor,
-        name: model.lowerBoundName
-      }
+        name: model.lowerBoundName,
+      },
     };
   }
 
   private fetchAllSeries(
     series: DecoratedSeriesDataFetcher<TInterval>[],
-    interval: TimeDuration
+    interval: TimeDuration,
   ): Observable<MetricSeries<TInterval>[]> {
     return forkJoinSafeEmpty(series.map(fetcher => fetcher.getData(interval)));
   }
 
   private fetchAllBands(
     bands: DecoratedBandDataFetcher<TInterval>[],
-    interval: TimeDuration
+    interval: TimeDuration,
   ): Observable<MetricBand<TInterval>[]> {
     return this.showBands ? forkJoinSafeEmpty(bands.map(fetcher => fetcher.getData(interval))) : of([]);
   }
@@ -299,24 +299,24 @@ export class CartesianWidgetModel<TInterval> {
   }
 
   private getDecoratedSeriesDataFetcher(
-    seriesModel: SeriesModel<TInterval>
+    seriesModel: SeriesModel<TInterval>,
   ): Observable<DecoratedSeriesDataFetcher<TInterval>> {
     return seriesModel.getDataFetcher().pipe(
       map(fetcher => ({
         ...fetcher,
-        seriesModel: seriesModel
-      }))
+        seriesModel: seriesModel,
+      })),
     );
   }
 
   private getDecoratedBandsDataFetcher(
-    bandModel: BandModel<TInterval>
+    bandModel: BandModel<TInterval>,
   ): Observable<DecoratedBandDataFetcher<TInterval>> {
     return bandModel.getDataFetcher().pipe(
       map(fetcher => ({
         ...fetcher,
-        bandModel: bandModel
-      }))
+        bandModel: bandModel,
+      })),
     );
   }
 

@@ -25,15 +25,15 @@ describe('Span request detail component', () => {
         buildNavParamsWithFilters: jest.fn().mockReturnValue(
           of({
             navType: NavigationParamsType.InApp,
-            path: 'test-'
-          })
-        )
+            path: 'test-',
+          }),
+        ),
       }),
       mockProvider(ActivatedRoute),
       MockProvider(MetadataService, {
-        getAllAttributes: jest.fn().mockReturnValue(of([]))
-      })
-    ]
+        getAllAttributes: jest.fn().mockReturnValue(of([])),
+      }),
+    ],
   });
 
   test('should display headers and body title', () => {
@@ -51,8 +51,8 @@ describe('Span request detail component', () => {
   test('should display header records', () => {
     spectator = createHost(`<ht-span-request-detail [requestHeaders]="requestHeaders"></ht-span-request-detail>`, {
       hostProps: {
-        requestHeaders: { header1: 'value1', header2: 'value2' }
-      }
+        requestHeaders: { header1: 'value1', header2: 'value2' },
+      },
     });
 
     const listViewElement = spectator.query(ListViewComponent);
@@ -62,8 +62,8 @@ describe('Span request detail component', () => {
   test('should display body', () => {
     spectator = createHost(`<ht-span-request-detail [requestBody]="requestBody"></ht-span-request-detail>`, {
       hostProps: {
-        requestBody: '[{"data": 5000}]'
-      }
+        requestBody: '[{"data": 5000}]',
+      },
     });
 
     const toggleButtonElement = spectator.query(ToggleButtonGroupComponent);

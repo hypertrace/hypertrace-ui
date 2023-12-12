@@ -27,17 +27,17 @@ describe('String property editor component', () => {
     mockApi = {
       value: 'initial',
       label: 'test label',
-      valueChange: jest.fn()
+      valueChange: jest.fn(),
     };
     TestBed.configureTestingModule({
       imports: [DashboardPropertyEditorsModule, NoopAnimationsModule],
       providers: [
         {
           provide: EDITOR_API,
-          useValue: mockApi
+          useValue: mockApi,
         },
-        mockProvider(NavigationService)
-      ]
+        mockProvider(NavigationService),
+      ],
     });
 
     // Render directly (no host) because editors are instantiated dynamically

@@ -17,7 +17,7 @@ describe('Table widget column model', () => {
     const model = buildModel({
       value: specBuilder.attributeSpecificationForKey('name'),
       title: 'Name column',
-      display: CoreTableCellRendererType.Text
+      display: CoreTableCellRendererType.Text,
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -25,8 +25,8 @@ describe('Table widget column model', () => {
         x: expect.objectContaining({
           id: 'name',
           title: 'Name column',
-          display: CoreTableCellRendererType.Text
-        })
+          display: CoreTableCellRendererType.Text,
+        }),
       });
     });
   }));

@@ -21,7 +21,7 @@ describe('Metadata Service', () => {
       allowedAggregations: [],
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
-      groupable: true
+      groupable: true,
     },
     {
       name: 'attr2',
@@ -32,7 +32,7 @@ describe('Metadata Service', () => {
       allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Sum],
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
-      groupable: false
+      groupable: false,
     },
     {
       name: 'attr3',
@@ -43,7 +43,7 @@ describe('Metadata Service', () => {
       allowedAggregations: [],
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
-      groupable: false
+      groupable: false,
     },
     {
       name: 'attr4',
@@ -54,21 +54,21 @@ describe('Metadata Service', () => {
       allowedAggregations: [],
       onlySupportsAggregation: false,
       onlySupportsGrouping: false,
-      groupable: false
-    }
+      groupable: false,
+    },
   ];
   const specBuilder = new SpecificationBuilder();
   const createService = createServiceFactory({
     service: MetadataService,
     providers: [
       mockProvider(GraphQlRequestService, {
-        query: jest.fn().mockReturnValue(of(testAttributes))
+        query: jest.fn().mockReturnValue(of(testAttributes)),
       }),
       mockProvider(FilterBuilderLookupService, {
         isBuildableType: (type: AttributeMetadataType) =>
-          type === AttributeMetadataType.String || type === AttributeMetadataType.Long
-      })
-    ]
+          type === AttributeMetadataType.String || type === AttributeMetadataType.Long,
+      }),
+    ],
   });
 
   const expectSingleValueObservable = <T>(observable: Observable<T>, value: T): void => {
@@ -88,9 +88,9 @@ describe('Metadata Service', () => {
     const spectator = createService({
       providers: [
         mockProvider(GraphQlRequestService, {
-          query: jest.fn().mockReturnValue(throwError('error'))
-        })
-      ]
+          query: jest.fn().mockReturnValue(throwError('error')),
+        }),
+      ],
     });
     expectSingleValueObservable(spectator.service.getFilterAttributes('Scope1'), []);
   });
@@ -99,7 +99,7 @@ describe('Metadata Service', () => {
     const spectator = createService();
     expectSingleValueObservable(
       spectator.service.getSpecificationDisplayName('Scope1', specBuilder.attributeSpecificationForKey('attr1')),
-      'Attribute 1'
+      'Attribute 1',
     );
   });
 
@@ -108,17 +108,17 @@ describe('Metadata Service', () => {
     expectSingleValueObservable(
       spectator.service.getSpecificationDisplayName('Scope1', {
         ...specBuilder.attributeSpecificationForKey('attr1'),
-        aggregation: MetricAggregationType.Max
+        aggregation: MetricAggregationType.Max,
       } as Specification),
-      'Max. Attribute 1'
+      'Max Attribute 1',
     );
 
     expectSingleValueObservable(
       spectator.service.getSpecificationDisplayName('Scope1', {
         ...specBuilder.attributeSpecificationForKey('attr1'),
-        aggregation: MetricAggregationType.AvgrateMinute
+        aggregation: MetricAggregationType.AvgrateMinute,
       } as Specification),
-      'Attribute 1 Rate (min.)'
+      'Attribute 1 Rate (min)',
     );
   });
 
@@ -126,7 +126,7 @@ describe('Metadata Service', () => {
     const spectator = createService();
     expectSingleValueObservable(
       spectator.service.getSpecificationDisplayName('Scope1', specBuilder.attributeSpecificationForKey('attr_fake')),
-      'attr_fake'
+      'attr_fake',
     );
   });
 
@@ -138,8 +138,8 @@ describe('Metadata Service', () => {
     expectSingleValueObservable(spectator.service.getSelectionAttributes(SPAN_SCOPE), [
       expect.objectContaining({
         name: 'attr2',
-        scope: SPAN_SCOPE
-      })
+        scope: SPAN_SCOPE,
+      }),
     ]);
   });
 
@@ -150,8 +150,8 @@ describe('Metadata Service', () => {
     expectSingleValueObservable(spectator.service.getGroupableAttributes('Scope1'), [
       expect.objectContaining({
         name: 'attr1',
-        scope: 'Scope1'
-      })
+        scope: 'Scope1',
+      }),
     ]);
     expectSingleValueObservable(spectator.service.getGroupableAttributes(SPAN_SCOPE), []);
   });
@@ -161,7 +161,7 @@ describe('Metadata Service', () => {
 
     expectSingleValueObservable(spectator.service.getFilterAttributes(SPAN_SCOPE), [
       testAttributes[1],
-      testAttributes[2]
+      testAttributes[2],
     ]);
   });
 });

@@ -9,35 +9,35 @@ describe('Detail Sheet Interaction Handler Model', () => {
   const buildModel = createModelFactory({
     providers: [
       mockProvider(DetailSheetInteractionHandlerService, {
-        showSheet: jest.fn()
+        showSheet: jest.fn(),
       }),
       {
         provide: MODEL_API,
         useValue: {
           createChild: jest.fn(),
-          setVariable: jest.fn()
-        }
-      }
-    ]
+          setVariable: jest.fn(),
+        },
+      },
+    ],
   });
 
   test('should work with default values', () => {
     const modelJson = {
       type: 'text-widget',
-      text: '${source}'
+      text: '${source}',
     };
 
     const mockModelObject = {};
     const modelApi = {
       createChild: jest.fn().mockReturnValue(mockModelObject),
-      setVariable: jest.fn()
+      setVariable: jest.fn(),
     };
 
     const spectator = buildModel(DetailSheetInteractionHandlerModel, {
       api: modelApi,
       properties: {
-        detailTemplate: modelJson
-      }
+        detailTemplate: modelJson,
+      },
     });
 
     const data = 'Test';
@@ -49,20 +49,20 @@ describe('Detail Sheet Interaction Handler Model', () => {
       mockModelObject,
       SheetSize.Large,
       undefined,
-      true
+      true,
     );
   });
 
   test('should work with custom values', () => {
     const modelJson = {
       type: 'text-widget',
-      text: '${source.value}'
+      text: '${source.value}',
     };
 
     const mockModelObject = {};
     const modelApi = {
       createChild: jest.fn().mockReturnValue(mockModelObject),
-      setVariable: jest.fn()
+      setVariable: jest.fn(),
     };
 
     const spectator = buildModel(DetailSheetInteractionHandlerModel, {
@@ -71,13 +71,13 @@ describe('Detail Sheet Interaction Handler Model', () => {
         detailTemplate: modelJson,
         injectSourceAs: 'record',
         sheetSize: SheetSize.Medium,
-        titlePropertyPath: 'type'
-      }
+        titlePropertyPath: 'type',
+      },
     });
 
     const data = {
       value: 'Test',
-      type: 'Test Type'
+      type: 'Test Type',
     };
     spectator.model.execute(data);
 
@@ -87,7 +87,7 @@ describe('Detail Sheet Interaction Handler Model', () => {
       mockModelObject,
       SheetSize.Medium,
       'Test Type',
-      true
+      true,
     );
   });
 });

@@ -26,7 +26,7 @@ import { map } from 'rxjs/operators';
         </ht-popover-content>
       </ht-popover>
     </ht-event-blocker>
-  `
+  `,
 })
 export class MenuDropdownComponent implements AfterContentInit {
   @Input()

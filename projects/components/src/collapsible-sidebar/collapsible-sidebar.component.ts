@@ -30,7 +30,7 @@ import { IconSize } from '../icon/icon-size';
         ></ht-icon>
       </div>
     </div>
-  `
+  `,
 })
 export class CollapsibleSidebarComponent implements OnChanges {
   @Input()

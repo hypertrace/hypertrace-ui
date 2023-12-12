@@ -17,7 +17,7 @@ export abstract class EntityBreadcrumbResolver<T extends EntityBreadcrumb = Enti
   public constructor(
     protected readonly timeRangeService: TimeRangeService,
     protected readonly graphQlQueryService: GraphQlRequestService,
-    protected readonly iconLookupService: EntityIconLookupService
+    protected readonly iconLookupService: EntityIconLookupService,
   ) {}
 
   public abstract resolve(route: ActivatedRouteSnapshot): Promise<Observable<Breadcrumb>>;
@@ -41,23 +41,23 @@ export abstract class EntityBreadcrumbResolver<T extends EntityBreadcrumb = Enti
             entityType: entityType,
             id: id,
             properties: [...this.getAttributeSpecification(), ...this.getAdditionalSpecifications()],
-            timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime)
+            timeRange: new GraphQlTimeRange(timeRange.startTime, timeRange.endTime),
           },
-          this.getRequestOptions()
-        )
+          this.getRequestOptions(),
+        ),
       ),
       map(entity => ({
         ...entity,
         label: entity.name as string,
-        icon: this.iconLookupService.forEntity(entity)
+        icon: this.iconLookupService.forEntity(entity),
       })),
-      take(1)
+      take(1),
     );
   }
 
   private getAttributeSpecification(): Specification[] {
     return this.getAttributeKeys().map(attributeKey =>
-      this.specificationBuilder.attributeSpecificationForKey(attributeKey)
+      this.specificationBuilder.attributeSpecificationForKey(attributeKey),
     );
   }
 }

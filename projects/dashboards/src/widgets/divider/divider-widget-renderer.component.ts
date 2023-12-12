@@ -13,7 +13,7 @@ import { DividerWidgetModel } from './divider-widget.model';
     <div class="divider-widget">
       <ht-divider class="divider"></ht-divider>
     </div>
-  `
+  `,
 })
 export class DividerWidgetRendererComponent extends WidgetRenderer<DividerWidgetModel> {
   protected fetchData(): Observable<never> {

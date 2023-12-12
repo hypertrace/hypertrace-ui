@@ -11,5 +11,5 @@ export const GRAPHQL_DATA_SOURCE_HANDLER_PROVIDERS = [
   TraceGraphQlQueryHandlerService,
   SpansGraphQlQueryHandlerService,
   SpanGraphQlQueryHandlerService,
-  MetadataGraphQlQueryHandlerService
+  MetadataGraphQlQueryHandlerService,
 ];

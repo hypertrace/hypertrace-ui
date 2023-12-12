@@ -6,16 +6,30 @@ import { Observable } from 'rxjs';
   selector: 'ht-chart-tooltip',
   styleUrls: ['./default-chart-tooltip.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './default-chart-tooltip.component.html'
+  templateUrl: './default-chart-tooltip.component.html',
 })
 export class DefaultChartTooltipComponent {
   public constructor(
     @Inject(POPOVER_DATA)
-    public readonly data$: Observable<DefaultChartTooltipRenderData>
+    public readonly data$: Observable<DefaultChartTooltipRenderData>,
   ) {}
 }
 
 export interface DefaultChartTooltipRenderData {
   title: string;
-  labeledValues: { label: string; value: number | string; color: string; units?: string }[];
+  labelHeader?: string;
+  valueHeader?: string;
+  groups: DefaultChartTooltipGroup[];
+}
+
+export interface DefaultChartTooltipGroup {
+  title: string;
+  labeledValues: DefaultChartTooltipLabeledValues[];
+}
+
+export interface DefaultChartTooltipLabeledValues {
+  label: string;
+  value: number | string;
+  color: string;
+  units?: string;
 }

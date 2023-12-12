@@ -61,10 +61,12 @@ export const enum IconType {
   External = 'svg:external',
   ExternalApi = 'svg:external-api',
   Eye = 'svg:eye',
+  EyeVisibilityOff = 'svg:eye-visibility-off',
   Favorite = 'favorite_border',
   FileCode = 'svg:file-code',
   Filter = 'svg:filter',
   First = 'first_page',
+  Folder = 'svg:folder',
   Go = 'svg:go',
   Helm = 'svg:helm',
   Home = 'home',
@@ -142,5 +144,5 @@ export const enum IconType {
   Warning = 'svg:warning',
   VirtualMachine = 'svg:virtual-machine',
   Yaml = 'svg:yaml',
-  ZoomToFit = 'zoom_out_map'
+  ZoomToFit = 'zoom_out_map',
 }

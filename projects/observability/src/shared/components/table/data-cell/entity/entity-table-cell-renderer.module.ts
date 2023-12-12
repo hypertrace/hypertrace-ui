@@ -6,6 +6,6 @@ import { EntityTableCellRendererComponent } from './entity-table-cell-renderer.c
 @NgModule({
   imports: [CommonModule, EntityRendererModule],
   declarations: [EntityTableCellRendererComponent],
-  exports: [EntityTableCellRendererComponent]
+  exports: [EntityTableCellRendererComponent],
 })
 export class EntityTableCellRendererModule {}

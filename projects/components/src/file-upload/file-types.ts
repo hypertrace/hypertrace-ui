@@ -1,6 +1,6 @@
 export enum SupportedFileType {
   Json = 'json',
-  Yaml = 'yaml'
+  Yaml = 'yaml',
 }
 
 export const SUPPORTED_FILE_TYPE_METADATA_MAP: Map<SupportedFileType, SupportedFileTypeMetaData> = new Map([
@@ -8,16 +8,16 @@ export const SUPPORTED_FILE_TYPE_METADATA_MAP: Map<SupportedFileType, SupportedF
     SupportedFileType.Json,
     {
       extension: ['.json'],
-      mimeTypes: ['application/json']
-    }
+      mimeTypes: ['application/json'],
+    },
   ],
   [
     SupportedFileType.Yaml,
     {
       extension: ['.yaml', '.yml'],
-      mimeTypes: ['application/x-yaml', 'text/yaml', 'text/x-yaml', 'application/yaml']
-    }
-  ]
+      mimeTypes: ['application/x-yaml', 'text/yaml', 'text/x-yaml', 'application/yaml'],
+    },
+  ],
 ]);
 
 // eslint-disable-next-line @typescript-eslint/no-namespace

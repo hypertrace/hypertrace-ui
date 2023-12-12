@@ -4,7 +4,7 @@ describe('TableWidgetRowInteractionModel applies to current row depth', () => {
   test('works for default properties', () => {
     const model = new TableWidgetRowInteractionModel();
     model.handler = {
-      execute: jest.fn()
+      execute: jest.fn(),
     };
 
     expect(model.appliesToCurrentRowDepth(0)).toBeTruthy();
@@ -15,7 +15,7 @@ describe('TableWidgetRowInteractionModel applies to current row depth', () => {
   test('works for higher row depth', () => {
     const model = new TableWidgetRowInteractionModel();
     model.handler = {
-      execute: jest.fn()
+      execute: jest.fn(),
     };
     model.rowDepth = 2;
 
@@ -28,7 +28,7 @@ describe('TableWidgetRowInteractionModel applies to current row depth', () => {
   test('works correctly when applyToChildRows is false', () => {
     const model = new TableWidgetRowInteractionModel();
     model.handler = {
-      execute: jest.fn()
+      execute: jest.fn(),
     };
     model.rowDepth = 2;
     model.applyToChildRows = false;

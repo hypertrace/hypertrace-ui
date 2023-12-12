@@ -14,9 +14,9 @@ import { TraceStatusTableCellRendererComponent } from './data-cell/trace-status/
     TableModule.withCellRenderers([MetricTableCellRendererComponent, TraceStatusTableCellRendererComponent]),
     IconModule,
     TooltipModule,
-    FormattingModule
+    FormattingModule,
   ],
   declarations: [MetricTableCellRendererComponent, TraceStatusTableCellRendererComponent],
-  exports: [MetricTableCellRendererComponent, TraceStatusTableCellRendererComponent]
+  exports: [MetricTableCellRendererComponent, TraceStatusTableCellRendererComponent],
 })
 export class TracingTableCellRendererModule {}

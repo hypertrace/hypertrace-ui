@@ -7,9 +7,9 @@ import { ObserveSystemRadarDataSourceModel } from './observe-system-radar-data-s
 @NgModule({
   imports: [
     DashboardCoreModule.with({
-      models: [ObserveSystemRadarDataSourceModel]
+      models: [ObserveSystemRadarDataSourceModel],
     }),
-    GraphQlModule.withHandlerProviders([ExploreGraphQlQueryHandlerService])
-  ]
+    GraphQlModule.withHandlerProviders([ExploreGraphQlQueryHandlerService]),
+  ],
 })
 export class ObserveSystemRadarDataSourceModule {}

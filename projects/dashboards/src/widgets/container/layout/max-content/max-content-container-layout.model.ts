@@ -2,20 +2,20 @@ import { Model, ModelProperty, NUMBER_PROPERTY } from '@hypertrace/hyperdash';
 import { ContainerLayout, ContainerLayoutData } from '../container-layout';
 
 @Model({
-  type: 'max-content-container-layout'
+  type: 'max-content-container-layout',
 })
 export class MaxContentContainerLayoutModel extends ContainerLayout {
   @ModelProperty({
     key: 'columns',
     type: NUMBER_PROPERTY.type,
-    required: false
+    required: false,
   })
   public numberColumns?: number;
 
   @ModelProperty({
     key: 'rows',
     type: NUMBER_PROPERTY.type,
-    required: false
+    required: false,
   })
   public numberRows?: number;
 
@@ -27,7 +27,7 @@ export class MaxContentContainerLayoutModel extends ContainerLayout {
       columns: `repeat(${gridDimension[1]}, max-content))`,
       gap: `${this.gridGap}`,
       enableStyle: this.enableStyle,
-      children: children.map(child => ({ model: child, areaSpan: '' }))
+      children: children.map(child => ({ model: child, areaSpan: '' })),
     };
   }
 

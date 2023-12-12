@@ -5,7 +5,7 @@ import {
   TABLE_COLUMN_CONFIG,
   TABLE_COLUMN_INDEX,
   TABLE_DATA_PARSER,
-  TABLE_ROW_DATA
+  TABLE_ROW_DATA,
 } from './table-cell-injection';
 import { TableCellParserBase } from './table-cell-parser-base';
 import { CoreTableCellParserType } from './types/core-table-cell-parser-type';
@@ -22,6 +22,7 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData, TColu
   private _value!: TValue;
   private _units!: string;
   private _tooltip!: string;
+
   public readonly clickable: boolean = false;
   public readonly isFirstColumn: boolean = false;
   protected readonly columnConfigOptions: TColumnConfigOptions | undefined;
@@ -30,7 +31,7 @@ export abstract class TableCellRendererBase<TCellData, TValue = TCellData, TColu
     @Inject(TABLE_COLUMN_INDEX) private readonly index: number,
     @Inject(TABLE_DATA_PARSER) private readonly parser: TableCellParserBase<TCellData, TValue, unknown>,
     @Inject(TABLE_CELL_DATA) private readonly cellData: TCellData,
-    @Inject(TABLE_ROW_DATA) private readonly rowData: TableRow
+    @Inject(TABLE_ROW_DATA) private readonly rowData: TableRow,
   ) {
     this.clickable = this.columnConfig.onClick !== undefined;
     this.isFirstColumn = this.index === 0;

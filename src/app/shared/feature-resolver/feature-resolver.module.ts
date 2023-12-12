@@ -6,8 +6,8 @@ import { FeatureResolverService } from './feature-resolver.service';
   providers: [
     {
       provide: FeatureStateResolver,
-      useClass: FeatureResolverService
-    }
-  ]
+      useClass: FeatureResolverService,
+    },
+  ],
 })
 export class FeatureResolverModule {}

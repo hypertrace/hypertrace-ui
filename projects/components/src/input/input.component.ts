@@ -5,7 +5,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  Output
+  Output,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NumberCoercer, TypedSimpleChanges } from '@hypertrace/common';
@@ -19,8 +19,8 @@ import { InputAppearance } from './input-appearance';
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: InputComponent
-    }
+      useExisting: InputComponent,
+    },
   ],
   template: `
     <mat-form-field [ngClass]="this.getStyleClasses()" floatLabel="never">
@@ -30,14 +30,14 @@ import { InputAppearance } from './input-appearance';
         [min]="this.min"
         [max]="this.max"
         [required]="this.required"
-        [disabled]="this.disabled"
+        [disabled]="this.isDisabled"
         [placeholder]="this.placeholderValue"
         [attr.aria-label]="this.ariaLabel || 'input'"
         [ngModel]="this.value"
         (ngModelChange)="this.onValueChange($event)"
       />
     </mat-form-field>
-  `
+  `,
 })
 export class InputComponent<T extends string | number> implements ControlValueAccessor, OnChanges {
   @Input()
@@ -47,7 +47,7 @@ export class InputComponent<T extends string | number> implements ControlValueAc
   public value?: T;
 
   @Input()
-  public type?: string;
+  public type: string = 'text';
 
   @Input()
   public appearance: InputAppearance = InputAppearance.Underline;
@@ -56,7 +56,9 @@ export class InputComponent<T extends string | number> implements ControlValueAc
   public required: boolean = false;
 
   @Input()
-  public disabled: boolean = false;
+  public set disabled(disabled: boolean) {
+    this.isDisabled = disabled;
+  }
 
   @Input()
   public min?: number | undefined;
@@ -73,6 +75,8 @@ export class InputComponent<T extends string | number> implements ControlValueAc
   private readonly numberCoercer: NumberCoercer = new NumberCoercer();
 
   public placeholderValue: string = '';
+
+  protected isDisabled: boolean = false;
 
   public constructor(private readonly cdr: ChangeDetectorRef) {}
 
@@ -93,12 +97,11 @@ export class InputComponent<T extends string | number> implements ControlValueAc
   }
 
   public getStyleClasses(): string[] {
-    return [this.appearance, this.disabled ? 'disabled' : ''];
+    return [this.appearance, this.isDisabled ? 'disabled' : ''];
   }
 
   public writeValue(value?: string): void {
-    const coercedValue = this.coerceValueIfNeeded(value);
-    this.value = coercedValue;
+    this.value = this.coerceValueIfNeeded(value);
     this.cdr.markForCheck();
   }
 
@@ -111,7 +114,8 @@ export class InputComponent<T extends string | number> implements ControlValueAc
   }
 
   public setDisabledState(isDisabled?: boolean): void {
-    this.disabled = isDisabled ?? false;
+    this.isDisabled = isDisabled ?? false;
+    this.cdr.markForCheck();
   }
 
   private coerceValueIfNeeded(value?: string): T | undefined {

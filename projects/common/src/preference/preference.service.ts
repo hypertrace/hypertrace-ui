@@ -11,11 +11,11 @@ import { NumberCoercer } from '../utilities/coercers/number-coercer';
 export const enum StorageType {
   Local = 'local',
   Session = 'session',
-  InMemory = 'in-memory'
+  InMemory = 'in-memory',
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PreferenceService {
   private static readonly DEFAULT_STORAGE_TYPE: StorageType = StorageType.Local;
@@ -29,7 +29,7 @@ export class PreferenceService {
   public constructor(
     private readonly localStorage: LocalStorage,
     private readonly sessionStorage: SessionStorage,
-    private readonly inMemoryStorage: InMemoryStorage
+    private readonly inMemoryStorage: InMemoryStorage,
   ) {}
 
   /**
@@ -41,7 +41,7 @@ export class PreferenceService {
   public get<T extends PreferenceValue>(
     key: PreferenceKey,
     defaultValue?: T,
-    type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE
+    type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE,
   ): Observable<T> {
     return this.preferenceStorage(type)
       .watch(this.asStorageKey(key))
@@ -50,8 +50,8 @@ export class PreferenceService {
         switchMap(value =>
           value === undefined
             ? throwError(Error(`No value found or default provided for preferenceKey: ${key}`))
-            : of(value)
-        )
+            : of(value),
+        ),
       );
   }
 
@@ -61,7 +61,7 @@ export class PreferenceService {
   public getOnce<T extends PreferenceValue>(
     key: PreferenceKey,
     defaultValue?: T,
-    type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE
+    type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE,
   ): T {
     const storedValue = this.preferenceStorage(type).get(this.asStorageKey(key));
     const value = this.fromStorageValue<T>(storedValue) ?? defaultValue;
@@ -76,10 +76,14 @@ export class PreferenceService {
   public set(
     key: PreferenceKey,
     value: PreferenceValue,
-    type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE
+    type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE,
   ): void {
     const val = this.asStorageValue(value);
     this.preferenceStorage(type).set(this.asStorageKey(key), val);
+  }
+
+  public delete(key: PreferenceKey, type: StorageType = PreferenceService.DEFAULT_STORAGE_TYPE): void {
+    this.preferenceStorage(type).delete(this.asStorageKey(key));
   }
 
   private asStorageKey(key: PreferenceKey): PreferenceStorageKey {

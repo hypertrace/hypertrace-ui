@@ -4,7 +4,7 @@ import {
   GraphQlArgument,
   GraphQlRequestCacheability,
   GraphQlRequestOptions,
-  GraphQlSelection
+  GraphQlSelection,
 } from '@hypertrace/graphql-client';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -27,7 +27,7 @@ export class EntitiesGraphqlQueryBuilderService {
   public constructor(
     private readonly metadataService: MetadataService,
     private readonly globalGraphQlFilterService: GlobalGraphQlFilterService,
-    @Inject(ENTITY_METADATA) private readonly entityMetadata: EntityMetadataMap
+    @Inject(ENTITY_METADATA) private readonly entityMetadata: EntityMetadataMap,
   ) {}
 
   public buildRequestArguments(request: GraphQlEntitiesRequest): GraphQlArgument[] {
@@ -38,7 +38,7 @@ export class EntitiesGraphqlQueryBuilderService {
       ...this.argBuilder.forOffset(request.offset),
       ...this.argBuilder.forOrderBy(request.sort),
       ...this.buildFilters(request),
-      ...this.argBuilder.forIncludeInactive(request.includeInactive)
+      ...this.argBuilder.forIncludeInactive(request.includeInactive),
     ];
   }
 
@@ -46,7 +46,7 @@ export class EntitiesGraphqlQueryBuilderService {
     return this.argBuilder.forFilters(
       request.ignoreGlobalFilters ?? false
         ? request.filters ?? []
-        : this.globalGraphQlFilterService.mergeGlobalFilters(request.entityType, request.filters)
+        : this.globalGraphQlFilterService.mergeGlobalFilters(request.entityType, request.filters),
     );
   }
 
@@ -58,12 +58,12 @@ export class EntitiesGraphqlQueryBuilderService {
     const typedResponse = response as EntitiesServerResponse;
 
     return forkJoinSafeEmpty(
-      typedResponse.results.map(entityResult => this.normalizeEntity(entityResult, request))
+      typedResponse.results.map(entityResult => this.normalizeEntity(entityResult, request)),
     ).pipe(
       map(results => ({
         total: typedResponse.total,
-        results: results
-      }))
+        results: results,
+      })),
     );
   }
 
@@ -74,7 +74,7 @@ export class EntitiesGraphqlQueryBuilderService {
         map(mappedResult => {
           const entity: Entity = {
             [entityIdKey]: rawResult.entityId as string,
-            [entityTypeKey]: request.entityType
+            [entityTypeKey]: request.entityType,
           };
 
           mappedResult.forEach((data, specification) => {
@@ -82,7 +82,7 @@ export class EntitiesGraphqlQueryBuilderService {
           });
 
           return entity;
-        })
+        }),
       );
   }
 

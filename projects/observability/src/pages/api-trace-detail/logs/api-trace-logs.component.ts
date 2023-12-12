@@ -13,7 +13,7 @@ import { ApiTraceDetailService } from './../api-trace-detail.service';
         logEventsTableViewType="${LogEventsTableViewType.Detailed}"
       ></ht-log-events-table>
     </ng-container>
-  `
+  `,
 })
 export class ApiTraceLogsComponent {
   public readonly logEvents$: Observable<LogEvent[]>;

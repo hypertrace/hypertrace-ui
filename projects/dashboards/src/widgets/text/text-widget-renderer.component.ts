@@ -14,7 +14,7 @@ import { TextWidgetModel } from './text-widget.model';
       <span class="primary-text" [ngClass]="this.model.primaryTextStyle">{{ this.model.text }}</span>
       <span class="secondary-text">{{ this.model.secondaryText }}</span>
     </div>
-  `
+  `,
 })
 export class TextWidgetRendererComponent extends WidgetRenderer<TextWidgetModel> {
   protected fetchData(): Observable<never> {

@@ -7,13 +7,13 @@ const enum PrimaryEdgeMetricCategoryValueType {
   From100To500 = 'from-100-to-500',
   From500To1000 = 'from-500-to-1000',
   GreaterThanOrEqualTo1000 = 'greater-than-or-equal-to-1000',
-  NotSpecified = 'not-specified'
+  NotSpecified = 'not-specified',
 }
 
 const enum SecondaryEdgeMetricCategoryValueType {
   LessThan5 = 'less-than-5',
   GreaterThanOrEqualTo5 = 'greater-than-or-equal-to-5',
-  NotSpecified = 'not-specified'
+  NotSpecified = 'not-specified',
 }
 
 export const defaultPrimaryEdgeMetricCategories: Omit<TopologyMetricCategoryData, 'getCategoryClassName'>[] = [
@@ -23,7 +23,7 @@ export const defaultPrimaryEdgeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: 20,
     fillColor: Color.BlueGray1,
     strokeColor: Color.BlueGray1,
-    focusColor: Color.BlueGray1
+    focusColor: Color.BlueGray1,
   },
   {
     name: PrimaryEdgeMetricCategoryValueType.From20To100,
@@ -31,7 +31,7 @@ export const defaultPrimaryEdgeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: 100,
     fillColor: Color.BlueGray2,
     strokeColor: Color.BlueGray2,
-    focusColor: Color.BlueGray2
+    focusColor: Color.BlueGray2,
   },
   {
     name: PrimaryEdgeMetricCategoryValueType.From100To500,
@@ -39,7 +39,7 @@ export const defaultPrimaryEdgeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: 500,
     fillColor: Color.BlueGray3,
     strokeColor: Color.BlueGray3,
-    focusColor: Color.BlueGray3
+    focusColor: Color.BlueGray3,
   },
   {
     name: PrimaryEdgeMetricCategoryValueType.From500To1000,
@@ -47,7 +47,7 @@ export const defaultPrimaryEdgeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: 1000,
     fillColor: Color.BlueGray4,
     strokeColor: Color.BlueGray4,
-    focusColor: Color.BlueGray4
+    focusColor: Color.BlueGray4,
   },
   {
     name: PrimaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo1000,
@@ -55,8 +55,8 @@ export const defaultPrimaryEdgeMetricCategories: Omit<TopologyMetricCategoryData
     maxValue: undefined,
     fillColor: Color.BlueGray4,
     strokeColor: Color.BlueGray4,
-    focusColor: Color.BlueGray4
-  }
+    focusColor: Color.BlueGray4,
+  },
 ];
 
 export const defaultSecondaryEdgeMetricCategories: Omit<TopologyMetricCategoryData, 'getCategoryClassName'>[] = [
@@ -66,7 +66,7 @@ export const defaultSecondaryEdgeMetricCategories: Omit<TopologyMetricCategoryDa
     maxValue: 5,
     fillColor: Color.Gray2,
     strokeColor: Color.Gray2,
-    focusColor: Color.Gray2
+    focusColor: Color.Gray2,
   },
   {
     name: SecondaryEdgeMetricCategoryValueType.GreaterThanOrEqualTo5,
@@ -75,6 +75,6 @@ export const defaultSecondaryEdgeMetricCategories: Omit<TopologyMetricCategoryDa
     fillColor: Color.Red5,
     strokeColor: Color.Red5,
     focusColor: Color.Red5,
-    highestPrecedence: true
-  }
+    highestPrecedence: true,
+  },
 ];

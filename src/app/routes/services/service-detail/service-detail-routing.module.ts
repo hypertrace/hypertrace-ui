@@ -8,7 +8,7 @@ import {
   ServiceDetailModule,
   ServiceMetricsComponent,
   ServiceOverviewComponent,
-  ServiceTraceListComponent
+  ServiceTraceListComponent,
 } from '@hypertrace/observability';
 
 const ROUTE_CONFIG: HtRoute[] = [
@@ -19,29 +19,29 @@ const ROUTE_CONFIG: HtRoute[] = [
       {
         path: '',
         redirectTo: 'overview',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'overview',
-        component: ServiceOverviewComponent
+        component: ServiceOverviewComponent,
       },
       {
         path: 'endpoints',
-        component: ServiceApisListComponent
+        component: ServiceApisListComponent,
       },
       {
         path: 'traces',
-        component: ServiceTraceListComponent
+        component: ServiceTraceListComponent,
       },
       {
         path: 'metrics',
-        component: ServiceMetricsComponent
-      }
-    ]
-  }
+        component: ServiceMetricsComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(ROUTE_CONFIG), ServiceDetailModule]
+  imports: [RouterModule.forChild(ROUTE_CONFIG), ServiceDetailModule],
 })
 export class ServiceDetailRoutingModule {}

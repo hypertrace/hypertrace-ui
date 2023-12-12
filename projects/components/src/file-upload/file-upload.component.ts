@@ -46,6 +46,13 @@ import { FileTypeUtil, SupportedFileType } from './file-types';
 
     <ng-template #defaultSubTpl>
       <ul class="file-requirements-list">
+        <li class="item" *ngFor="let req of (this.config?.customRequirementsInfo ?? [])">
+          <ht-icon class="icon" icon="${IconType.CheckCircleFill}" size="${IconSize.ExtraSmall}"></ht-icon>
+          <div class="text">
+            <strong>{{ req.key | htDisplayString }}</strong
+            >: {{ req.value | htDisplayString }}
+          </div>
+        </li>
         <li class="item">
           <ht-icon class="icon" icon="${IconType.CheckCircleFill}" size="${IconSize.ExtraSmall}"></ht-icon>
           <div class="text"><strong>File Types</strong>: {{ this.config.supportedFileTypes | htFilePipe }}</div>
@@ -62,7 +69,7 @@ import { FileTypeUtil, SupportedFileType } from './file-types';
         </li>
       </ul>
     </ng-template>
-  `
+  `,
 })
 export class FileUploadComponent {
   @Input()
@@ -75,7 +82,7 @@ export class FileUploadComponent {
   public config: UploaderConfig = {
     maxNumberOfFiles: 10,
     maxFileSizeInBytes: 20 * 1024 * 1024, // 20 MB
-    supportedFileTypes: Object.values(SupportedFileType)
+    supportedFileTypes: Object.values(SupportedFileType),
   };
 
   @Output()
@@ -135,16 +142,22 @@ export class FileUploadComponent {
       return false;
     }
 
-    if (!this.areFileTypesValid(fileList)) {
-      this.showFileTypeErrorToast();
-
-      return false;
-    }
-
     if (this.areFilesEmpty(fileList)) {
       this.showEmptyFilesErrorToast();
 
       return false;
+    }
+
+    /**
+     * It's not advised to rely on mime based validation as there is limitations.
+     * So we use an info toast rather than stopping the flow.
+     *
+     * @see - https://developer.mozilla.org/en-US/docs/Web/API/File/type#result
+     */
+    if (!this.areFileTypesValid(fileList)) {
+      this.showFileTypeInfoToast();
+
+      return true;
     }
 
     return true;
@@ -160,7 +173,7 @@ export class FileUploadComponent {
 
   private areFileTypesValid(fileList: FileList | null): boolean {
     return this.getFilesFromFileList(fileList).every(file =>
-      FileTypeUtil.supportedFileMimeTypesSet(this.config.supportedFileTypes).has(file.type)
+      FileTypeUtil.supportedFileMimeTypesSet(this.config.supportedFileTypes).has(file.type),
     );
   }
   private areFilesEmpty(fileList: FileList | null): boolean {
@@ -169,7 +182,7 @@ export class FileUploadComponent {
 
   private showFileSizeErrorToast(): void {
     this.notificationService.createFailureToast(
-      `File size should not be more than ${this.fileDisplayPipe.transform(this.config.maxFileSizeInBytes)}`
+      `File size should not be more than ${this.fileDisplayPipe.transform(this.config.maxFileSizeInBytes)}`,
     );
   }
 
@@ -177,9 +190,9 @@ export class FileUploadComponent {
     this.notificationService.createFailureToast(`File should not be empty`);
   }
 
-  private showFileTypeErrorToast(): void {
-    this.notificationService.createFailureToast(
-      `File type should be any of ${this.config.supportedFileTypes.join(', ')}`
+  private showFileTypeInfoToast(): void {
+    this.notificationService.createInfoToast(
+      `Make sure to choose file of type ${this.config.supportedFileTypes.join(', ')}`,
     );
   }
 
@@ -192,4 +205,10 @@ export interface UploaderConfig {
   supportedFileTypes: SupportedFileType[];
   maxFileSizeInBytes: number;
   maxNumberOfFiles: number;
+  customRequirementsInfo?: FileUploadCustomRequirementInfo[];
+}
+
+export interface FileUploadCustomRequirementInfo {
+  key: string;
+  value: string;
 }

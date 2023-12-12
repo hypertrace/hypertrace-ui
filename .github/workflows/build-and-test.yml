@@ -6,18 +6,20 @@ on:
       - main
 jobs:
   npm-install-if-needed:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
       - name: Set up Node 18
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 18
+          cache: 'npm'
 
       - id: cache
         name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
@@ -26,18 +28,19 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
   build:
-    runs-on: ubuntu-20.04
-    needs: [npm-install-if-needed]
+    runs-on: ubuntu-22.04
+    needs: [ npm-install-if-needed ]
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
-      - name: Set up Node 16
-        uses: actions/setup-node@v2
+        uses: actions/checkout@v4
+
+      - name: Set up Node 18
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
-          cache: 'npm'
-      - name: Cache node modules
-        uses: actions/cache@v2
+          node-version: 18
+
+      - name: Restore node modules
+        uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
@@ -46,19 +49,24 @@ jobs:
         run: npm run build:ci
 
       - name: Archive build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist
   lint:
-    runs-on: ubuntu-20.04
-    needs: [npm-install-if-needed]
+    runs-on: ubuntu-22.04
+    needs: [ npm-install-if-needed ]
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: Set up Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
       - name: Restore node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
@@ -68,132 +76,94 @@ jobs:
 
       - name: Prettier Check
         run: npm run prettier:check
-  setup-test-batches:
-    runs-on: ubuntu-20.04
-    needs: [npm-install-if-needed]
-    env:
-      PARALLELISM: 4
-    outputs:
-      test-chunks: ${{ steps['set-test-chunks'].outputs['test-chunks'] }}
-      test-chunk-ids: ${{ steps['set-test-chunk-ids'].outputs['test-chunk-ids'] }}
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
-
-      - id: set-test-chunks
-        name: Set Chunks
-        run: echo "::set-output name=test-chunks::$(npx jest --listTests --json | jq -cM "[_nwise(length / $PARALLELISM | ceil)]")"
-
-      - id: set-test-chunk-ids
-        name: Set Chunk IDs
-        run: echo "::set-output name=test-chunk-ids::$(echo $CHUNKS | jq -cM 'to_entries | map(.key)')"
-        env:
-          CHUNKS: ${{ steps['set-test-chunks'].outputs['test-chunks'] }}
   test:
     name: test (chunk ${{ matrix.chunk }})
-    runs-on: ubuntu-20.04
-    needs: [npm-install-if-needed, setup-test-batches]
+    runs-on: ubuntu-22.04
+    needs: [ npm-install-if-needed ]
     strategy:
       fail-fast: false
       matrix:
-        chunk: ${{ fromJson(needs['setup-test-batches'].outputs['test-chunk-ids']) }}
+        chunk: [1, 2, 3, 4]
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         # Used by CCI uploader to detect base commit
         with:
           fetch-depth: 0
 
-      - name: Cache node modules
-        uses: actions/cache@v2
+      - name: Restore node modules
+        uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Test
-        run: npm run test:ci -- $(echo $CHUNKS | jq -r '.[${{ matrix.chunk }}] | .[] | "--test-path-pattern "+.')
-        env:
-          CHUNKS: ${{ needs['setup-test-batches'].outputs['test-chunks'] }}
+        run: npm run test:ci -- --shard=${{ matrix.chunk }}/${{ strategy.job-total }}
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true
 
       - name: Upload Unit Test Results
-        if: always()
-        uses: actions/upload-artifact@v2
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
         with:
           name: Unit Test Results (chunk ${{ matrix.chunk }})
           path: test-results/**/*.xml
   validate-helm-charts:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: validate charts
         uses: hypertrace/github-actions/validate-charts@main
   publish-test-results:
     name: "Publish Unit Tests Results"
     needs: test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     # Only run if prereq jobs completed - successfully or not
     if: success() || failure()
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: artifacts
 
       - name: Publish Unit Test Results
-        uses: docker://ghcr.io/enricomi/publish-unit-test-result-action:v1.6
+        uses: EnricoMi/publish-unit-test-result-action@v2
         continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: artifacts/**/*.xml
   merge-publish:
     if: github.event_name == 'push'
-    runs-on: ubuntu-20.04
-    needs: [npm-install-if-needed, build, lint, test, validate-helm-charts]
+    runs-on: ubuntu-22.04
+    needs: [ npm-install-if-needed, build, lint, test, validate-helm-charts ]
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         # Used by gradle version calculation
         with:
           fetch-depth: 0
 
-      - name: Create checksum file
-        uses: hypertrace/github-actions/checksum@main
-
-      - name: Cache gradle
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/checksum.txt') }}
-          restore-keys: |
-            gradle-${{ runner.os }}
-
       - name: Download build results
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: dist
           path: dist
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_READ_USER }}
           password: ${{ secrets.DOCKERHUB_READ_TOKEN }}
 
       - name: Push docker image
-        run: ./gradlew dockerPushImages
+        uses: hypertrace/github-actions/gradle@main
+        with:
+          args: dockerPushImages
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKERHUB_PUBLISH_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PUBLISH_TOKEN }}

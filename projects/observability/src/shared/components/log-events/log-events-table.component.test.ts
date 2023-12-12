@@ -3,7 +3,7 @@ import { fakeAsync, flush } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
-import { TableComponent, TableModule } from '@hypertrace/components';
+import { TableComponent, TableCsvDownloaderService, TableModule } from '@hypertrace/components';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { EMPTY } from 'rxjs';
@@ -19,12 +19,17 @@ describe('LogEventsTableComponent', () => {
     declareComponent: false,
     providers: [
       mockProvider(ActivatedRoute, {
-        queryParamMap: EMPTY
+        queryParamMap: EMPTY,
       }),
       mockProvider(NavigationService, {
-        navigation$: EMPTY
-      })
-    ]
+        navigation$: EMPTY,
+      }),
+      mockProvider(TableCsvDownloaderService, {
+        csvDownloadRequest$: EMPTY,
+        triggerDownload: jest.fn(),
+        executeDownload: jest.fn(),
+      }),
+    ],
   });
 
   test('should render data correctly for sheet view', fakeAsync(() => {
@@ -33,11 +38,11 @@ describe('LogEventsTableComponent', () => {
       {
         hostProps: {
           logEvents: [
-            { attributes: { attr1: 1, attr2: 2 }, summary: 'test', timestamp: '2021-04-30T12:23:57.889149Z' }
+            { attributes: { attr1: 1, attr2: 2 }, summary: 'test', timestamp: '2021-04-30T12:23:57.889149Z' },
           ],
-          logEventsTableViewType: LogEventsTableViewType.Condensed
-        }
-      }
+          logEventsTableViewType: LogEventsTableViewType.Condensed,
+        },
+      },
     );
 
     expect(spectator.query('.log-events-table')).toExist();
@@ -45,11 +50,11 @@ describe('LogEventsTableComponent', () => {
     expect(spectator.query(TableComponent)!.resizable).toBe(false);
     expect(spectator.query(TableComponent)!.columnConfigs).toMatchObject([
       expect.objectContaining({
-        id: 'timestamp'
+        id: 'timestamp',
       }),
       expect.objectContaining({
-        id: 'summary'
-      })
+        id: 'summary',
+      }),
     ]);
     expect(spectator.query(TableComponent)!.pageable).toBe(false);
     expect(spectator.query(TableComponent)!.detailContent).not.toBeNull();
@@ -59,8 +64,8 @@ describe('LogEventsTableComponent', () => {
       expectObservable(spectator.component.dataSource!.getData(undefined!)).toBe('(x|)', {
         x: {
           data: [expect.objectContaining({ summary: 'test' })],
-          totalCount: 1
-        }
+          totalCount: 1,
+        },
       });
 
       flush();

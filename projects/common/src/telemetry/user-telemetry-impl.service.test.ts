@@ -14,9 +14,9 @@ describe('User Telemetry helper service', () => {
     service: UserTelemetryImplService,
     providers: [
       mockProvider(Router, {
-        events: of({})
-      })
-    ]
+        events: of({}),
+      }),
+    ],
   });
 
   test('should delegate to telemetry provider after registration', () => {
@@ -25,7 +25,7 @@ describe('User Telemetry helper service', () => {
       initConfig: { orgId: 'test-id' },
       enablePageTracking: true,
       enableEventTracking: true,
-      enableErrorTracking: true
+      enableErrorTracking: true,
     };
 
     telemetryProvider = {
@@ -34,16 +34,16 @@ describe('User Telemetry helper service', () => {
       trackEvent: jest.fn(),
       trackPage: jest.fn(),
       trackError: jest.fn(),
-      shutdown: jest.fn()
+      shutdown: jest.fn(),
     };
 
     const spectator = createService({
       providers: [
         {
           provide: injectionToken,
-          useValue: telemetryProvider
-        }
-      ]
+          useValue: telemetryProvider,
+        },
+      ],
     });
 
     spectator.service.register(registrationConfig);
@@ -60,7 +60,7 @@ describe('User Telemetry helper service', () => {
     spectator.service.trackEvent('eventA', { target: 'unknown' });
     expect(telemetryProvider.trackEvent).toHaveBeenCalledWith('eventA', {
       target: 'unknown',
-      eventCategory: 'user-action'
+      eventCategory: 'user-action',
     });
 
     // TrackPage
@@ -71,7 +71,7 @@ describe('User Telemetry helper service', () => {
     spectator.service.trackErrorEvent('console error', { target: 'unknown' });
     expect(telemetryProvider.trackError).toHaveBeenCalledWith('Error: console error', {
       target: 'unknown',
-      eventCategory: 'error'
+      eventCategory: 'error',
     });
   });
 
@@ -81,7 +81,7 @@ describe('User Telemetry helper service', () => {
       initConfig: { orgId: 'test-id' },
       enablePageTracking: true,
       enableEventTracking: false,
-      enableErrorTracking: true
+      enableErrorTracking: true,
     };
 
     telemetryProvider = {
@@ -90,16 +90,16 @@ describe('User Telemetry helper service', () => {
       trackEvent: jest.fn(),
       trackPage: jest.fn(),
       trackError: jest.fn(),
-      shutdown: jest.fn()
+      shutdown: jest.fn(),
     };
 
     const spectator = createService({
       providers: [
         {
           provide: injectionToken,
-          useValue: telemetryProvider
-        }
-      ]
+          useValue: telemetryProvider,
+        },
+      ],
     });
 
     spectator.service.register(registrationConfig);
@@ -124,7 +124,7 @@ describe('User Telemetry helper service', () => {
     spectator.service.trackErrorEvent('console error', { target: 'unknown' });
     expect(telemetryProvider.trackError).toHaveBeenCalledWith('Error: console error', {
       target: 'unknown',
-      eventCategory: 'error'
+      eventCategory: 'error',
     });
   });
 
@@ -134,7 +134,7 @@ describe('User Telemetry helper service', () => {
       initConfig: { orgId: 'test-id' },
       enablePageTracking: false,
       enableEventTracking: true,
-      enableErrorTracking: true
+      enableErrorTracking: true,
     };
 
     telemetryProvider = {
@@ -143,16 +143,16 @@ describe('User Telemetry helper service', () => {
       trackEvent: jest.fn(),
       trackPage: jest.fn(),
       trackError: jest.fn(),
-      shutdown: jest.fn()
+      shutdown: jest.fn(),
     };
 
     const spectator = createService({
       providers: [
         {
           provide: injectionToken,
-          useValue: telemetryProvider
-        }
-      ]
+          useValue: telemetryProvider,
+        },
+      ],
     });
 
     spectator.service.register(registrationConfig);
@@ -169,7 +169,7 @@ describe('User Telemetry helper service', () => {
     spectator.service.trackEvent('eventA', { target: 'unknown' });
     expect(telemetryProvider.trackEvent).toHaveBeenCalledWith('eventA', {
       target: 'unknown',
-      eventCategory: 'user-action'
+      eventCategory: 'user-action',
     });
 
     // TrackPage
@@ -180,7 +180,7 @@ describe('User Telemetry helper service', () => {
     spectator.service.trackErrorEvent('console error', { target: 'unknown' });
     expect(telemetryProvider.trackError).toHaveBeenCalledWith('Error: console error', {
       target: 'unknown',
-      eventCategory: 'error'
+      eventCategory: 'error',
     });
   });
 
@@ -190,7 +190,7 @@ describe('User Telemetry helper service', () => {
       initConfig: { orgId: 'test-id' },
       enablePageTracking: true,
       enableEventTracking: true,
-      enableErrorTracking: false
+      enableErrorTracking: false,
     };
 
     telemetryProvider = {
@@ -199,16 +199,16 @@ describe('User Telemetry helper service', () => {
       trackEvent: jest.fn(),
       trackPage: jest.fn(),
       trackError: jest.fn(),
-      shutdown: jest.fn()
+      shutdown: jest.fn(),
     };
 
     const spectator = createService({
       providers: [
         {
           provide: injectionToken,
-          useValue: telemetryProvider
-        }
-      ]
+          useValue: telemetryProvider,
+        },
+      ],
     });
 
     spectator.service.register(registrationConfig);
@@ -225,7 +225,7 @@ describe('User Telemetry helper service', () => {
     spectator.service.trackEvent('eventA', { target: 'unknown' });
     expect(telemetryProvider.trackEvent).toHaveBeenCalledWith('eventA', {
       target: 'unknown',
-      eventCategory: 'user-action'
+      eventCategory: 'user-action',
     });
 
     // TrackPage

@@ -8,6 +8,6 @@ import { MemoizeModule } from '@hypertrace/common';
 @NgModule({
   imports: [CommonModule, IconModule, MatSnackBarModule, MemoizeModule],
   declarations: [NotificationComponent],
-  exports: [NotificationComponent]
+  exports: [NotificationComponent],
 })
 export class NotificationModule {}

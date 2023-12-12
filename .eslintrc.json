@@ -290,7 +290,8 @@
             "allowForLoopAfterthoughts": true
           }
         ],
-        "no-trailing-spaces": "off"
+        "no-trailing-spaces": "off",
+        "comma-dangle": ["error", "always-multiline"]
       }
     },
     {

@@ -19,7 +19,7 @@ describe('Stepper Component', () => {
     declarations: [MockComponents(ButtonComponent, LabelComponent, IconComponent), StepperTabComponent],
     imports: [MemoizeModule, MatStepperModule, LoadAsyncModule],
     shallow: true,
-    detectChanges: true
+    detectChanges: true,
   });
 
   test('should render stepper properly', () => {
@@ -28,7 +28,7 @@ describe('Stepper Component', () => {
           <ht-stepper-tab label="Hello"> Hello World!</ht-stepper-tab>
           <ht-stepper-tab label="Yo"> Hey!</ht-stepper-tab>
           <ht-stepper-tab label="Kem cho"> Test!</ht-stepper-tab>
-        </ht-stepper>`
+        </ht-stepper>`,
     );
 
     expect(spectator.query('.stepper')).toExist();
@@ -47,7 +47,7 @@ describe('Stepper Component', () => {
             <ht-stepper-tab label="Hello"> Hello World!</ht-stepper-tab>
             <ht-stepper-tab label="Yo"> Hey!</ht-stepper-tab>
             <ht-stepper-tab label="Kem cho"> Test!</ht-stepper-tab>
-          </ht-stepper>`
+          </ht-stepper>`,
     );
 
     spectator.click('.next');
@@ -76,9 +76,9 @@ describe('Stepper Component', () => {
         {
           hostProps: {
             isLinear: true,
-            tabOneStatus: false
-          }
-        }
+            tabOneStatus: false,
+          },
+        },
       );
       const actionButtons = spectator.queryAll(ButtonComponent);
       expect(spectator.query('.next')).toExist();
@@ -94,9 +94,9 @@ describe('Stepper Component', () => {
         {
           hostProps: {
             isLinear: true,
-            tabOneStatus: true
-          }
-        }
+            tabOneStatus: true,
+          },
+        },
       );
       spectator.detectComponentChanges();
       const actionButtons = spectator.queryAll(ButtonComponent);
@@ -117,9 +117,9 @@ describe('Stepper Component', () => {
         {
           hostProps: {
             isLinear: true,
-            stepControl: formControl
-          }
-        }
+            stepControl: formControl,
+          },
+        },
       );
       const actionButtons = spectator.queryAll(ButtonComponent);
       expect(spectator.query('.next')).toExist();
@@ -136,9 +136,9 @@ describe('Stepper Component', () => {
         {
           hostProps: {
             isLinear: true,
-            stepControl: formControl
-          }
-        }
+            stepControl: formControl,
+          },
+        },
       );
       spectator.detectComponentChanges();
       const actionButtons = spectator.queryAll(ButtonComponent);
@@ -159,9 +159,9 @@ describe('Stepper Component', () => {
           isLinear: true,
           tabOneStatus: true,
           tabTwoStatus: true,
-          tabThreeStatus: false
-        }
-      }
+          tabThreeStatus: false,
+        },
+      },
     );
 
     // Goto last step
@@ -186,9 +186,9 @@ describe('Stepper Component', () => {
           isLinear: true,
           tabOneStatus: true,
           tabTwoStatus: true,
-          tabThreeStatus: false
-        }
-      }
+          tabThreeStatus: false,
+        },
+      },
     );
 
     spectator.component.goToStep(1);
@@ -209,9 +209,9 @@ describe('Stepper Component', () => {
           tabOneStatus: true,
           tabTwoStatus: true,
           tabThreeStatus: false,
-          tabFourStatus: false
-        }
-      }
+          tabFourStatus: false,
+        },
+      },
     );
 
     spectator.component.goToStep(3);
@@ -232,9 +232,9 @@ describe('Stepper Component', () => {
           tabOneStatus: true,
           tabTwoStatus: true,
           tabThreeStatus: false,
-          tabFourStatus: false
-        }
-      }
+          tabFourStatus: false,
+        },
+      },
     );
 
     spectator.component.goToStep(3);

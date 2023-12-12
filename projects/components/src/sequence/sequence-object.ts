@@ -10,7 +10,7 @@ export class SequenceObject {
     private readonly containerSelection: SequenceContainerSelection,
     private readonly options: SequenceOptions,
     private readonly sequenceChartService: SequenceChartService,
-    private readonly sequenceBarRendererService: SequenceBarRendererService
+    private readonly sequenceBarRendererService: SequenceBarRendererService,
   ) {
     this.chartSelection = this.containerSelection.select('svg').select('g');
   }

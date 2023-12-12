@@ -75,7 +75,7 @@ import { ExploreSeries } from '../explore-visualization-builder';
         (click)="this.onRemove()"
       ></ht-button>
     </div>
-  `
+  `,
 })
 export class ExploreQuerySeriesEditorComponent implements OnChanges {
   @Input()
@@ -109,38 +109,38 @@ export class ExploreQuerySeriesEditorComponent implements OnChanges {
   public readonly visualizationTypeOptions: SelectOption<CartesianSeriesVisualizationType>[] = [
     {
       value: CartesianSeriesVisualizationType.Column,
-      label: 'Column'
+      label: 'Column',
     },
     {
       value: CartesianSeriesVisualizationType.Line,
-      label: 'Line'
+      label: 'Line',
     },
     {
       value: CartesianSeriesVisualizationType.Area,
-      label: 'Area'
+      label: 'Area',
     },
     {
       value: CartesianSeriesVisualizationType.Scatter,
-      label: 'Scatter'
-    }
+      label: 'Scatter',
+    },
   ];
 
   public constructor(private readonly metadataService: MetadataService) {
     this.selectedAggregation$ = this.seriesSubject.pipe(map(series => series && series.specification.aggregation));
     this.selectedVisualizationType$ = this.seriesSubject.pipe(
-      map(series => series && series.visualizationOptions.type)
+      map(series => series && series.visualizationOptions.type),
     );
 
     this.selectedAttribute$ = combineLatest([this.contextSubject, this.seriesSubject]).pipe(
-      switchMap(() => this.getCurrentSelectedAttribute())
+      switchMap(() => this.getCurrentSelectedAttribute()),
     );
 
     this.aggregationOptions$ = this.selectedAttribute$.pipe(
-      map(selection => this.getAggregationOptionsForAttribute(selection))
+      map(selection => this.getAggregationOptionsForAttribute(selection)),
     );
 
     this.attributeOptions$ = this.contextSubject.pipe(
-      switchMap(context => this.getAttributeOptionsForContext(context))
+      switchMap(context => this.getAttributeOptionsForContext(context)),
     );
   }
 
@@ -159,28 +159,28 @@ export class ExploreQuerySeriesEditorComponent implements OnChanges {
 
   public onAggregationChange(newAggregation: MetricAggregationType): void {
     this.buildSpecAndEmit(
-      combineLatest([this.selectedAttribute$, of(newAggregation), this.selectedVisualizationType$])
+      combineLatest([this.selectedAttribute$, of(newAggregation), this.selectedVisualizationType$]),
     );
   }
 
   public onAttributeChange(newAttribute: AttributeMetadata): void {
     this.buildSpecAndEmit(
-      combineLatest([of(newAttribute), this.selectedAggregation$, this.selectedVisualizationType$])
+      combineLatest([of(newAttribute), this.selectedAggregation$, this.selectedVisualizationType$]),
     );
   }
 
   public onVisualizationTypeChange(newVisualizationType: CartesianSeriesVisualizationType): void {
     this.buildSpecAndEmit(
-      combineLatest([this.selectedAttribute$, this.selectedAggregation$, of(newVisualizationType)])
+      combineLatest([this.selectedAttribute$, this.selectedAggregation$, of(newVisualizationType)]),
     );
   }
 
   private getCurrentSelectedAttribute(): Observable<AttributeMetadata | undefined> {
     return this.attributeOptions$.pipe(
       map(attributeOptions =>
-        attributeOptions.find(option => option.value.name === (this.series && this.series.specification.name))
+        attributeOptions.find(option => option.value.name === (this.series && this.series.specification.name)),
       ),
-      map(matchedSelection => matchedSelection && matchedSelection.value)
+      map(matchedSelection => matchedSelection && matchedSelection.value),
     );
   }
 
@@ -191,7 +191,7 @@ export class ExploreQuerySeriesEditorComponent implements OnChanges {
 
     return selected.allowedAggregations.map(aggType => ({
       value: aggType,
-      label: getAggregationDisplayName(aggType)
+      label: getAggregationDisplayName(aggType),
     }));
   }
 
@@ -204,21 +204,21 @@ export class ExploreQuerySeriesEditorComponent implements OnChanges {
       map(attributes =>
         attributes.map(attribute => ({
           value: attribute,
-          label: this.metadataService.getAttributeDisplayName(attribute)
-        }))
-      )
+          label: this.metadataService.getAttributeDisplayName(attribute),
+        })),
+      ),
     );
   }
 
   private buildSpecAndEmit(
     seriesData$: Observable<
       [AttributeMetadata | undefined, MetricAggregationType | undefined, CartesianSeriesVisualizationType | undefined]
-    >
+    >,
   ): void {
     seriesData$
       .pipe(
         take(1),
-        switchMap(seriesData => this.buildNewExploreSeries(...seriesData))
+        switchMap(seriesData => this.buildNewExploreSeries(...seriesData)),
       )
       .subscribe(newSeries => this.seriesChange.next(newSeries));
   }
@@ -226,7 +226,7 @@ export class ExploreQuerySeriesEditorComponent implements OnChanges {
   private buildNewExploreSeries(
     attribute?: AttributeMetadata,
     aggregation?: MetricAggregationType,
-    visualization?: CartesianSeriesVisualizationType
+    visualization?: CartesianSeriesVisualizationType,
   ): Observable<ExploreSeries> {
     if (!attribute || aggregation === undefined || visualization === undefined) {
       return EMPTY;
@@ -241,8 +241,8 @@ export class ExploreQuerySeriesEditorComponent implements OnChanges {
     return of({
       specification: this.specBuilder.exploreSpecificationForKey(attribute.name, aggregationToUse),
       visualizationOptions: {
-        type: visualization
-      }
+        type: visualization,
+      },
     });
   }
 }

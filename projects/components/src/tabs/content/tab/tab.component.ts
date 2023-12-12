@@ -6,7 +6,7 @@ import { TabCustomHeaderDirective } from '../tab-custom-header.directive';
   selector: 'ht-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./tab.component.scss'],
-  template: CONTENT_HOLDER_TEMPLATE
+  template: CONTENT_HOLDER_TEMPLATE,
 })
 export class TabComponent extends ContentHolder {
   @ContentChild(TabCustomHeaderDirective)

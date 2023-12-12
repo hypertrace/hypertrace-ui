@@ -11,7 +11,7 @@ export interface PopoverOptions<TData = never> {
 export const enum PopoverBackdrop {
   Transparent = 'transparent',
   Opaque = 'opaque',
-  None = 'none'
+  None = 'none',
 }
 
 export interface PopoverMousePosition {
@@ -52,7 +52,7 @@ export const enum PopoverPositionType {
   Relative,
   FollowMouse,
   Hidden,
-  Fixed
+  Fixed,
 }
 
 export const enum PopoverRelativePositionLocation {
@@ -65,7 +65,7 @@ export const enum PopoverRelativePositionLocation {
   LeftCentered,
   OverLeftAligned,
   RightCentered,
-  InsideTopLeft
+  InsideTopLeft,
 }
 
 export const enum PopoverFixedPositionLocation {
@@ -73,7 +73,7 @@ export const enum PopoverFixedPositionLocation {
   RightUnderHeader,
   Centered,
   Right,
-  Custom
+  Custom,
 }
 
 export const POPOVER_DATA = new InjectionToken<unknown>('POPOVER_DATA');

@@ -8,12 +8,12 @@ import { InteractionHandler } from '../interaction-handler';
 import { DetailSheetInteractionHandlerService } from './detail-sheet-interaction-handler.service';
 
 @Model({
-  type: 'detail-sheet-interaction-handler'
+  type: 'detail-sheet-interaction-handler',
 })
 export class DetailSheetInteractionHandlerModel implements InteractionHandler {
   @ModelProperty({
     key: 'detail-template',
-    type: ModelTemplatePropertyType.TYPE
+    type: ModelTemplatePropertyType.TYPE,
   })
   public detailTemplate!: ModelJson;
 
@@ -22,27 +22,33 @@ export class DetailSheetInteractionHandlerModel implements InteractionHandler {
     required: false,
     type: {
       key: ENUM_TYPE.type,
-      values: [SheetSize.Small, SheetSize.Medium, SheetSize.Large, SheetSize.ExtraLarge, SheetSize.ResponsiveExtraLarge]
-    } as EnumPropertyTypeInstance
+      values: [
+        SheetSize.Small,
+        SheetSize.Medium,
+        SheetSize.Large,
+        SheetSize.ExtraLarge,
+        SheetSize.ResponsiveExtraLarge,
+      ],
+    } as EnumPropertyTypeInstance,
   })
   public sheetSize: SheetSize = SheetSize.Large;
 
   @ModelProperty({
     key: 'title-property-path',
     required: false,
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public titlePropertyPath?: string;
 
   @ModelProperty({
     key: 'inject-source-as',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public injectSourceAs: string = 'source';
 
   @ModelProperty({
     key: 'show-header',
-    type: BOOLEAN_PROPERTY.type
+    type: BOOLEAN_PROPERTY.type,
   })
   public showHeader: boolean = true;
 

@@ -8,6 +8,6 @@ import { DatetimePickerComponent } from './datetime-picker.component';
 @NgModule({
   imports: [CommonModule, FormsModule, LabelModule, InputModule, TimePickerModule],
   declarations: [DatetimePickerComponent],
-  exports: [DatetimePickerComponent]
+  exports: [DatetimePickerComponent],
 })
 export class DatetimePickerModule {}

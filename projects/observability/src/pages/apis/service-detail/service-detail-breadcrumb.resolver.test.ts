@@ -24,25 +24,27 @@ describe('Service detail breadcrumb resolver', () => {
           of({
             [entityTypeKey]: ObservabilityEntityType.Service,
             [entityIdKey]: 'test-id',
-            name: 'test service'
-          })
-        )
+            name: 'test service',
+          }),
+        ),
       }),
       mockProvider(EntityIconLookupService, {
-        forEntity: jest.fn().mockReturnValue(ObservabilityIconType.Service)
+        forEntity: jest.fn().mockReturnValue(ObservabilityIconType.Service),
       }),
       mockProvider(TimeRangeService, {
-        getTimeRangeAndChanges: jest.fn().mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour))))
-      })
+        getTimeRangeAndChanges: jest
+          .fn()
+          .mockReturnValue(of(new RelativeTimeRange(new TimeDuration(1, TimeUnit.Hour)))),
+      }),
     ],
     imports: [
       RouterTestingModule.withRoutes([
         {
           path: 'service/:id',
-          children: []
-        }
-      ])
-    ]
+          children: [],
+        },
+      ]),
+    ],
   });
 
   beforeEach(() => {
@@ -63,17 +65,17 @@ describe('Service detail breadcrumb resolver', () => {
             [entityIdKey]: 'test-id',
             label: 'test service',
             icon: ObservabilityIconType.Service,
-            name: 'test service'
-          }
+            name: 'test service',
+          },
         });
 
         expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
           expect.objectContaining({
             requestType: ENTITY_GQL_REQUEST,
             entityType: ObservabilityEntityType.Service,
-            id: 'test-id'
+            id: 'test-id',
           }),
-          { cacheability: GraphQlRequestCacheability.Cacheable }
+          { cacheability: GraphQlRequestCacheability.Cacheable },
         );
       });
     });

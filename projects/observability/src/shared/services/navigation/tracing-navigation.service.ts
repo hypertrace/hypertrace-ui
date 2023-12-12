@@ -13,7 +13,7 @@ export class TracingNavigationService {
   public buildTraceDetailNavigationParam(
     traceId: string,
     spanId?: string,
-    startTime?: string | number
+    startTime?: string | number,
   ): NavigationParams {
     const optionalParams: Dictionary<string> = {};
 
@@ -27,7 +27,7 @@ export class TracingNavigationService {
 
     return {
       navType: NavigationParamsType.InApp,
-      path: ['/trace', traceId, optionalParams]
+      path: ['/trace', traceId, optionalParams],
     };
   }
 
@@ -44,7 +44,7 @@ export class TracingNavigationService {
 
     return {
       navType: NavigationParamsType.InApp,
-      path: ['/api-trace', traceId, optionalParams]
+      path: ['/api-trace', traceId, optionalParams],
     };
   }
 }

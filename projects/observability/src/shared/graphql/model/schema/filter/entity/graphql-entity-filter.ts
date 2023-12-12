@@ -16,8 +16,8 @@ export class GraphQlEntityFilter implements GraphQlFilter {
         operator: new GraphQlEnumArgument(GraphQlOperatorType.Equals),
         value: this.id,
         type: new GraphQlEnumArgument(GraphQlFilterType.Id),
-        idType: new GraphQlEnumArgument(this.type)
-      }
+        idType: new GraphQlEnumArgument(this.type),
+      },
     ];
   }
 }

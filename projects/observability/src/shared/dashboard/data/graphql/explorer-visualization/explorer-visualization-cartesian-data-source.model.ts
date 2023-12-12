@@ -4,7 +4,7 @@ import { NEVER, Observable } from 'rxjs';
 import { mergeMap, switchMap } from 'rxjs/operators';
 import {
   ExploreRequestState,
-  ExploreVisualizationRequest
+  ExploreVisualizationRequest,
 } from '../../../../components/explore-query-editor/explore-visualization-builder';
 import { GraphQlFilter } from '../../../../graphql/model/schema/filter/graphql-filter';
 import { GraphQlTimeRange } from '../../../../graphql/model/schema/timerange/graphql-time-range';
@@ -12,8 +12,9 @@ import { ExploreGraphQlQueryHandlerService } from '../../../../graphql/request/h
 import { GraphQlExploreRequest } from '../../../../graphql/request/handlers/explore/explore-query';
 import { CartesianResult } from '../../../widgets/charts/cartesian-widget/cartesian-widget.model';
 import { ExploreCartesianDataSourceModel, ExplorerData } from '../explore/explore-cartesian-data-source.model';
+
 @Model({
-  type: 'explorer-visualization-cartesian-data-source'
+  type: 'explorer-visualization-cartesian-data-source',
 })
 export class ExplorerVisualizationCartesianDataSourceModel extends ExploreCartesianDataSourceModel {
   public request?: ExploreVisualizationRequest;
@@ -28,25 +29,29 @@ export class ExplorerVisualizationCartesianDataSourceModel extends ExploreCartes
         const timeRange = this.getTimeRangeOrThrow();
 
         return this.query<ExploreGraphQlQueryHandlerService>(inheritedFilters =>
-          this.appendFilters(exploreRequest, this.getFilters(inheritedFilters), timeRange)
+          this.appendFilters(exploreRequest, this.getFilters(inheritedFilters), timeRange),
         ).pipe(
           mergeMap(response =>
-            this.mapResponseData(this.request!, response, exploreRequest.interval as TimeDuration, timeRange)
-          )
+            this.mapResponseData(this.request!, response, exploreRequest.interval as TimeDuration, timeRange),
+          ),
         );
-      })
+      }),
     );
+  }
+
+  protected getImplicitFilters(): GraphQlFilter[] {
+    return [];
   }
 
   protected appendFilters(
     request: Omit<GraphQlExploreRequest, 'timeRange'>,
     filters: GraphQlFilter[],
-    timeRange: GraphQlTimeRange
+    timeRange: GraphQlTimeRange,
   ): GraphQlExploreRequest {
     return {
       ...request,
       timeRange: timeRange,
-      filters: [...(request.filters ?? []), ...filters]
+      filters: [...this.getImplicitFilters(), ...(request.filters ?? []), ...filters],
     };
   }
 

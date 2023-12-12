@@ -22,20 +22,20 @@ describe('Explore Query Order by Editor component', () => {
     providers: [
       mockProvider(MetadataService, {
         getAttributeDisplayName: (attribute: AttributeMetadata) => attribute.name,
-        getSelectionAttributes: jest.fn(() => of(attributeMetadata()))
+        getSelectionAttributes: jest.fn(() => of(attributeMetadata())),
       }),
       mockProvider(NavigationService, {
-        navigation$: EMPTY
-      })
+        navigation$: EMPTY,
+      }),
     ],
-    shallow: true
+    shallow: true,
   });
 
   beforeEach(() => {
     attributeMetadata.mockReset();
     attributeMetadata.mockReturnValue([
       { name: 'test value', allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Max] },
-      { name: 'foo bar', allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Max] }
+      { name: 'foo bar', allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Max] },
     ]);
   });
 
@@ -43,11 +43,11 @@ describe('Explore Query Order by Editor component', () => {
     attributeMetadata.mockReturnValue([
       {
         name: 'test value',
-        allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Min, MetricAggregationType.Sum]
+        allowedAggregations: [MetricAggregationType.Average, MetricAggregationType.Min, MetricAggregationType.Sum],
       },
       {
-        name: 'foo bar'
-      }
+        name: 'foo bar',
+      },
     ]);
 
     const spectator = hostBuilder(
@@ -62,11 +62,11 @@ describe('Explore Query Order by Editor component', () => {
             aggregation: MetricAggregationType.Count,
             direction: SortDirection.Asc,
             attribute: {
-              key: 'calls'
-            }
-          }
-        }
-      }
+              key: 'calls',
+            },
+          },
+        },
+      },
     );
     spectator.tick();
 

@@ -80,7 +80,7 @@ export * from './shared/graphql/model/schema/filter/graphql-filter';
 export * from './shared/graphql/model/schema/filter/global-graphql-filter.service';
 export {
   GraphQlMetricAggregationType,
-  convertToGraphQlMetricAggregationType
+  convertToGraphQlMetricAggregationType,
 } from './shared/graphql/model/schema/metrics/graphql-metric-aggregation-type';
 export * from './shared/graphql/model/schema/sort/graphql-sort-argument';
 export * from './shared/graphql/model/schema/sort/graphql-sort-direction';
@@ -192,7 +192,7 @@ export * from './shared/components/explore-query-editor/explore-query-editor.mod
 export {
   ExploreSeries,
   ExploreRequestState,
-  ExploreVisualizationRequest
+  ExploreVisualizationRequest,
 } from './shared/components/explore-query-editor/explore-visualization-builder';
 export * from './shared/dashboard/data/graphql/explore/explore-cartesian-data-source.model';
 
@@ -283,7 +283,7 @@ export * from './shared/components/radar/radar-chart.module';
 export {
   RadarWidgetDataFetcher,
   RadarComparisonData,
-  RadarDataSourceModel
+  RadarDataSourceModel,
 } from './shared/dashboard/widgets/radar/data/radar-data-source.model';
 
 // Datasources
@@ -297,6 +297,7 @@ export * from './shared/components/topology/renderers/node/topology-node-rendere
 export * from './shared/components/topology/renderers/tooltip/topology-tooltip-renderer.service';
 export * from './shared/components/topology/topology.component';
 export * from './shared/components/topology/topology.module';
+export * from './shared/components/topology/d3/layouts/graph-layout';
 export * from './shared/dashboard/data/graphql/topology/topology-data-source.model';
 export * from './shared/dashboard/data/graphql/topology/metrics/topology-metric-category.model';
 export * from './shared/dashboard/data/graphql/topology/metrics/topology-metric-with-category.model';
@@ -306,8 +307,10 @@ export * from './shared/dashboard/widgets/topology/edge/curved/entity-edge-curve
 export * from './shared/dashboard/widgets/topology/node/box/api-node-renderer/api-node-box-renderer.service';
 export * from './shared/dashboard/widgets/topology/node/box/backend-node-renderer/backend-node-box-renderer.service';
 export * from './shared/dashboard/widgets/topology/node/box/service-node-renderer/service-node-box-renderer.service';
+export * from './shared/dashboard/widgets/topology/node/box/group-node/group-node-box-renderer.service';
 export * from './shared/dashboard/widgets/topology/tooltip/topology-entity-tooltip.component';
 export * from './shared/dashboard/widgets/topology/visibility-updater';
+export * from './shared/components/topology/utils/topology-group-node.util';
 
 // Topology Metric
 export * from './shared/dashboard/widgets/topology/metric/edge-metric-category';
@@ -332,7 +335,7 @@ export * from './shared/components/cartesian/chart-interactivty';
 export { MetricSeries, MetricSeriesDataFetcher } from './shared/dashboard/widgets/charts/cartesian-widget/series.model';
 export {
   CartesianDataFetcher,
-  CartesianResult
+  CartesianResult,
 } from './shared/dashboard/widgets/charts/cartesian-widget/cartesian-widget.model';
 export * from './shared/dashboard/widgets/charts/cartesian-widget/series-visualization/series-visualization-type';
 
@@ -351,6 +354,7 @@ export * from './shared/dashboard/data/graphql/specifiers/metric-aggregation-spe
 
 // Timeseries
 export * from './shared/graphql/model/metric/metric-timeseries';
+export * from './shared/dashboard/data/graphql/specifiers/metric-timeseries-specification.model';
 
 // Card list
 export * from './shared/components/card-list/card-list.component';

@@ -11,13 +11,13 @@ import {
   MetricAggregationType,
   ObservabilityTraceType,
   RadarDataSourceModel,
-  RadarPoint
+  RadarPoint,
 } from '@hypertrace/observability';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Model({
-  type: 'observe-system-radar-data-source'
+  type: 'observe-system-radar-data-source',
 })
 export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
   private readonly specBuilder: ExploreSpecificationBuilder = new ExploreSpecificationBuilder();
@@ -27,28 +27,28 @@ export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
       this.fetchP99Latency(timeRange),
       this.fetchCallsPerSecond(timeRange),
       this.fetchAvgLatency(timeRange),
-      this.fetchErrorsPerSecond(timeRange)
+      this.fetchErrorsPerSecond(timeRange),
     ]).pipe(
       map(([totalCalls, callsPerSecond, totalErrors, errorsPerSecond]) => [
         this.buildP99LatencyRadarPoint(totalCalls),
         this.buildCallsPerSecondRadarPoint(callsPerSecond),
         this.buildAvgLatencyRadarPoint(totalErrors),
-        this.buildErrorsPerSecondRadarPoint(errorsPerSecond)
-      ])
+        this.buildErrorsPerSecondRadarPoint(errorsPerSecond),
+      ]),
     );
   }
 
   private fetchP99Latency(timeRange: GraphQlTimeRange): Observable<number> {
     const specification: ExploreSpecification = this.specBuilder.exploreSpecificationForKey(
       'duration',
-      MetricAggregationType.P99
+      MetricAggregationType.P99,
     );
 
     return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
-      this.buildExploreRequest(timeRange, specification)
+      this.buildExploreRequest(timeRange, specification),
     ).pipe(
       map((response: GraphQlExploreResponse) => response.results[0][specification.resultAlias()]),
-      map(value => value.value as number)
+      map(value => value.value as number),
     );
   }
 
@@ -59,14 +59,14 @@ export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
   private fetchAvgLatency(timeRange: GraphQlTimeRange): Observable<number> {
     const specification: ExploreSpecification = this.specBuilder.exploreSpecificationForKey(
       'duration',
-      MetricAggregationType.Average
+      MetricAggregationType.Average,
     );
 
     return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
-      this.buildExploreRequest(timeRange, specification)
+      this.buildExploreRequest(timeRange, specification),
     ).pipe(
       map((response: GraphQlExploreResponse) => response.results[0][specification.resultAlias()]),
-      map(value => value.value as number)
+      map(value => value.value as number),
     );
   }
 
@@ -83,14 +83,14 @@ export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
   private fetchCallsPerSecond(timeRange: GraphQlTimeRange): Observable<number> {
     const specification: ExploreSpecification = this.specBuilder.exploreSpecificationForKey(
       'calls',
-      MetricAggregationType.AvgrateSecond
+      MetricAggregationType.AvgrateSecond,
     );
 
     return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
-      this.buildExploreRequest(timeRange, specification)
+      this.buildExploreRequest(timeRange, specification),
     ).pipe(
       map((response: GraphQlExploreResponse) => response.results[0][specification.resultAlias()]),
-      map(value => value.value as number)
+      map(value => value.value as number),
     );
   }
 
@@ -107,14 +107,14 @@ export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
   private fetchErrorsPerSecond(timeRange: GraphQlTimeRange): Observable<number> {
     const specification: ExploreSpecification = this.specBuilder.exploreSpecificationForKey(
       'errorCount',
-      MetricAggregationType.AvgrateSecond
+      MetricAggregationType.AvgrateSecond,
     );
 
     return this.query<ExploreGraphQlQueryHandlerService, GraphQlExploreResponse>(() =>
-      this.buildExploreRequest(timeRange, specification)
+      this.buildExploreRequest(timeRange, specification),
     ).pipe(
       map((response: GraphQlExploreResponse) => response.results[0][specification.resultAlias()]),
-      map(value => value.value as number)
+      map(value => value.value as number),
     );
   }
 
@@ -128,7 +128,7 @@ export class ObserveSystemRadarDataSourceModel extends RadarDataSourceModel {
       timeRange: timeRange,
       context: ObservabilityTraceType.Api,
       limit: 1,
-      selections: [specification]
+      selections: [specification],
     };
   }
 }

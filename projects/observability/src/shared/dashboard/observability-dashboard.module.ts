@@ -11,8 +11,8 @@ import { ObservabilityDashboardWidgetsModule } from './widgets/observability-das
     ObservabilityDashboardWidgetsModule,
     ObservabilityGraphQlDataSourceModule,
     ObservabilityIconLibraryModule,
-    ObservabilityDashboardInteractionsModule
+    ObservabilityDashboardInteractionsModule,
   ],
-  exports: [TracingDashboardModule]
+  exports: [TracingDashboardModule],
 })
 export class ObservabilityDashboardModule {}

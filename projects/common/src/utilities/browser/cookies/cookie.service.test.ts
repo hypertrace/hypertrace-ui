@@ -19,8 +19,8 @@ describe('Cookie service', () => {
     expect(spectator.service.getAll()).toEqual(
       new Map([
         ['foo', 'fooValue'],
-        ['bar', 'https://www.google.com']
-      ])
+        ['bar', 'https://www.google.com'],
+      ]),
     );
   });
   test("returns undefined if requesting a cookie that doesn't exist", () => {

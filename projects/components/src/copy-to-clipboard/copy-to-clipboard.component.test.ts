@@ -17,17 +17,17 @@ describe('Copy to Clipboard component', () => {
   const removeChildSpy = jest.fn();
   const execCommandSpy = jest.fn();
   const mockPopoverRef = {
-    close: jest.fn()
+    close: jest.fn(),
   };
   const createHost = createHostFactory({
     declareComponent: false,
     component: CopyToClipboardComponent,
     providers: [
       mockProvider(PopoverService, {
-        drawPopover: jest.fn().mockReturnValue(mockPopoverRef)
-      })
+        drawPopover: jest.fn().mockReturnValue(mockPopoverRef),
+      }),
     ],
-    imports: [CopyToClipboardModule, HttpClientTestingModule, IconLibraryTestingModule, RouterTestingModule]
+    imports: [CopyToClipboardModule, HttpClientTestingModule, IconLibraryTestingModule, RouterTestingModule],
   });
 
   test('correctly copies the text to clipboard', fakeAsync(() => {
@@ -36,9 +36,9 @@ describe('Copy to Clipboard component', () => {
       {
         hostProps: {
           textToBeCopied: 'Text to be copied',
-          tooltipDuration: 1000
-        }
-      }
+          tooltipDuration: 1000,
+        },
+      },
     );
 
     document.createElement = createElementSpy;

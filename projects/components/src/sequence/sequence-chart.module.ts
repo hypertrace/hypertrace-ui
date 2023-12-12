@@ -12,6 +12,6 @@ import { SequenceChartService } from './sequence-chart.service';
   imports: [CommonModule, TooltipModule, LayoutChangeModule],
   providers: [SequenceChartService, SequenceChartAxisService, SequenceChartLayoutService, SequenceBarRendererService],
   declarations: [SequenceChartComponent],
-  exports: [SequenceChartComponent]
+  exports: [SequenceChartComponent],
 })
 export class SequenceChartModule {}

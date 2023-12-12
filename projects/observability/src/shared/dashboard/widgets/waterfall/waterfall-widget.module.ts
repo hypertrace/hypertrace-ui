@@ -9,7 +9,7 @@ import {
   OverlayModule,
   SummaryValueModule,
   TitledContentModule,
-  TooltipModule
+  TooltipModule,
 } from '@hypertrace/components';
 import { DashboardCoreModule } from '@hypertrace/hyperdash-angular';
 import { ExploreFilterLinkModule } from '../../../components/explore-filter-link/explore-filter-link.module';
@@ -23,7 +23,7 @@ import { WaterfallChartModule } from './waterfall/waterfall-chart.module';
   imports: [
     DashboardCoreModule.with({
       models: [WaterfallWidgetModel],
-      renderers: [WaterfallWidgetRendererComponent]
+      renderers: [WaterfallWidgetRendererComponent],
     }),
     CommonModule,
     ExploreFilterLinkModule,
@@ -37,7 +37,7 @@ import { WaterfallChartModule } from './waterfall/waterfall-chart.module';
     ButtonModule,
     IconModule,
     SummaryValueModule,
-    WaterfallChartModule
-  ]
+    WaterfallChartModule,
+  ],
 })
 export class WaterfallWidgetModule {}

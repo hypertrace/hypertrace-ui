@@ -16,11 +16,11 @@ export const apiTraceListDashboard = {
         filterable: true,
         value: {
           type: 'attribute-specification',
-          attribute: 'requestUrl'
+          attribute: 'requestUrl',
         },
         'click-handler': {
-          type: 'api-trace-navigation-handler'
-        }
+          type: 'api-trace-navigation-handler',
+        },
       },
       {
         type: 'table-widget-column',
@@ -32,18 +32,18 @@ export const apiTraceListDashboard = {
           specifications: [
             {
               type: 'attribute-specification',
-              attribute: 'apiExitCalls'
+              attribute: 'apiExitCalls',
             },
             {
               type: 'attribute-specification',
-              attribute: 'apiCalleeNameCount'
-            }
+              attribute: 'apiCalleeNameCount',
+            },
           ],
-          'order-by': 'apiExitCalls'
+          'order-by': 'apiExitCalls',
         },
         'click-handler': {
-          type: 'api-trace-navigation-handler'
-        }
+          type: 'api-trace-navigation-handler',
+        },
       },
       {
         type: 'table-widget-column',
@@ -52,11 +52,11 @@ export const apiTraceListDashboard = {
         display: TracingTableCellType.TraceStatus,
         filterable: true,
         value: {
-          type: 'trace-status-specification'
+          type: 'trace-status-specification',
         },
         'click-handler': {
-          type: 'api-trace-navigation-handler'
-        }
+          type: 'api-trace-navigation-handler',
+        },
       },
       {
         type: 'table-widget-column',
@@ -65,11 +65,11 @@ export const apiTraceListDashboard = {
         filterable: true,
         value: {
           type: 'attribute-specification',
-          attribute: 'apiTraceErrorSpanCount'
+          attribute: 'apiTraceErrorSpanCount',
         },
         'click-handler': {
-          type: 'api-trace-navigation-handler'
-        }
+          type: 'api-trace-navigation-handler',
+        },
       },
       {
         type: 'table-widget-column',
@@ -80,11 +80,11 @@ export const apiTraceListDashboard = {
         value: {
           type: 'enriched-attribute-specification',
           attribute: 'duration',
-          units: 'ms'
+          units: 'ms',
         },
         'click-handler': {
-          type: 'api-trace-navigation-handler'
-        }
+          type: 'api-trace-navigation-handler',
+        },
       },
       {
         type: 'table-widget-column',
@@ -93,13 +93,13 @@ export const apiTraceListDashboard = {
         display: CoreTableCellRendererType.Timestamp,
         value: {
           type: 'attribute-specification',
-          attribute: 'startTime'
+          attribute: 'startTime',
         },
         'click-handler': {
-          type: 'api-trace-navigation-handler'
+          type: 'api-trace-navigation-handler',
         },
-        sort: TableSortDirection.Descending
-      }
+        sort: TableSortDirection.Descending,
+      },
     ],
     mode: TableMode.Detail,
     'child-template': {
@@ -108,12 +108,12 @@ export const apiTraceListDashboard = {
         type: 'api-trace-detail-data-source',
 
         trace: '${row}',
-        attributes: ['requestUrl']
-      }
+        attributes: ['requestUrl'],
+      },
     },
     data: {
       type: 'traces-table-data-source',
-      trace: ObservabilityTraceType.Api
-    }
-  }
+      trace: ObservabilityTraceType.Api,
+    },
+  },
 };

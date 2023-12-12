@@ -11,13 +11,13 @@ describe('Icon component', () => {
     component: IconComponent,
     imports: [IconModule, HttpClientTestingModule, IconLibraryTestingModule],
     declareComponent: false,
-    providers: [mockProvider(NavigationService)]
+    providers: [mockProvider(NavigationService)],
   });
 
   test('uses svg attribute for icons backed by svgs', () => {
     const spectator = buildHost(
       `<ht-icon icon="${IconType.Hypertrace}">
-       </ht-icon>`
+       </ht-icon>`,
     );
 
     expect(spectator.query(MatIcon)!.svgIcon).toBe('hypertrace');
@@ -30,7 +30,7 @@ describe('Icon component', () => {
   test('should apply custom color if provided', () => {
     const spectator = buildHost(
       `<ht-icon icon="${IconType.Hypertrace}" color="#FEA395">
-       </ht-icon>`
+       </ht-icon>`,
     );
 
     expect(spectator.query('.ht-icon')).toHaveAttribute('style', 'color: rgb(254, 163, 149);');
@@ -39,7 +39,7 @@ describe('Icon component', () => {
   test('uses ligatures for icons backed by ligature', () => {
     const spectator = buildHost(
       `<ht-icon icon="${IconType.Add}" label="other label">
-       </ht-icon>`
+       </ht-icon>`,
     );
 
     expect(spectator.query('.svg-icon')).not.toExist();

@@ -17,20 +17,22 @@ import { MetadataService } from '../../../services/metadata/metadata.service';
         <ht-list-view [records]="tagRecords" display="${ListViewDisplay.Plain}" data-sensitive-pii>
           <div class="tag-value" *htListViewValueRenderer="let record">
             <div class="value">{{ record.value }}</div>
-            <ht-filter-button
-              *htLetAsync="this.metadata$ as metadata"
-              class="filter-button"
-              [attribute]="this.getFilterAttribute | htMemoize: metadata"
-              [metadata]="metadata"
-              [value]="record.value"
-              [subpath]="record.key"
-              htTooltip="See traces in Explorer"
-            ></ht-filter-button>
+            <ng-container *ngIf="this.showFilters">
+              <ht-filter-button
+                *htLetAsync="this.metadata$ as metadata"
+                class="filter-button"
+                [attribute]="this.getFilterAttribute | htMemoize: metadata"
+                [metadata]="metadata"
+                [value]="record.value"
+                [subpath]="record.key"
+                htTooltip="See traces in Explorer"
+              ></ht-filter-button>
+            </ng-container>
           </div>
         </ht-list-view>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class SpanTagsDetailComponent implements OnChanges {
   @Input()
@@ -38,6 +40,9 @@ export class SpanTagsDetailComponent implements OnChanges {
 
   @Input()
   public scope?: string;
+
+  @Input()
+  public showFilters: boolean = true;
 
   public tagRecords$?: Observable<ListViewRecord[]>;
   public metadata$?: Observable<FilterAttribute[]>;
@@ -49,15 +54,15 @@ export class SpanTagsDetailComponent implements OnChanges {
       this.buildTagRecords();
     }
 
-    if (changes.scope && this.scope) {
+    if (changes.scope && this.scope && this.showFilters) {
       this.metadata$ = this.metadataService.getAllAttributes(this.scope).pipe(
         map(metadata =>
           metadata.map(attributeMetadata => ({
             name: attributeMetadata.name,
             displayName: attributeMetadata.displayName,
-            type: toFilterAttributeType(attributeMetadata.type)
-          }))
-        )
+            type: toFilterAttributeType(attributeMetadata.type),
+          })),
+        ),
       );
     }
   }
@@ -74,8 +79,8 @@ export class SpanTagsDetailComponent implements OnChanges {
           .sort((key1, key2) => key1.localeCompare(key2))
           .map(key => ({
             key: key,
-            value: this.tags![key] as string | number
-          }))
+            value: this.tags![key] as string | number,
+          })),
       );
     }
   }

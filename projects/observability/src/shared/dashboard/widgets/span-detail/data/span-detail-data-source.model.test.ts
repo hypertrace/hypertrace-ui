@@ -24,21 +24,21 @@ describe('Span Detail data source model', () => {
             [spanIdKey]: 'test-id',
             traceId: 'test-trace-id',
             statusCode: '200',
-            spanTags: { param1: 'email' }
-          })
-        )
-      })
-    ]
+            spanTags: { param1: 'email' },
+          }),
+        ),
+      }),
+    ],
   });
 
   beforeEach(() => {
     const mockApi: Partial<ModelApi> = {
-      getTimeRange: jest.fn(() => testTimeRange)
+      getTimeRange: jest.fn(() => testTimeRange),
     };
     spectator = buildModel(SpanDetailDataSourceModel);
 
     spectator.model.span = {
-      [spanIdKey]: 'test-id'
+      [spanIdKey]: 'test-id',
     };
     spectator.model.api = mockApi as ModelApi;
     spectator.model.query$.subscribe(query => (lastEmittedQuery = query.buildRequest([])));
@@ -54,9 +54,9 @@ describe('Span Detail data source model', () => {
         properties: [
           attributeSpecBuilder.attributeSpecificationForKey('statusCode'),
           attributeSpecBuilder.attributeSpecificationForKey('spanTags'),
-          attributeSpecBuilder.attributeSpecificationForKey('traceId')
-        ]
-      })
+          attributeSpecBuilder.attributeSpecificationForKey('traceId'),
+        ],
+      }),
     ).toBe(true);
   });
 
@@ -71,9 +71,9 @@ describe('Span Detail data source model', () => {
         properties: [
           attributeSpecBuilder.attributeSpecificationForKey('statusCode'),
           attributeSpecBuilder.attributeSpecificationForKey('spanTags'),
-          attributeSpecBuilder.attributeSpecificationForKey('traceId')
-        ]
-      })
+          attributeSpecBuilder.attributeSpecificationForKey('traceId'),
+        ],
+      }),
     ).toBe(true);
   });
 
@@ -89,9 +89,9 @@ describe('Span Detail data source model', () => {
         properties: [
           attributeSpecBuilder.attributeSpecificationForKey('statusCode'),
           attributeSpecBuilder.attributeSpecificationForKey('spanTags'),
-          attributeSpecBuilder.attributeSpecificationForKey('traceId')
-        ]
-      })
+          attributeSpecBuilder.attributeSpecificationForKey('traceId'),
+        ],
+      }),
     ).toBe(true);
   });
 
@@ -107,9 +107,9 @@ describe('Span Detail data source model', () => {
         properties: [
           attributeSpecBuilder.attributeSpecificationForKey('statusCode'),
           attributeSpecBuilder.attributeSpecificationForKey('spanTags'),
-          attributeSpecBuilder.attributeSpecificationForKey('traceId')
-        ]
-      })
+          attributeSpecBuilder.attributeSpecificationForKey('traceId'),
+        ],
+      }),
     ).toBe(true);
   });
 
@@ -120,8 +120,8 @@ describe('Span Detail data source model', () => {
           id: 'test-id',
           traceId: 'test-trace-id',
           statusCode: '200',
-          tags: { param1: 'email' }
-        })
+          tags: { param1: 'email' },
+        }),
       });
     });
   });

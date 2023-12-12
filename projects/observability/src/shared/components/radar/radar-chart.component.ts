@@ -6,7 +6,7 @@ import {
   Input,
   OnChanges,
   Output,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { RecursivePartial } from '@hypertrace/common';
 import { LegendPosition } from '../legend/legend.component';
@@ -17,7 +17,7 @@ import { RadarChartService } from './radar-chart.service';
   selector: 'ht-radar-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` <div class="ht-radar-chart" (htLayoutChange)="this.buildChart()" #chartContainer></div> `,
-  styleUrls: ['./radar-chart.scss']
+  styleUrls: ['./radar-chart.scss'],
 })
 export class RadarChartComponent implements OnChanges {
   @Input()
@@ -72,11 +72,11 @@ export class RadarChartComponent implements OnChanges {
       onPointClicked: (point: RadarPoint, seriesName: string) =>
         this.pointClicked.emit({
           point: point,
-          seriesName: seriesName
+          seriesName: seriesName,
         }),
       onSeriesClicked: (seriesName: string) => {
         this.seriesClicked.emit(seriesName);
-      }
+      },
     };
   }
 }

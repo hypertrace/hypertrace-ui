@@ -61,7 +61,7 @@ import { SheetOverlayConfig, SheetSize } from './sheet';
         <ng-container *ngTemplateOutlet="this.attachedTriggerTemplate"></ng-container>
       </div>
     </ng-container>
-  `
+  `,
 })
 export class SheetOverlayComponent {
   public readonly sheetTitle: string | TemplateRef<unknown>;
@@ -82,7 +82,7 @@ export class SheetOverlayComponent {
     private readonly popoverRef: PopoverRef,
     private readonly globalHeaderHeightProvider: GlobalHeaderHeightProviderService,
     @Inject(POPOVER_DATA) sheetData: SheetConstructionData,
-    layoutChange: LayoutChangeService
+    layoutChange: LayoutChangeService,
   ) {
     const sheetConfig: SheetOverlayConfig = sheetData.config;
     this.hasDefaultPadding = sheetConfig.hasDefaultPadding ?? true;
@@ -97,7 +97,7 @@ export class SheetOverlayComponent {
     this.isComponentSheet = !(sheetConfig.content instanceof TemplateRef);
     this.renderer = sheetConfig.content;
     this.popoverRef.height(
-      this.getHeightForPopover(this.globalHeaderHeightProvider.globalHeaderHeight, sheetConfig.position)
+      this.getHeightForPopover(this.globalHeaderHeightProvider.globalHeaderHeight, sheetConfig.position),
     );
     this.setWidth();
     this.navigationParams = sheetConfig.pageNavParams;
@@ -105,10 +105,10 @@ export class SheetOverlayComponent {
       providers: [
         {
           provide: LayoutChangeService,
-          useValue: layoutChange
-        }
+          useValue: layoutChange,
+        },
       ],
-      parent: sheetData.injector
+      parent: sheetData.injector,
     });
   }
 

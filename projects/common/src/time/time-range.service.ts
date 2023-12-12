@@ -13,7 +13,7 @@ import { TimeUnit } from './time-unit.type';
 import { ParamMap } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TimeRangeService {
   private static readonly TIME_RANGE_QUERY_PARAM: string = 'time';
@@ -24,7 +24,7 @@ export class TimeRangeService {
 
   public constructor(
     private readonly navigationService: NavigationService,
-    private readonly timeDurationService: TimeDurationService
+    private readonly timeDurationService: TimeDurationService,
   ) {
     this.initializeTimeRange();
     this.navigationService.registerGlobalQueryParamKey(TimeRangeService.TIME_RANGE_QUERY_PARAM);
@@ -85,7 +85,7 @@ export class TimeRangeService {
         }), // Only valid time ranges
         map(timeRangeString => this.timeRangeFromUrlString(timeRangeString)),
         catchError(() => EMPTY),
-        defaultIfEmpty(this.defaultTimeRange)
+        defaultIfEmpty(this.defaultTimeRange),
       )
       .subscribe(timeRange => {
         this.updateTimeRangeAndEmit(timeRange);
@@ -99,7 +99,7 @@ export class TimeRangeService {
     );
   }
 
-  private timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
+  public timeRangeFromUrlString(timeRangeFromUrl: string): TimeRange {
     const duration = this.timeDurationService.durationFromString(timeRangeFromUrl);
     if (duration) {
       return new RelativeTimeRange(duration);
@@ -114,7 +114,7 @@ export class TimeRangeService {
 
   private setTimeRangeInUrl(newTimeRange: TimeRange): this {
     this.navigationService.addQueryParametersToUrl({
-      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString()
+      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: newTimeRange.toUrlString(),
     });
 
     return this;
@@ -135,7 +135,7 @@ export class TimeRangeService {
 
   public toQueryParams(timeRange: TimeRange): QueryParamObject {
     const queryParams: QueryParamObject = {
-      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString()
+      [TimeRangeService.TIME_RANGE_QUERY_PARAM]: timeRange.toUrlString(),
     };
 
     return queryParams;

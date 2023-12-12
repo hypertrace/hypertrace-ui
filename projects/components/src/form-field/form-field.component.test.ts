@@ -1,18 +1,19 @@
 import { CommonModule } from '@angular/common';
+import { fakeAsync } from '@angular/core/testing';
 import { IconType } from '@hypertrace/assets-library';
 import { createHostFactory } from '@ngneat/spectator/jest';
 import { MockComponents, MockDirective } from 'ng-mocks';
 import { IconComponent } from '../icon/icon.component';
 import { LabelComponent } from '../label/label.component';
-import { FormFieldComponent } from './form-field.component';
 import { TooltipDirective } from '../tooltip/tooltip.directive';
+import { FormFieldComponent } from './form-field.component';
 
 describe('Form Field Component', () => {
   const hostFactory = createHostFactory({
     component: FormFieldComponent,
     imports: [CommonModule],
     declarations: [MockComponents(LabelComponent, IconComponent), MockDirective(TooltipDirective)],
-    shallow: true
+    shallow: true,
   });
 
   test('should show mandatory form field data', () => {
@@ -25,9 +26,9 @@ describe('Form Field Component', () => {
           label: 'Label',
           icon: IconType.Info,
           iconTooltip: 'Add or update a text',
-          errorLabel: 'Error message'
-        }
-      }
+          errorLabel: 'Error message',
+        },
+      },
     );
 
     expect(spectator.query('.content')).not.toHaveClass(['show-border', 'error-border']);
@@ -51,16 +52,16 @@ describe('Form Field Component', () => {
           label: 'Label',
           icon: IconType.Info,
           iconTooltip: 'Add or update a text',
-          isOptional: true
-        }
-      }
+          isOptional: true,
+        },
+      },
     );
     const labels = spectator.queryAll(LabelComponent);
     expect(labels[0].label).toEqual('Label');
     expect(labels[1].label).toEqual('(Optional)');
   });
 
-  test('should show error when showFormError, errorLabel and showBorder is present', () => {
+  test('should show error when showFormError, errorLabel and showBorder is present', fakeAsync(() => {
     const spectator = hostFactory(
       `
     <ht-form-field [label]="label" [showFormError]="showFormError" [errorLabel]="errorLabel" [showBorder]="showBorder">
@@ -70,11 +71,13 @@ describe('Form Field Component', () => {
           label: 'Label',
           errorLabel: 'Invalid Form element',
           showFormError: true,
-          showBorder: true
-        }
-      }
+          showBorder: true,
+        },
+      },
     );
-    expect(spectator.query('.content')).toHaveClass(['content', 'show-border', 'error-border']);
+
+    expect(spectator.query('.content')?.classList.contains('show-border')).toBe(true);
+    expect(spectator.query('.content')?.classList.contains('error-border')).toBe(true);
 
     expect(spectator.query('.error')).toExist();
 
@@ -84,10 +87,12 @@ describe('Form Field Component', () => {
     expect(labels[1].label).toEqual('Invalid Form element');
 
     spectator.setHostInput({
-      showFormError: false
+      showFormError: false,
     });
+
+    spectator.tick(500); // Wait for animation to complete
 
     expect(spectator.query('.error')).not.toExist();
     expect(spectator.query('.content')).toHaveClass(['show-border']);
-  });
+  }));
 });

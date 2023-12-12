@@ -21,14 +21,14 @@ export class CartesianBand<TData> extends CartesianData<TData, Band<TData>> {
     protected readonly domRenderer: Renderer2,
     protected readonly band: Band<TData>,
     protected readonly scaleBuilder: CartesianScaleBuilder<TData>,
-    tooltipTrackingStrategy?: ChartTooltipTrackingStrategy
+    tooltipTrackingStrategy?: ChartTooltipTrackingStrategy,
   ) {
     super(band, scaleBuilder, tooltipTrackingStrategy);
   }
 
   protected buildDataLookupStrategy(
     visualization: Band<TData>,
-    strategy: ChartTooltipTrackingStrategy
+    strategy: ChartTooltipTrackingStrategy,
   ): MouseDataLookupStrategy<TData, Band<TData>> {
     if (strategy.followSingleAxis !== undefined) {
       return new SingleAxisDataLookupStrategy(
@@ -37,7 +37,7 @@ export class CartesianBand<TData> extends CartesianData<TData, Band<TData>> {
         this.xScale,
         this.yScale,
         strategy.radius,
-        strategy.followSingleAxis
+        strategy.followSingleAxis,
       );
     }
 
@@ -97,7 +97,7 @@ export class CartesianBand<TData> extends CartesianData<TData, Band<TData>> {
 
   private drawSvgLine(
     series: Series<TData>,
-    seriesGroupSelection: Selection<SVGGElement, unknown, null, undefined>
+    seriesGroupSelection: Selection<SVGGElement, unknown, null, undefined>,
   ): void {
     seriesGroupSelection.append('path').attr('d', this.buildLine()(series.data)!);
   }

@@ -8,4 +8,5 @@ export interface SelectOption<V> {
   iconBorderColor?: string;
   iconBorderRadius?: string;
   disabled?: boolean;
+  tooltip?: string;
 }

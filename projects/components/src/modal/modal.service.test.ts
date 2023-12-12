@@ -14,7 +14,7 @@ describe('Modal service', () => {
     template: `
       <div class="test-modal-content">Test Component Content Data: {{ this.data }}</div>
       <button class="test-close-button" role="button" (click)="this.modalRef.close(this.data)">Close</button>
-    `
+    `,
   })
   class TestComponent {
     public constructor(@Inject(MODAL_DATA) public readonly data: string, public readonly modalRef: ModalRef<string>) {}
@@ -27,10 +27,10 @@ describe('Modal service', () => {
     imports: [ModalModule],
     providers: [
       mockProvider(NavigationService, {
-        navigation$: EMPTY
-      })
+        navigation$: EMPTY,
+      }),
     ],
-    template: `<host></host>`
+    template: `<host></host>`,
   });
 
   test('can create a modal with provided data', fakeAsync(() => {
@@ -38,13 +38,13 @@ describe('Modal service', () => {
     spectator.inject(ModalService).createModal({
       content: TestComponent,
       size: ModalSize.Small,
-      data: 'custom input'
+      data: 'custom input',
     });
 
     spectator.tick();
 
     expect(spectator.query('.test-modal-content', { root: true })).toContainText(
-      'Test Component Content Data: custom input'
+      'Test Component Content Data: custom input',
     );
   }));
 
@@ -53,7 +53,7 @@ describe('Modal service', () => {
     const modal: ModalRef<string> = spectator.inject(ModalService).createModal({
       content: TestComponent,
       size: ModalSize.Small,
-      data: 'custom input'
+      data: 'custom input',
     });
     let result: string | undefined;
     spectator.tick();
@@ -76,7 +76,7 @@ describe('Modal service', () => {
     const modal: ModalRef<string> = spectator.inject(ModalService).createModal({
       content: TestComponent,
       size: ModalSize.Small,
-      data: 'custom input'
+      data: 'custom input',
     });
 
     spectator.tick();

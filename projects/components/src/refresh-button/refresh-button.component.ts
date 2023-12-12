@@ -15,7 +15,7 @@ import { ButtonVariant, ButtonSize } from '../button/button';
     >
     </ht-button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RefreshButtonComponent {
   @Input()

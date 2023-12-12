@@ -23,7 +23,7 @@ export class CartesianAxis<TData = {}> {
     configuration: Axis,
     private readonly axisDimension: AxisDimension,
     protected readonly scaleBuilder: CartesianScaleBuilder<TData>,
-    protected readonly svgUtilService: SvgUtilService
+    protected readonly svgUtilService: SvgUtilService,
   ) {
     this.scale = this.scaleBuilder.withAxis(configuration).build(configuration.type);
     this.configuration = this.applyDefaults(configuration);
@@ -86,11 +86,11 @@ export class CartesianAxis<TData = {}> {
     if (this.configuration.location === AxisLocation.Bottom || this.configuration.location === AxisLocation.Top) {
       const maxTextTickTextLength = this.getMaxTickTextLength(selection);
 
-      if (this.configuration.labelOverflow === LabelOverflow.Wrap) {
-        this.tickTextWrap(selection, maxTextTickTextLength);
-      } else {
+      if (this.configuration.labelOverflow === LabelOverflow.Rotate) {
         const isLabelRotated = this.rotateAxisTicks(selection, maxTextTickTextLength);
         this.removeOverflowedTicks(selection, maxTextTickTextLength, isLabelRotated);
+      } else {
+        this.tickTextWrap(selection, maxTextTickTextLength);
       }
     } else {
       this.maybeTruncateAxisTicks(selection);
@@ -103,7 +103,7 @@ export class CartesianAxis<TData = {}> {
     const allElementLength: number[] = [];
 
     ticksSelection.each((_, index, nodes) =>
-      allElementLength.push(this.svgUtilService.getElementTextLength(nodes[index] as SVGTextElement))
+      allElementLength.push(this.svgUtilService.getElementTextLength(nodes[index] as SVGTextElement)),
     );
 
     return Math.max(...allElementLength);
@@ -113,7 +113,7 @@ export class CartesianAxis<TData = {}> {
     const ticksSelection = axisSvgSelection.selectAll('text');
 
     ticksSelection.each((_, index, nodes) =>
-      this.svgUtilService.truncateText(nodes[index] as SVGTextElement, this.axisDimension.yAxisWidth)
+      this.svgUtilService.truncateText(nodes[index] as SVGTextElement, this.axisDimension.yAxisWidth),
     );
   }
 
@@ -129,7 +129,7 @@ export class CartesianAxis<TData = {}> {
   private removeOverflowedTicks(
     axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
     maxTextTickTextLength: number,
-    isLabelRotated: boolean
+    isLabelRotated: boolean,
   ): void {
     axisSvgSelection.selectAll('.tick').each((_, i, n) => {
       const currentTick = select(n[i]);
@@ -147,7 +147,7 @@ export class CartesianAxis<TData = {}> {
 
   private tickTextWrap(
     axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
-    maxTextLength: number
+    maxTextLength: number,
   ): void {
     const ticksSelection = axisSvgSelection.selectAll('text');
     const tickBandwidth = (this.scale.getRangeEnd() - this.scale.getRangeStart()) / ticksSelection.size();
@@ -163,7 +163,7 @@ export class CartesianAxis<TData = {}> {
 
   private rotateAxisTicks(
     axisSvgSelection: Selection<SVGGElement, unknown, null, undefined>,
-    maxTextLength: number
+    maxTextLength: number,
   ): boolean {
     const ticksSelection = axisSvgSelection.selectAll('text');
 
@@ -254,7 +254,7 @@ export class CartesianAxis<TData = {}> {
     const defaultValues = {
       gridLines: false,
       axisLine: true,
-      tickLabels: true
+      tickLabels: true,
     };
 
     return defaultsDeep({}, this.scale.initData, configuration, defaultValues) as typeof configuration &

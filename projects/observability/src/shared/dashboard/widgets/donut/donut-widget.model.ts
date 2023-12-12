@@ -8,7 +8,7 @@ import {
   ModelProperty,
   ModelPropertyType,
   STRING_PROPERTY,
-  UNKNOWN_PROPERTY
+  UNKNOWN_PROPERTY,
 } from '@hypertrace/hyperdash';
 import { ModelInject, MODEL_API } from '@hypertrace/hyperdash-angular';
 import { Observable } from 'rxjs';
@@ -17,18 +17,18 @@ import { DonutResults, DonutSeries, DonutSeriesResults } from '../../../componen
 import { LegendPosition } from '../../../components/legend/legend.component';
 
 @Model({
-  type: 'donut-widget'
+  type: 'donut-widget',
 })
 export class DonutWidgetModel {
   @ModelProperty({
     key: 'title',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public title?: string;
 
   @ModelProperty({
     key: 'center-title',
-    type: STRING_PROPERTY.type
+    type: STRING_PROPERTY.type,
   })
   public centerTitle?: string;
 
@@ -42,16 +42,16 @@ export class DonutWidgetModel {
         LegendPosition.Top,
         LegendPosition.Bottom,
         LegendPosition.Right,
-        LegendPosition.None
-      ]
-    } as EnumPropertyTypeInstance
+        LegendPosition.None,
+      ],
+    } as EnumPropertyTypeInstance,
   })
   public legendPosition: LegendPosition = LegendPosition.Right;
 
   @ModelProperty({
     key: 'display-legend-counts',
     type: BOOLEAN_PROPERTY.type,
-    required: false
+    required: false,
   })
   public displayLegendCounts?: boolean = true;
 
@@ -60,8 +60,8 @@ export class DonutWidgetModel {
     required: false,
     type: {
       key: ModelPropertyType.TYPE,
-      defaultModelClass: WidgetHeaderModel
-    } as ModelModelPropertyTypeInstance
+      defaultModelClass: WidgetHeaderModel,
+    } as ModelModelPropertyTypeInstance,
   })
   public header?: WidgetHeaderModel;
 
@@ -69,7 +69,7 @@ export class DonutWidgetModel {
   @ModelProperty({
     key: 'color-palette',
     type: UNKNOWN_PROPERTY.type,
-    required: false
+    required: false,
   })
   public colorPalette?: string | string[];
 
@@ -87,10 +87,10 @@ export class DonutWidgetModel {
           this.centerTitle !== undefined
             ? {
                 title: this.centerTitle,
-                value: r.total
+                value: r.total,
               }
-            : undefined
-      }))
+            : undefined,
+      })),
     );
   }
 
@@ -99,7 +99,7 @@ export class DonutWidgetModel {
 
     return series.map((aSeries, index) => ({
       color: colors[index],
-      ...aSeries
+      ...aSeries,
     }));
   }
 }

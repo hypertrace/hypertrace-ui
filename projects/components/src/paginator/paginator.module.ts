@@ -10,6 +10,6 @@ import { PaginatorComponent } from './paginator.component';
 @NgModule({
   declarations: [PaginatorComponent],
   imports: [CommonModule, SelectModule, LabelModule, ToggleButtonModule, ButtonModule, TooltipModule],
-  exports: [PaginatorComponent]
+  exports: [PaginatorComponent],
 })
 export class PaginatorModule {}

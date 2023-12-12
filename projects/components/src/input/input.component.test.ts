@@ -8,7 +8,7 @@ describe('Input Component', () => {
   const hostFactory = createHostFactory({
     component: InputComponent,
     imports: [MatInputModule, FormsModule],
-    shallow: true
+    shallow: true,
   });
 
   test('should apply disabled attribute when disabled', fakeAsync(() => {
@@ -30,9 +30,9 @@ describe('Input Component', () => {
       {
         hostProps: {
           onChange: onChange,
-          type: 'number'
-        }
-      }
+          type: 'number',
+        },
+      },
     );
 
     const inputEl = spectator.query('input') as HTMLInputElement;
@@ -43,7 +43,7 @@ describe('Input Component', () => {
     expect(onChange).toHaveBeenCalledWith(5);
 
     spectator.setHostInput({
-      type: 'text'
+      type: 'text',
     });
     inputEl.value = '7';
     spectator.dispatchFakeEvent(inputEl, 'input');
@@ -58,9 +58,9 @@ describe('Input Component', () => {
       {
         hostProps: {
           type: 'string',
-          placeholder: 'placeholder'
-        }
-      }
+          placeholder: 'placeholder',
+        },
+      },
     );
 
     const matInput = spectator.query(MatInput);

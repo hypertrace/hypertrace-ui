@@ -1,41 +1,41 @@
 import { Model, ModelProperty, STRING_PROPERTY } from '@hypertrace/hyperdash';
 
 @Model({
-  type: 'container-style-properties'
+  type: 'container-style-properties',
 })
 export class ContainerStylesPropertiesModel {
   @ModelProperty({
     key: 'background-color',
     type: STRING_PROPERTY.type,
-    required: false
+    required: false,
   })
   public backgroundColor?: string;
 
   @ModelProperty({
     key: 'border-radius',
     type: STRING_PROPERTY.type,
-    required: false
+    required: false,
   })
   public borderRadius?: string;
 
   @ModelProperty({
     key: 'padding',
     type: STRING_PROPERTY.type,
-    required: false
+    required: false,
   })
   public padding?: string;
 
   @ModelProperty({
     key: 'margin',
     type: STRING_PROPERTY.type,
-    required: false
+    required: false,
   })
   public margin?: string;
 
   @ModelProperty({
     key: 'display',
     type: STRING_PROPERTY.type,
-    required: false
+    required: false,
   })
   public display?: string;
 
@@ -45,7 +45,7 @@ export class ContainerStylesPropertiesModel {
       borderRadius: this.borderRadius,
       padding: this.padding,
       margin: this.margin,
-      display: this.display
+      display: this.display,
     };
   }
 }

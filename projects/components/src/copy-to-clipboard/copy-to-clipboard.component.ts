@@ -10,7 +10,7 @@ import {
   OnInit,
   Output,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { isNil } from 'lodash-es';
@@ -42,7 +42,7 @@ import { PopoverService } from '../popover/popover.service';
     <ng-template #notification>
       <div class="notification"><span class="label">Copied!</span></div>
     </ng-template>
-  `
+  `,
 })
 export class CopyToClipboardComponent implements OnInit, OnDestroy {
   @Input()
@@ -80,7 +80,7 @@ export class CopyToClipboardComponent implements OnInit, OnDestroy {
   public constructor(
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly popoverService: PopoverService,
-    private readonly elementRef: ElementRef
+    private readonly elementRef: ElementRef,
   ) {}
 
   public ngOnInit(): void {
@@ -132,15 +132,15 @@ export class CopyToClipboardComponent implements OnInit, OnDestroy {
       position: {
         type: PopoverPositionType.Relative,
         origin: this.elementRef,
-        locationPreferences: [PopoverRelativePositionLocation.AboveCentered]
+        locationPreferences: [PopoverRelativePositionLocation.AboveCentered],
       },
       componentOrTemplate: this.notificationTemplate,
-      backdrop: PopoverBackdrop.None
+      backdrop: PopoverBackdrop.None,
     });
 
     return of(popoverRef).pipe(
       delay(this.tooltipDuration ?? 0),
-      finalize(() => popoverRef.close())
+      finalize(() => popoverRef.close()),
     );
   }
 }

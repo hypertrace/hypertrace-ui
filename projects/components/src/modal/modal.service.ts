@@ -7,7 +7,7 @@ import { ModalConfig, ModalRef, MODAL_DATA } from './modal';
 import { ModalConstructionData, ModalContainerComponent } from './modal-container.component';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ModalService {
   private activeModal?: ModalRef<unknown>;
@@ -16,7 +16,7 @@ export class ModalService {
 
   public createModal<TData, TResponse = never>(
     config: ModalConfig<TData>,
-    injector: Injector = this.defaultInjector
+    injector: Injector = this.defaultInjector,
   ): ModalRef<TResponse> {
     this.activeModal?.close();
 
@@ -32,7 +32,7 @@ export class ModalService {
   private buildMetadata(
     config: ModalConfig,
     modalRef: ModalRef<unknown>,
-    parentInjector: Injector
+    parentInjector: Injector,
   ): ModalConstructionData {
     return {
       config: config,
@@ -40,15 +40,15 @@ export class ModalService {
         providers: [
           {
             provide: MODAL_DATA,
-            useValue: config.data
+            useValue: config.data,
           },
           {
             provide: ModalRef,
-            useValue: modalRef
-          }
+            useValue: modalRef,
+          },
         ],
-        parent: parentInjector
-      })
+        parent: parentInjector,
+      }),
     };
   }
 
@@ -58,10 +58,10 @@ export class ModalService {
       parentInjector: injector,
       position: {
         type: PopoverPositionType.Fixed,
-        location: PopoverFixedPositionLocation.Centered
+        location: PopoverFixedPositionLocation.Centered,
       },
       data: modalContainerData,
-      backdrop: PopoverBackdrop.Opaque
+      backdrop: PopoverBackdrop.Opaque,
     });
 
     popover.closeOnNavigation();

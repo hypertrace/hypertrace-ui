@@ -9,7 +9,7 @@ import { ExploreSpecificationBuilder } from '../../../../graphql/request/builder
 import {
   GQL_EXPLORE_RESULT_INTERVAL_KEY,
   GraphQlExploreResponse,
-  GraphQlExploreResult
+  GraphQlExploreResult,
 } from '../../../../graphql/request/handlers/explore/explore-query';
 
 export class ExploreResult {
@@ -21,7 +21,7 @@ export class ExploreResult {
   public constructor(
     private readonly response: GraphQlExploreResponse,
     private readonly interval?: TimeDuration,
-    private readonly timeRange?: GraphQlTimeRange
+    private readonly timeRange?: GraphQlTimeRange,
   ) {}
 
   public getTimeSeriesData(metricKey: string, aggregation: MetricAggregationType): MetricTimeseriesInterval[] {
@@ -31,32 +31,36 @@ export class ExploreResult {
   public getGroupedSeriesData(
     groupExpressions: AttributeExpression[],
     metricKey: string,
-    aggregation: MetricAggregationType
+    aggregation: MetricAggregationType,
   ): GroupData[] {
     return this.extractGroupSeriesForSpec(
       groupExpressions.map(expression => this.specBuilder.exploreSpecificationForAttributeExpression(expression)),
-      this.specBuilder.exploreSpecificationForKey(metricKey, aggregation)
+      this.specBuilder.exploreSpecificationForKey(metricKey, aggregation),
     );
+  }
+
+  public getMetricAggregationSeriesData(metricKey: string, aggregation: MetricAggregationType): MetricAggregationData {
+    return this.extractMetricAggregationForSpec(this.specBuilder.exploreSpecificationForKey(metricKey, aggregation));
   }
 
   public getGroupedTimeSeriesData(
     groupExpressions: AttributeExpression[],
     metricKey: string,
-    aggregation: MetricAggregationType
+    aggregation: MetricAggregationType,
   ): Map<string[], MetricTimeseriesInterval[]> {
     const groupSpecs = groupExpressions.map(expression =>
-      this.specBuilder.exploreSpecificationForAttributeExpression(expression)
+      this.specBuilder.exploreSpecificationForAttributeExpression(expression),
     );
     const spec = this.specBuilder.exploreSpecificationForKey(metricKey, aggregation);
     const groupedResults = groupBy(this.response.results, result =>
-      this.getGroupNamesFromResult(result, groupSpecs).join(',')
+      this.getGroupNamesFromResult(result, groupSpecs).join(','),
     );
 
     return new Map(
       Object.entries(groupedResults).map(([concatenatedGroupNames, results]) => [
         concatenatedGroupNames.split(','),
-        this.resultsToTimeseriesIntervals(results, spec)
-      ])
+        this.resultsToTimeseriesIntervals(results, spec),
+      ]),
     );
   }
 
@@ -64,18 +68,32 @@ export class ExploreResult {
     return this.resultsContainingSpec(spec).map(result => this.resultToGroupData(result, groupBySpecs, spec));
   }
 
+  private extractMetricAggregationForSpec(spec: ExploreSpecification): MetricAggregationData {
+    return this.resultToMetricAggregationDataData(this.resultsContainingSpec(spec)?.[0], spec);
+  }
+
   private extractTimeseriesForSpec(spec: ExploreSpecification): MetricTimeseriesInterval[] {
     return this.resultsToTimeseriesIntervals(this.resultsContainingSpec(spec), spec);
+  }
+
+  private resultToMetricAggregationDataData(
+    result: GraphQlExploreResult | undefined,
+    spec: ExploreSpecification,
+  ): MetricAggregationData {
+    return {
+      key: spec.name,
+      value: result?.[spec.resultAlias()].value as number,
+    };
   }
 
   private resultToGroupData(
     result: GraphQlExploreResult,
     groupBySpecs: ExploreSpecification[],
-    spec: ExploreSpecification
+    spec: ExploreSpecification,
   ): GroupData {
     return {
       keys: this.getGroupNamesFromResult(result, groupBySpecs),
-      value: result[spec.resultAlias()].value as number
+      value: result[spec.resultAlias()].value as number,
     };
   }
 
@@ -87,7 +105,7 @@ export class ExploreResult {
 
   private resultsToTimeseriesIntervals(
     results: GraphQlExploreResult[],
-    spec: ExploreSpecification
+    spec: ExploreSpecification,
   ): MetricTimeseriesInterval[] {
     if (this.interval !== undefined && this.timeRange !== undefined) {
       // This should add missing data to array
@@ -105,15 +123,15 @@ export class ExploreResult {
       const resultBucketMap: Map<number, MetricTimeseriesInterval> = new Map(
         results
           .map(result => this.resultToTimeseriesInterval(result, spec))
-          .map(metric => [metric.timestamp.getTime(), metric])
+          .map(metric => [metric.timestamp.getTime(), metric]),
       );
 
       const metrics = buckets.map(
         timestamp =>
           resultBucketMap.get(timestamp) ?? {
             value: 0,
-            timestamp: new Date(timestamp)
-          }
+            timestamp: new Date(timestamp),
+          },
       );
 
       return metrics;
@@ -124,11 +142,11 @@ export class ExploreResult {
 
   private resultToTimeseriesInterval(
     result: GraphQlExploreResult,
-    spec: ExploreSpecification
+    spec: ExploreSpecification,
   ): MetricTimeseriesInterval {
     return {
       value: result[spec.resultAlias()].value as number,
-      timestamp: result[GQL_EXPLORE_RESULT_INTERVAL_KEY]!
+      timestamp: result[GQL_EXPLORE_RESULT_INTERVAL_KEY]!,
     };
   }
 
@@ -142,4 +160,9 @@ export class ExploreResult {
 interface GroupData {
   keys: string[];
   value: number;
+}
+
+interface MetricAggregationData {
+  key: string;
+  value: number | undefined;
 }

@@ -16,24 +16,24 @@ describe('NavigationComponent', () => {
       mockProvider(NavigationService, {
         getRouteConfig: () => ({
           data: {
-            features: ['example-feature']
-          }
-        })
+            features: ['example-feature'],
+          },
+        }),
       }),
       mockProvider(NavigationListService, {
         decorateNavItem: jest
           .fn()
-          .mockImplementation(navItem => ({ ...navItem, features: ['example-feature'] } as NavItemConfig))
+          .mockImplementation(navItem => ({ ...navItem, features: ['example-feature'] } as NavItemConfig)),
       }),
       mockProvider(ActivatedRoute),
       mockProvider(PreferenceService, { get: jest.fn().mockReturnValue(of(false)) }),
-      mockProvider(LoggerService)
-    ]
+      mockProvider(LoggerService),
+    ],
   });
   test('should decorate the config list', () => {
     const spectator = createComponent();
     expect(spectator.query(NavigationListComponent)?.navItems).toContainEqual(
-      expect.objectContaining({ features: ['example-feature'] })
+      expect.objectContaining({ features: ['example-feature'] }),
     );
   });
 
@@ -41,9 +41,9 @@ describe('NavigationComponent', () => {
     const spectator = createComponent({
       providers: [
         mockProvider(PreferenceService, {
-          get: jest.fn().mockReturnValue(new BehaviorSubject(false))
-        })
-      ]
+          get: jest.fn().mockReturnValue(new BehaviorSubject(false)),
+        }),
+      ],
     });
     spectator.triggerEventHandler(NavigationListComponent, 'collapsedChange', true);
     expect(spectator.inject(PreferenceService).set).toHaveBeenCalledWith('app-navigation.collapsed', true);

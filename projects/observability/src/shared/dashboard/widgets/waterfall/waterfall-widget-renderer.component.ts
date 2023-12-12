@@ -5,7 +5,7 @@ import {
   Inject,
   OnInit,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { NavigationParams } from '@hypertrace/common';
@@ -68,6 +68,7 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
           [showTitleHeader]="true"
           layout="${SpanDetailLayoutStyle.Vertical}"
           [activeTabLabel]="this.activeTabLabel"
+          [showFilters]="this.model.showFilters"
           (closed)="this.closeSheet()"
         >
           <div class="filterable-summary-value">
@@ -88,7 +89,7 @@ import { MarkerSelection, WaterfallChartComponent } from './waterfall/waterfall-
         </ht-span-detail>
       </div>
     </ng-template>
-  `
+  `,
 })
 export class WaterfallWidgetRendererComponent
   extends WidgetRenderer<WaterfallWidgetModel, WaterfallData[]>
@@ -107,7 +108,7 @@ export class WaterfallWidgetRendererComponent
     @Inject(RENDERER_API) api: RendererApi<WaterfallWidgetModel>,
     changeDetector: ChangeDetectorRef,
     private readonly overlayService: OverlayService,
-    private readonly explorerService: ExplorerService
+    private readonly explorerService: ExplorerService,
   ) {
     super(api, changeDetector);
   }
@@ -141,7 +142,7 @@ export class WaterfallWidgetRendererComponent
     this.sheet = this.overlayService.createSheet({
       showHeader: false,
       size: SheetSize.ResponsiveExtraLarge,
-      content: this.sidebarDetails
+      content: this.sidebarDetails,
     });
   }
 
@@ -157,6 +158,6 @@ export class WaterfallWidgetRendererComponent
 
   public getExploreNavigationParams = (selectedData: WaterfallData | undefined): Observable<NavigationParams> =>
     this.explorerService.buildNavParamsWithFilters(ScopeQueryParam.Spans, [
-      { field: 'id', operator: FilterOperator.Equals, value: selectedData!.id }
+      { field: 'id', operator: FilterOperator.Equals, value: selectedData!.id },
     ]);
 }

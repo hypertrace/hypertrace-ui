@@ -4,7 +4,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatLegacySlideToggle as MatSlideToggle,
   MatLegacySlideToggleChange as MatSlideToggleChange,
-  MatLegacySlideToggleModule as MatSlideToggleModule
+  MatLegacySlideToggleModule as MatSlideToggleModule,
 } from '@angular/material/legacy-slide-toggle';
 import { createHostFactory, Spectator } from '@ngneat/spectator/jest';
 import { MockModule } from 'ng-mocks';
@@ -17,7 +17,7 @@ describe('Toggle Switch Component', () => {
   const createHost = createHostFactory({
     component: ToggleSwitchComponent,
     shallow: true,
-    imports: [MockModule(MatSlideToggleModule), MockModule(FormsModule), MockModule(CommonModule), ReactiveFormsModule]
+    imports: [MockModule(MatSlideToggleModule), MockModule(FormsModule), MockModule(CommonModule), ReactiveFormsModule],
   });
 
   test('should pass properties to Mat Slide toggle correctly', fakeAsync(() => {
@@ -30,9 +30,9 @@ describe('Toggle Switch Component', () => {
           label: 'label',
           disabled: false,
           size: ToggleSwitchSize.Small,
-          onCheckedChange: onCheckedChangeSpy
-        }
-      }
+          onCheckedChange: onCheckedChangeSpy,
+        },
+      },
     );
     const matToggleComponent = spectator.query(MatSlideToggle);
     spectator.tick();
@@ -51,8 +51,8 @@ describe('Toggle Switch Component', () => {
     const formControl = new FormControl(false);
     spectator = createHost(`<ht-toggle-switch [label]="label" [formControl]="formControl"></ht-toggle-switch>`, {
       hostProps: {
-        formControl: formControl
-      }
+        formControl: formControl,
+      },
     });
     expect(spectator.component.isChecked).toBe(false);
 

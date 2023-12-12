@@ -12,18 +12,18 @@ describe('EnrichedAttributeSpecificationBuilder', () => {
       arguments: [
         {
           name: 'expression',
-          value: { key: 'duration' }
-        }
-      ]
+          value: { key: 'duration' },
+        },
+      ],
     });
 
     expect(
       specification.extractFromServerData({
-        duration: 1
-      })
+        duration: 1,
+      }),
     ).toEqual({
       value: 1,
-      units: 'ms'
+      units: 'ms',
     });
   });
 });

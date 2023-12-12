@@ -39,8 +39,8 @@ export class EntityTopologyGraphQlQueryHandlerService
         this.argBuilder.forLimit(request.rootNodeLimit),
         this.argBuilder.forTimeRange(request.timeRange),
         ...this.argBuilder.forFilters(
-          this.globalGraphQlFilterService.mergeGlobalFilters(request.rootNodeType, request.rootNodeFilters)
-        )
+          this.globalGraphQlFilterService.mergeGlobalFilters(request.rootNodeType, request.rootNodeFilters),
+        ),
       ],
       children: [
         {
@@ -48,10 +48,10 @@ export class EntityTopologyGraphQlQueryHandlerService
           children: [
             ...this.buildTopologyNodeSelections(request.rootNodeSpecification, request.rootNodeType),
             ...this.convertNeighborSpecMap(EdgeDirection.Outgoing, request),
-            ...this.convertNeighborSpecMap(EdgeDirection.Incoming, request)
-          ]
-        }
-      ]
+            ...this.convertNeighborSpecMap(EdgeDirection.Incoming, request),
+          ],
+        },
+      ],
     };
   }
 
@@ -61,36 +61,43 @@ export class EntityTopologyGraphQlQueryHandlerService
 
   private buildTopologyNodeSelections(
     nodeSpec: TopologyNodeSpecification,
-    entityType: ObservabilityEntityType
+    entityType: ObservabilityEntityType,
   ): GraphQlSelection[] {
     return [
       { path: 'id', alias: 'entityId' },
       ...this.selectionBuilder.fromSpecifications([nodeSpec.titleSpecification]),
       ...this.selectionBuilder.fromSpecifications(this.buildEntityTypeSpecificSpecs(entityType)),
-      ...this.selectionBuilder.fromSpecifications(nodeSpec.metricSpecifications)
+      ...this.selectionBuilder.fromSpecifications(nodeSpec.metricSpecifications),
+      ...this.selectionBuilder.fromSpecifications(nodeSpec.otherSpecifications ?? []),
     ];
   }
 
   private convertNeighborSpecMap(
     edgeDirection: EdgeDirection,
-    request: GraphQlEntityTopologyRequest
+    request: GraphQlEntityTopologyRequest,
   ): GraphQlSelection[] {
     return Array.from(this.getSpecMapForDirection(edgeDirection, request).entries()).map(([entityType, spec]) => ({
       path: this.getEdgeQueryKey(edgeDirection),
       alias: this.buildEdgeAlias(edgeDirection, entityType),
-      arguments: [this.argBuilder.forNeighborType(entityType), ...this.argBuilder.forFilters(request.edgeFilters)],
+      arguments: [
+        this.argBuilder.forNeighborType(entityType),
+        ...this.argBuilder.forFilters(
+          [request.edgeFilters ?? [], request.edgeEntityFilters?.get(entityType) ?? []].flat(),
+        ),
+      ],
       children: [
         {
           path: 'results',
           children: [
             ...this.buildTopologyEdgeSelections(request.edgeSpecification),
+            ...this.selectionBuilder.fromSpecifications(request.edgeEntitySpecifications?.get(entityType) ?? []),
             {
               path: 'neighbor',
-              children: this.buildTopologyNodeSelections(spec, entityType)
-            }
-          ]
-        }
-      ]
+              children: this.buildTopologyNodeSelections(spec, entityType),
+            },
+          ],
+        },
+      ],
     }));
   }
 
@@ -111,7 +118,7 @@ export class EntityTopologyGraphQlQueryHandlerService
 
   private getSpecMapForDirection(
     edgeDirection: EdgeDirection,
-    request: GraphQlEntityTopologyRequest
+    request: GraphQlEntityTopologyRequest,
   ): Map<ObservabilityEntityType, TopologyNodeSpecification> {
     switch (edgeDirection) {
       case EdgeDirection.Incoming:
@@ -131,17 +138,17 @@ export class EntityTopologyGraphQlQueryHandlerService
 
   private convertToEntityNodes(
     request: GraphQlEntityTopologyRequest,
-    serverEntities: TopologyEntityWithEdges[]
+    serverEntities: TopologyEntityWithEdges[],
   ): EntityNode[] {
     const nodeMap = new Map<string, EntityNode>();
 
     serverEntities.forEach(entity => {
       const node = this.getOrCreateNode(request.rootNodeType, request.rootNodeSpecification, nodeMap, entity);
       this.buildEdges(EdgeDirection.Incoming, entity, node, nodeMap, request).forEach(edge =>
-        this.addEdgeToEachNodesEdgeArrayIfMissing(edge)
+        this.addEdgeToEachNodesEdgeArrayIfMissing(edge),
       );
       this.buildEdges(EdgeDirection.Outgoing, entity, node, nodeMap, request).forEach(edge =>
-        this.addEdgeToEachNodesEdgeArrayIfMissing(edge)
+        this.addEdgeToEachNodesEdgeArrayIfMissing(edge),
       );
     });
 
@@ -152,7 +159,7 @@ export class EntityTopologyGraphQlQueryHandlerService
     entityType: ObservabilityEntityType,
     nodeSpec: TopologyNodeSpecification,
     nodeMap: Map<string, EntityNode>,
-    serverEntity: TopologyEntity
+    serverEntity: TopologyEntity,
   ): EntityNode {
     if (nodeMap.has(serverEntity.entityId)) {
       return nodeMap.get(serverEntity.entityId)!;
@@ -161,7 +168,7 @@ export class EntityTopologyGraphQlQueryHandlerService
     const newNode = {
       edges: [],
       specification: nodeSpec,
-      data: this.buildEntity(entityType, serverEntity, nodeSpec)
+      data: this.buildEntity(entityType, serverEntity, nodeSpec),
     };
 
     nodeMap.set(serverEntity.entityId, newNode);
@@ -172,7 +179,7 @@ export class EntityTopologyGraphQlQueryHandlerService
   private buildEntity(
     entityType: ObservabilityEntityType,
     serverResult: TopologyEntity,
-    nodeSpec: TopologyNodeSpecification
+    nodeSpec: TopologyNodeSpecification,
   ): Entity {
     return {
       [entityIdKey]: serverResult.entityId,
@@ -181,10 +188,11 @@ export class EntityTopologyGraphQlQueryHandlerService
         [
           nodeSpec.titleSpecification,
           ...nodeSpec.metricSpecifications,
-          ...this.buildEntityTypeSpecificSpecs(entityType)
+          ...this.buildEntityTypeSpecificSpecs(entityType),
+          ...(nodeSpec.otherSpecifications ?? []),
         ],
-        serverResult
-      )
+        serverResult,
+      ),
     };
   }
 
@@ -193,13 +201,17 @@ export class EntityTopologyGraphQlQueryHandlerService
     node: EntityNode,
     neighborNode: EntityNode,
     serverEdge: TopologyEdge,
-    edgeSpec: TopologySpecification
+    edgeSpec: TopologySpecification,
+    edgeEntitySpecs?: Specification[],
   ): EntityEdge {
     return {
       fromNode: direction === EdgeDirection.Outgoing ? node : neighborNode,
       toNode: direction === EdgeDirection.Incoming ? node : neighborNode,
       specification: edgeSpec,
-      data: this.extractSpecsFromServerResult(edgeSpec.metricSpecifications, serverEdge)
+      data: this.extractSpecsFromServerResult(
+        [edgeSpec.metricSpecifications, edgeEntitySpecs ?? []].flat(),
+        serverEdge,
+      ),
     };
   }
 
@@ -208,7 +220,7 @@ export class EntityTopologyGraphQlQueryHandlerService
     severEntity: TopologyEntityWithEdges,
     node: EntityNode,
     nodeMap: Map<string, EntityNode>,
-    request: GraphQlEntityTopologyRequest
+    request: GraphQlEntityTopologyRequest,
   ): EntityEdge[] {
     return Array.from(this.getSpecMapForDirection(direction, request).entries()).flatMap(
       ([neighborType, neighborSpec]) => {
@@ -217,9 +229,16 @@ export class EntityTopologyGraphQlQueryHandlerService
         return edges.map(edge => {
           const neighborNode = this.getOrCreateNode(neighborType, neighborSpec, nodeMap, edge.neighbor);
 
-          return this.buildEdge(direction, node, neighborNode, edge, request.edgeSpecification);
+          return this.buildEdge(
+            direction,
+            node,
+            neighborNode,
+            edge,
+            request.edgeSpecification,
+            request.edgeEntitySpecifications?.get(neighborType),
+          );
         });
-      }
+      },
     );
   }
 
@@ -234,13 +253,13 @@ export class EntityTopologyGraphQlQueryHandlerService
 
   private nodeContainsEdge(node: EntityNode, edge: EntityEdge): boolean {
     return !!node.edges.find(
-      existingEdge => existingEdge.fromNode === edge.fromNode && existingEdge.toNode === edge.toNode
+      existingEdge => existingEdge.fromNode === edge.fromNode && existingEdge.toNode === edge.toNode,
     );
   }
 
   private extractSpecsFromServerResult(
     specifications: Specification[],
-    serverResult: TopologyEntity | TopologyEdge
+    serverResult: TopologyEntity | TopologyEdge,
   ): Dictionary<unknown> {
     return fromPairs(specifications.map(spec => [spec.resultAlias(), spec.extractFromServerData(serverResult)]));
   }
@@ -263,11 +282,16 @@ export interface GraphQlEntityTopologyRequest {
   rootNodeType: ObservabilityEntityType;
   rootNodeSpecification: TopologyNodeSpecification;
   rootNodeFilters?: GraphQlFilter[];
+  /**
+   * @deprecated Use `edgeEntityFilters` instead.
+   */
   edgeFilters?: GraphQlFilter[];
+  edgeEntityFilters?: Map<string, GraphQlFilter[]>;
   rootNodeLimit: number; // TODO should downstream/upstream nodes of same type match root spec?
   downstreamNodeSpecifications: Map<ObservabilityEntityType, TopologyNodeSpecification>;
   upstreamNodeSpecifications: Map<ObservabilityEntityType, TopologyNodeSpecification>;
   edgeSpecification: TopologySpecification;
+  edgeEntitySpecifications?: Map<string, Specification[]>;
 }
 
 interface TopologySpecification {
@@ -278,6 +302,7 @@ export type TopologyEdgeSpecification = TopologySpecification;
 
 export interface TopologyNodeSpecification extends TopologySpecification {
   titleSpecification: Specification;
+  otherSpecifications?: Specification[];
 }
 
 export interface EntityNode {
@@ -309,5 +334,5 @@ type TopologyEdge = { neighbor: TopologyEntity } & Dictionary<Dictionary<GraphQl
 
 const enum EdgeDirection {
   Outgoing,
-  Incoming
+  Incoming,
 }

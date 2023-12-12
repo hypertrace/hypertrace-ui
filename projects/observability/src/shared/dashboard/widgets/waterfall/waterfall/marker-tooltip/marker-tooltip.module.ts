@@ -7,6 +7,6 @@ import { MarkerTooltipComponent } from './marker-tooltip.component';
 @NgModule({
   declarations: [MarkerTooltipComponent],
   exports: [MarkerTooltipComponent],
-  imports: [PopoverModule, CommonModule, FormattingModule, LabelModule]
+  imports: [PopoverModule, CommonModule, FormattingModule, LabelModule],
 })
 export class MarkerTooltipModule {}

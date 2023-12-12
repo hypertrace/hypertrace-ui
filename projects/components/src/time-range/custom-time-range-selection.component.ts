@@ -42,7 +42,7 @@ import { ButtonVariant } from '../button/button';
         </div>
       </form>
     </div>
-  `
+  `,
 })
 export class CustomTimeRangeSelectionComponent implements OnChanges {
   @Input()

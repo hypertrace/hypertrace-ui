@@ -11,23 +11,23 @@ describe('Timeline Card List component', () => {
     declareComponent: false,
     component: TimelineCardListComponent,
     imports: [TimelineCardListModule],
-    providers: [mockProvider(PopoverService)]
+    providers: [mockProvider(PopoverService)],
   });
 
   test('should display all cards', () => {
     const data = [
       {
         name: 'First',
-        timestamp: 1579817561559
+        timestamp: 1579817561559,
       },
       {
         name: 'Second',
-        timestamp: 1579813972292
+        timestamp: 1579813972292,
       },
       {
         name: 'Third',
-        timestamp: 1579810387143
-      }
+        timestamp: 1579810387143,
+      },
     ];
 
     spectator = createHost(
@@ -42,9 +42,9 @@ describe('Timeline Card List component', () => {
     `,
       {
         hostProps: {
-          data: data
-        }
-      }
+          data: data,
+        },
+      },
     );
 
     // Add test logic
@@ -67,7 +67,7 @@ describe('Timeline Card List component', () => {
     expect(spectator.query('.selected-card')).not.toExist();
 
     spectator.setInput({
-      selectedIndex: 0
+      selectedIndex: 0,
     });
 
     const selectedCardContent = spectator.query('.selected-card');
@@ -83,18 +83,18 @@ describe('Timeline Card List component', () => {
       {
         name: 'First',
         timestamp: 1579817561559,
-        isSimilarToPrevious: false
+        isSimilarToPrevious: false,
       },
       {
         name: 'Second',
         timestamp: 1579813972292,
-        isSimilarToPrevious: true
+        isSimilarToPrevious: true,
       },
       {
         name: 'Third',
         timestamp: 1579810387143,
-        isSimilarToPrevious: true
-      }
+        isSimilarToPrevious: true,
+      },
     ];
 
     spectator = createHost(
@@ -109,9 +109,9 @@ describe('Timeline Card List component', () => {
     `,
       {
         hostProps: {
-          data: data
-        }
-      }
+          data: data,
+        },
+      },
     );
 
     // Only one card element should be visible. Other two should be gropued and hidden
@@ -130,13 +130,13 @@ describe('Timeline Card List component', () => {
       {
         name: 'First',
         timestamp: 1579817561559,
-        isSimilarToPrevious: false
+        isSimilarToPrevious: false,
       },
       {
         name: 'Second',
         timestamp: 1579813972292,
-        isSimilarToPrevious: true
-      }
+        isSimilarToPrevious: true,
+      },
     ];
 
     spectator = createHost(
@@ -152,9 +152,9 @@ describe('Timeline Card List component', () => {
       {
         hostProps: {
           data: data,
-          showTime: true
-        }
-      }
+          showTime: true,
+        },
+      },
     );
 
     // Only one card element should be visible. Other two should be gropued and hidden
@@ -163,7 +163,7 @@ describe('Timeline Card List component', () => {
     expect(spectator.query('.button')).toHaveClass('button with-margin');
 
     spectator.setHostInput({
-      showTime: false
+      showTime: false,
     });
 
     expect(spectator.query('.time')).not.toExist();

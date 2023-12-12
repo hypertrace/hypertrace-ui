@@ -11,10 +11,10 @@ import { JsonWidgetModel } from './json-widget.model';
     CommonModule,
     DashboardCoreModule.with({
       models: [JsonWidgetModel],
-      renderers: [JsonWidgetRendererComponent]
+      renderers: [JsonWidgetRendererComponent],
     }),
     TitledContentModule,
-    LoadAsyncModule
-  ]
+    LoadAsyncModule,
+  ],
 })
 export class JsonWidgetModule {}

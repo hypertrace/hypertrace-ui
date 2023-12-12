@@ -7,7 +7,7 @@ import {
   Input,
   OnChanges,
   Output,
-  QueryList
+  QueryList,
 } from '@angular/core';
 import { Color, queryListAndChanges$ } from '@hypertrace/common';
 import { isEmpty } from 'lodash-es';
@@ -54,7 +54,7 @@ import { TabComponent } from './tab/tab.component';
         </mat-tab>
       </mat-tab-group>
     </div>
-  `
+  `,
 })
 export class TabGroupComponent implements OnChanges, AfterViewInit {
   @ContentChildren(TabComponent)

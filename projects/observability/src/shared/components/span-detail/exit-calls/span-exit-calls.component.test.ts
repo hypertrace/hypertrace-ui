@@ -5,9 +5,10 @@ import { IconLibraryTestingModule } from '@hypertrace/assets-library';
 import { NavigationService } from '@hypertrace/common';
 import { runFakeRxjs } from '@hypertrace/test-utils';
 import { createHostFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
-import { EMPTY } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { SpanExitCallsComponent } from './span-exit-calls.component';
 import { SpanExitCallsModule } from './span-exit-calls.module';
+import { FileDownloadService, NotificationService } from '@hypertrace/components';
 
 describe('SpanExitCallsComponent', () => {
   let spectator: Spectator<SpanExitCallsComponent>;
@@ -18,17 +19,23 @@ describe('SpanExitCallsComponent', () => {
     declareComponent: false,
     providers: [
       mockProvider(ActivatedRoute, {
-        queryParamMap: EMPTY
+        queryParamMap: EMPTY,
       }),
       mockProvider(NavigationService, {
-        navigation$: EMPTY
-      })
-    ]
+        navigation$: EMPTY,
+      }),
+      mockProvider(FileDownloadService, {
+        downloadAsCsv: jest.fn().mockReturnValue(of(undefined)),
+      }),
+      mockProvider(NotificationService, {
+        createInfoToast: jest.fn(),
+      }),
+    ],
   });
 
   test('should render data correctly', fakeAsync(() => {
     spectator = createHost(`<ht-span-exit-calls [exitCalls]="exitCalls"></ht-span-exit-calls>`, {
-      hostProps: { exitCalls: { 'name 1': '10', 'name 2': '11' } }
+      hostProps: { exitCalls: { 'name 1': '10', 'name 2': '11' } },
     });
 
     runFakeRxjs(({ expectObservable }) => {
@@ -37,10 +44,10 @@ describe('SpanExitCallsComponent', () => {
         x: {
           data: [
             { name: 'name 1', calls: '10' },
-            { name: 'name 2', calls: '11' }
+            { name: 'name 2', calls: '11' },
           ],
-          totalCount: 2
-        }
+          totalCount: 2,
+        },
       });
 
       flush();

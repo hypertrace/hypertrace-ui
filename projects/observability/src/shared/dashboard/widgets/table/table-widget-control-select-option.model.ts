@@ -6,7 +6,7 @@ import { TableWidgetControlModel } from './table-widget-control.model';
 import { isEmpty, isEqual } from 'lodash-es';
 
 @Model({
-  type: 'table-widget-select-option'
+  type: 'table-widget-select-option',
 })
 export class TableWidgetControlSelectOptionModel extends TableWidgetControlModel<TableSelectControlOption> {
   public readonly isMultiselect: boolean = false;
@@ -15,7 +15,7 @@ export class TableWidgetControlSelectOptionModel extends TableWidgetControlModel
     key: 'placeholder',
     displayName: 'Placeholder',
     type: STRING_PROPERTY.type,
-    required: true
+    required: true,
   })
   public placeholder!: string;
 
@@ -23,7 +23,7 @@ export class TableWidgetControlSelectOptionModel extends TableWidgetControlModel
     key: 'selected',
     displayName: 'Selected',
     type: ARRAY_PROPERTY.type,
-    required: false
+    required: false,
   })
   public selected: TableSelectControlOption[] = [];
 
@@ -39,8 +39,8 @@ export class TableWidgetControlSelectOptionModel extends TableWidgetControlModel
       map(options =>
         isEmpty(this.selected)
           ? options
-          : options.map(option => (this.isOptionSelected(option) ? { ...option, applied: true } : option))
-      )
+          : options.map(option => (this.isOptionSelected(option) ? { ...option, applied: true } : option)),
+      ),
     );
   }
 
