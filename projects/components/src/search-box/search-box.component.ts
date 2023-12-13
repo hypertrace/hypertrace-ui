@@ -111,7 +111,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   public searchMode: SearchBoxEmitMode = SearchBoxEmitMode.Incremental;
 
   @Input()
-  public enableSearchHistory: boolean = true; 
+  public enableSearchHistory: boolean = true;
 
   @Input()
   public collapsable: boolean = false;
@@ -139,6 +139,8 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   public filteredSearchHistory: string[] = [];
 
   public popover?: PopoverRef;
+
+  public defaultSearchHistoryDebounceTime = 1000;
 
   public constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -263,23 +265,27 @@ export class SearchBoxComponent implements OnInit, OnChanges {
       }),
     );
 
+    // Use the default search history debounce time if the value debounce time is less than the default
+    const searchHistoryDebounce =
+      this.debounceTime && this.debounceTime > this.defaultSearchHistoryDebounceTime
+        ? 0
+        : this.defaultSearchHistoryDebounceTime;
+
     this.subscriptionLifecycle.add(
-      this.debounceTime && this.debounceTime > 0 ?
-      this.valueChange
-        .asObservable()
-        .subscribe(emittedValue => {
-          if (!isEmpty(emittedValue)) {
-            this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
-          }
-        }) : 
-      this.valueChange
-        .asObservable()
-        .pipe(debounceTime(400))
-        .subscribe(emittedValue => {
-          if (!isEmpty(emittedValue)) {
-            this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
-          }
-        }),
+      searchHistoryDebounce > 0
+        ? this.valueChange
+            .asObservable()
+            .pipe(debounceTime(searchHistoryDebounce))
+            .subscribe(emittedValue => {
+              if (!isEmpty(emittedValue)) {
+                this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
+              }
+            })
+        : this.valueChange.asObservable().subscribe(emittedValue => {
+            if (!isEmpty(emittedValue)) {
+              this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
+            }
+          }),
     );
   }
 
