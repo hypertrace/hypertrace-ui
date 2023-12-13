@@ -9,7 +9,7 @@ import { FeaturePipe } from './feature.pipe';
 describe('Feature pipe', () => {
   let spectator: SpectatorHost<unknown, FeatureHost>;
   let featureState$: Observable<FeatureState>;
-  let getCombinedFeatureStateMock: jest.Mock<Observable<FeatureState>>;
+  let getCombinedFeatureStateMock: jest.SpyInstance;
   const createHost = createHostFactory({
     component: Component({
       selector: 'pipe-holder',
@@ -27,7 +27,7 @@ describe('Feature pipe', () => {
     featureState$ = EMPTY;
     spectator = createHost(`
     <pipe-holder>{{ features | htFeature }}</pipe-holder>`);
-    getCombinedFeatureStateMock = spectator.inject(FeatureStateResolver).getCombinedFeatureState;
+    getCombinedFeatureStateMock = jest.spyOn(spectator.inject(FeatureStateResolver), 'getCombinedFeatureState');
     getCombinedFeatureStateMock.mockClear();
   });
 

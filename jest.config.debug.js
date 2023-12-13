@@ -5,7 +5,7 @@ process.env.TZ = 'UTC'; // Tests should always run in UTC, no time zone dependen
 
 // eslint-disable-next-line no-undef
 globalThis.ngJest = {
-  skipNgcc: false,
+  skipNgcc: true,
   tsconfig: 'tsconfig.spec.json',
 };
 
@@ -13,7 +13,6 @@ module.exports = {
   rootDir: '.',
   preset: 'jest-preset-angular',
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
-  globalSetup: 'jest-preset-angular/global-setup',
   transform: {
     '^.+\\.(ts|js|html|svg)$': [
       'jest-preset-angular',
