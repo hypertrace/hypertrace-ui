@@ -69,7 +69,7 @@ export class IntervalDurationService {
     return durations[0];
   }
 
-  public getAvailableIntervals(timeRange: TimeRange, minDataPoints: number, maxDataPoints: number): TimeDuration[] {
+  private getAvailableIntervals(timeRange: TimeRange, minDataPoints: number, maxDataPoints: number): TimeDuration[] {
     const timeRangeDuration = this.timeDurationService.getTimeRangeDuration(timeRange);
 
     const availableIntervals = IntervalDurationService.PREDEFINED_INTERVALS.filter(duration =>
