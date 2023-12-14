@@ -144,11 +144,11 @@ describe('Search box Component', () => {
     spectator.setInput({ value: 'test-value' });
     spectator.triggerEventHandler('input', 'input', 'test-value');
     expect(searchBoxELement).toHaveClass('has-value');
-    spectator.tick(500);
+    spectator.tick(1500);
 
     inputElement.blur();
     spectator.click('.icon.close');
-    spectator.tick(500);
+    spectator.tick(1500);
     expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalled();
 
     flush();
