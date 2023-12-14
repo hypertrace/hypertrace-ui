@@ -116,9 +116,6 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   @Input()
   public collapsable: boolean = false;
 
-  @Input()
-  public searchHistoryDebounceTime: number | undefined;
-
   @Output()
   public readonly valueChange: EventEmitter<string> = new EventEmitter();
 
