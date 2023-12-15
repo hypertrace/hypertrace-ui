@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { Breadcrumb, TimeRangeService } from '@hypertrace/common';
 import { ObservabilityEntityType } from '../../../shared/graphql/model/schema/entity';
 import {
@@ -16,7 +16,7 @@ import { EntityIconLookupService } from '../../../shared/services/entity/entity-
 import { BackendEntity } from './backend-detail.service';
 
 @Injectable({ providedIn: 'root' })
-export class BackendDetailBreadcrumbResolver implements Resolve<Observable<Breadcrumb>> {
+export class BackendDetailBreadcrumbResolver {
   private readonly specificationBuilder: SpecificationBuilder = new SpecificationBuilder();
 
   public constructor(

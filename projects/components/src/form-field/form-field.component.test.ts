@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { fakeAsync } from '@angular/core/testing';
 import { IconType } from '@hypertrace/assets-library';
 import { createHostFactory } from '@ngneat/spectator/jest';
-import { MockComponents, MockDirective, MockModule } from 'ng-mocks';
+import { MockComponents, MockDirective } from 'ng-mocks';
 import { IconComponent } from '../icon/icon.component';
 import { LabelComponent } from '../label/label.component';
 import { TooltipDirective } from '../tooltip/tooltip.directive';
@@ -11,7 +11,7 @@ import { FormFieldComponent } from './form-field.component';
 describe('Form Field Component', () => {
   const hostFactory = createHostFactory({
     component: FormFieldComponent,
-    imports: [MockModule(CommonModule)],
+    imports: [CommonModule],
     declarations: [MockComponents(LabelComponent, IconComponent), MockDirective(TooltipDirective)],
     shallow: true,
   });

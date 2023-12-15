@@ -4,6 +4,7 @@ import { NavigableTab } from '@hypertrace/components';
 import { BackendDetailService } from './backend-detail.service';
 
 @Component({
+  selector: 'ht-backend-detail-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [BackendDetailService, SubscriptionLifecycle],
   template: `
