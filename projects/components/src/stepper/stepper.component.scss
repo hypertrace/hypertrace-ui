@@ -3,6 +3,9 @@
 :host {
   ::ng-deep {
     .mat-step-header {
+      // TODO: Remove this once we have migrate to mdc based components
+      --mat-stepper-header-height: 72px;
+
       .mat-step-label {
         @include overline($gray-5);
         text-transform: uppercase;
