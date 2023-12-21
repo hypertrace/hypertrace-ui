@@ -14,6 +14,7 @@ import { TableCellRendererBase } from '../../table-cell-renderer-base';
 import { CoreTableCellParserType } from '../../types/core-table-cell-parser-type';
 import { CoreTableCellRendererType } from '../../types/core-table-cell-renderer-type';
 import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
+import { StringArrayTableCellDisplayMode } from './types';
 
 @Component({
   selector: 'ht-string-array-table-cell-renderer',
@@ -67,11 +68,6 @@ export class StringArrayTableCellRendererComponent
   public getOffsetLabel(count: number): string {
     return count === 1 ? '+1 other' : `+${count} others`;
   }
-}
-
-export const enum StringArrayTableCellDisplayMode {
-  List = 'list',
-  CountWithListTooltip = 'countWithListTooltip',
 }
 
 interface StringArrayTableCellConfigOptions {

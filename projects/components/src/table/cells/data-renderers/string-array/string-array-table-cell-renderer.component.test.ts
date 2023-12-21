@@ -3,10 +3,8 @@ import { tableCellColumnProvider, TableCellNoOpParser, XMoreComponent } from '@h
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MockComponent } from 'ng-mocks';
 import { tableCellDataProvider, tableCellProviders } from '../../test/cell-providers';
-import {
-  StringArrayTableCellDisplayMode,
-  StringArrayTableCellRendererComponent,
-} from './string-array-table-cell-renderer.component';
+import { StringArrayTableCellRendererComponent } from './string-array-table-cell-renderer.component';
+import { StringArrayTableCellDisplayMode } from './types';
 
 describe('String array table cell renderer component', () => {
   const buildComponent = createComponentFactory({

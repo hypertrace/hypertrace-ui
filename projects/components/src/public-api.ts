@@ -442,3 +442,6 @@ export * from './input-pill-list/input-pill-list.module';
 
 // Parsed Filter
 export * from './filtering/filter/parser/parsed-filter';
+
+// String array table cell types
+export * from './table/cells/data-renderers/string-array/types';
