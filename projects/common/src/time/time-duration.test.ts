@@ -80,6 +80,24 @@ describe('Time duration', () => {
     expect(new TimeDuration(0, TimeUnit.Millisecond).getMostSignificantUnitOnly()).toEqual(
       new TimeDuration(0, TimeUnit.Millisecond),
     );
+
+    expect(
+      new TimeDuration(365 * 24 * 60 * 60 * 1000, TimeUnit.Millisecond).getMostSignificantUnitOnly(
+        TimeUnit.Year,
+        false,
+      ),
+    ).toEqual(new TimeDuration(1, TimeUnit.Year));
+
+    expect(
+      new TimeDuration(364 * 24 * 60 * 60 * 1000, TimeUnit.Millisecond).getMostSignificantUnitOnly(
+        TimeUnit.Year,
+        false,
+      ),
+    ).toEqual(new TimeDuration(52, TimeUnit.Week));
+
+    expect(
+      new TimeDuration(44 * 60 * 60 * 1000, TimeUnit.Millisecond).getMostSignificantUnitOnly(TimeUnit.Hour, false),
+    ).toEqual(new TimeDuration(44, TimeUnit.Hour));
   });
 
   test('can parse ISO 8601 duration string', () => {
