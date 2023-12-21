@@ -74,6 +74,28 @@ export class TimeDuration {
     return new TimeDuration(amountForUnit, firstApplicableUnit);
   }
 
+  public getMostSignificantUnitOnlyWithoutApprox(maxSupportedUnit?: TimeUnit): TimeDuration {
+    let orderedUnits: ConvertibleTimeUnit[] = isNil(maxSupportedUnit)
+      ? TimeDuration.TIME_UNITS
+      : TimeDuration.TIME_UNITS.slice(indexOf(TimeDuration.TIME_UNITS, maxSupportedUnit));
+
+    let firstApplicableUnit = TimeUnit.Millisecond;
+    for (let unit of orderedUnits) {
+      const selectedUnitValue = this.getAmountForUnit(unit);
+
+      if (selectedUnitValue >= 1 && selectedUnitValue - Math.floor(selectedUnitValue) === 0) {
+        firstApplicableUnit = unit;
+
+        break;
+      } else if (selectedUnitValue >= 1) {
+        firstApplicableUnit = unit;
+      }
+    }
+    const amountForUnit = Math.floor(this.getAmountForUnit(firstApplicableUnit));
+
+    return new TimeDuration(amountForUnit, firstApplicableUnit);
+  }
+
   public toString(): string {
     return `${this.value}${this.unit}`;
   }
