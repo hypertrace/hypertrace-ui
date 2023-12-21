@@ -96,7 +96,7 @@ describe('Time duration', () => {
     ).toEqual(new TimeDuration(52, TimeUnit.Week));
 
     expect(
-      new TimeDuration(44 * 60 * 60 * 1000, TimeUnit.Millisecond).getMostSignificantUnitOnly(TimeUnit.Hour, false),
+      new TimeDuration(44 * 60 * 60 * 1000, TimeUnit.Millisecond).getMostSignificantUnitOnly(TimeUnit.Year, false),
     ).toEqual(new TimeDuration(44, TimeUnit.Hour));
   });
 
