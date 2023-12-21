@@ -52,7 +52,7 @@ export class StringArrayTableCellRendererComponent
   extends TableCellRendererBase<string[], string[], StringArrayTableCellConfigOptions>
   implements OnInit {
   public maxItemsInTooltip: number = 50;
-  protected viewMode: StringArrayTableCellDisplayMode = StringArrayTableCellDisplayMode.List;
+  protected readonly viewMode: StringArrayTableCellDisplayMode = StringArrayTableCellDisplayMode.List;
   public constructor(
     @Inject(TABLE_COLUMN_CONFIG) columnConfig: TableColumnConfig<StringArrayTableCellConfigOptions>,
     @Inject(TABLE_COLUMN_INDEX) index: number,
