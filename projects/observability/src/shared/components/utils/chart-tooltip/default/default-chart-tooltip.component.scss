@@ -2,6 +2,9 @@
 @import 'font';
 
 .tooltip-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   background-color: $gray-9;
   color: white;
   opacity: 0.9;
@@ -10,6 +13,16 @@
   min-height: 48px;
   padding: 12px;
   box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.2), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 8px 10px rgba(0, 0, 0, 0.14);
+
+  .groups {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .table {
+      margin-left: 16px;
+    }
+  }
 }
 
 .tooltip-timestamp {

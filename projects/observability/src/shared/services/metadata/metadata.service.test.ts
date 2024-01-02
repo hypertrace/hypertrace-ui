@@ -110,7 +110,7 @@ describe('Metadata Service', () => {
         ...specBuilder.attributeSpecificationForKey('attr1'),
         aggregation: MetricAggregationType.Max,
       } as Specification),
-      'Max. Attribute 1',
+      'Max Attribute 1',
     );
 
     expectSingleValueObservable(
@@ -118,7 +118,7 @@ describe('Metadata Service', () => {
         ...specBuilder.attributeSpecificationForKey('attr1'),
         aggregation: MetricAggregationType.AvgrateMinute,
       } as Specification),
-      'Attribute 1 Rate (min.)',
+      'Attribute 1 Rate (min)',
     );
   });
 

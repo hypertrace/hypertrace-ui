@@ -13,17 +13,6 @@ Object.defineProperty(window, 'getComputedStyle', {
   }),
 });
 
-/**
- * ISSUE: https://github.com/angular/material2/issues/7101
- * Workaround for JSDOM missing transform property
- */
-Object.defineProperty(document.body.style, 'transform', {
-  value: () => ({
-    enumerable: true,
-    configurable: true,
-  }),
-});
-
 // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 Element.prototype.scrollIntoView = <typeof Element.prototype.scrollIntoView>jest.fn();
 

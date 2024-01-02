@@ -5,6 +5,7 @@ import { LogEvent } from '../../../shared/dashboard/widgets/waterfall/waterfall/
 import { ApiTraceDetailService } from './../api-trace-detail.service';
 
 @Component({
+  selector: 'ht-api-trace-logs',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-container *ngIf="this.logEvents$ | async as logEvents">

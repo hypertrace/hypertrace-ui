@@ -113,18 +113,19 @@ describe('Api detail breadcrumb resolver', () => {
             serviceId: 'test-service-id',
           },
         });
+
+        expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
+          expect.objectContaining({
+            requestType: ENTITY_GQL_REQUEST,
+            entityType: ObservabilityEntityType.Api,
+            id: 'test-id',
+          }),
+          { cacheability: GraphQlRequestCacheability.Cacheable },
+        );
       });
     });
 
     flushMicrotasks();
-    expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
-      expect.objectContaining({
-        requestType: ENTITY_GQL_REQUEST,
-        entityType: ObservabilityEntityType.Api,
-        id: 'test-id',
-      }),
-      { cacheability: GraphQlRequestCacheability.Cacheable },
-    );
   }));
 
   test('returns the api breadcrumb for no previous navigation', fakeAsync(() => {
@@ -147,17 +148,18 @@ describe('Api detail breadcrumb resolver', () => {
             serviceId: 'test-service-id',
           },
         });
+
+        expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
+          expect.objectContaining({
+            requestType: ENTITY_GQL_REQUEST,
+            entityType: ObservabilityEntityType.Api,
+            id: 'test-id',
+          }),
+          { cacheability: GraphQlRequestCacheability.Cacheable },
+        );
       });
     });
 
     flushMicrotasks();
-    expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
-      expect.objectContaining({
-        requestType: ENTITY_GQL_REQUEST,
-        entityType: ObservabilityEntityType.Api,
-        id: 'test-id',
-      }),
-      { cacheability: GraphQlRequestCacheability.Cacheable },
-    );
   }));
 });

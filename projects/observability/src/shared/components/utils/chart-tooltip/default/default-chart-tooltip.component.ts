@@ -17,5 +17,19 @@ export class DefaultChartTooltipComponent {
 
 export interface DefaultChartTooltipRenderData {
   title: string;
-  labeledValues: { label: string; value: number | string; color: string; units?: string }[];
+  labelHeader?: string;
+  valueHeader?: string;
+  groups: DefaultChartTooltipGroup[];
+}
+
+export interface DefaultChartTooltipGroup {
+  title: string;
+  labeledValues: DefaultChartTooltipLabeledValues[];
+}
+
+export interface DefaultChartTooltipLabeledValues {
+  label: string;
+  value: number | string;
+  color: string;
+  units?: string;
 }
