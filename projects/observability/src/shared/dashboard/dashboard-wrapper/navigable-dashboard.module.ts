@@ -11,7 +11,14 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 const DEFAULT_DASHBOARDS = new InjectionToken<DashboardDefaultConfiguration[]>('DEFAULT_DASHBOARDS');
 
 @NgModule({
-  imports: [CommonModule, DashboardCoreModule, DashboardEditorModule, LoadAsyncModule, FilterBarModule, ScrollingModule],
+  imports: [
+    CommonModule,
+    DashboardCoreModule,
+    DashboardEditorModule,
+    LoadAsyncModule,
+    FilterBarModule,
+    ScrollingModule,
+  ],
   declarations: [ApplicationAwareDashboardComponent, NavigableDashboardComponent],
   providers: [{ provide: DEFAULT_DASHBOARDS, useValue: [], multi: true }],
   exports: [ApplicationAwareDashboardComponent, NavigableDashboardComponent],
