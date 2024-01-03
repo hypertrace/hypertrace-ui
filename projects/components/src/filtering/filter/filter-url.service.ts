@@ -72,9 +72,13 @@ export class FilterUrlService {
   }
 
   public setUrlFilters(filters: Filter[]): void {
-    this.navigationService.addQueryParametersToUrl({
+    this.navigationService.addQueryParametersToUrl(this.getQueryParamsObjectForFilters(filters));
+  }
+
+  public getQueryParamsObjectForFilters(filters: Filter[]): QueryParamObject {
+    return {
       [FilterUrlService.FILTER_QUERY_PARAM]: filters.length === 0 ? undefined : filters.map(f => f.urlString),
-    });
+    };
   }
 
   public setUrlGroupBy(groupBy?: string[]): void {
