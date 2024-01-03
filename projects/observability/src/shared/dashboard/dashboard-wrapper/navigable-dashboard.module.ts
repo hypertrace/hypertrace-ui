@@ -6,11 +6,12 @@ import { ModelJson } from '@hypertrace/hyperdash';
 import { DashboardCoreModule, DashboardEditorModule } from '@hypertrace/hyperdash-angular';
 import { ApplicationAwareDashboardComponent } from './application-aware-dashboard.component';
 import { NavigableDashboardComponent } from './navigable-dashboard.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 const DEFAULT_DASHBOARDS = new InjectionToken<DashboardDefaultConfiguration[]>('DEFAULT_DASHBOARDS');
 
 @NgModule({
-  imports: [CommonModule, DashboardCoreModule, DashboardEditorModule, LoadAsyncModule, FilterBarModule],
+  imports: [CommonModule, DashboardCoreModule, DashboardEditorModule, LoadAsyncModule, FilterBarModule, ScrollingModule],
   declarations: [ApplicationAwareDashboardComponent, NavigableDashboardComponent],
   providers: [{ provide: DEFAULT_DASHBOARDS, useValue: [], multi: true }],
   exports: [ApplicationAwareDashboardComponent, NavigableDashboardComponent],
