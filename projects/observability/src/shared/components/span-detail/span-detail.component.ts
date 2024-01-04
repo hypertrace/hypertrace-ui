@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { ButtonSize, ToggleItem } from '@hypertrace/components';
-import { CurlCommandGeneratorUtil } from '@hypertrace/observability';
 import { isEmpty } from 'lodash-es';
 import { Observable, ReplaySubject } from 'rxjs';
 import { ObservabilityIconType } from '../../icons/observability-icon-type';
 import { SpanData } from './span-data';
 import { SpanDetailLayoutStyle } from './span-detail-layout-style';
 import { SpanDetailTab } from './span-detail-tab';
+import { ButtonSize } from '../../../../../components/src/button/button';
+import { ToggleItem } from '../../../../../components/src/toggle-group/toggle-item';
+import { CurlCommandGeneratorUtil } from '../../utils/curl-command-generator/curl-command-generator-util';
 
 @Component({
   selector: 'ht-span-detail',
