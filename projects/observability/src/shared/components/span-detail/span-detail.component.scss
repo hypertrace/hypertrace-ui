@@ -11,8 +11,14 @@
   display: flex;
   flex-direction: column;
 
-  .toggle-group {
-    margin-top: 18px;
+  .toggle-group-and-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .toggle-group {
+      margin-top: 18px;
+    }
   }
 
   .title-header {

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
   ButtonModule,
+  CopyToClipboardModule,
   IconModule,
   JsonViewerModule,
   LabelModule,
@@ -41,6 +42,7 @@ import { SpanTagsDetailModule } from './tags/span-tags-detail.module';
     LogEventsTableModule,
     ToggleGroupModule,
     MessageDisplayModule,
+    CopyToClipboardModule,
   ],
   declarations: [SpanDetailComponent],
   exports: [SpanDetailComponent],

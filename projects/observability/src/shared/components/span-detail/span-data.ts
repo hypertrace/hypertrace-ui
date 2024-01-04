@@ -18,4 +18,5 @@ export interface SpanData {
   exitCallsBreakup?: Dictionary<string>;
   startTime?: number;
   logEvents?: LogEvent[];
+  requestMethod?: string;
 }
