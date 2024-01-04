@@ -119,6 +119,21 @@ describe('Search box Component', () => {
     });
   }));
 
+  test('search history should be enabled by default', fakeAsync(() => {
+    spectator = createHost(
+      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" [searchMode]="searchMode"></ht-search-box>`,
+      {
+        hostProps: {
+          placeholder: 'Test Placeholder',
+          debounceTime: 200,
+          searchMode: SearchBoxEmitMode.Incremental,
+        },
+      },
+    );
+
+    expect(spectator.component.enableSearchHistory).toBe(true);
+  }));
+
   test('enabled search history should work as expected', fakeAsync(() => {
     spectator = createHost(
       `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" [searchMode]="searchMode" [enableSearchHistory]="enableSearchHistory"></ht-search-box>`,
@@ -144,12 +159,57 @@ describe('Search box Component', () => {
     spectator.setInput({ value: 'test-value' });
     spectator.triggerEventHandler('input', 'input', 'test-value');
     expect(searchBoxELement).toHaveClass('has-value');
-    spectator.tick(500);
+
+    spectator.tick(1500);
+
+    expect(spectator.inject(PopoverService).drawPopover).not.toHaveBeenCalled();
 
     inputElement.blur();
     spectator.click('.icon.close');
-    spectator.tick(500);
+    spectator.tick(1500);
     expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalled();
+
+    flush();
+  }));
+
+  test('enabled search history should work as expected for high debounce time', fakeAsync(() => {
+    const debounceTime = 3000;
+    spectator = createHost(
+      `<ht-search-box [placeholder]="placeholder" [debounceTime]="debounceTime" [searchMode]="searchMode" [enableSearchHistory]="enableSearchHistory"></ht-search-box>`,
+      {
+        hostProps: {
+          placeholder: 'Test Placeholder',
+          debounceTime: debounceTime,
+          searchMode: SearchBoxEmitMode.Incremental,
+          enableSearchHistory: true,
+        },
+      },
+    );
+
+    const searchBoxELement = spectator.query('.ht-search-box')!;
+    expect(searchBoxELement).not.toHaveClass('has-value');
+    expect(searchBoxELement).not.toHaveClass('focused');
+
+    spectator.click('.icon.search');
+    expect(searchBoxELement).toHaveClass('focused');
+    expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalledTimes(1);
+
+    const inputElement = spectator.query('input') as HTMLInputElement;
+    spectator.setInput({ value: 'test-value' });
+    spectator.triggerEventHandler('input', 'input', 'test-value');
+    expect(searchBoxELement).toHaveClass('has-value');
+
+    // popover not called before debounce is over
+    expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalledTimes(1);
+
+    spectator.tick(debounceTime + 100);
+
+    expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalledTimes(1);
+
+    inputElement.blur();
+    spectator.click('.icon.close');
+    spectator.tick(debounceTime + 100);
+    expect(spectator.inject(PopoverService).drawPopover).toHaveBeenCalledTimes(2);
 
     flush();
   }));
