@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Out
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
 import { ButtonSize, ToggleItem } from '@hypertrace/components';
+import { CurlCommandGeneratorUtil } from '@hypertrace/observability';
 import { isEmpty } from 'lodash-es';
 import { Observable, ReplaySubject } from 'rxjs';
+import { ObservabilityIconType } from '../../icons/observability-icon-type';
 import { SpanData } from './span-data';
 import { SpanDetailLayoutStyle } from './span-detail-layout-style';
 import { SpanDetailTab } from './span-detail-tab';
-import { ObservabilityIconType } from '../../icons/observability-icon-type';
 
 @Component({
   selector: 'ht-span-detail',
@@ -39,10 +40,9 @@ import { ObservabilityIconType } from '../../icons/observability-icon-type';
           </ht-toggle-group>
 
           <ht-copy-to-clipboard
-            *ngIf="this.curlCommand"
             size="${ButtonSize.Medium}"
             icon="${ObservabilityIconType.Api}"
-            [text]="curlCommand"
+            [text]="this.getCurlCommand | htMemoize: this.spanData"
             label=""
             tooltip="Copy curl command"
           ></ht-copy-to-clipboard>
@@ -120,9 +120,6 @@ export class SpanDetailComponent implements OnChanges {
   @Input()
   public showAttributesTab: boolean = true;
 
-  @Input()
-  public curlCommand?: string;
-
   @Output()
   public readonly closed: EventEmitter<void> = new EventEmitter<void>();
   public showRequestTab?: boolean;
@@ -169,6 +166,16 @@ export class SpanDetailComponent implements OnChanges {
     this.activeTabLabelChange.emit(tab.value);
     this.activeTabSubject.next(tab);
   }
+
+  protected getCurlCommand = (span: SpanData): string =>
+    CurlCommandGeneratorUtil.generateCurlCommand(
+      span.requestHeaders,
+      span.requestCookies,
+      span.requestBody,
+      span.requestUrl,
+      span.protocolName ?? '',
+      span.requestMethod ?? '',
+    );
 
   /**
    * Tabs are added in order:
