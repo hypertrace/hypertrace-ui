@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
   ButtonModule,
+  CopyToClipboardModule,
   IconModule,
   JsonViewerModule,
   LabelModule,
@@ -20,6 +21,7 @@ import { SpanRequestDetailModule } from './request/span-request-detail.module';
 import { SpanResponseDetailModule } from './response/span-response-detail.module';
 import { SpanDetailComponent } from './span-detail.component';
 import { SpanTagsDetailModule } from './tags/span-tags-detail.module';
+import { MemoizeModule } from '@hypertrace/common';
 
 @NgModule({
   imports: [
@@ -41,6 +43,8 @@ import { SpanTagsDetailModule } from './tags/span-tags-detail.module';
     LogEventsTableModule,
     ToggleGroupModule,
     MessageDisplayModule,
+    CopyToClipboardModule,
+    MemoizeModule,
   ],
   declarations: [SpanDetailComponent],
   exports: [SpanDetailComponent],

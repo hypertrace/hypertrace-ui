@@ -413,3 +413,6 @@ export * from './shared/utils/time-range';
 
 // CSV Downloader Service
 export * from './shared/services/global-csv-download/global-csv-download.service';
+
+// Curl Command Generator
+export * from './shared/utils/curl-command-generator/curl-command-generator-util';
