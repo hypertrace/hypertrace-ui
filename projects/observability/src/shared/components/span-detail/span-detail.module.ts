@@ -21,7 +21,7 @@ import { SpanRequestDetailModule } from './request/span-request-detail.module';
 import { SpanResponseDetailModule } from './response/span-response-detail.module';
 import { SpanDetailComponent } from './span-detail.component';
 import { SpanTagsDetailModule } from './tags/span-tags-detail.module';
-import { MemoizeModule } from '../../../../../common/src/utilities/memoize/memoize.module';
+import { MemoizeModule } from '@hypertrace/common';
 
 @NgModule({
   imports: [

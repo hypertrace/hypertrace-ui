@@ -7,9 +7,8 @@ import { ObservabilityIconType } from '../../icons/observability-icon-type';
 import { SpanData } from './span-data';
 import { SpanDetailLayoutStyle } from './span-detail-layout-style';
 import { SpanDetailTab } from './span-detail-tab';
-import { ButtonSize } from '../../../../../components/src/button/button';
-import { ToggleItem } from '../../../../../components/src/toggle-group/toggle-item';
 import { CurlCommandGeneratorUtil } from '../../utils/curl-command-generator/curl-command-generator-util';
+import { ButtonSize, ToggleItem } from '@hypertrace/components';
 
 @Component({
   selector: 'ht-span-detail',
