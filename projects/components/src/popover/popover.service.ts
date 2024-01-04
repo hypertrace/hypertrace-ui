@@ -26,6 +26,7 @@ export class PopoverService {
       positionStrategy: initialPositionStrategy,
       hasBackdrop: this.hasBackdrop(options.backdrop),
       backdropClass: this.getBackdropClass(options.backdrop),
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
     });
 
     const popoverRef = new PopoverRef(overlayRef, this.positionBuilder, this.navigationService);

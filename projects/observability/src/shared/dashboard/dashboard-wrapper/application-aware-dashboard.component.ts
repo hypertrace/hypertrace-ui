@@ -11,7 +11,7 @@ import { GraphQlFilterDataSourceModel } from '../data/graphql/filter/graphql-fil
   styleUrls: ['./application-aware-dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="application-aware-dashboard" [style.padding.px]="this.padding">
+    <div class="application-aware-dashboard" [style.padding.px]="this.padding" cdk-scrollable>
       <hda-dashboard
         *ngIf="this.json"
         [json]="this.json"
