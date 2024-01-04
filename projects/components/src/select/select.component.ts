@@ -227,6 +227,9 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public triggerDisplayMode?: SelectTriggerDisplayMode = SelectTriggerDisplayMode.MenuWithBorder;
 
   @Input()
+  public emitOnSelectedChange: boolean = false; // Call selectedChange Output() when selected Input() is updated
+
+  @Input()
   public placeholder?: string;
 
   @Input()
@@ -310,6 +313,9 @@ export class SelectComponent<V> implements ControlValueAccessor, AfterContentIni
   public ngOnChanges(changes: TypedSimpleChanges<this>): void {
     if (this.allOptionsList !== undefined && changes.selected !== undefined) {
       this.selected$ = this.buildObservableOfSelected();
+    }
+    if (this.emitOnSelectedChange && changes.selected?.previousValue !== changes.selected?.currentValue) {
+      this.selectedChange.emit(this.selected);
     }
   }
 
