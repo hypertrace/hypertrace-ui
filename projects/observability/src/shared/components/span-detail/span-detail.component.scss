@@ -13,12 +13,9 @@
 
   .toggle-group-and-actions {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-
-    .toggle-group {
-      margin-top: 18px;
-    }
+    gap: 8px;
+    margin-top: 18px;
   }
 
   .title-header {

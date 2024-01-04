@@ -41,6 +41,7 @@ import { CurlCommandGeneratorUtil } from '../../utils/curl-command-generator/cur
           </ht-toggle-group>
 
           <ht-copy-to-clipboard
+            *ngIf="this.showCurlCommand"
             size="${ButtonSize.Medium}"
             icon="${ObservabilityIconType.Api}"
             [text]="this.getCurlCommand | htMemoize: this.spanData"
@@ -120,6 +121,9 @@ export class SpanDetailComponent implements OnChanges {
 
   @Input()
   public showAttributesTab: boolean = true;
+
+  @Input()
+  public showCurlCommand: boolean = false;
 
   @Output()
   public readonly closed: EventEmitter<void> = new EventEmitter<void>();
