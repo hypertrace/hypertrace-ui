@@ -87,11 +87,7 @@ import { CsvFileName } from '../download-file/service/file-download.service';
         #cdkTable
         [multiTemplateDataRows]="this.isDetailType()"
         [dataSource]="this.dataSource"
-        [ngClass]="[
-          this.display,
-          this.pageable && this.isTableFullPage ? 'bottom-margin' : '',
-          !this.showFloatingPaginator ? 'table' : ''
-        ]"
+        [ngClass]="[this.display, !this.showFloatingPaginator ? 'table' : '']"
         cdkDropList
         cdkDropListOrientation="horizontal"
         (cdkDropListDropped)="this.dropList($event)"
@@ -262,7 +258,7 @@ import { CsvFileName } from '../download-file/service/file-download.service';
       <div
         class="pagination-controls"
         *ngIf="this.pageable"
-        [style.position]="!this.showFloatingPaginator ? (this.isTableFullPage ? 'fixed' : 'sticky') : ''"
+        [style.position]="!this.showFloatingPaginator ? 'sticky' : ''"
       >
         <ht-paginator
           *htLetAsync="this.currentPage$ as pagination"
