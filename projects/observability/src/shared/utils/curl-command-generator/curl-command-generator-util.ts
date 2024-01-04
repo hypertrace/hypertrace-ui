@@ -49,8 +49,6 @@ export abstract class CurlCommandGeneratorUtil {
       curlCommand += this.NOT_SUPPORTED_MESSAGE;
     }
 
-    console.log(curlCommand);
-
     return curlCommand;
   }
 
