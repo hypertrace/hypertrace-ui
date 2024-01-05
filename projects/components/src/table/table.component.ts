@@ -343,6 +343,9 @@ export class TableComponent
   public selectionMode?: TableSelectionMode = TableSelectionMode.Single;
 
   @Input()
+  public clickOnRowToSelect?: boolean = true;
+
+  @Input()
   public title?: string;
 
   @Input()
@@ -975,7 +978,9 @@ export class TableComponent
 
   public onDataRowClick(row: StatefulTableRow): void {
     this.rowClicked.emit(row);
-    this.toggleRowSelected(row);
+    if (this.clickOnRowToSelect) {
+      this.toggleRowSelected(row);
+    }
   }
 
   public onDataRowMouseEnter(row: StatefulTableRow): void {
