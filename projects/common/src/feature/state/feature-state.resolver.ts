@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { defaultIfEmpty, map } from 'rxjs/operators';
 import { forkJoinSafeEmpty } from '../../utilities/rxjs/rxjs-utils';
 import { Dictionary } from '../../utilities/types/types';
@@ -11,6 +11,16 @@ export abstract class FeatureStateResolver {
     return this.getFeatureFlagValue(feature).pipe(
       map(featureFlagValue => this.convertFlagValueToFeatureState(featureFlagValue)),
     );
+  }
+
+  public getFeatureStates(features: string[]): Observable<Map<string, FeatureState>> {
+    return combineLatest(features.map(feature => this.getFeatureStateTupleObservable(feature))).pipe(
+      map((tuples: [string, FeatureState][]) => new Map<string, FeatureState>(tuples))
+    );
+  }
+
+  private getFeatureStateTupleObservable(feature: string): Observable<[string, FeatureState]> {
+    return this.getFeatureState(feature).pipe(map(featureState => [feature, featureState]));
   }
 
   private convertFlagValueToFeatureState(flagValue: FeatureFlagValue): FeatureState {
