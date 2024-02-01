@@ -292,6 +292,8 @@ export class TableCdkDataSource implements DataSource<TableRow> {
       return true;
     }
 
+    // Check if references are equal
+    // Only checks if the array of columns has been modified. Not the columns themselves.
     return !isEqual(request.columns, this.cachedData.request.columns);
   }
 
