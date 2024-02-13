@@ -395,6 +395,7 @@ export * from './time-picker/time-picker.module';
 // Time Range
 export * from './time-range/time-range.component';
 export * from './time-range/time-range.module';
+export * from './time-range/predefined-time-duration.service';
 
 // Titled Content
 export {
@@ -441,3 +442,6 @@ export * from './input-pill-list/input-pill-list.module';
 
 // Parsed Filter
 export * from './filtering/filter/parser/parsed-filter';
+
+// String array table cell types
+export * from './table/cells/data-renderers/string-array/types';

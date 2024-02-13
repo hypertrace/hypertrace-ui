@@ -67,10 +67,12 @@ export class CartesianLegend<TData> {
         }));
       }
     } else {
-      this.legendGroups = this.series.map(s => ({
-        title: s.name,
-        data: [{ text: s.name, series: s }],
-      }));
+      this.legendGroups = [
+        {
+          title: '',
+          data: this.series.map(s => ({ text: s.name, series: s })),
+        },
+      ];
     }
 
     this.activeSeries = [...this.series];
@@ -131,18 +133,19 @@ export class CartesianLegend<TData> {
 
   private drawLegendEntriesTitleAndValues(seriesGroup: LegendGroupData<TData>, element: HTMLDivElement): void {
     const legendEntriesSelection = select(element);
-    legendEntriesSelection
-      .selectAll('.legend-entries-title')
-      .data([seriesGroup])
-      .enter()
-      .append('div')
-      .classed('legend-entries-title', true)
-      .text(group => `${group.title}:`)
-      .on('click', group => this.updateActiveSeriesGroup(group.data));
+
+    if (this.isGroupedSeries) {
+      legendEntriesSelection
+        .selectAll('.legend-entries-title')
+        .data([seriesGroup])
+        .enter()
+        .append('div')
+        .classed('legend-entries-title', true)
+        .text(group => `${group.title}:`)
+        .on('click', group => this.updateActiveSeriesGroup(group.data));
+    }
 
     legendEntriesSelection
-      .append('div')
-      .classed('legend-entry-values', true)
       .selectAll('.legend-entry')
       .data(seriesGroup.data)
       .enter()
@@ -165,7 +168,7 @@ export class CartesianLegend<TData> {
       .append('div')
       .classed(CartesianLegend.CSS_CLASS, true)
       .classed(`position-${legendPosition}`, true)
-      .classed('grouped', true);
+      .classed('grouped', this.isGroupedSeries);
   }
 
   private drawLegendEntry(
@@ -184,7 +187,7 @@ export class CartesianLegend<TData> {
       .text(entry => entry.text)
       .on('click', entry => (this.series.length > 1 ? this.updateActiveSeries(entry.series) : undefined));
 
-    if (this.isGroupedSeries || this.hasInterval) {
+    if (this.isGroupedSeries) {
       this.drawFilterControl(legendEntry.node()!).location.nativeElement.classList.add('filter');
 
       if (showFilters) {
@@ -201,21 +204,19 @@ export class CartesianLegend<TData> {
 
   private updateLegendClassesAndStyle(): void {
     const legendElementSelection = select(this.legendElement!);
-    if (true) {
-      // Legend entries
-      select(this.legendElement!)
-        .selectAll('.legend-entries')
-        .classed(CartesianLegend.ACTIVE_CSS_CLASS, legendGroup =>
-          this.isThisLegendSeriesGroupActive((legendGroup as LegendGroupData<TData>).data.map(d => d.series)),
-        );
+    // Legend entries
+    select(this.legendElement!)
+      .selectAll('.legend-entries')
+      .classed(CartesianLegend.ACTIVE_CSS_CLASS, legendGroup =>
+        this.isThisLegendSeriesGroupActive((legendGroup as LegendGroupData<TData>).data.map(d => d.series)),
+      );
 
-      // Legend entry title
-      select(this.legendElement!)
-        .selectAll('.legend-entries-title')
-        .classed(CartesianLegend.ACTIVE_CSS_CLASS, legendGroup =>
-          this.isThisLegendSeriesGroupActive((legendGroup as LegendGroupData<TData>).data.map(d => d.series)),
-        );
-    }
+    // Legend entry title
+    select(this.legendElement!)
+      .selectAll('.legend-entries-title')
+      .classed(CartesianLegend.ACTIVE_CSS_CLASS, legendGroup =>
+        this.isThisLegendSeriesGroupActive((legendGroup as LegendGroupData<TData>).data.map(d => d.series)),
+      );
 
     // Legend entry symbol
     legendElementSelection

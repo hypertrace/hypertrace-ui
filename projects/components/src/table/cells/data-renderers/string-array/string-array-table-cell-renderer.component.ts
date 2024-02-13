@@ -14,6 +14,7 @@ import { TableCellRendererBase } from '../../table-cell-renderer-base';
 import { CoreTableCellParserType } from '../../types/core-table-cell-parser-type';
 import { CoreTableCellRendererType } from '../../types/core-table-cell-renderer-type';
 import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
+import { StringArrayTableCellDisplayMode } from './types';
 
 @Component({
   selector: 'ht-string-array-table-cell-renderer',
@@ -22,8 +23,13 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   template: `
     <div class="string-array-cell" [htTooltip]="this.value?.length > 0 ? summaryTooltip : undefined">
       <ng-container *ngIf="this.value?.length > 0; else emptyValueTemplate">
-        <span class="first-item">{{ this.value[0] | htDisplayString }}</span>
-        <ht-x-more [count]="(this.value | slice: 1).length" displayStyle="${XMoreDisplay.Gray}"></ht-x-more>
+        <ng-container *ngIf="this.viewMode === '${StringArrayTableCellDisplayMode.List}'">
+          <span class="first-item">{{ this.value[0] | htDisplayString }}</span>
+          <ht-x-more [count]="(this.value | slice: 1).length" displayStyle="${XMoreDisplay.Gray}"></ht-x-more>
+        </ng-container>
+        <ng-container *ngIf="this.viewMode === '${StringArrayTableCellDisplayMode.CountWithListTooltip}'">
+          <span class="first-item">{{ this.value.length }}</span>
+        </ng-container>
       </ng-container>
 
       <ng-template #summaryTooltip>
@@ -43,20 +49,27 @@ import { TableCellAlignmentType } from '../../types/table-cell-alignment-type';
   alignment: TableCellAlignmentType.Left,
   parser: CoreTableCellParserType.NoOp,
 })
-export class StringArrayTableCellRendererComponent extends TableCellRendererBase<string[]> implements OnInit {
+export class StringArrayTableCellRendererComponent
+  extends TableCellRendererBase<string[], string[], StringArrayTableCellConfigOptions>
+  implements OnInit {
   public maxItemsInTooltip: number = 50;
-
+  protected readonly viewMode: StringArrayTableCellDisplayMode;
   public constructor(
-    @Inject(TABLE_COLUMN_CONFIG) columnConfig: TableColumnConfig,
+    @Inject(TABLE_COLUMN_CONFIG) columnConfig: TableColumnConfig<StringArrayTableCellConfigOptions>,
     @Inject(TABLE_COLUMN_INDEX) index: number,
     @Inject(TABLE_DATA_PARSER) parser: TableCellParserBase<string[], string[], boolean>,
     @Inject(TABLE_CELL_DATA) cellData: string[],
     @Inject(TABLE_ROW_DATA) rowData: TableRow,
   ) {
     super(columnConfig, index, parser, cellData, rowData);
+    this.viewMode = this.columnConfigOptions?.viewMode ?? StringArrayTableCellDisplayMode.List;
   }
 
   public getOffsetLabel(count: number): string {
     return count === 1 ? '+1 other' : `+${count} others`;
   }
+}
+
+interface StringArrayTableCellConfigOptions {
+  viewMode: StringArrayTableCellDisplayMode;
 }

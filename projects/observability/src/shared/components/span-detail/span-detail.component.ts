@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { IconType } from '@hypertrace/assets-library';
 import { TypedSimpleChanges } from '@hypertrace/common';
-import { ToggleItem } from '@hypertrace/components';
 import { isEmpty } from 'lodash-es';
 import { Observable, ReplaySubject } from 'rxjs';
+import { ObservabilityIconType } from '../../icons/observability-icon-type';
 import { SpanData } from './span-data';
 import { SpanDetailLayoutStyle } from './span-detail-layout-style';
 import { SpanDetailTab } from './span-detail-tab';
+import { CurlCommandGeneratorUtil } from '../../utils/curl-command-generator/curl-command-generator-util';
+import { ButtonSize, ToggleItem } from '@hypertrace/components';
 
 @Component({
   selector: 'ht-span-detail',
@@ -27,13 +29,25 @@ import { SpanDetailTab } from './span-detail-tab';
         <div class="summary-container">
           <ng-content></ng-content>
         </div>
-        <ht-toggle-group
-          class="toggle-group"
-          [activeItem]="this.activeTab$ | async"
-          [items]="this.tabs"
-          (activeItemChange)="this.changeTab($event)"
-        >
-        </ht-toggle-group>
+
+        <div class="toggle-group-and-actions">
+          <ht-toggle-group
+            class="toggle-group"
+            [activeItem]="this.activeTab$ | async"
+            [items]="this.tabs"
+            (activeItemChange)="this.changeTab($event)"
+          >
+          </ht-toggle-group>
+
+          <ht-copy-to-clipboard
+            *ngIf="this.showCurlCommand"
+            size="${ButtonSize.Medium}"
+            icon="${ObservabilityIconType.Api}"
+            [text]="this.getCurlCommand | htMemoize: this.spanData"
+            label=""
+            tooltip="Copy curl command"
+          ></ht-copy-to-clipboard>
+        </div>
 
         <div class="tab-container" *ngIf="this.activeTab$ | async as activeTab">
           <ng-container [ngSwitch]="activeTab?.value">
@@ -106,6 +120,10 @@ export class SpanDetailComponent implements OnChanges {
 
   @Input()
   public showAttributesTab: boolean = true;
+
+  @Input()
+  public showCurlCommand: boolean = false;
+
   @Output()
   public readonly closed: EventEmitter<void> = new EventEmitter<void>();
   public showRequestTab?: boolean;
@@ -152,6 +170,16 @@ export class SpanDetailComponent implements OnChanges {
     this.activeTabLabelChange.emit(tab.value);
     this.activeTabSubject.next(tab);
   }
+
+  protected getCurlCommand = (span: SpanData): string =>
+    CurlCommandGeneratorUtil.generateCurlCommand(
+      span.requestHeaders,
+      span.requestCookies,
+      span.requestBody,
+      span.requestUrl,
+      span.protocolName ?? '',
+      span.requestMethod ?? '',
+    );
 
   /**
    * Tabs are added in order:

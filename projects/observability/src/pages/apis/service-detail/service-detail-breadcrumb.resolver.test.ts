@@ -68,17 +68,18 @@ describe('Service detail breadcrumb resolver', () => {
             name: 'test service',
           },
         });
+
+        expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
+          expect.objectContaining({
+            requestType: ENTITY_GQL_REQUEST,
+            entityType: ObservabilityEntityType.Service,
+            id: 'test-id',
+          }),
+          { cacheability: GraphQlRequestCacheability.Cacheable },
+        );
       });
     });
 
     flushMicrotasks();
-    expect(spectator.inject(GraphQlRequestService).query).toHaveBeenCalledWith(
-      expect.objectContaining({
-        requestType: ENTITY_GQL_REQUEST,
-        entityType: ObservabilityEntityType.Service,
-        id: 'test-id',
-      }),
-      { cacheability: GraphQlRequestCacheability.Cacheable },
-    );
   }));
 });

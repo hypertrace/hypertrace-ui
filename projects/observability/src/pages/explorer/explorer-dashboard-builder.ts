@@ -67,15 +67,7 @@ export class ExplorerDashboardBuilder {
         'selectable-interval': false,
         'series-from-data': true,
         'legend-position': LegendPosition.Bottom,
-        'show-y-axis': true,
-        'default-interval':
-          request.interval instanceof TimeDuration
-            ? {
-                type: 'time-duration',
-                value: request.interval.value,
-                unit: request.interval.unit,
-              }
-            : undefined,
+        'default-interval': this.buildDefaultIntervalModel(request),
         'selection-handler': {
           type: 'cartesian-explorer-selection-handler',
           'show-context-menu': false,
@@ -88,6 +80,22 @@ export class ExplorerDashboardBuilder {
         dataSource.request = request;
       },
     });
+  }
+
+  private buildDefaultIntervalModel(request: ExploreVisualizationRequest): ModelJson | undefined {
+    if (request.interval instanceof TimeDuration) {
+      return {
+        type: 'time-duration',
+        value: request.interval.value,
+        unit: request.interval.unit,
+      };
+    } else if (request.interval === 'AUTO') {
+      return {
+        type: 'auto-time-duration',
+      };
+    }
+
+    return undefined;
   }
 
   public buildResultsDashboard(dashboardData: ResultsDashboardData): ExplorerGeneratedDashboard {

@@ -187,7 +187,6 @@ describe('Cartesian Chart component', () => {
           name: 'first',
           color: 'blue',
           type: CartesianSeriesVisualizationType.Column,
-          groupName: 'test series',
           stacking: true,
         },
         {
@@ -195,7 +194,6 @@ describe('Cartesian Chart component', () => {
           name: 'second',
           color: 'red',
           type: CartesianSeriesVisualizationType.Column,
-          groupName: 'test series',
           stacking: true,
         },
       ],
@@ -207,11 +205,24 @@ describe('Cartesian Chart component', () => {
     expect(chart.query('.reset.hidden')).toExist();
 
     const legendEntriesTitleElement = chart.query('.legend-entries-title') as Element;
-    chart.click(legendEntriesTitleElement);
+    expect(legendEntriesTitleElement).not.toExist();
+
+    const legendText = chart.queryAll('.legend-text');
+    expect(legendText.length).toEqual(2);
+
+    chart.click(legendText[0]);
     tick();
     expect(chart.queryAll('.legend-text.active').length).toBe(1);
 
-    chart.click(legendEntriesTitleElement);
+    chart.click(legendText[1]);
+    tick();
+    expect(chart.queryAll('.legend-text.active').length).toBe(1);
+
+    chart.click(legendText[0]);
+    tick();
+    expect(chart.queryAll('.legend-text.active').length).toBe(1);
+
+    chart.click(legendText[1]);
     tick();
     expect(chart.queryAll('.legend-text.active').length).toBe(0);
 

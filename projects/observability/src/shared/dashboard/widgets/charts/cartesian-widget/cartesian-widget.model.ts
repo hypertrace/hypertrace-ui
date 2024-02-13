@@ -1,5 +1,5 @@
 import { ColorPaletteKey, ColorService, forkJoinSafeEmpty, TimeDuration } from '@hypertrace/common';
-import { EnumPropertyTypeInstance, ENUM_TYPE, TimeDurationModel } from '@hypertrace/dashboards';
+import { EnumPropertyTypeInstance, ENUM_TYPE, TimeDurationModel, AutoTimeDurationModel } from '@hypertrace/dashboards';
 import {
   BOOLEAN_PROPERTY,
   Model,
@@ -111,7 +111,7 @@ export class CartesianWidgetModel<TInterval> {
       key: ModelPropertyType.TYPE,
     } as ModelModelPropertyTypeInstance,
   })
-  public defaultInterval?: TimeDurationModel;
+  public defaultInterval?: TimeDurationModel | AutoTimeDurationModel;
 
   @ModelProperty({
     key: 'show-summary',

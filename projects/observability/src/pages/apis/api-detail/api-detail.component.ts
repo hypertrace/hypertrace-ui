@@ -3,6 +3,7 @@ import { NavigableTab } from '@hypertrace/components';
 import { ApiDetailService } from './api-detail.service';
 
 @Component({
+  selector: 'ht-api-detail-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ApiDetailService],
   template: `

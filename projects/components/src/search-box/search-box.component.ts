@@ -21,7 +21,7 @@ import {
   TypedSimpleChanges,
 } from '@hypertrace/common';
 import { combineLatest, Observable, Subject, timer } from 'rxjs';
-import { debounce, map } from 'rxjs/operators';
+import { debounce, debounceTime, map } from 'rxjs/operators';
 import { IconSize } from '../icon/icon-size';
 import { PopoverService } from '../popover/popover.service';
 import { PopoverRef } from '../popover/popover-ref';
@@ -111,7 +111,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   public searchMode: SearchBoxEmitMode = SearchBoxEmitMode.Incremental;
 
   @Input()
-  public enableSearchHistory: boolean = false; // Experimental
+  public enableSearchHistory: boolean = true;
 
   @Input()
   public collapsable: boolean = false;
@@ -136,6 +136,8 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   public filteredSearchHistory: string[] = [];
 
   public popover?: PopoverRef;
+
+  public defaultSearchHistoryDebounceTime = 1000;
 
   public constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -222,7 +224,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
     this.subscriptionLifecycle.unsubscribe();
     this.subscriptionLifecycle.add(
       combineLatest([this.debouncedValueSubject, this.getDebounceTime()])
-        .pipe(debounce(([_, debounceTime]) => timer(debounceTime)))
+        .pipe(debounce(([_, valueDebounceTime]) => timer(valueDebounceTime)))
         .subscribe(([value, _]) => this.valueChange.emit(value)),
     );
   }
@@ -260,12 +262,27 @@ export class SearchBoxComponent implements OnInit, OnChanges {
       }),
     );
 
+    // Use the default search history debounce time if the value debounce time is less than the default
+    const searchHistoryDebounce =
+      this.debounceTime && this.debounceTime > this.defaultSearchHistoryDebounceTime
+        ? 0
+        : this.defaultSearchHistoryDebounceTime;
+
     this.subscriptionLifecycle.add(
-      this.valueChange.asObservable().subscribe(emittedValue => {
-        if (!isEmpty(emittedValue)) {
-          this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
-        }
-      }),
+      searchHistoryDebounce > 0
+        ? this.valueChange
+            .asObservable()
+            .pipe(debounceTime(searchHistoryDebounce))
+            .subscribe(emittedValue => {
+              if (!isEmpty(emittedValue)) {
+                this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
+              }
+            })
+        : this.valueChange.asObservable().subscribe(emittedValue => {
+            if (!isEmpty(emittedValue)) {
+              this.lastEmittedValues = [emittedValue, ...this.lastEmittedValues];
+            }
+          }),
     );
   }
 
@@ -296,7 +313,7 @@ export class SearchBoxComponent implements OnInit, OnChanges {
   }
 
   private handleSearchHistoryOnInputBlur(): void {
-    this.searchHistory = [...uniq(this.lastEmittedValues), ...this.searchHistory];
+    this.searchHistory = uniq([...this.lastEmittedValues, ...this.searchHistory]);
     this.filteredSearchHistory = [...this.searchHistory];
     this.lastEmittedValues = [];
   }
