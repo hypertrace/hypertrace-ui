@@ -216,7 +216,7 @@ export class CartesianAxis<TData = {}> {
       return this.configuration.tickCount;
     }
 
-    return 6;
+    return 16;
   }
 
   private addGridLinesIfNeeded(): void {

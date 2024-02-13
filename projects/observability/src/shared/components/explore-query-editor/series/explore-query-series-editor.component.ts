@@ -123,6 +123,10 @@ export class ExploreQuerySeriesEditorComponent implements OnChanges {
       value: CartesianSeriesVisualizationType.Scatter,
       label: 'Scatter',
     },
+    {
+      value: CartesianSeriesVisualizationType.Bar,
+      label: 'Bar',
+    },
   ];
 
   public constructor(private readonly metadataService: MetadataService) {

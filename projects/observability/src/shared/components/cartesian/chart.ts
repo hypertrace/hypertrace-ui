@@ -85,6 +85,7 @@ export const enum RenderingStrategy {
 }
 
 export const enum CartesianSeriesVisualizationType {
+  Bar = 'bar',
   Column = 'column',
   Line = 'line',
   DashedLine = 'dashed-line',

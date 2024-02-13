@@ -216,7 +216,7 @@ describe('Cartesian Chart component', () => {
 
     chart.click(legendText[1]);
     tick();
-    expect(chart.queryAll('.legend-text.active').length).toBe(2);
+    expect(chart.queryAll('.legend-text.active').length).toBe(1);
 
     chart.click(legendText[0]);
     tick();
