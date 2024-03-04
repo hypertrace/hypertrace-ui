@@ -80,7 +80,7 @@
     "@angular/compiler-cli": "^16.1.8",
     "@angular/language-service": "^16.1.8",
     "@ngneat/spectator": "^15.0.1",
-    "@commitlint/cli": "^18.4.3",
+    "@commitlint/cli": "^19.0.3",
     "@commitlint/config-conventional": "^18.4.3",
     "@compodoc/compodoc": "^1.1.21",
     "@types/d3-array": "^2.9.0",
