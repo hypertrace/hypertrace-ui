@@ -9,6 +9,7 @@ export interface ModalConfig<TData = unknown> {
   title?: string;
   data?: TData;
   closeOnEscapeKey?: boolean;
+  persistOnNavigate?: boolean;
   styles?: ModalStyles;
 }
 
