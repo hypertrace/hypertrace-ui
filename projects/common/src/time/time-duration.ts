@@ -63,12 +63,17 @@ export class TimeDuration {
     return unitStringType === UnitStringType.Short ? this.toString() : this.toLongString();
   }
 
-  public getMostSignificantUnitOnly(maxSupportedUnit?: TimeUnit): TimeDuration {
+  public getMostSignificantUnitOnly(maxSupportedUnit?: TimeUnit, allowApproxUnit: boolean = true): TimeDuration {
     let orderedUnits: ConvertibleTimeUnit[] = isNil(maxSupportedUnit)
       ? TimeDuration.TIME_UNITS
       : TimeDuration.TIME_UNITS.slice(indexOf(TimeDuration.TIME_UNITS, maxSupportedUnit));
 
-    const firstApplicableUnit = orderedUnits.find(unit => this.getAmountForUnit(unit) >= 1) || TimeUnit.Millisecond;
+    const firstApplicableUnit =
+      orderedUnits.find(unit => {
+        const selectedUnitValue = this.getAmountForUnit(unit);
+
+        return allowApproxUnit ? selectedUnitValue >= 1 : selectedUnitValue >= 1 && Number.isInteger(selectedUnitValue);
+      }) || TimeUnit.Millisecond;
     const amountForUnit = Math.floor(this.getAmountForUnit(firstApplicableUnit));
 
     return new TimeDuration(amountForUnit, firstApplicableUnit);
