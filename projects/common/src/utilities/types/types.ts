@@ -35,3 +35,4 @@ export interface Json {
 export type JsonValue = Json | Json[] | string | number | boolean | null;
 export type PrimitiveValue = string | number | boolean;
 export type ValueOrNull<T> = T | null;
+export type ValueOrUndefined<T> = T | undefined;
