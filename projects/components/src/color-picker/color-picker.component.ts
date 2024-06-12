@@ -20,7 +20,10 @@ import { IconSize } from '../icon/icon-size';
       <div
         class="color"
         *ngFor="let color of this.paletteColors"
-        [ngClass]="{ selected: color === this.selected, disabled: this.disabled }"
+        [ngClass]="{
+          selected: color === this.selected,
+          disabled: this.disabled || (this.required && color === this.selected)
+        }"
         [style.backgroundColor]="color"
         (click)="this.selectColor(color)"
       ></div>
