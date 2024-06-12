@@ -2,6 +2,8 @@ import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { ReplayObservable } from '../../rxjs/rxjs-utils';
+import { isEmpty } from 'lodash-es';
+
 @Injectable({ providedIn: 'root' })
 export class CookieService {
   private readonly cookie$: ReplaySubject<Map<string, string>> = new ReplaySubject(1);
@@ -16,7 +18,7 @@ export class CookieService {
     return this.getAll().get(key);
   }
 
-  public set(key: string, value: string, msUntilExpire?: number): void {
+  public set(key: string, value: string, msUntilExpire?: number, path?: string): void {
     let expires = '';
 
     if (msUntilExpire !== undefined) {
@@ -24,7 +26,7 @@ export class CookieService {
       date.setTime(date.getTime() + msUntilExpire);
       expires = `; expires=${date.toUTCString()}`;
     }
-    this.document.cookie = `${key}=${encodeURIComponent(value)}${expires}`;
+    this.document.cookie = `${key}=${encodeURIComponent(value)}${expires}${isEmpty(path) ? '' : `; path=${path}`}`;
 
     this.cookie$.next(this.getAll());
   }
