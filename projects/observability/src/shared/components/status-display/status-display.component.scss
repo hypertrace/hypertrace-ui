@@ -1,0 +1,12 @@
+@import 'mixins';
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px;
+  background-color: $gray-1;
+  border-radius: 4px;
+  font-size: 12px;
+  color: $gray-5;
+}
